@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { Mail, MapPin, Phone, Send, Sparkles } from "lucide-react";
 import { InstagramIcon, YoutubeIcon } from "@/components/ui/icon-svg";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 
 type FieldProps = {
   label: string;
@@ -11,17 +16,17 @@ type FieldProps = {
 
 function Field({ label, name, type = "text", placeholder }: FieldProps) {
   return (
-    <div>
+    <div className="space-y-2">
       <label htmlFor={name} className="text-sm font-medium">
         {label}
       </label>
-      <input
+      <Input
         id={name}
         name={name}
         type={type}
         required
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none focus:border-primary"
+        className="rounded-xl border-border bg-background px-4 py-6 text-sm"
       />
     </div>
   );
@@ -35,9 +40,9 @@ export function ContactPage() {
       {/* <p className="text-sm uppercase tracking-[0.25em] text-primary">
         Kontak
       </p> */}
-      <span className="inline-flex w-fit items-center gap-2 rounded-full border border-primary/40 bg-background/40 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-primary backdrop-blur">
+      <Badge variant="outline" className="w-fit gap-2 rounded-full border-primary/40 bg-background/40 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-primary backdrop-blur">
         <Sparkles className="h-3.5 w-3.5" /> Kontak
-      </span>
+      </Badge>
       <h1 className="mt-4 max-w-3xl font-display text-5xl font-bold md:text-6xl">
         Mari <span className="text-gradient-gold">berkolaborasi</span> bersama
         kami.
@@ -66,22 +71,24 @@ export function ContactPage() {
               val: "+62 812-3456-7890",
             },
           ].map((contact) => (
-            <div
+            <Card
               key={contact.title}
-              className="flex gap-4 rounded-2xl border border-border/60 bg-card p-5"
+              className="rounded-2xl border-border/60 bg-card"
             >
-              <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gradient-gold shadow-gold">
-                <contact.icon className="h-5 w-5 text-primary-foreground" />
-              </div>
-              <div>
-                <div className="text-xs uppercase tracking-wider text-muted-foreground">
-                  {contact.title}
+              <CardContent className="flex gap-4 p-5">
+                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gradient-gold shadow-gold">
+                  <contact.icon className="h-5 w-5 text-primary-foreground" />
                 </div>
-                <div className="mt-1 font-medium text-foreground">
-                  {contact.val}
+                <div>
+                  <div className="text-xs uppercase tracking-wider text-muted-foreground">
+                    {contact.title}
+                  </div>
+                  <div className="mt-1 font-medium text-foreground">
+                    {contact.val}
+                  </div>
                 </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           ))}
           <div className="flex gap-3 pt-2">
             <a
@@ -103,13 +110,15 @@ export function ContactPage() {
           </div>
         </div>
 
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            setSent(true);
-          }}
-          className="space-y-5 rounded-3xl border border-border/60 bg-card p-8 md:col-span-3"
-        >
+        <Card className="rounded-3xl border-border/60 bg-card md:col-span-3">
+          <CardContent className="p-8">
+            <form
+              onSubmit={(event) => {
+                event.preventDefault();
+                setSent(true);
+              }}
+              className="space-y-5"
+            >
           <div className="grid gap-5 sm:grid-cols-2">
             <Field label="Nama" name="name" placeholder="Nama lengkap" />
             <Field
@@ -124,27 +133,29 @@ export function ContactPage() {
             name="subject"
             placeholder="Kolaborasi / undangan / lainnya"
           />
-          <div>
+          <div className="space-y-2">
             <label className="text-sm font-medium">Pesan</label>
-            <textarea
+            <Textarea
               required
               rows={5}
               placeholder="Tulis pesan Anda..."
-              className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none focus:border-primary"
+              className="rounded-xl border-border bg-background px-4 py-3 text-sm"
             />
           </div>
-          <button
+          <Button
             type="submit"
-            className="inline-flex items-center gap-2 rounded-full bg-gradient-gold px-7 py-3 text-sm font-semibold text-primary-foreground shadow-gold transition-transform hover:scale-[1.02]"
+            className="rounded-full bg-gradient-gold px-7 py-6 text-sm font-semibold text-primary-foreground shadow-gold transition-transform hover:scale-[1.02]"
           >
-            <Send className="h-4 w-4" /> Kirim Pesan
-          </button>
+            <Send className="h-4 w-4 mr-2" /> Kirim Pesan
+          </Button>
           {sent ? (
             <p className="text-sm text-primary">
               Terima kasih! Pesan Anda telah terkirim.
             </p>
           ) : null}
-        </form>
+            </form>
+          </CardContent>
+        </Card>
       </div>
     </section>
   );

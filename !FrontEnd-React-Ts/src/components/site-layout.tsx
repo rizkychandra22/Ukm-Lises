@@ -12,6 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 const nav = [
   { to: "/", label: "Home" },
@@ -73,14 +74,14 @@ export function SiteLayout() {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="hidden items-center gap-2 rounded-full border border-border/60 bg-card px-4 py-2 text-sm font-semibold transition-colors hover:bg-accent hover:text-accent-foreground md:inline-flex">
+              <Button variant="outline" className="hidden h-auto items-center gap-2 rounded-full border-border/60 bg-card px-4 py-2 text-sm font-semibold transition-colors hover:bg-accent hover:text-accent-foreground md:inline-flex">
                 <img
                   src={lang === "id" ? flagId : flagEn}
                   alt="Language"
                   className="h-4 w-6 rounded-sm object-cover"
                 />
                 <span className="uppercase">{lang}</span>
-              </button>
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40">
               <DropdownMenuItem onClick={() => setLang("id")} className="gap-3 cursor-pointer">
@@ -94,14 +95,15 @@ export function SiteLayout() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <button
-            type="button"
-            className="rounded-md border border-border p-2 text-primary md:hidden"
+          <Button
+            variant="outline"
+            size="icon"
+            className="md:hidden border-border text-primary"
             onClick={() => setOpen((value) => !value)}
             aria-label="Toggle menu"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
+          </Button>
         </div>
 
         {open ? (
@@ -124,28 +126,30 @@ export function SiteLayout() {
               ))}
             </nav>
             <div className="mx-auto flex max-w-7xl gap-3 px-6 pb-6 pt-2">
-              <button
+              <Button
+                variant={lang === "id" ? "default" : "outline"}
                 onClick={() => { setLang("id"); setOpen(false); }}
-                className={`flex flex-1 items-center justify-center gap-2 rounded-lg border py-2.5 text-sm font-semibold transition-colors ${
+                className={`flex-1 flex items-center justify-center gap-2 rounded-lg py-6 text-sm font-semibold ${
                   lang === "id"
-                    ? "border-primary bg-primary/10 text-primary"
+                    ? "bg-primary/10 text-primary hover:bg-primary/20"
                     : "border-border bg-card text-muted-foreground hover:bg-accent"
                 }`}
               >
                 <img src={flagId} alt="Indonesia" className="h-4 w-6 rounded-sm object-cover" />
                 ID
-              </button>
-              <button
+              </Button>
+              <Button
+                variant={lang === "en" ? "default" : "outline"}
                 onClick={() => { setLang("en"); setOpen(false); }}
-                className={`flex flex-1 items-center justify-center gap-2 rounded-lg border py-2.5 text-sm font-semibold transition-colors ${
+                className={`flex-1 flex items-center justify-center gap-2 rounded-lg py-6 text-sm font-semibold ${
                   lang === "en"
-                    ? "border-primary bg-primary/10 text-primary"
+                    ? "bg-primary/10 text-primary hover:bg-primary/20"
                     : "border-border bg-card text-muted-foreground hover:bg-accent"
                 }`}
               >
                 <img src={flagEn} alt="English" className="h-4 w-6 rounded-sm object-cover" />
                 EN
-              </button>
+              </Button>
             </div>
           </div>
         ) : null}

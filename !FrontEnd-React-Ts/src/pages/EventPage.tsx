@@ -2,6 +2,8 @@ import { CalendarDays, MapPin, Sparkles, Ticket } from "lucide-react";
 import g1 from "@/assets/gallery-1.jpg";
 import g2 from "@/assets/gallery-2.jpg";
 import g3 from "@/assets/gallery-3.jpg";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { useState } from "react";
 import {
   Dialog,
@@ -65,18 +67,18 @@ export function EventPage() {
 
   return (
     <section className="mx-auto max-w-7xl px-6 pb-24 pt-20">
-      <span className="inline-flex w-fit items-center gap-2 rounded-full border border-primary/40 bg-background/40 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-primary backdrop-blur">
+      <Badge variant="outline" className="w-fit gap-2 rounded-full border-primary/40 bg-background/40 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-primary backdrop-blur">
         <Sparkles className="h-3.5 w-3.5" /> Event
-      </span>
+      </Badge>
       <h1 className="mt-4 max-w-3xl font-display text-5xl font-bold md:text-6xl">
         Hadirilah <span className="text-gradient-gold">pertunjukan</span> kami.
       </h1>
 
       <div className="mt-14 grid gap-8 md:grid-cols-3">
         {events.map((event) => (
-          <article
+          <Card
             key={event.id}
-            className="group flex flex-col overflow-hidden rounded-3xl border border-border/60 bg-card transition-colors hover:border-primary/60"
+            className="group flex flex-col overflow-hidden rounded-3xl border-border/60 bg-card transition-colors hover:border-primary/60"
           >
             <div className="relative aspect-[4/3] overflow-hidden">
               <img
@@ -85,17 +87,17 @@ export function EventPage() {
                 loading="lazy"
                 className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
-              <span
+              <Badge
                 className={`absolute left-4 top-4 rounded-full px-3 py-1 text-xs font-semibold ${
                   event.type === "Eksklusif"
                     ? "bg-gradient-gold text-primary-foreground shadow-gold"
-                    : "bg-muted text-muted-foreground border border-border"
+                    : "bg-muted text-muted-foreground border border-border hover:bg-muted"
                 }`}
               >
                 {event.type}
-              </span>
+              </Badge>
             </div>
-            <div className="flex flex-1 flex-col p-6">
+            <CardContent className="flex flex-1 flex-col p-6">
               <div className="flex items-center gap-4 text-xs text-muted-foreground">
                 <span className="flex items-center gap-1.5">
                   <CalendarDays className="h-3.5 w-3.5" /> {event.date}
@@ -104,32 +106,32 @@ export function EventPage() {
                   <MapPin className="h-3.5 w-3.5" /> {event.location}
                 </span>
               </div>
-              <h3 className="mt-4 font-display text-xl font-bold leading-snug">
+              <CardTitle className="mt-4 font-display text-xl font-bold leading-snug">
                 {event.title}
-              </h3>
-              <p className="mt-3 flex-1 text-sm text-muted-foreground">
+              </CardTitle>
+              <CardDescription className="mt-3 flex-1 text-sm">
                 {event.excerpt}
-              </p>
+              </CardDescription>
 
               <div className="mt-6 flex items-center justify-between border-t border-border/60 pt-4">
                 <span className="font-semibold text-primary">
                   {event.price}
                 </span>
                 {event.available ? (
-                  <button
+                  <Button
                     onClick={() => handleBuyTicket(event.id)}
-                    className="inline-flex items-center gap-2 rounded-full bg-gradient-gold px-4 py-2 text-sm font-semibold text-primary-foreground shadow-gold transition-transform hover:scale-[1.03]"
+                    className="rounded-full bg-gradient-gold px-4 py-2 text-sm font-semibold text-primary-foreground shadow-gold transition-transform hover:scale-[1.03]"
                   >
-                    <Ticket className="h-4 w-4" /> Beli Tiket
-                  </button>
+                    <Ticket className="h-4 w-4 mr-2" /> Beli Tiket
+                  </Button>
                 ) : (
                   <span className="text-sm font-medium text-muted-foreground">
                     Tiket Habis / Bebas
                   </span>
                 )}
               </div>
-            </div>
-          </article>
+            </CardContent>
+          </Card>
         ))}
       </div>
 
