@@ -2,19 +2,31 @@ import { useState } from "react";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { Mail, Menu, X } from "lucide-react";
 import logo from "@/assets/logo-bg-dark.png";
+import flagId from "@/assets/flag-id.png";
+import flagEn from "@/assets/flag-en.png";
 import { InstagramIcon, YoutubeIcon } from "./ui/icon-svg";
 import { ScrollToTop } from "./scrolling";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 const nav = [
   { to: "/", label: "Home" },
   { to: "/about", label: "About" },
   { to: "/gallery", label: "Gallery" },
   { to: "/news", label: "News" },
+  { to: "/event", label: "Event" },
   { to: "/contact", label: "Contact" },
 ] as const;
 
 export function SiteLayout() {
   const [open, setOpen] = useState(false);
+  const [lang, setLang] = useState<"id" | "en">("id");
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -61,42 +73,91 @@ export function SiteLayout() {
             ))}
           </nav>
 
-          <Link
-            to="/contact"
-            className="hidden rounded-full bg-gradient-gold px-5 py-2 text-sm font-semibold text-primary-foreground shadow-gold transition-transform hover:scale-[1.03] md:inline-flex"
-          >
-            Gabung UKM
-          </Link>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="hidden h-auto items-center gap-2 rounded-full border-border/60 bg-card px-4 py-2 text-sm font-semibold transition-colors hover:bg-accent hover:text-accent-foreground md:inline-flex">
+                <img
+                  src={lang === "id" ? flagId : flagEn}
+                  alt="Language"
+                  className="h-4 w-6 rounded-sm object-cover"
+                />
+                <span className="uppercase">{lang}</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-40">
+              <DropdownMenuItem onClick={() => setLang("id")} className="gap-3 cursor-pointer">
+                <img src={flagId} alt="Indonesia" className="h-4 w-6 rounded-sm object-cover" />
+                Indonesia
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setLang("en")} className="gap-3 cursor-pointer">
+                <img src={flagEn} alt="English" className="h-4 w-6 rounded-sm object-cover" />
+                English
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-          <button
-            type="button"
-            className="rounded-md border border-border p-2 text-primary md:hidden"
+          <Button
+            variant="outline"
+            size="icon"
+            className="md:hidden border-border text-primary"
             onClick={() => setOpen((value) => !value)}
             aria-label="Toggle menu"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
+          </Button>
         </div>
 
         {open ? (
-          <div className="border-t border-border/60 md:hidden">
-            <nav className="mx-auto flex max-w-7xl flex-col px-6 py-4">
-              {nav.map((item) => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  end={item.to === "/"}
-                  onClick={() => setOpen(false)}
-                  className={({ isActive }) =>
-                    `rounded-lg px-3 py-3 text-sm hover:text-primary ${
-                      isActive ? "text-primary" : "text-muted-foreground"
-                    }`
-                  }
-                >
-                  {item.label}
-                </NavLink>
-              ))}
-            </nav>
+          <div className="absolute left-4 right-4 top-[calc(100%+0.5rem)] md:hidden">
+            <Card className="shadow-lg border-border/60">
+              <CardContent className="flex flex-col p-4">
+                <nav className="flex flex-col gap-1">
+                  {nav.map((item) => (
+                    <NavLink
+                      key={item.to}
+                      to={item.to}
+                      end={item.to === "/"}
+                      onClick={() => setOpen(false)}
+                      className={({ isActive }) =>
+                        `rounded-lg px-4 py-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground ${
+                          isActive
+                            ? "bg-primary/10 text-primary"
+                            : "text-muted-foreground"
+                        }`
+                      }
+                    >
+                      {item.label}
+                    </NavLink>
+                  ))}
+                </nav>
+                <div className="mt-4 flex gap-3 pt-4 border-t border-border/60">
+                  <Button
+                    variant={lang === "id" ? "default" : "outline"}
+                    onClick={() => { setLang("id"); setOpen(false); }}
+                    className={`flex-1 flex items-center justify-center gap-2 rounded-lg py-5 text-sm font-semibold ${
+                      lang === "id"
+                        ? "bg-primary/10 text-primary hover:bg-primary/20"
+                        : "border-border bg-card text-muted-foreground hover:bg-accent"
+                    }`}
+                  >
+                    <img src={flagId} alt="Indonesia" className="h-4 w-6 rounded-sm object-cover" />
+                    ID
+                  </Button>
+                  <Button
+                    variant={lang === "en" ? "default" : "outline"}
+                    onClick={() => { setLang("en"); setOpen(false); }}
+                    className={`flex-1 flex items-center justify-center gap-2 rounded-lg py-5 text-sm font-semibold ${
+                      lang === "en"
+                        ? "bg-primary/10 text-primary hover:bg-primary/20"
+                        : "border-border bg-card text-muted-foreground hover:bg-accent"
+                    }`}
+                  >
+                    <img src={flagEn} alt="English" className="h-4 w-6 rounded-sm object-cover" />
+                    EN
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         ) : null}
       </header>

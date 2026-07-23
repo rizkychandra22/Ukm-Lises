@@ -1,5 +1,7 @@
 import { Eye, Heart, Sparkles, Target } from "lucide-react";
 import img from "@/assets/gallery-2.jpg";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 export function AboutPage() {
   return (
@@ -8,9 +10,9 @@ export function AboutPage() {
         {/* <p className="text-sm uppercase tracking-[0.25em] text-primary">
           Tentang Kami
         </p> */}
-        <span className="inline-flex w-fit items-center gap-2 rounded-full border border-primary/40 bg-background/40 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-primary backdrop-blur">
+        <Badge variant="outline" className="w-fit gap-2 rounded-full border-primary/40 bg-background/40 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-primary backdrop-blur">
           <Sparkles className="h-3.5 w-3.5" /> Tentang Kami
-        </span>
+        </Badge>
         <h1 className="mt-4 max-w-3xl font-display text-5xl font-bold md:text-6xl">
           Menyalakan tradisi lewat{" "}
           <span className="text-gradient-gold">kolektif seni mahasiswa</span>.
@@ -69,16 +71,18 @@ export function AboutPage() {
               desc: "Kolektivitas, disiplin latihan, dan cinta pada akar budaya tanpa menutup diri pada kebaruan.",
             },
           ].map((item) => (
-            <div
+            <Card
               key={item.title}
-              className="rounded-3xl border border-border/60 bg-card p-8"
+              className="rounded-3xl border-border/60 bg-card"
             >
-              <div className="mb-5 grid h-12 w-12 place-items-center rounded-2xl bg-gradient-gold shadow-gold">
-                <item.icon className="h-6 w-6 text-primary-foreground" />
-              </div>
-              <h3 className="font-display text-2xl font-bold">{item.title}</h3>
-              <p className="mt-3 text-muted-foreground">{item.desc}</p>
-            </div>
+              <CardContent className="p-8">
+                <div className="mb-5 grid h-12 w-12 place-items-center rounded-2xl bg-gradient-gold shadow-gold">
+                  <item.icon className="h-6 w-6 text-primary-foreground" />
+                </div>
+                <CardTitle className="font-display text-2xl font-bold">{item.title}</CardTitle>
+                <CardDescription className="mt-3 text-base">{item.desc}</CardDescription>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </section>
