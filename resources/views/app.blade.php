@@ -6,20 +6,23 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    {{-- SEO Dasar Google --}}
+    {{-- SEO & Dynamic Meta --}}
     <title>{{ $title ?? 'Lises Asmarandana | Seni Musik & Tari UMMI' }}</title>
     <meta name="description" content="{{ $description ?? 'Unit Kegiatan Mahasiswa Seni Musik dan Tari Lises Asmarandana Universitas Muhammadiyah Sukabumi. Merawat budaya, memanggung talenta.' }}">
-    <meta name="keywords" content="Lises Asmarandana, UKM Seni UMMI, Seni Musik Sukabumi, Tari Tradisional UMMI, Universitas Muhammadiyah Sukabumi, UKM Kampus">
+    <meta name="keywords" content="Lises Asmarandana, UKM Seni UMMI, Musik dan Tari Sukabumi">
     <meta name="author" content="UKM Lises Asmarandana">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ url()->current() }}">
 
-    {{-- Open Graph Meta (Preview WhatsApp, Facebook, LinkedIn, Telegram) --}}
-    <meta property="og:type" content="website">
+    {{-- Open Graph / WhatsApp Preview --}}
+    <meta property="og:type" content="{{ isset($news) ? 'article' : 'website' }}">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:title" content="{{ $title ?? 'Lises Asmarandana | Seni Musik & Tari UMMI' }}">
-    <meta property="og:description" content="{{ $description ?? 'Unit Kegiatan Mahasiswa Seni Musik dan Tari Lises Asmarandana Universitas Muhammadiyah Sukabumi. Merawat budaya, memanggung talenta.' }}">
-    <meta property="og:image" content="{{ Vite::asset('!FrontEnd-React-Ts/src/assets/logo-bg-light.png') }}">
+    <meta property="og:description" content="{{ $description ?? 'Unit Kegiatan Mahasiswa Seni Musik dan Tari Lises Asmarandana Universitas Muhammadiyah Sukabumi.' }}">
+    
+    {{-- Gambar Dinamis / Absolute URL --}}
+    <meta property="og:image" content="{{ $image ?? url(Vite::asset('!FrontEnd-React-Ts/src/assets/logo-bg-light.png')) }}">
+    <meta property="og:image:secure_url" content="{{ $image ?? url(Vite::asset('!FrontEnd-React-Ts/src/assets/logo-bg-light.png')) }}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:site_name" content="Lises Asmarandana UMMI">
@@ -29,12 +32,12 @@
     <meta name="twitter:url" content="{{ url()->current() }}">
     <meta name="twitter:title" content="{{ $title ?? 'Lises Asmarandana | Seni Musik & Tari UMMI' }}">
     <meta name="twitter:description" content="{{ $description ?? 'Unit Kegiatan Mahasiswa Seni Musik dan Tari Lises Asmarandana Universitas Muhammadiyah Sukabumi.' }}">
-    <meta name="twitter:image" content="{{ Vite::asset('!FrontEnd-React-Ts/src/assets/logo-bg-light.png') }}">
+    <meta name="twitter:image" content="{{ $image ?? url(Vite::asset('!FrontEnd-React-Ts/src/assets/logo-bg-light.png')) }}">
 
     {{-- Favicon --}}
-    <link rel="icon" type="image/png" href="{{ Vite::asset('!FrontEnd-React-Ts/src/assets/logo-bg-light.png') }}" />
+    <link rel="icon" type="image/png" href="{{ url(Vite::asset('!FrontEnd-React-Ts/src/assets/logo-bg-light.png')) }}" />
 
-    {{-- Preconnect Font Google (Untuk Performa) --}}
+    {{-- Preconnect Font Google --}}
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 
