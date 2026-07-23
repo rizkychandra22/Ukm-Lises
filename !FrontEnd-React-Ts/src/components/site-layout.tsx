@@ -12,12 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 const nav = [
@@ -101,67 +96,70 @@ export function SiteLayout() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="md:hidden border-border text-primary"
-                aria-label="Toggle menu"
-              >
-                <Menu className="h-5 w-5" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="flex w-full flex-col border-border/60 bg-background/95 backdrop-blur-xl px-6 py-6 sm:max-w-sm">
-              <SheetTitle className="sr-only">Menu Navigasi Mobile</SheetTitle>
-              <nav className="mt-8 flex flex-col gap-2">
-                {nav.map((item) => (
-                  <NavLink
-                    key={item.to}
-                    to={item.to}
-                    end={item.to === "/"}
-                    onClick={() => setOpen(false)}
-                    className={({ isActive }) =>
-                      `rounded-lg px-4 py-4 text-base font-medium transition-colors hover:bg-accent hover:text-accent-foreground ${
-                        isActive
-                          ? "bg-primary/10 text-primary"
-                          : "text-muted-foreground"
-                      }`
-                    }
-                  >
-                    {item.label}
-                  </NavLink>
-                ))}
-              </nav>
-              <div className="mt-auto flex gap-3 pt-6 border-t border-border/60">
-                <Button
-                  variant={lang === "id" ? "default" : "outline"}
-                  onClick={() => { setLang("id"); setOpen(false); }}
-                  className={`flex-1 flex items-center justify-center gap-2 rounded-lg py-6 text-sm font-semibold ${
-                    lang === "id"
-                      ? "bg-primary/10 text-primary hover:bg-primary/20"
-                      : "border-border bg-card text-muted-foreground hover:bg-accent"
-                  }`}
-                >
-                  <img src={flagId} alt="Indonesia" className="h-4 w-6 rounded-sm object-cover" />
-                  ID
-                </Button>
-                <Button
-                  variant={lang === "en" ? "default" : "outline"}
-                  onClick={() => { setLang("en"); setOpen(false); }}
-                  className={`flex-1 flex items-center justify-center gap-2 rounded-lg py-6 text-sm font-semibold ${
-                    lang === "en"
-                      ? "bg-primary/10 text-primary hover:bg-primary/20"
-                      : "border-border bg-card text-muted-foreground hover:bg-accent"
-                  }`}
-                >
-                  <img src={flagEn} alt="English" className="h-4 w-6 rounded-sm object-cover" />
-                  EN
-                </Button>
-              </div>
-            </SheetContent>
-          </Sheet>
+          <Button
+            variant="outline"
+            size="icon"
+            className="md:hidden border-border text-primary"
+            onClick={() => setOpen((value) => !value)}
+            aria-label="Toggle menu"
+          >
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
         </div>
+
+        {open ? (
+          <div className="absolute left-4 right-4 top-[calc(100%+0.5rem)] md:hidden">
+            <Card className="shadow-lg border-border/60">
+              <CardContent className="flex flex-col p-4">
+                <nav className="flex flex-col gap-1">
+                  {nav.map((item) => (
+                    <NavLink
+                      key={item.to}
+                      to={item.to}
+                      end={item.to === "/"}
+                      onClick={() => setOpen(false)}
+                      className={({ isActive }) =>
+                        `rounded-lg px-4 py-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground ${
+                          isActive
+                            ? "bg-primary/10 text-primary"
+                            : "text-muted-foreground"
+                        }`
+                      }
+                    >
+                      {item.label}
+                    </NavLink>
+                  ))}
+                </nav>
+                <div className="mt-4 flex gap-3 pt-4 border-t border-border/60">
+                  <Button
+                    variant={lang === "id" ? "default" : "outline"}
+                    onClick={() => { setLang("id"); setOpen(false); }}
+                    className={`flex-1 flex items-center justify-center gap-2 rounded-lg py-5 text-sm font-semibold ${
+                      lang === "id"
+                        ? "bg-primary/10 text-primary hover:bg-primary/20"
+                        : "border-border bg-card text-muted-foreground hover:bg-accent"
+                    }`}
+                  >
+                    <img src={flagId} alt="Indonesia" className="h-4 w-6 rounded-sm object-cover" />
+                    ID
+                  </Button>
+                  <Button
+                    variant={lang === "en" ? "default" : "outline"}
+                    onClick={() => { setLang("en"); setOpen(false); }}
+                    className={`flex-1 flex items-center justify-center gap-2 rounded-lg py-5 text-sm font-semibold ${
+                      lang === "en"
+                        ? "bg-primary/10 text-primary hover:bg-primary/20"
+                        : "border-border bg-card text-muted-foreground hover:bg-accent"
+                    }`}
+                  >
+                    <img src={flagEn} alt="English" className="h-4 w-6 rounded-sm object-cover" />
+                    EN
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        ) : null}
       </header>
 
       <main>
