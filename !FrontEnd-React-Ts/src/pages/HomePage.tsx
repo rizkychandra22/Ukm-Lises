@@ -14,6 +14,10 @@ export function HomePage() {
           alt="Pertunjukan tari Lises Asmarandana"
           width={1600}
           height={1008}
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
+          sizes="100vw"
           className="absolute inset-0 h-full w-full object-cover"
         />
         <div
