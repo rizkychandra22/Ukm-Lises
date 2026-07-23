@@ -3,6 +3,7 @@ import { Link, NavLink, Outlet } from "react-router-dom";
 import { Mail, Menu, X } from "lucide-react";
 import logo from "@/assets/logo-bg-dark.png";
 import { InstagramIcon, YoutubeIcon } from "./ui/icon-svg";
+import { ScrollToTop } from "./scrolling";
 
 const nav = [
   { to: "/", label: "Home" },
@@ -17,6 +18,7 @@ export function SiteLayout() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <ScrollToTop />
       <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Link to="/" className="group flex items-center gap-3">
@@ -177,8 +179,9 @@ export function SiteLayout() {
         </div>
         <div className="border-t border-border/60">
           <p className="mx-auto max-w-7xl px-6 py-5 text-center text-xs text-muted-foreground">
-            &copy; {new Date().getFullYear()} UKM Lises Asmarandana - Universitas
-            Muhammadiyah Sukabumi
+            &copy; {new Date().getFullYear()} UKM Lises Asmarandana &mdash; Universitas
+            Muhammadiyah Sukabumi &mdash; Created By 
+            <a href="https://portofolio-rizky-chandra.laravel.cloud/" className="text-primary hover:underline"> Chndr</a>
           </p>
         </div>
       </footer>
