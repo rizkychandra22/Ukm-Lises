@@ -2,8 +2,16 @@ import { useState } from "react";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { Mail, Menu, X } from "lucide-react";
 import logo from "@/assets/logo-bg-dark.png";
+import flagId from "@/assets/flag-id.png";
+import flagEn from "@/assets/flag-en.png";
 import { InstagramIcon, YoutubeIcon } from "./ui/icon-svg";
 import { ScrollToTop } from "./scrolling";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const nav = [
   { to: "/", label: "Home" },
@@ -16,6 +24,7 @@ const nav = [
 
 export function SiteLayout() {
   const [open, setOpen] = useState(false);
+  const [lang, setLang] = useState<"id" | "en">("id");
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -62,12 +71,28 @@ export function SiteLayout() {
             ))}
           </nav>
 
-          <Link
-            to="/contact"
-            className="hidden rounded-full bg-gradient-gold px-5 py-2 text-sm font-semibold text-primary-foreground shadow-gold transition-transform hover:scale-[1.03] md:inline-flex"
-          >
-            Gabung UKM
-          </Link>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="hidden items-center gap-2 rounded-full border border-border/60 bg-card px-4 py-2 text-sm font-semibold transition-colors hover:bg-accent hover:text-accent-foreground md:inline-flex">
+                <img
+                  src={lang === "id" ? flagId : flagEn}
+                  alt="Language"
+                  className="h-4 w-6 rounded-sm object-cover"
+                />
+                <span className="uppercase">{lang}</span>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-40">
+              <DropdownMenuItem onClick={() => setLang("id")} className="gap-3 cursor-pointer">
+                <img src={flagId} alt="Indonesia" className="h-4 w-6 rounded-sm object-cover" />
+                Indonesia
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setLang("en")} className="gap-3 cursor-pointer">
+                <img src={flagEn} alt="English" className="h-4 w-6 rounded-sm object-cover" />
+                English
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           <button
             type="button"
@@ -98,6 +123,30 @@ export function SiteLayout() {
                 </NavLink>
               ))}
             </nav>
+            <div className="mx-auto flex max-w-7xl gap-3 px-6 pb-6 pt-2">
+              <button
+                onClick={() => { setLang("id"); setOpen(false); }}
+                className={`flex flex-1 items-center justify-center gap-2 rounded-lg border py-2.5 text-sm font-semibold transition-colors ${
+                  lang === "id"
+                    ? "border-primary bg-primary/10 text-primary"
+                    : "border-border bg-card text-muted-foreground hover:bg-accent"
+                }`}
+              >
+                <img src={flagId} alt="Indonesia" className="h-4 w-6 rounded-sm object-cover" />
+                ID
+              </button>
+              <button
+                onClick={() => { setLang("en"); setOpen(false); }}
+                className={`flex flex-1 items-center justify-center gap-2 rounded-lg border py-2.5 text-sm font-semibold transition-colors ${
+                  lang === "en"
+                    ? "border-primary bg-primary/10 text-primary"
+                    : "border-border bg-card text-muted-foreground hover:bg-accent"
+                }`}
+              >
+                <img src={flagEn} alt="English" className="h-4 w-6 rounded-sm object-cover" />
+                EN
+              </button>
+            </div>
           </div>
         ) : null}
       </header>
