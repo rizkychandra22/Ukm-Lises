@@ -2,7 +2,7 @@ import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, CalendarDays, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { posts } from "@/data/news";
+import { posts } from "@/constants/news";
 
 export function NewsDetailPage() {
   const { slug } = useParams<{ slug: string }>();

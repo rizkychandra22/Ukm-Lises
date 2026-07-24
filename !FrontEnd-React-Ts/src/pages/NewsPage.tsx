@@ -3,7 +3,7 @@ import { ArrowUpRight, CalendarDays, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { posts } from "@/data/news";
+import { posts } from "@/constants/news";
 
 export function NewsPage() {
   return (
