@@ -6,9 +6,12 @@ import g2 from "@/assets/gallery-2.jpg";
 import g3 from "@/assets/gallery-3.jpg";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
+import { useTranslation } from "@/i18n";
 
 export function HomePage() {
+  const { t } = useTranslation("HomePage");
+
   return (
     <>
       <section className="relative overflow-hidden">
@@ -32,33 +35,31 @@ export function HomePage() {
             <Sparkles className="h-3.5 w-3.5" /> UKM Lises - UMMI
           </Badge>
           <h1 className="mt-6 max-w-4xl font-display text-5xl font-black leading-[1.05] md:text-7xl">
-            Bergema dalam <span className="text-gradient-gold">Nada</span>,
+            {t("banner.title_t1")} <span className="text-gradient-gold">{t("banner.title_y1")}</span>,
             <br />
-            Bercerita lewat <span className="text-gradient-gold">Gerak</span>.
+            {t("banner.title_t2")} <span className="text-gradient-gold">{t("banner.title_y2")}</span>.
           </h1>
           <p className="mt-6 max-w-2xl text-lg text-muted-foreground">
-            UKM Lises Asmarandana adalah rumah bagi mahasiswa Universitas
-            Muhammadiyah Sukabumi yang mencintai seni musik dan tari - merawat
-            tradisi, menghidupkan panggung.
+            {t("banner.description")}
           </p>
           <div className="mt-10 flex flex-wrap gap-4">
             <Button asChild className="rounded-full bg-gradient-gold px-7 py-6 text-sm font-semibold text-primary-foreground shadow-gold transition-transform hover:scale-[1.03]">
               <Link to="/about">
-                Kenali Kami <ArrowRight className="h-4 w-4 ml-2" />
+                {t("banner.btn_about")} <ArrowRight className="h-4 w-4 ml-2" />
               </Link>
             </Button>
-            <Button asChild variant="outline" className="rounded-full border-primary/40 px-7 py-6 text-sm font-semibold text-primary hover:bg-primary/10">
+            <Button asChild variant="outline" className="rounded-full border-primary/40 px-7 py-6 text-sm font-semibold text-primary transition-colors hover:bg-primary/10 hover:text-white">
               <Link to="/gallery">
-                Lihat Galeri
+                {t("banner.btn_gallery")}
               </Link>
             </Button>
           </div>
 
           <div className="mt-16 grid max-w-3xl gap-6 sm:grid-cols-3">
             {[
-              { n: "120+", l: "Anggota Aktif" },
-              { n: "45", l: "Pementasan" },
-              { n: "12", l: "Tahun Berkarya" },
+              { n: "120+", l: t("banner.card_1") },
+              { n: "45", l: t("banner.card_2") },
+              { n: "12", l: t("banner.card_3") },
             ].map((item) => (
               <Card
                 key={item.l}
@@ -82,15 +83,14 @@ export function HomePage() {
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
             <p className="text-sm uppercase tracking-[0.25em] text-primary">
-              Divisi Kami
+              {t("section_divisi.title")}
             </p>
             <h2 className="mt-3 max-w-2xl font-display text-4xl font-bold md:text-5xl">
-              Dua nafas, satu <span className="text-gradient-gold">panggung</span>.
+              {t("section_divisi.title_t1")} <span className="text-gradient-gold">{t("section_divisi.title_y1")}</span>.
             </h2>
           </div>
           <p className="max-w-md text-muted-foreground">
-            Musik dan tari berjalan berdampingan di Lises Asmarandana - saling
-            mengisi dalam setiap karya dan pertunjukan.
+            {t("section_divisi.desc")}
           </p>
         </div>
 
@@ -98,13 +98,13 @@ export function HomePage() {
           {[
             {
               icon: Music2,
-              title: "Divisi Musik",
-              desc: "Gamelan, kacapi suling, hingga kolaborasi kontemporer. Kami menghidupkan bunyi dari akar tradisi.",
+              title: t("section_divisi.division.title_1"),
+              desc: t("section_divisi.division.desc_1"),
             },
             {
               icon: Users,
-              title: "Divisi Tari",
-              desc: "Jaipong, tari kreasi, dan koreografi baru - gerak yang jujur berpadu dengan cerita budaya.",
+              title: t("section_divisi.division.title_2"),
+              desc: t("section_divisi.division.desc_2"),
             },
           ].map((division) => (
             <Card
@@ -132,17 +132,17 @@ export function HomePage() {
         <div className="flex items-end justify-between">
           <div>
             <p className="text-sm uppercase tracking-[0.25em] text-primary">
-              Momen
+              {t("section_momen.title")}
             </p>
             <h2 className="mt-3 font-display text-4xl font-bold md:text-5xl">
-              Cuplikan panggung
+              {t("section_momen.subtitle")}
             </h2>
           </div>
           <Link
             to="/gallery"
             className="hidden text-sm font-semibold text-primary hover:underline sm:inline-flex"
           >
-            Lihat Galeri 
+            {t("section_momen.link")} 
           </Link>
         </div>
         <div className="mt-10 grid gap-4 md:grid-cols-3">
