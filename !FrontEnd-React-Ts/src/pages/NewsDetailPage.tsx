@@ -29,7 +29,7 @@ export function NewsDetailPage() {
 
   return (
     <article className="mx-auto max-w-4xl px-6 pb-12 pt-12 md:pb-16 md:pt-16">
-      <Button asChild variant="ghost" className="mb-8 -ml-4 text-muted-foreground hover:text-primary">
+      <Button asChild variant="ghost" className="mb-4 -ml-4 text-muted-foreground hover:text-primary">
         <Link to="/news">
           <ArrowLeft className="mr-2 h-4 w-4" /> {t("btn_back")}
         </Link>
