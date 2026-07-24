@@ -149,7 +149,7 @@ export function EventPage() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button onClick={() => setIsDialogOpen(false)} variant="outline">
+            <Button onClick={() => setIsDialogOpen(false)} variant="outline" className="mt-2 sm:mt-0">
               Tutup
             </Button>
             <Button onClick={() => setIsDialogOpen(false)} className="bg-gradient-gold text-primary-foreground">
