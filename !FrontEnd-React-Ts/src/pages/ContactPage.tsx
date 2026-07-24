@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Mail, MapPin, Phone, Send, Sparkles } from "lucide-react";
-import { InstagramIcon, YoutubeIcon } from "@/components/ui/icon-svg";
+import { Instagram, Mail, MapPin, Phone, Send, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -37,9 +36,6 @@ export function ContactPage() {
 
   return (
     <section className="mx-auto max-w-7xl px-6 pb-12 pt-12 md:pb-16 md:pt-16">
-      {/* <p className="text-sm uppercase tracking-[0.25em] text-primary">
-        Kontak
-      </p> */}
       <Badge variant="outline" className="w-fit gap-2 rounded-full border-primary/40 bg-background/40 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-primary backdrop-blur">
         <Sparkles className="h-3.5 w-3.5" /> Kontak
       </Badge>
@@ -52,14 +48,97 @@ export function ContactPage() {
         anggota? Silakan hubungi kami melalui kanal berikut.
       </p>
 
-      <div className="mt-14 grid gap-10 md:grid-cols-5">
-        <div className="space-y-4 md:col-span-2">
+      <div className="mt-14 flex flex-col gap-10">
+        {/* Top Section: Form and Map */}
+        <div className="grid gap-10 lg:grid-cols-2">
+          {/* Map */}
+          <Card className="relative rounded-3xl border-border/60 bg-card overflow-hidden min-h-[400px]">
+            <iframe 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.596001188339!2d106.9298453147728!3d-6.938814994986705!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68482939923835%3A0xc39f88636f3322e7!2sUniversitas%20Muhammadiyah%20Sukabumi!5e0!3m2!1sid!2sid!4v1680123456789!5m2!1sid!2sid" 
+              width="100%" 
+              height="100%" 
+              style={{ border: 0, position: "absolute", inset: 0 }} 
+              allowFullScreen 
+              loading="lazy" 
+              referrerPolicy="no-referrer-when-downgrade"
+            ></iframe> 
+            
+            {/* alamat */}
+            <div className="absolute bottom-6 left-6 right-6">
+              <Card className="rounded-2xl border-border/60 bg-card/85 backdrop-blur-md shadow-lg">
+                <CardContent className="flex items-center gap-4 p-5">
+                  <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-gradient-gold shadow-gold">
+                    <MapPin className="h-6 w-6 text-primary-foreground" />
+                  </div>
+                  <div>
+                    <div className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">
+                      Sekretariat
+                    </div>
+                    <div className="mt-1 font-medium text-foreground text-sm leading-snug">
+                      Kampus UMMI, Jl. R. Syamsudin, S.H. No. 50, Sukabumi
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </Card>
+
+          {/* Form */}
+          <Card className="rounded-3xl border-border/60 bg-card h-full">
+            <CardContent className="p-8 h-full">
+              <form
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  setSent(true);
+                }}
+                className="flex flex-col justify-between h-full space-y-5"
+              >
+                <div className="space-y-5">
+                  <div className="grid gap-5 sm:grid-cols-2">
+                    <Field label="Nama" name="name" placeholder="Nama lengkap" />
+                    <Field
+                      label="Email"
+                      name="email"
+                      type="email"
+                      placeholder="nama@email.com"
+                    />
+                  </div>
+                  <Field
+                    label="Subjek"
+                    name="subject"
+                    placeholder="Kolaborasi / undangan / lainnya"
+                  />
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Pesan</label>
+                    <Textarea
+                      required
+                      rows={6}
+                      placeholder="Tulis pesan Anda..."
+                      className="rounded-xl border-border bg-background px-4 py-3 text-sm resize-none"
+                    />
+                  </div>
+                </div>
+                <div className="pt-2">
+                  <Button
+                    type="submit"
+                    className="rounded-full bg-gradient-gold px-7 py-6 text-sm font-semibold text-primary-foreground shadow-gold transition-transform hover:scale-[1.02] w-full sm:w-auto"
+                  >
+                    <Send className="h-4 w-4 mr-2" /> Kirim Pesan
+                  </Button>
+                  {sent && (
+                    <p className="mt-4 text-sm text-primary">
+                      Terima kasih! Pesan Anda telah terkirim.
+                    </p>
+                  )}
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Bottom Section: 4 Contact Items */}
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mt-4">
           {[
-            {
-              icon: MapPin,
-              title: "Sekretariat",
-              val: "Kampus UMMI, Jl. R. Syamsudin, S.H. No. 50, Sukabumi",
-            },
             {
               icon: Mail,
               title: "Email",
@@ -70,92 +149,32 @@ export function ContactPage() {
               title: "WhatsApp",
               val: "+62 812-3456-7890",
             },
+            {
+              icon: Instagram,
+              title: "Instagram",
+              val: "@lises.asmarandana",
+            },
           ].map((contact) => (
             <Card
               key={contact.title}
-              className="rounded-2xl border-border/60 bg-card"
+              className="rounded-3xl border-border/60 bg-card transition-colors hover:border-primary/40"
             >
-              <CardContent className="flex gap-4 p-5">
-                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gradient-gold shadow-gold">
-                  <contact.icon className="h-5 w-5 text-primary-foreground" />
+              <CardContent className="flex items-center gap-4 p-5">
+                <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-gradient-gold shadow-gold">
+                  <contact.icon className="h-6 w-6 text-primary-foreground" />
                 </div>
                 <div>
-                  <div className="text-xs uppercase tracking-wider text-muted-foreground">
+                  <div className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">
                     {contact.title}
                   </div>
-                  <div className="mt-1 font-medium text-foreground">
+                  <div className="mt-1 font-medium text-foreground text-sm leading-snug break-all sm:break-normal">
                     {contact.val}
                   </div>
                 </div>
               </CardContent>
             </Card>
           ))}
-          <div className="flex gap-3 pt-2">
-            <a
-              href="#"
-              className="grid h-11 w-11 place-items-center rounded-xl border border-border text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
-              aria-label="Instagram"
-            >
-              {/* IG Icons */}
-              <InstagramIcon />
-            </a>
-            <a
-              href="#"
-              className="grid h-11 w-11 place-items-center rounded-xl border border-border text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
-              aria-label="YouTube"
-            >
-              {/* YT Icons */}
-              <YoutubeIcon />
-            </a>
-          </div>
         </div>
-
-        <Card className="rounded-3xl border-border/60 bg-card md:col-span-3">
-          <CardContent className="p-8">
-            <form
-              onSubmit={(event) => {
-                event.preventDefault();
-                setSent(true);
-              }}
-              className="space-y-5"
-            >
-          <div className="grid gap-5 sm:grid-cols-2">
-            <Field label="Nama" name="name" placeholder="Nama lengkap" />
-            <Field
-              label="Email"
-              name="email"
-              type="email"
-              placeholder="nama@email.com"
-            />
-          </div>
-          <Field
-            label="Subjek"
-            name="subject"
-            placeholder="Kolaborasi / undangan / lainnya"
-          />
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Pesan</label>
-            <Textarea
-              required
-              rows={5}
-              placeholder="Tulis pesan Anda..."
-              className="rounded-xl border-border bg-background px-4 py-3 text-sm"
-            />
-          </div>
-          <Button
-            type="submit"
-            className="rounded-full bg-gradient-gold px-7 py-6 text-sm font-semibold text-primary-foreground shadow-gold transition-transform hover:scale-[1.02]"
-          >
-            <Send className="h-4 w-4 mr-2" /> Kirim Pesan
-          </Button>
-          {sent ? (
-            <p className="text-sm text-primary">
-              Terima kasih! Pesan Anda telah terkirim.
-            </p>
-          ) : null}
-            </form>
-          </CardContent>
-        </Card>
       </div>
     </section>
   );
