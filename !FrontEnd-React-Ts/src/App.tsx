@@ -5,6 +5,7 @@ import { ContactPage } from "./pages/ContactPage";
 import { GalleryPage } from "./pages/GalleryPage";
 import { HomePage } from "./pages/HomePage";
 import { NewsPage } from "./pages/NewsPage";
+import { NewsDetailPage } from "./pages/NewsDetailPage";
 import { EventPage } from "./pages/EventPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 
@@ -17,6 +18,7 @@ function App() {
           <Route path="about" element={<AboutPage />} />
           <Route path="gallery" element={<GalleryPage />} />
           <Route path="news" element={<NewsPage />} />
+          <Route path="news/:slug" element={<NewsDetailPage />} />
           <Route path="event" element={<EventPage />} />
           <Route path="contact" element={<ContactPage />} />
           <Route path="*" element={<NotFoundPage />} />

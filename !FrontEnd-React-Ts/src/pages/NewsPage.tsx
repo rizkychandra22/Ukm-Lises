@@ -1,37 +1,9 @@
+import { Link } from "react-router-dom";
 import { ArrowUpRight, CalendarDays, Sparkles } from "lucide-react";
-import g1 from "@/assets/gallery-3.jpg";
-import g2 from "@/assets/gallery-2.jpg";
-import g3 from "@/assets/gallery-1.jpg";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-
-const posts = [
-  {
-    tag: "Pementasan",
-    date: "12 Jul 2026",
-    title: "Gelar Karya Tahunan: Malam Asmarandana",
-    excerpt:
-      "Pementasan tahunan menampilkan kolaborasi musik gamelan dan tari kreasi mahasiswa lintas angkatan.",
-    img: g1,
-  },
-  {
-    tag: "Workshop",
-    date: "28 Jun 2026",
-    title: "Workshop Kacapi Suling untuk Pemula",
-    excerpt:
-      "Kelas terbuka bagi mahasiswa UMMI yang ingin mengenal dasar-dasar permainan kacapi suling.",
-    img: g3,
-  },
-  {
-    tag: "Prestasi",
-    date: "05 Mei 2026",
-    title: "Juara 2 Festival Tari Se-Jawa Barat",
-    excerpt:
-      "Tim tari Lises Asmarandana meraih penghargaan pada Festival Tari Kreasi Se-Jawa Barat 2026.",
-    img: g2,
-  },
-];
+import { posts } from "@/data/news";
 
 export function NewsPage() {
   return (
@@ -72,10 +44,13 @@ export function NewsPage() {
                 {post.excerpt}
               </CardDescription>
               <Button
+                asChild
                 variant="link"
                 className="mt-5 h-auto p-0 inline-flex items-center gap-1.5 justify-start text-sm font-semibold text-primary"
               >
-                Baca selengkapnya <ArrowUpRight className="h-4 w-4" />
+                <Link to={`/news/${post.slug}`}>
+                  Baca selengkapnya <ArrowUpRight className="h-4 w-4" />
+                </Link>
               </Button>
             </CardContent>
           </Card>
