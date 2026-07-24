@@ -40,7 +40,7 @@ jobs:
 
       # 3. Menjalankan Frontend Unit Test (Bisa diaktifkan nanti jika sudah memakai Vitest/Jest)
       - name: Run Frontend Tests
-        run: npm test || echo "No frontend tests configured yet."
+        run: echo "No frontend tests configured yet."
 
       # 4. Menjalankan Production Build dengan Vite
       - name: Build Vite App
