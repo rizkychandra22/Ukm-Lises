@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Instagram, Mail, MapPin, Phone, Send, Sparkles } from "lucide-react";
+import { Mail, MapPin, Phone, Send, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { InstagramIcon } from "@/components/ui/icon-svg";
 
 type FieldProps = {
   label: string;
@@ -150,7 +151,7 @@ export function ContactPage() {
               val: "+62 812-3456-7890",
             },
             {
-              icon: Instagram,
+              icon: InstagramIcon,
               title: "Instagram",
               val: "@lises.asmarandana",
             },
