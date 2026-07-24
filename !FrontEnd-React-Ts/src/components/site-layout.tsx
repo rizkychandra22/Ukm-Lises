@@ -52,7 +52,7 @@ export function SiteLayout() {
                 Lises Asmarandana
               </span>
               <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                Universitas Muhammadiyah Sukabumi
+                {t("nav.brand")}
               </span>
             </span>
           </Link>
