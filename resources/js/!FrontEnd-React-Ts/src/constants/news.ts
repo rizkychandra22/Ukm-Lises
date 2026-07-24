@@ -1,10 +1,10 @@
 import g1 from "@/assets/gallery-3.jpg";
 import g2 from "@/assets/gallery-2.jpg";
 import g3 from "@/assets/gallery-1.jpg";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 export const usePosts = () => {
-  const {t} = useTranslation("common");
+  const { t } = useTranslation("common");
 
   return [
     {

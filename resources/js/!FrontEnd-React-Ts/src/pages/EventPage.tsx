@@ -47,8 +47,7 @@ const events = [
     title: "Malam Gala: Harmoni Tatar Sunda",
     location: "Ballroom Hotel Santika Sukabumi",
     price: "Rp 100.000",
-    excerpt:
-      "Pertunjukan spektakuler dengan tata cahaya memukau dan penampilan maestro tamu.",
+    excerpt: "Pertunjukan spektakuler dengan tata cahaya memukau dan penampilan maestro tamu.",
     img: g1,
     available: true,
   },
@@ -67,7 +66,10 @@ export function EventPage() {
 
   return (
     <section className="mx-auto max-w-7xl px-6 pb-12 pt-12 md:pb-16 md:pt-16">
-      <Badge variant="outline" className="w-fit gap-2 rounded-full border-primary/40 bg-background/40 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-primary backdrop-blur">
+      <Badge
+        variant="outline"
+        className="w-fit gap-2 rounded-full border-primary/40 bg-background/40 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-primary backdrop-blur"
+      >
         <Sparkles className="h-3.5 w-3.5" /> Event
       </Badge>
       <h1 className="mt-4 max-w-3xl font-display text-5xl font-bold leading-[1.15] md:text-6xl">
@@ -109,14 +111,10 @@ export function EventPage() {
               <CardTitle className="mt-4 font-display text-xl font-bold leading-snug">
                 {event.title}
               </CardTitle>
-              <CardDescription className="mt-3 flex-1 text-sm">
-                {event.excerpt}
-              </CardDescription>
+              <CardDescription className="mt-3 flex-1 text-sm">{event.excerpt}</CardDescription>
 
               <div className="mt-6 flex items-center justify-between border-t border-border/60 pt-4">
-                <span className="font-semibold text-primary">
-                  {event.price}
-                </span>
+                <span className="font-semibold text-primary">{event.price}</span>
                 {event.available ? (
                   <Button
                     onClick={() => handleBuyTicket(event.id)}
@@ -149,10 +147,17 @@ export function EventPage() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button onClick={() => setIsDialogOpen(false)} variant="outline" className="mt-2 sm:mt-0">
+            <Button
+              onClick={() => setIsDialogOpen(false)}
+              variant="outline"
+              className="mt-2 sm:mt-0"
+            >
               Tutup
             </Button>
-            <Button onClick={() => setIsDialogOpen(false)} className="bg-gradient-gold text-primary-foreground">
+            <Button
+              onClick={() => setIsDialogOpen(false)}
+              className="bg-gradient-gold text-primary-foreground"
+            >
               Konfirmasi
             </Button>
           </DialogFooter>

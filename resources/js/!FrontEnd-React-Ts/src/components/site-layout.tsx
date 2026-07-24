@@ -65,9 +65,7 @@ export function SiteLayout() {
                 end={item.to === "/"}
                 className={({ isActive }) =>
                   `rounded-full px-4 py-2 text-sm font-medium transition-colors hover:text-primary ${
-                    isActive
-                      ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground"
+                    isActive ? "bg-primary/10 text-primary" : "text-muted-foreground"
                   }`
                 }
               >
@@ -78,7 +76,10 @@ export function SiteLayout() {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="hidden h-auto items-center gap-2 rounded-full border-border/60 bg-card px-4 py-2 text-sm font-semibold transition-colors hover:bg-accent hover:text-accent-foreground md:inline-flex">
+              <Button
+                variant="outline"
+                className="hidden h-auto items-center gap-2 rounded-full border-border/60 bg-card px-4 py-2 text-sm font-semibold transition-colors hover:bg-accent hover:text-accent-foreground md:inline-flex"
+              >
                 <img
                   src={lang === "id" ? flagId : flagEn}
                   alt="Language"
@@ -88,11 +89,17 @@ export function SiteLayout() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40">
-              <DropdownMenuItem onClick={() => i18n.changeLanguage("id")} className="gap-3 cursor-pointer">
+              <DropdownMenuItem
+                onClick={() => i18n.changeLanguage("id")}
+                className="gap-3 cursor-pointer"
+              >
                 <img src={flagId} alt="Indonesia" className="h-4 w-6 rounded-sm object-cover" />
                 Indonesia
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => i18n.changeLanguage("en")} className="gap-3 cursor-pointer">
+              <DropdownMenuItem
+                onClick={() => i18n.changeLanguage("en")}
+                className="gap-3 cursor-pointer"
+              >
                 <img src={flagEn} alt="English" className="h-4 w-6 rounded-sm object-cover" />
                 English
               </DropdownMenuItem>
@@ -123,9 +130,7 @@ export function SiteLayout() {
                       onClick={() => setOpen(false)}
                       className={({ isActive }) =>
                         `rounded-lg px-4 py-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground ${
-                          isActive
-                            ? "bg-primary/10 text-primary"
-                            : "text-muted-foreground"
+                          isActive ? "bg-primary/10 text-primary" : "text-muted-foreground"
                         }`
                       }
                     >
@@ -136,7 +141,10 @@ export function SiteLayout() {
                 <div className="mt-4 flex gap-3 pt-4 border-t border-border/60">
                   <Button
                     variant={lang === "id" ? "default" : "outline"}
-                    onClick={() => { i18n.changeLanguage("id"); setOpen(false); }}
+                    onClick={() => {
+                      i18n.changeLanguage("id");
+                      setOpen(false);
+                    }}
                     className={`flex-1 flex items-center justify-center gap-2 rounded-lg py-5 text-sm font-semibold ${
                       lang === "id"
                         ? "bg-primary/10 text-primary hover:bg-primary/20"
@@ -148,7 +156,10 @@ export function SiteLayout() {
                   </Button>
                   <Button
                     variant={lang === "en" ? "default" : "outline"}
-                    onClick={() => { i18n.changeLanguage("en"); setOpen(false); }}
+                    onClick={() => {
+                      i18n.changeLanguage("en");
+                      setOpen(false);
+                    }}
                     className={`flex-1 flex items-center justify-center gap-2 rounded-lg py-5 text-sm font-semibold ${
                       lang === "en"
                         ? "bg-primary/10 text-primary hover:bg-primary/20"
@@ -186,9 +197,7 @@ export function SiteLayout() {
                 Lises Asmarandana
               </span>
             </div>
-            <p className="mt-4 max-w-xs text-sm text-muted-foreground">
-              {t("footer.desc")}
-            </p>
+            <p className="mt-4 max-w-xs text-sm text-muted-foreground">{t("footer.desc")}</p>
           </div>
           <div>
             <h4 className="text-sm font-semibold uppercase tracking-widest text-primary">
@@ -242,8 +251,14 @@ export function SiteLayout() {
         </div>
         <div className="border-t border-border/60">
           <p className="mx-auto max-w-7xl px-6 py-5 text-center text-xs text-muted-foreground">
-            {t("footer.copyright")} <br className="sm:hidden" /> {t("footer.outhor")} 
-            <a href="https://portofolio-rizky-chandra.laravel.cloud/" className="text-primary hover:underline"> Chndr</a>
+            {t("footer.copyright")} <br className="sm:hidden" /> {t("footer.outhor")}
+            <a
+              href="https://portofolio-rizky-chandra.laravel.cloud/"
+              className="text-primary hover:underline"
+            >
+              {" "}
+              Chndr
+            </a>
           </p>
         </div>
       </footer>

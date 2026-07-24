@@ -15,10 +15,11 @@ export function NewsDetailPage() {
     return (
       <section className="mx-auto flex max-w-7xl flex-col items-center justify-center px-6 py-16 md:py-24 text-center">
         <h1 className="font-display text-4xl font-bold">{t("not_found_title")}</h1>
-        <p className="mt-4 text-muted-foreground">
-          {t("not_found_desc")}
-        </p>
-        <Button asChild className="mt-8 rounded-full bg-gradient-gold px-7 shadow-gold text-primary-foreground">
+        <p className="mt-4 text-muted-foreground">{t("not_found_desc")}</p>
+        <Button
+          asChild
+          className="mt-8 rounded-full bg-gradient-gold px-7 shadow-gold text-primary-foreground"
+        >
           <Link to="/news">
             <ArrowLeft className="mr-2 h-4 w-4" /> {t("btn_back_news")}
           </Link>
@@ -29,14 +30,21 @@ export function NewsDetailPage() {
 
   return (
     <article className="mx-auto max-w-4xl px-6 pb-12 pt-12 md:pb-16 md:pt-16">
-      <Button asChild variant="ghost" className="mb-4 -ml-4 rounded-full border border-border/60 bg-background/40 backdrop-blur-sm text-sm font-semibold text-white transition-colors hover:bg-primary/20 hover:text-primary">
+      <Button
+        asChild
+        variant="ghost"
+        className="mb-4 -ml-4 rounded-full border border-border/60 bg-background/40 backdrop-blur-sm text-sm font-semibold text-white transition-colors hover:bg-primary/20 hover:text-primary"
+      >
         <Link to="/news">
           <ArrowLeft className="mr-2 h-4 w-4" /> {t("btn_back")}
         </Link>
       </Button>
 
       <div className="flex flex-wrap items-center gap-3">
-        <Badge variant="outline" className="gap-2 rounded-full border-primary/40 bg-background/40 px-3 py-1 text-xs uppercase tracking-widest text-primary">
+        <Badge
+          variant="outline"
+          className="gap-2 rounded-full border-primary/40 bg-background/40 px-3 py-1 text-xs uppercase tracking-widest text-primary"
+        >
           <Sparkles className="h-3 w-3" /> {post.tag}
         </Badge>
         <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
@@ -49,11 +57,7 @@ export function NewsDetailPage() {
       </h1>
 
       <div className="mt-10 overflow-hidden rounded-3xl border border-border/60 bg-card shadow-sm">
-        <img
-          src={post.img}
-          alt={post.title}
-          className="w-full h-auto object-cover"
-        />
+        <img src={post.img} alt={post.title} className="w-full h-auto object-cover" />
       </div>
 
       <div

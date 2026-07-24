@@ -1,5 +1,13 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Ticket, Music2, Sparkles, Users, ArrowUpRight, CalendarDays } from "lucide-react";
+import {
+  ArrowRight,
+  Ticket,
+  Music2,
+  Sparkles,
+  Users,
+  ArrowUpRight,
+  CalendarDays,
+} from "lucide-react";
 import hero from "@/assets/hero-lises.jpg";
 import g1 from "@/assets/gallery-1.jpg";
 import g2 from "@/assets/gallery-2.jpg";
@@ -28,29 +36,36 @@ export function HomePage() {
           sizes="100vw"
           className="absolute inset-0 h-full w-full object-cover"
         />
-        <div
-          className="absolute inset-0"
-          style={{ background: "var(--gradient-hero)" }}
-        />
+        <div className="absolute inset-0" style={{ background: "var(--gradient-hero)" }} />
         <div className="relative mx-auto flex min-h-[50vh] md:min-h-[60vh] max-w-7xl flex-col justify-center px-6 pt-12 pb-12 md:pt-18 md:pb-18">
-          <Badge variant="outline" className="w-fit gap-2 rounded-full border-primary/40 bg-background/40 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-primary backdrop-blur">
+          <Badge
+            variant="outline"
+            className="w-fit gap-2 rounded-full border-primary/40 bg-background/40 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-primary backdrop-blur"
+          >
             <Sparkles className="h-3.5 w-3.5" /> UKM Lises - UMMI
           </Badge>
           <h1 className="mt-6 max-w-4xl font-display text-5xl font-black leading-[1.05] md:text-7xl">
-            {t("banner.title_t1")} <span className="text-gradient-gold">{t("banner.title_y1")}</span>,
+            {t("banner.title_t1")}{" "}
+            <span className="text-gradient-gold">{t("banner.title_y1")}</span>,
             <br />
-            {t("banner.title_t2")} <span className="text-gradient-gold">{t("banner.title_y2")}</span>.
+            {t("banner.title_t2")}{" "}
+            <span className="text-gradient-gold">{t("banner.title_y2")}</span>.
           </h1>
-          <p className="mt-6 max-w-2xl text-lg text-muted-foreground">
-            {t("banner.description")}
-          </p>
+          <p className="mt-6 max-w-2xl text-lg text-muted-foreground">{t("banner.description")}</p>
           <div className="mt-10 flex flex-wrap gap-4">
-            <Button asChild className="rounded-full bg-gradient-gold px-7 py-6 text-sm font-semibold text-primary-foreground shadow-gold transition-transform hover:scale-[1.03]">
+            <Button
+              asChild
+              className="rounded-full bg-gradient-gold px-7 py-6 text-sm font-semibold text-primary-foreground shadow-gold transition-transform hover:scale-[1.03]"
+            >
               <Link to="/about">
                 {t("banner.btn_about")} <ArrowRight className="h-4 w-4 ml-2" />
               </Link>
             </Button>
-            <Button asChild variant="outline" className="rounded-full border-primary/40 px-7 py-6 text-sm font-semibold text-primary transition-colors hover:bg-primary/10 hover:text-white">
+            <Button
+              asChild
+              variant="outline"
+              className="rounded-full border-primary/40 px-7 py-6 text-sm font-semibold text-primary transition-colors hover:bg-primary/10 hover:text-white"
+            >
               <Link to="/contact">
                 {t("banner.btn_contact")} <ArrowRight className="h-4 w-4 ml-2" />
               </Link>
@@ -63,17 +78,10 @@ export function HomePage() {
               { n: "45", l: t("banner.card_2") },
               { n: "12", l: t("banner.card_3") },
             ].map((item) => (
-              <Card
-                key={item.l}
-                className="rounded-2xl border-border/60 bg-card/40 backdrop-blur"
-              >
+              <Card key={item.l} className="rounded-2xl border-border/60 bg-card/40 backdrop-blur">
                 <CardContent className="p-5">
-                  <div className="font-display text-3xl font-bold text-gradient-gold">
-                    {item.n}
-                  </div>
-                  <div className="mt-1 text-sm text-muted-foreground">
-                    {item.l}
-                  </div>
+                  <div className="font-display text-3xl font-bold text-gradient-gold">{item.n}</div>
+                  <div className="mt-1 text-sm text-muted-foreground">{item.l}</div>
                 </CardContent>
               </Card>
             ))}
@@ -88,12 +96,11 @@ export function HomePage() {
               {t("section_divisi.title")}
             </p>
             <h2 className="mt-3 max-w-2xl font-display text-4xl font-bold leading-[1.15] md:text-5xl">
-              {t("section_divisi.title_t1")} <span className="text-gradient-gold">{t("section_divisi.title_y1")}</span>.
+              {t("section_divisi.title_t1")}{" "}
+              <span className="text-gradient-gold">{t("section_divisi.title_y1")}</span>.
             </h2>
           </div>
-          <p className="max-w-md text-muted-foreground">
-            {t("section_divisi.desc")}
-          </p>
+          <p className="max-w-md text-muted-foreground">{t("section_divisi.desc")}</p>
         </div>
 
         <div className="mt-12 grid gap-6 md:grid-cols-2">
@@ -117,12 +124,8 @@ export function HomePage() {
                 <div className="mb-6 grid h-12 w-12 place-items-center rounded-2xl bg-gradient-gold shadow-gold">
                   <division.icon className="h-6 w-6 text-primary-foreground" />
                 </div>
-                <CardTitle className="font-display text-2xl font-bold">
-                  {division.title}
-                </CardTitle>
-                <CardDescription className="mt-3 text-base">
-                  {division.desc}
-                </CardDescription>
+                <CardTitle className="font-display text-2xl font-bold">{division.title}</CardTitle>
+                <CardDescription className="mt-3 text-base">{division.desc}</CardDescription>
                 <div className="absolute -right-16 -bottom-16 h-48 w-48 rounded-full bg-primary/10 blur-3xl transition-all group-hover:bg-primary/20" />
               </CardContent>
             </Card>
@@ -176,11 +179,15 @@ export function HomePage() {
             <h2 className="mt-3 font-display text-4xl font-bold md:text-5xl">
               {t("section_news.subtitle")}
             </h2>
-            <p className="mt-4 text-muted-foreground">
-              {t("section_news.desc")}
-            </p>
-            <Button asChild variant="outline" className="mt-8 rounded-full border-primary/40 px-6 hidden sm:inline-flex">
-              <Link to="/news">{t("section_news.link")} <ArrowRight className="ml-2 h-4 w-4" /></Link>
+            <p className="mt-4 text-muted-foreground">{t("section_news.desc")}</p>
+            <Button
+              asChild
+              variant="outline"
+              className="mt-8 rounded-full border-primary/40 px-6 hidden sm:inline-flex"
+            >
+              <Link to="/news">
+                {t("section_news.link")} <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
             </Button>
           </div>
           <div className="flex flex-col gap-4 md:w-1/2">
@@ -207,7 +214,9 @@ export function HomePage() {
         </div>
         <div className="mt-8 flex justify-center sm:hidden">
           <Button asChild variant="outline" className="rounded-full border-primary/40 px-6">
-             <Link to="/news">{t("section_news.link")} <ArrowRight className="ml-2 h-4 w-4" /></Link>
+            <Link to="/news">
+              {t("section_news.link")} <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
           </Button>
         </div>
       </section>
@@ -229,13 +238,15 @@ export function HomePage() {
               <h2 className="mt-3 max-w-3xl font-display text-3xl font-bold md:text-4xl">
                 {t("section_event.title")}
               </h2>
-              <p className="mt-3 max-w-xl text-muted-foreground">
-                {t("section_event.desc")}
-              </p>
+              <p className="mt-3 max-w-xl text-muted-foreground">{t("section_event.desc")}</p>
             </div>
-            <Button asChild className="rounded-full bg-gradient-gold px-7 py-6 text-sm font-semibold text-primary-foreground shadow-gold transition-transform hover:scale-[1.03]">
+            <Button
+              asChild
+              className="rounded-full bg-gradient-gold px-7 py-6 text-sm font-semibold text-primary-foreground shadow-gold transition-transform hover:scale-[1.03]"
+            >
               <Link to="/event">
-                {t("section_event.btn")}<ArrowRight className="h-4 w-4 ml-2" />
+                {t("section_event.btn")}
+                <ArrowRight className="h-4 w-4 ml-2" />
               </Link>
             </Button>
           </CardContent>

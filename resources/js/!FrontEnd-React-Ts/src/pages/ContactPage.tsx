@@ -37,16 +37,18 @@ export function ContactPage() {
 
   return (
     <section className="mx-auto max-w-7xl px-6 pb-12 pt-12 md:pb-16 md:pt-16">
-      <Badge variant="outline" className="w-fit gap-2 rounded-full border-primary/40 bg-background/40 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-primary backdrop-blur">
+      <Badge
+        variant="outline"
+        className="w-fit gap-2 rounded-full border-primary/40 bg-background/40 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-primary backdrop-blur"
+      >
         <Sparkles className="h-3.5 w-3.5" /> Kontak
       </Badge>
       <h1 className="mt-4 max-w-3xl font-display text-5xl font-bold leading-[1.15] md:text-6xl">
-        Mari <span className="text-gradient-gold">berkolaborasi</span> bersama
-        kami.
+        Mari <span className="text-gradient-gold">berkolaborasi</span> bersama kami.
       </h1>
       <p className="mt-5 max-w-2xl text-muted-foreground">
-        Ingin mengundang kami tampil, kolaborasi, atau bergabung menjadi
-        anggota? Silakan hubungi kami melalui kanal berikut.
+        Ingin mengundang kami tampil, kolaborasi, atau bergabung menjadi anggota? Silakan hubungi
+        kami melalui kanal berikut.
       </p>
 
       <div className="mt-14 flex flex-col gap-10">
@@ -56,14 +58,14 @@ export function ContactPage() {
           <Card className="relative rounded-3xl border-border/60 bg-card overflow-hidden min-h-[400px]">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.7634380384557!2d106.9343985!3d-6.918859899999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e683633fcd15215%3A0x261f558445241e0c!2sUniversitas%20Muhammadiyah%20Sukabumi!5e0!3m2!1sid!2sid!4v1784882369528!5m2!1sid!2sid"
-              width="100%" 
-              height="100%" 
-              style={{ border: 0, position: "absolute", inset: 0 }} 
-              allowFullScreen 
-              loading="lazy" 
+              width="100%"
+              height="100%"
+              style={{ border: 0, position: "absolute", inset: 0 }}
+              allowFullScreen
+              loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-            ></iframe> 
-            
+            ></iframe>
+
             {/* alamat */}
             <div className="absolute bottom-6 left-6 right-6">
               <Card className="rounded-2xl border-border/60 bg-card/85 backdrop-blur-md shadow-lg">
@@ -97,12 +99,7 @@ export function ContactPage() {
                 <div className="space-y-5">
                   <div className="grid gap-5 sm:grid-cols-2">
                     <Field label="Nama" name="name" placeholder="Nama lengkap" />
-                    <Field
-                      label="Email"
-                      name="email"
-                      type="email"
-                      placeholder="nama@email.com"
-                    />
+                    <Field label="Email" name="email" type="email" placeholder="nama@email.com" />
                   </div>
                   <Field
                     label="Subjek"

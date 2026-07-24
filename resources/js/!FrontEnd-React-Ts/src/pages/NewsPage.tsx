@@ -13,7 +13,10 @@ export function NewsPage() {
   return (
     <section className="mx-auto max-w-7xl px-6 pb-12 pt-12 md:pb-16 md:pt-16">
       {/* <p className="text-sm uppercase tracking-[0.25em] text-primary">News</p> */}
-      <Badge variant="outline" className="w-fit gap-2 rounded-full border-primary/40 bg-background/40 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-primary backdrop-blur">
+      <Badge
+        variant="outline"
+        className="w-fit gap-2 rounded-full border-primary/40 bg-background/40 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-primary backdrop-blur"
+      >
         <Sparkles className="h-3.5 w-3.5" /> {t("badge")}
       </Badge>
       <h1 className="mt-4 max-w-3xl font-display text-5xl font-bold leading-[1.15] md:text-6xl">
@@ -44,18 +47,16 @@ export function NewsPage() {
               <CardTitle className="mt-3 font-display text-xl font-bold leading-snug">
                 {post.title}
               </CardTitle>
-              <CardDescription className="mt-3 flex-1 text-sm">
-                {post.excerpt}
-              </CardDescription>
-                <Button
-                  asChild
-                  variant="link"
-                  className="mt-5 h-auto p-0 inline-flex items-center gap-1.5 justify-start text-sm font-semibold text-primary"
-                >
-                  <Link to={`/news/${post.slug}`}>
-                    {t("btn_readmore")} <ArrowUpRight className="h-4 w-4" />
-                  </Link>
-                </Button>
+              <CardDescription className="mt-3 flex-1 text-sm">{post.excerpt}</CardDescription>
+              <Button
+                asChild
+                variant="link"
+                className="mt-5 h-auto p-0 inline-flex items-center gap-1.5 justify-start text-sm font-semibold text-primary"
+              >
+                <Link to={`/news/${post.slug}`}>
+                  {t("btn_readmore")} <ArrowUpRight className="h-4 w-4" />
+                </Link>
+              </Button>
             </CardContent>
           </Card>
         ))}

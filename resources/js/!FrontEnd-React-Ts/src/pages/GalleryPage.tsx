@@ -23,12 +23,11 @@ export function GalleryPage() {
         <Sparkles className="h-3.5 w-3.5" /> Galeri
       </span>
       <h1 className="mt-4 max-w-3xl font-display text-5xl font-bold leading-[1.15] md:text-6xl">
-        Bingkai <span className="text-gradient-gold">panggung</span> & latihan
-        kami.
+        Bingkai <span className="text-gradient-gold">panggung</span> & latihan kami.
       </h1>
       <p className="mt-5 max-w-2xl text-muted-foreground">
-        Kumpulan dokumentasi visual dari pementasan, workshop, dan momen
-        kebersamaan Lises Asmarandana.
+        Kumpulan dokumentasi visual dari pementasan, workshop, dan momen kebersamaan Lises
+        Asmarandana.
       </p>
 
       <div className="mt-12 grid auto-rows-[220px] gap-4 md:grid-cols-3">
