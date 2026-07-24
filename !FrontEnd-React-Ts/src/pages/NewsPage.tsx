@@ -7,7 +7,7 @@ import { posts } from "@/data/news";
 
 export function NewsPage() {
   return (
-    <section className="mx-auto max-w-7xl px-6 pb-24 pt-20">
+    <section className="mx-auto max-w-7xl px-6 pb-12 pt-12 md:pb-16 md:pt-16">
       {/* <p className="text-sm uppercase tracking-[0.25em] text-primary">News</p> */}
       <Badge variant="outline" className="w-fit gap-2 rounded-full border-primary/40 bg-background/40 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-primary backdrop-blur">
         <Sparkles className="h-3.5 w-3.5" /> Berita

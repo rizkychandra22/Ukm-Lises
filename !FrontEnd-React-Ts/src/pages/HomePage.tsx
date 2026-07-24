@@ -27,7 +27,7 @@ export function HomePage() {
           className="absolute inset-0"
           style={{ background: "var(--gradient-hero)" }}
         />
-        <div className="relative mx-auto flex min-h-[92vh] max-w-7xl flex-col justify-center px-6 py-24">
+        <div className="relative mx-auto flex min-h-[50vh] md:min-h-[60vh] max-w-7xl flex-col justify-center px-6 pt-12 pb-12 md:pt-18 md:pb-18">
           <Badge variant="outline" className="w-fit gap-2 rounded-full border-primary/40 bg-background/40 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-primary backdrop-blur">
             <Sparkles className="h-3.5 w-3.5" /> UKM Lises - UMMI
           </Badge>
@@ -78,7 +78,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-24">
+      <section className="mx-auto max-w-7xl px-6 py-12 md:py-16">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
             <p className="text-sm uppercase tracking-[0.25em] text-primary">
@@ -128,7 +128,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 pb-24">
+      <section className="mx-auto max-w-7xl px-6 pb-12 md:pb-16">
         <div className="flex items-end justify-between">
           <div>
             <p className="text-sm uppercase tracking-[0.25em] text-primary">
@@ -165,7 +165,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 pb-24">
+      <section className="mx-auto max-w-7xl px-6 pb-12 md:pb-16">
         <Card className="relative overflow-hidden rounded-3xl border-primary/30 bg-card">
           <div
             className="absolute inset-0 opacity-30"

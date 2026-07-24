@@ -10,7 +10,7 @@ export function NewsDetailPage() {
 
   if (!post) {
     return (
-      <section className="mx-auto flex max-w-7xl flex-col items-center justify-center px-6 py-32 text-center">
+      <section className="mx-auto flex max-w-7xl flex-col items-center justify-center px-6 py-16 md:py-24 text-center">
         <h1 className="font-display text-4xl font-bold">Berita tidak ditemukan</h1>
         <p className="mt-4 text-muted-foreground">
           Maaf, artikel yang Anda cari tidak tersedia atau mungkin sudah dihapus.
@@ -25,7 +25,7 @@ export function NewsDetailPage() {
   }
 
   return (
-    <article className="mx-auto max-w-4xl px-6 pb-24 pt-20">
+    <article className="mx-auto max-w-4xl px-6 pb-12 pt-12 md:pb-16 md:pt-16">
       <Button asChild variant="ghost" className="mb-8 -ml-4 text-muted-foreground hover:text-primary">
         <Link to="/news">
           <ArrowLeft className="mr-2 h-4 w-4" /> Kembali

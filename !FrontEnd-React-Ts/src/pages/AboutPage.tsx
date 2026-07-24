@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 export function AboutPage() {
   return (
     <>
-      <section className="mx-auto max-w-7xl px-6 pb-14 pt-20">
+      <section className="mx-auto max-w-7xl px-6 pb-10 pt-12 md:pt-16">
         {/* <p className="text-sm uppercase tracking-[0.25em] text-primary">
           Tentang Kami
         </p> */}
@@ -19,7 +19,7 @@ export function AboutPage() {
         </h1>
       </section>
 
-      <section className="mx-auto grid max-w-7xl gap-12 px-6 pb-24 md:grid-cols-2 md:items-center">
+      <section className="mx-auto grid max-w-7xl gap-12 px-6 pb-12 md:pb-16 md:grid-cols-2 md:items-center">
         <div className="relative overflow-hidden rounded-3xl border border-border/60">
           <img
             src={img}
@@ -52,7 +52,7 @@ export function AboutPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 pb-24">
+      <section className="mx-auto max-w-7xl px-6 pb-12 md:pb-16">
         <div className="grid gap-6 md:grid-cols-3">
           {[
             {

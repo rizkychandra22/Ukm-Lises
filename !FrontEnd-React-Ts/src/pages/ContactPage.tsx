@@ -36,7 +36,7 @@ export function ContactPage() {
   const [sent, setSent] = useState(false);
 
   return (
-    <section className="mx-auto max-w-7xl px-6 pb-24 pt-20">
+    <section className="mx-auto max-w-7xl px-6 pb-12 pt-12 md:pb-16 md:pt-16">
       {/* <p className="text-sm uppercase tracking-[0.25em] text-primary">
         Kontak
       </p> */}
