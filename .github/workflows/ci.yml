@@ -15,7 +15,7 @@ jobs:
   # ==========================================================
   frontend-ci:
     name: Frontend (ESLint + TypeCheck + Vite Build)
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Checkout Code
@@ -61,7 +61,7 @@ jobs:
   # ==========================================================
   backend-ci:
     name: Backend (PHPUnit Test)
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Skip Backend Tests
         run: echo "Backend is not set up yet. Skipping tests..."
