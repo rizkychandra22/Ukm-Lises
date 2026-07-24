@@ -5,6 +5,7 @@ import logo from "@/assets/logo-bg-dark.png";
 import flagId from "@/assets/flag-id.png";
 import flagEn from "@/assets/flag-en.png";
 import { InstagramIcon, YoutubeIcon } from "./ui/icon-svg";
+import { useTranslation } from "react-i18next";
 import { ScrollToTop } from "./scrolling";
 import {
   DropdownMenu,
@@ -15,18 +16,20 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-const nav = [
-  { to: "/", label: "Home" },
-  { to: "/about", label: "About" },
-  { to: "/gallery", label: "Gallery" },
-  { to: "/news", label: "News" },
-  { to: "/event", label: "Event" },
-  { to: "/contact", label: "Contact" },
-] as const;
+const getNav = (t: any) => [
+  { to: "/", label: t("nav.home") },
+  { to: "/about", label: t("nav.about") },
+  { to: "/gallery", label: t("nav.gallery") },
+  { to: "/news", label: t("nav.news") },
+  { to: "/event", label: t("nav.event") },
+  { to: "/contact", label: t("nav.contact") },
+];
 
 export function SiteLayout() {
   const [open, setOpen] = useState(false);
-  const [lang, setLang] = useState<"id" | "en">("id");
+  const { t, i18n } = useTranslation("site-layout");
+  const nav = getNav(t);
+  const lang = i18n.language || "id";
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -49,7 +52,7 @@ export function SiteLayout() {
                 Lises Asmarandana
               </span>
               <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                Universitas Muhammadiyah Sukabumi
+                {t("nav.brand")}
               </span>
             </span>
           </Link>
@@ -85,11 +88,11 @@ export function SiteLayout() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40">
-              <DropdownMenuItem onClick={() => setLang("id")} className="gap-3 cursor-pointer">
+              <DropdownMenuItem onClick={() => i18n.changeLanguage("id")} className="gap-3 cursor-pointer">
                 <img src={flagId} alt="Indonesia" className="h-4 w-6 rounded-sm object-cover" />
                 Indonesia
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setLang("en")} className="gap-3 cursor-pointer">
+              <DropdownMenuItem onClick={() => i18n.changeLanguage("en")} className="gap-3 cursor-pointer">
                 <img src={flagEn} alt="English" className="h-4 w-6 rounded-sm object-cover" />
                 English
               </DropdownMenuItem>
@@ -133,7 +136,7 @@ export function SiteLayout() {
                 <div className="mt-4 flex gap-3 pt-4 border-t border-border/60">
                   <Button
                     variant={lang === "id" ? "default" : "outline"}
-                    onClick={() => { setLang("id"); setOpen(false); }}
+                    onClick={() => { i18n.changeLanguage("id"); setOpen(false); }}
                     className={`flex-1 flex items-center justify-center gap-2 rounded-lg py-5 text-sm font-semibold ${
                       lang === "id"
                         ? "bg-primary/10 text-primary hover:bg-primary/20"
@@ -145,7 +148,7 @@ export function SiteLayout() {
                   </Button>
                   <Button
                     variant={lang === "en" ? "default" : "outline"}
-                    onClick={() => { setLang("en"); setOpen(false); }}
+                    onClick={() => { i18n.changeLanguage("en"); setOpen(false); }}
                     className={`flex-1 flex items-center justify-center gap-2 rounded-lg py-5 text-sm font-semibold ${
                       lang === "en"
                         ? "bg-primary/10 text-primary hover:bg-primary/20"
@@ -184,13 +187,12 @@ export function SiteLayout() {
               </span>
             </div>
             <p className="mt-4 max-w-xs text-sm text-muted-foreground">
-              Unit Kegiatan Mahasiswa seni musik dan tari Universitas
-              Muhammadiyah Sukabumi. Merawat budaya, memanggung talenta.
+              {t("footer.desc")}
             </p>
           </div>
           <div>
             <h4 className="text-sm font-semibold uppercase tracking-widest text-primary">
-              Navigasi
+              {t("footer.links")}
             </h4>
             <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
               {nav.map((item) => (
@@ -204,10 +206,10 @@ export function SiteLayout() {
           </div>
           <div>
             <h4 className="text-sm font-semibold uppercase tracking-widest text-primary">
-              Terhubung
+              {t("footer.social")}
             </h4>
             <p className="mt-4 text-sm text-muted-foreground">
-              Sekretariat UKM - Kampus UMMI
+              {t("footer.address")}
               <br />
               Jl. R. Syamsudin, S.H. No. 50, Sukabumi
             </p>
@@ -240,8 +242,7 @@ export function SiteLayout() {
         </div>
         <div className="border-t border-border/60">
           <p className="mx-auto max-w-7xl px-6 py-5 text-center text-xs text-muted-foreground">
-            &copy; {new Date().getFullYear()} UKM Lises Asmarandana &mdash; Universitas
-            Muhammadiyah Sukabumi &mdash; Created By 
+            {t("footer.copyright")} <br className="sm:hidden" /> {t("footer.outhor")} 
             <a href="https://portofolio-rizky-chandra.laravel.cloud/" className="text-primary hover:underline"> Chndr</a>
           </p>
         </div>
