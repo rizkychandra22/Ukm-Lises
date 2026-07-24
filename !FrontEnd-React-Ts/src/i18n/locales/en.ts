@@ -74,7 +74,7 @@ export default {
     "NewsDetailPage": {
         "not_found_title": "News not found",
         "not_found_desc": "Sorry, the article you are looking for is not available or has been deleted.",
-        "btn_back_home": "Back to Home",
+        "btn_back_news": "Back to News",
         "btn_back": "Back"
     },
 

@@ -74,7 +74,7 @@ export default {
     "NewsDetailPage": {
         "not_found_title": "Berita tidak ditemukan",
         "not_found_desc": "Maaf, artikel yang Anda cari tidak tersedia atau mungkin sudah dihapus.",
-        "btn_back_home": "Kembali ke Beranda",
+        "btn_back_news": "Kembali ke Berita",
         "btn_back": "Kembali"
     },
 

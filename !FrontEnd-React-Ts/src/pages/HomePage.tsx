@@ -207,7 +207,7 @@ export function HomePage() {
         </div>
         <div className="mt-8 flex justify-center sm:hidden">
           <Button asChild variant="outline" className="rounded-full border-primary/40 px-6">
-             <Link to="/news">Lihat Semua Berita</Link>
+             <Link to="/news">{t("section_news.link")} <ArrowRight className="ml-2 h-4 w-4" /></Link>
           </Button>
         </div>
       </section>

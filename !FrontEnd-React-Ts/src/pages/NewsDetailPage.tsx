@@ -20,7 +20,7 @@ export function NewsDetailPage() {
         </p>
         <Button asChild className="mt-8 rounded-full bg-gradient-gold px-7 shadow-gold text-primary-foreground">
           <Link to="/news">
-            <ArrowLeft className="mr-2 h-4 w-4" /> {t("btn_back_home")}
+            <ArrowLeft className="mr-2 h-4 w-4" /> {t("btn_back_news")}
           </Link>
         </Button>
       </section>
@@ -29,7 +29,7 @@ export function NewsDetailPage() {
 
   return (
     <article className="mx-auto max-w-4xl px-6 pb-12 pt-12 md:pb-16 md:pt-16">
-      <Button asChild variant="ghost" className="mb-4 -ml-4 text-muted-foreground hover:text-primary">
+      <Button asChild variant="ghost" className="mb-4 -ml-4 rounded-full border border-border/60 bg-background/40 backdrop-blur-sm text-sm font-semibold text-white transition-colors hover:bg-primary/20 hover:text-primary">
         <Link to="/news">
           <ArrowLeft className="mr-2 h-4 w-4" /> {t("btn_back")}
         </Link>
