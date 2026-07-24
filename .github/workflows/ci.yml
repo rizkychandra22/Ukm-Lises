@@ -51,6 +51,7 @@ jobs:
       # 5. Menyimpan hasil build (Artifacts) agar bisa di-download jika dibutuhkan
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
+        continue-on-error: true
         with:
           name: frontend-build
           path: public/build/
