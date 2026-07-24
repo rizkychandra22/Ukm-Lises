@@ -53,8 +53,8 @@ export function ContactPage() {
         <div className="grid gap-10 lg:grid-cols-2">
           {/* Map */}
           <Card className="relative rounded-3xl border-border/60 bg-card overflow-hidden min-h-[400px]">
-            <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.596001188339!2d106.9298453147728!3d-6.938814994986705!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68482939923835%3A0xc39f88636f3322e7!2sUniversitas%20Muhammadiyah%20Sukabumi!5e0!3m2!1sid!2sid!4v1680123456789!5m2!1sid!2sid" 
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.7634380384557!2d106.9343985!3d-6.918859899999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e683633fcd15215%3A0x261f558445241e0c!2sUniversitas%20Muhammadiyah%20Sukabumi!5e0!3m2!1sid!2sid!4v1784882369528!5m2!1sid!2sid"
               width="100%" 
               height="100%" 
               style={{ border: 0, position: "absolute", inset: 0 }} 
