@@ -2,22 +2,25 @@ import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, CalendarDays, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { posts } from "@/constants/news";
+import { usePosts } from "@/constants/news";
+import { useTranslation } from "@/i18n";
 
 export function NewsDetailPage() {
   const { slug } = useParams<{ slug: string }>();
+  const { t } = useTranslation("NewsDetailPage");
+  const posts = usePosts();
   const post = posts.find((p) => p.slug === slug);
 
   if (!post) {
     return (
       <section className="mx-auto flex max-w-7xl flex-col items-center justify-center px-6 py-16 md:py-24 text-center">
-        <h1 className="font-display text-4xl font-bold">Berita tidak ditemukan</h1>
+        <h1 className="font-display text-4xl font-bold">{t("not_found_title")}</h1>
         <p className="mt-4 text-muted-foreground">
-          Maaf, artikel yang Anda cari tidak tersedia atau mungkin sudah dihapus.
+          {t("not_found_desc")}
         </p>
         <Button asChild className="mt-8 rounded-full bg-gradient-gold px-7 shadow-gold text-primary-foreground">
           <Link to="/news">
-            <ArrowLeft className="mr-2 h-4 w-4" /> Kembali ke Berita
+            <ArrowLeft className="mr-2 h-4 w-4" /> {t("btn_back_home")}
           </Link>
         </Button>
       </section>
@@ -28,7 +31,7 @@ export function NewsDetailPage() {
     <article className="mx-auto max-w-4xl px-6 pb-12 pt-12 md:pb-16 md:pt-16">
       <Button asChild variant="ghost" className="mb-8 -ml-4 text-muted-foreground hover:text-primary">
         <Link to="/news">
-          <ArrowLeft className="mr-2 h-4 w-4" /> Kembali
+          <ArrowLeft className="mr-2 h-4 w-4" /> {t("btn_back")}
         </Link>
       </Button>
 
@@ -49,11 +52,11 @@ export function NewsDetailPage() {
         <img
           src={post.img}
           alt={post.title}
-          className="aspect-[21/9] w-full object-cover"
+          className="w-full h-auto object-cover"
         />
       </div>
 
-      <div 
+      <div
         className="mt-12 max-w-none text-lg leading-relaxed text-muted-foreground space-y-6"
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
