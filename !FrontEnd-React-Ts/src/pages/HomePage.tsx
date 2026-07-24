@@ -87,7 +87,7 @@ export function HomePage() {
             <p className="text-sm uppercase tracking-[0.25em] text-primary">
               {t("section_divisi.title")}
             </p>
-            <h2 className="mt-3 max-w-2xl font-display text-4xl font-bold md:text-5xl">
+            <h2 className="mt-3 max-w-2xl font-display text-4xl font-bold leading-[1.15] md:text-5xl">
               {t("section_divisi.title_t1")} <span className="text-gradient-gold">{t("section_divisi.title_y1")}</span>.
             </h2>
           </div>
@@ -136,7 +136,7 @@ export function HomePage() {
             <p className="text-sm uppercase tracking-[0.25em] text-primary">
               {t("section_momen.title")}
             </p>
-            <h2 className="mt-3 font-display text-4xl font-bold md:text-5xl">
+            <h2 className="mt-3 font-display text-4xl font-bold leading-[1.15] md:text-5xl">
               {t("section_momen.subtitle")}
             </h2>
           </div>

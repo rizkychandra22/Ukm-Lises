@@ -16,7 +16,7 @@ export function NewsPage() {
       <Badge variant="outline" className="w-fit gap-2 rounded-full border-primary/40 bg-background/40 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-primary backdrop-blur">
         <Sparkles className="h-3.5 w-3.5" /> {t("badge")}
       </Badge>
-      <h1 className="mt-4 max-w-3xl font-display text-5xl font-bold md:text-6xl">
+      <h1 className="mt-4 max-w-3xl font-display text-5xl font-bold leading-[1.15] md:text-6xl">
         {t("title_t1")} <span className="text-gradient-gold">{t("title_y1")}</span> {t("title_t2")}
       </h1>
 
