@@ -1,0 +1,121 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, development, feat/* ]
+  pull_request:
+    branches: [ main, development ]
+
+# Membatalkan proses CI sebelumnya jika ada push baru di branch yang sama
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ==========================================================
+  # 1. FRONTEND CI (React + TypeScript + Vite + ESLint)
+  # ==========================================================
+  frontend-ci:
+    name: Frontend (ESLint + TypeCheck + Vite Build)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      # 1. Menjalankan ESLint untuk mengecek code quality & syntax standards
+      - name: Run ESLint
+        run: npx eslint . --ext .ts,.tsx --max-warnings 0
+
+      # 2. Menjalankan TypeScript Compiler dan Production Build dengan Vite
+      - name: Build Vite App
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+  # ==========================================================
+  # 2. BACKEND CI (Laravel PHP)
+  # ==========================================================
+  backend-ci:
+    name: Backend (PHPUnit Test)
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: testing
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, dom, fileinfo, pdo_pgsql, pgsql, gd, curl, zip
+
+      - name: Cache Composer Dependencies
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Install Composer Dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Prepare Environment
+        run: |
+          cp .env.example .env.testing
+          php artisan key:generate --env=testing
+
+      - name: Run Migrations
+        run: php artisan migrate --env=testing --database=pgsql
+        env:
+          DB_CONNECTION: pgsql
+          DB_PORT: 5432
+          DB_DATABASE: testing
+          DB_USERNAME: root
+          DB_PASSWORD: password
+
+      - name: Run Tests
+        run: php artisan test --parallel
+        env:
+          DB_CONNECTION: pgsql
+          DB_PORT: 5432
+          DB_DATABASE: testing
+          DB_USERNAME: root
+          DB_PASSWORD: password
+
+  # ==========================================================
+  # 3. DEPLOYMENT (CD - Hanya jika Frontend & Backend CI Lulus)
+  # ==========================================================
+  deploy:
+    name: Deploy to Production
+    needs: [frontend-ci, backend-ci]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Webhook / Auto-Deploy
+        run: |
+          echo "🚀 All quality checks passed! Deploying to production..."
+          # Jika memakai webhook Laravel Cloud / Forge:
+          # curl -X POST "${{ secrets.LARAVEL_CLOUD_DEPLOY_WEBHOOK }}"

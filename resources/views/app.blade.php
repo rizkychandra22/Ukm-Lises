@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'self'; upgrade-insecure-requests">
@@ -21,8 +21,8 @@
     <meta property="og:description" content="{{ $description ?? 'Unit Kegiatan Mahasiswa Seni Musik dan Tari Lises Asmarandana Universitas Muhammadiyah Sukabumi.' }}">
     
     {{-- Gambar Dinamis / Absolute URL --}}
-    <meta property="og:image" content="{{ $image ?? url(Vite::asset('!FrontEnd-React-Ts/src/assets/logo-bg-light.png')) }}">
-    <meta property="og:image:secure_url" content="{{ $image ?? url(Vite::asset('!FrontEnd-React-Ts/src/assets/logo-bg-light.png')) }}">
+    <meta property="og:image" content="{{ $image ?? url(Vite::asset('resources/js/!FrontEnd-React-Ts/src/assets/logo-bg-light.png')) }}">
+    <meta property="og:image:secure_url" content="{{ $image ?? url(Vite::asset('resources/js/!FrontEnd-React-Ts/src/assets/logo-bg-light.png')) }}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:site_name" content="Lises Asmarandana UMMI">
@@ -32,10 +32,10 @@
     <meta name="twitter:url" content="{{ url()->current() }}">
     <meta name="twitter:title" content="{{ $title ?? 'Lises Asmarandana | Seni Musik & Tari UMMI' }}">
     <meta name="twitter:description" content="{{ $description ?? 'Unit Kegiatan Mahasiswa Seni Musik dan Tari Lises Asmarandana Universitas Muhammadiyah Sukabumi.' }}">
-    <meta name="twitter:image" content="{{ $image ?? url(Vite::asset('!FrontEnd-React-Ts/src/assets/logo-bg-light.png')) }}">
+    <meta name="twitter:image" content="{{ $image ?? url(Vite::asset('resources/js/!FrontEnd-React-Ts/src/assets/logo-bg-light.png')) }}">
 
     {{-- Favicon --}}
-    <link rel="icon" type="image/png" href="{{ url(Vite::asset('!FrontEnd-React-Ts/src/assets/logo-bg-light.png')) }}" />
+    <link rel="icon" type="image/png" href="{{ url(Vite::asset('resources/js/!FrontEnd-React-Ts/src/assets/logo-bg-light.png')) }}" />
 
     {{-- Preconnect Font Google --}}
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="anonymous">
@@ -43,7 +43,7 @@
 
     {{-- Vite Scripts --}}
     @viteReactRefresh
-    @vite('!FrontEnd-React-Ts/src/main.tsx')
+    @vite('resources/js/!FrontEnd-React-Ts/src/main.tsx')
 </head>
 <body class="bg-background text-foreground antialiased">
     <div id="root"></div>

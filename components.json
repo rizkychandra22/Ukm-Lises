@@ -4,7 +4,7 @@
   "rsc": false,
   "tsx": true,
   "tailwind": {
-    "css": "src/styles.css",
+    "css": "resources/js/!FrontEnd-React-Ts/src/styles.css",
     "baseColor": "slate",
     "cssVariables": true,
     "prefix": ""

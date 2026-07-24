@@ -1,6 +1,6 @@
 import i18n from "i18next"
 import { initReactI18next } from "react-i18next"
-import LanguageDetector from "i18next-browser-languagedetector"
+import LanguageDetector from "i18next-browser-languagedetector/cjs"
 // Default locale (id) loaded eagerly. en are lazy-loaded.
 import id from "./locales/id"
 

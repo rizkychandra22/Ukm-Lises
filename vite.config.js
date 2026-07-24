@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
-import { bunny } from 'laravel-vite-plugin/fonts';
+// import { bunny } from 'laravel-vite-plugin/fonts';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
@@ -18,8 +18,8 @@ export default defineConfig({
 
             // ===== CONFIG FRONTEND REACT TS =====
             input: [
-                '!FrontEnd-React-Ts/src/main.tsx',
-                '!FrontEnd-React-Ts/src/assets/logo-bg-light.png',
+                'resources/js/!FrontEnd-React-Ts/src/main.tsx',
+                'resources/js/!FrontEnd-React-Ts/src/assets/logo-bg-light.png',
             ],
             refresh: true,
         }),
@@ -28,8 +28,9 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
-            '@': path.resolve(__dirname, './!FrontEnd-React-Ts/src'),
+            '@': path.resolve(__dirname, './resources/js/!FrontEnd-React-Ts/src'),
         },
+        dedupe: ['react', 'react-dom'],
     },
     server: {
         // ===== DEFAULTS LARAVEL (DISABLED) =====
@@ -39,5 +40,7 @@ export default defineConfig({
 
         // ===== CONFIG FRONTEND REACT TS =====
         origin: 'http://localhost:5173',
+        cors: true,
+        host: true,
     },
 });
