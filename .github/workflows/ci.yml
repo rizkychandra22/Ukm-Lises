@@ -38,14 +38,6 @@ jobs:
         env:
           NODE_ENV: production
 
-      # Simpan hasil build agar bisa ditarik oleh CD Pipeline (Immutable Artifact)
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: vite-build-assets
-          path: public/build/
-          retention-days: 1
-
   # ================== JOB 2: BACKEND ==================
   backend-checks:
     name: Backend (Tests & Postgres)
