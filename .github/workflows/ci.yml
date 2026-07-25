@@ -1,0 +1,97 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ "main", "development", "feat/*" ]
+  pull_request:
+    branches: [ "main", "development" ]
+
+jobs:
+  # ================== JOB 1: FRONTEND ==================
+  frontend-checks:
+    name: Frontend (Lint, Typecheck, Build)
+    runs-on: self-hosted
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install Dependencies (Strict)
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run Typecheck (FrontEnd-React-Ts)
+        run: npx tsc -p resources/js/FrontEnd-React-Ts/tsconfig.json --noEmit
+
+      - name: Run Typecheck (Inertia-React-Ts)
+        run: npx tsc -p resources/js/Inertia-React-Ts/tsconfig.json --noEmit
+
+      - name: Build Vite App (SPA & Inertia)
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+  # ================== JOB 2: BACKEND ==================
+  backend-checks:
+    name: Backend (Tests & Postgres)
+    runs-on: self-hosted
+    defaults:
+      run:
+        shell: powershell
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: zip, pdo_pgsql, pgsql, bcmath, ctype, fileinfo, json, mbstring, openssl, pdo, tokenizer, xml
+          coverage: none
+
+      - name: Install Composer Dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --ignore-platform-reqs
+
+      - name: Setup Environment
+        run: cp .env.example .env
+
+      - name: Generate Application Key
+        run: php artisan key:generate
+
+      - name: Run Migrations & Seeders
+        run: php artisan migrate:fresh --seed
+        env:
+          DB_CONNECTION: pgsql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 5432
+          DB_DATABASE: lises_test
+          DB_USERNAME: postgres
+          DB_PASSWORD: password
+
+      - name: Setup Node (For Vite Build)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Build Vite for Tests
+        run: |
+          npm ci
+          npm run build
+
+      - name: Execute Backend Tests (PHPUnit / Pest)
+        run: php artisan test
+        env:
+          DB_CONNECTION: pgsql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 5432
+          DB_DATABASE: lises_test
+          DB_USERNAME: postgres
+          DB_PASSWORD: password

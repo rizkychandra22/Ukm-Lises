@@ -1,0 +1,99 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-gold: var(--gold);
+  --color-gold-deep: var(--gold-deep);
+  --color-ink: var(--ink);
+  --font-display: "Playfair Display", serif;
+  --font-sans: "Inter", sans-serif;
+}
+
+:root {
+  --radius: 0.625rem;
+
+  /* UKM Lises Asmarandana palette: kuning tua (gold) + hitam */
+  --ink: oklch(0.14 0.01 60);
+  --gold: oklch(0.82 0.16 82);
+  --gold-deep: oklch(0.68 0.17 70);
+
+  --background: oklch(0.11 0.01 60);
+  --foreground: oklch(0.97 0.02 85);
+  --card: oklch(0.16 0.015 60);
+  --card-foreground: oklch(0.97 0.02 85);
+  --popover: oklch(0.16 0.015 60);
+  --popover-foreground: oklch(0.97 0.02 85);
+  --primary: oklch(0.82 0.16 82);
+  --primary-foreground: oklch(0.14 0.01 60);
+  --secondary: oklch(0.22 0.02 60);
+  --secondary-foreground: oklch(0.97 0.02 85);
+  --muted: oklch(0.2 0.015 60);
+  --muted-foreground: oklch(0.72 0.03 80);
+  --accent: oklch(0.68 0.17 70);
+  --accent-foreground: oklch(0.14 0.01 60);
+  --destructive: oklch(0.6 0.24 27);
+  --destructive-foreground: oklch(0.97 0.02 85);
+  --border: oklch(0.28 0.02 70 / 60%);
+  --input: oklch(0.28 0.02 70);
+  --ring: oklch(0.82 0.16 82);
+
+  --gradient-gold: linear-gradient(135deg, var(--gold-deep), var(--gold));
+  --gradient-hero: linear-gradient(180deg, oklch(0.11 0.01 60 / 0.2) 0%, oklch(0.11 0.01 60 / 0.65) 60%, oklch(0.11 0.01 60) 100%);
+  --shadow-gold: 0 20px 60px -20px color-mix(in oklab, var(--gold) 45%, transparent);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+}
+
+@utility text-gradient-gold {
+  background: var(--gradient-gold);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility bg-gradient-gold {
+  background: var(--gradient-gold);
+}
+
+@utility shadow-gold {
+  box-shadow: var(--shadow-gold);
+}

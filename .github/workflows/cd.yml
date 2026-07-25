@@ -1,0 +1,62 @@
+name: CD Pipeline
+
+on:
+  workflow_run:
+    workflows: ["CI Pipeline"]
+    types:
+      - completed
+
+concurrency:
+  group: cd-${{ github.workflow }}-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: true
+
+jobs:
+  deploy-production:
+    name: Deploy to Production
+    # HANYA JALAN JIKA: CI Sukses DAN yang memicu adalah branch 'main' atau 'development'
+    if: ${{ github.event.workflow_run.conclusion == 'success' && (github.event.workflow_run.head_branch == 'main' || github.event.workflow_run.head_branch == 'development') }}
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # OPSI A: Jika runner INI adalah server production itu sendiri
+      - name: Zero-Downtime Deployment Script
+        run: |
+          echo "🚀 Starting Enterprise Deployment to Production..."
+          
+          # 1. Tarik kode terbaru
+          git fetch origin main
+          git reset --hard origin/main
+          
+          # 2. Masuk mode maintenance (Kecualikan IP Developer/Admin jika perlu)
+          php artisan down --render="errors::503" --secret="bypass-token-123"
+
+          # 3. Install Backend Dependencies
+          composer install --no-dev --optimize-autoloader --no-interaction
+
+          # 4. Install Frontend & Build (ATAU tarik artifact dari CI)
+          npm ci
+          npm run build
+
+          # 5. Eksekusi Database Migration secara paksa (force wajib di prod)
+          php artisan migrate --force
+
+          # 6. Optimize Caches (Wajib di Production)
+          php artisan config:cache
+          php artisan event:cache
+          php artisan route:cache
+          php artisan view:cache
+
+          # 7. Restart Queue Workers (Penting jika menggunakan antrean background)
+          php artisan queue:restart
+
+          # 8. Hidupkan kembali aplikasi
+          php artisan up
+          
+          echo "✅ Deployment Successful!"
+
+      # OPSI B: Jika menggunakan Webhook Laravel Cloud (Tinggal uncomment)
+      # - name: Trigger Laravel Cloud Webhook
+      #   run: curl -X POST "${{ secrets.LARAVEL_CLOUD_DEPLOY_WEBHOOK }}"
