@@ -1,10 +1,11 @@
-name: CI
+name: CI Pipeline
 
 on:
+  push:
+    branches: [ "main", "development", "feat/*" ]
   pull_request:
-    branches: [ main, development ]
+    branches: [ "main", "development" ]
 
-# Membatalkan proses CI sebelumnya jika ada push baru di branch yang sama
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -14,7 +15,7 @@ jobs:
   # 1. FRONTEND CI (React + TypeScript + Vite + ESLint)
   # ==========================================================
   frontend-ci:
-    name: Frontend (ESLint + TypeCheck + Vite Build)
+    name: Frontend (Lint + TypeCheck + Build)
     runs-on: self-hosted
 
     steps:
@@ -28,27 +29,19 @@ jobs:
           cache: 'npm'
 
       - name: Install Dependencies
-        run: npm ci
+        run: npm ci || npm install
 
-      # 1. Menjalankan ESLint untuk mengecek code quality
       - name: Run ESLint
         run: npm run lint
 
-      # 2. Menjalankan Typecheck (Terpisah agar lebih cepat mendeteksi error TypeScript)
       - name: Run Typecheck
-        run: npx tsc -b resources/js/FrontEnd-React-Ts/tsconfig.json
+        run: npx tsc -b resources/js/FrontEnd-React-Ts/tsconfig.json && npx tsc -b resources/js/Inertia-React-Ts/tsconfig.json
 
-      # 3. Menjalankan Frontend Unit Test (Bisa diaktifkan nanti jika sudah memakai Vitest/Jest)
-      - name: Run Frontend Tests
-        run: echo "No frontend tests configured yet."
-
-      # 4. Menjalankan Production Build dengan Vite
-      - name: Build Vite App
+      - name: Build Vite App (SPA & Inertia)
         run: npm run build
         env:
           NODE_ENV: production
 
-      # 5. Menyimpan hasil build (Artifacts) agar bisa di-download jika dibutuhkan
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         continue-on-error: true
@@ -58,11 +51,64 @@ jobs:
           retention-days: 7
 
   # ==========================================================
-  # 2. BACKEND CI (Laravel PHP) - Temporarily Disabled
+  # 2. BACKEND CI (Laravel PHP)
   # ==========================================================
   backend-ci:
     name: Backend (PHPUnit Test)
     runs-on: self-hosted
+
+    # Hapus bagian services db ini jika self-hosted runner Anda 
+    # sudah punya database postgres sendiri yang berjalan.
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: testing
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
-      - name: Skip Backend Tests
-        run: echo "Backend is not set up yet. Skipping tests..."
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo_pgsql, pgsql, bcmath, ctype, fileinfo, json, mbstring, openssl, pdo, tokenizer, xml
+
+      - name: Install Composer Dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: Copy .env
+        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+
+      - name: Generate Application Key
+        run: php artisan key:generate
+
+      - name: Run Migrations for Testing
+        run: php artisan migrate:fresh --seed
+        env:
+          DB_CONNECTION: pgsql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 5432
+          DB_DATABASE: testing
+          DB_USERNAME: postgres
+          DB_PASSWORD: password
+
+      - name: Execute Backend Tests
+        run: php artisan test
+        env:
+          DB_CONNECTION: pgsql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 5432
+          DB_DATABASE: testing
+          DB_USERNAME: postgres
+          DB_PASSWORD: password

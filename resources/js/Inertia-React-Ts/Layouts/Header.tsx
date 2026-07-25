@@ -35,9 +35,9 @@ export function Header() {
         <header className="flex h-14 shrink-0 items-center justify-between border-b border-border/40 bg-card/80 px-4 backdrop-blur-sm sticky top-0 z-10 dark:bg-background/80">
             <div className="flex items-center gap-2">
                 <SidebarTrigger className="-ml-2 rounded-xl" />
-                <div className="mx-2 h-4 w-px bg-border/40 hidden md:block" />
+                <div className="mx-2 h-4 w-px bg-border/40 md:block" />
 
-                <div className="hidden md:block">
+                <div className="md:block">
                     <Breadcrumb>
                         <BreadcrumbList>
                             <BreadcrumbItem>
