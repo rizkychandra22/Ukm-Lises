@@ -1,4 +1,16 @@
-import { Link, usePage } from '@inertiajs/react';
+import React from 'react';
+import { Link, usePage, router } from '@inertiajs/react';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import {
     Sidebar,
     SidebarContent,
@@ -36,7 +48,6 @@ export function AppSidebar() {
         <Sidebar className="border-r border-border">
             <SidebarHeader className="border-b border-border/40 px-4 py-4">
                 <Link href="/dashboard" className="flex items-center gap-2.5">
-                    {/* Menggunakan inisial atau logo default jika tidak ada gambar */}
                     <img src={theme === 'dark' ? LogoDark : LogoLight} alt="logo" className='w-8 h-8 rounded-full' />
                     <div className="flex flex-col">
                         <span className="text-[13px] font-bold tracking-tight font-display">UKM Lises</span>
@@ -132,9 +143,27 @@ export function AppSidebar() {
                         <Link href="/settings" className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors" aria-label="Pengaturan" title="Pengaturan">
                             <Settings className="w-[18px] h-[18px]" />
                         </Link>
-                        <Link href="/logout" method="post" as="button" className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors" aria-label="Keluar" title="Keluar">
-                            <LogOut className="w-[18px] h-[18px]" />
-                        </Link>
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <button className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors" aria-label="Keluar" title="Keluar">
+                                    <LogOut className="w-[18px] h-[18px]" />
+                                </button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>Konfirmasi Keluar</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        Apakah anda benar ingin keluar...?
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>Batal</AlertDialogCancel>
+                                    <AlertDialogAction onClick={() => router.post('/dashboard/auth/logout')}>
+                                        Ya, Keluar
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
                     </div>
                 </div>
             </SidebarFooter>
