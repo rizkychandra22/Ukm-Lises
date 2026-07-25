@@ -20,7 +20,7 @@ export default defineConfig({
             input: [
                 'resources/js/FrontEnd-React-Ts/src/main.tsx',
                 'resources/js/FrontEnd-React-Ts/src/assets/logo-bg-light.png',
-                'resources/js/Inertia-React-Ts/app.tsx',
+                'resources/js/app.tsx',
             ],
             refresh: true,
         }),

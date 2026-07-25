@@ -1,9 +1,158 @@
-@import 'tailwindcss';
+@import "tailwindcss" source(none);
+@source "../js/Inertia-React-Ts";
+@source "../js/FrontEnd-React-Ts/src/components/ui";
+@source "../views/app.blade.php";
+@import "tw-animate-css";
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
+@custom-variant dark (&:is(.dark *));
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-gold: var(--gold);
+  --color-gold-deep: var(--gold-deep);
+  --color-ink: var(--ink);
+  --font-display: "Playfair Display", serif;
+  --font-sans: "Inter", sans-serif;
+  --color-sidebar: var(--sidebar-background);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --radius: 0.625rem;
+
+  /* UKM Lises Asmarandana palette */
+  --ink: oklch(0.14 0.01 60);
+  --gold: oklch(0.82 0.16 82);
+  --gold-deep: oklch(0.68 0.17 70);
+
+  /* Light mode (Default for Admin) */
+  --background: oklch(0.99 0.01 90);
+  --foreground: oklch(0.14 0.01 60);
+  --card: oklch(1 0 100);
+  --card-foreground: oklch(0.14 0.01 60);
+  --popover: oklch(1 0 100);
+  --popover-foreground: oklch(0.14 0.01 60);
+  --primary: oklch(0.82 0.16 82);
+  --primary-foreground: oklch(0.14 0.01 60);
+  --secondary: oklch(0.96 0.01 90);
+  --secondary-foreground: oklch(0.14 0.01 60);
+  --muted: oklch(0.96 0.01 90);
+  --muted-foreground: oklch(0.5 0.02 70);
+  --accent: oklch(0.92 0.02 85);
+  --accent-foreground: oklch(0.14 0.01 60);
+  --destructive: oklch(0.6 0.24 27);
+  --destructive-foreground: oklch(0.98 0.01 90);
+  --border: oklch(0.9 0.02 70);
+  --input: oklch(0.9 0.02 70);
+  --ring: oklch(0.82 0.16 82);
+
+  --gradient-gold: linear-gradient(135deg, var(--gold-deep), var(--gold));
+  --shadow-gold: 0 20px 60px -20px color-mix(in oklab, var(--gold) 45%, transparent);
+  
+  --sidebar-background: oklch(0.99 0.01 90);
+  --sidebar-foreground: oklch(0.14 0.01 60);
+  --sidebar-primary: oklch(0.82 0.16 82);
+  --sidebar-primary-foreground: oklch(0.99 0.01 90);
+  --sidebar-accent: oklch(0.96 0.01 90);
+  --sidebar-accent-foreground: oklch(0.14 0.01 60);
+  --sidebar-border: oklch(0.9 0.02 70);
+  --sidebar-ring: oklch(0.82 0.16 82);
+}
+
+.dark {
+  /* Dark mode */
+  --background: oklch(0.11 0.01 60);
+  --foreground: oklch(0.97 0.02 85);
+  --card: oklch(0.16 0.015 60);
+  --card-foreground: oklch(0.97 0.02 85);
+  --popover: oklch(0.16 0.015 60);
+  --popover-foreground: oklch(0.97 0.02 85);
+  --primary: oklch(0.82 0.16 82);
+  --primary-foreground: oklch(0.14 0.01 60);
+  --secondary: oklch(0.22 0.02 60);
+  --secondary-foreground: oklch(0.97 0.02 85);
+  --muted: oklch(0.2 0.015 60);
+  --muted-foreground: oklch(0.72 0.03 80);
+  --accent: oklch(0.68 0.17 70);
+  --accent-foreground: oklch(0.14 0.01 60);
+  --destructive: oklch(0.6 0.24 27);
+  --destructive-foreground: oklch(0.97 0.02 85);
+  --border: oklch(0.28 0.02 70 / 60%);
+  --input: oklch(0.28 0.02 70);
+  --ring: oklch(0.82 0.16 82);
+
+  --sidebar-background: oklch(0.11 0.01 60);
+  --sidebar-foreground: oklch(0.97 0.02 85);
+  --sidebar-primary: oklch(0.82 0.16 82);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.2 0.015 60);
+  --sidebar-accent-foreground: oklch(0.97 0.02 85);
+  --sidebar-border: oklch(0.28 0.02 70 / 60%);
+  --sidebar-ring: oklch(0.82 0.16 82);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+}
+
+@utility text-gradient-gold {
+  background: var(--gradient-gold);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility bg-gradient-gold {
+  background: var(--gradient-gold);
+}
+
+@utility shadow-gold {
+  box-shadow: var(--shadow-gold);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }

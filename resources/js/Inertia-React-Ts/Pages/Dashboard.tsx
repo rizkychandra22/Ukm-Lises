@@ -1,17 +1,22 @@
 import { Head } from '@inertiajs/react';
+import AdminLayout from '../Layouts/AppLayout';
 
 export default function Dashboard() {
     return (
-        <div className="min-h-screen bg-gray-100 dark:bg-slate-900 p-8">
-            <Head title="Admin Dashboard" />
+        <AdminLayout>
+            <Head title="Dashboard Admin" />
             
-            <div className="max-w-7xl mx-auto bg-white dark:bg-slate-800 rounded-lg shadow-sm p-6">
-                <h1 className="text-2xl font-bold text-slate-800 dark:text-white mb-4">Welcome to Admin Dashboard!</h1>
-                <p className="text-slate-600 dark:text-slate-300">
-                    This is a completely separate Inertia.js React application powered by Laravel and Vite.
-                    It uses the app.blade.php layout.
-                </p>
+            <div className="flex flex-col gap-6 max-w-7xl mx-auto pb-12 relative">
+                {/* Header Section */}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h2 className="text-2xl font-bold text-foreground font-display tracking-tight">Dashboard</h2>
+                        <p className="text-sm text-muted-foreground mt-1">
+                            Selamat datang kembali, System Admin. Anda masuk sebagai Administrator.
+                        </p>
+                    </div>
+                </div>
             </div>
-        </div>
+        </AdminLayout>
     );
 }
