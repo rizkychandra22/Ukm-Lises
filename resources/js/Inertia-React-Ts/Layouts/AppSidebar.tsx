@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link, usePage, router } from '@inertiajs/react';
 import {
     AlertDialog,
@@ -149,19 +148,24 @@ export function AppSidebar() {
                                     <LogOut className="w-[18px] h-[18px]" />
                                 </button>
                             </AlertDialogTrigger>
-                            <AlertDialogContent>
+                            <AlertDialogContent className="w-[90%] max-w-[360px] rounded-2xl p-6">
                                 <AlertDialogHeader>
-                                    <AlertDialogTitle>Konfirmasi Keluar</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                        Apakah anda benar ingin keluar...?
+                                    <AlertDialogTitle className="text-center text-lg font-semibold">Keluar</AlertDialogTitle>
+                                    <AlertDialogDescription className="text-center text-[15px] mt-2 mb-4 text-foreground/80">
+                                        Apakah Anda yakin ingin keluar?
                                     </AlertDialogDescription>
                                 </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                    <AlertDialogCancel>Batal</AlertDialogCancel>
-                                    <AlertDialogAction onClick={() => router.post('/dashboard/auth/logout')}>
+                                <div className="flex flex-row justify-center gap-3 mt-2">
+                                    <AlertDialogCancel className="w-24 mt-0 border border-border bg-background hover:bg-muted text-foreground rounded-lg h-10 text-sm font-medium">
+                                        Batal
+                                    </AlertDialogCancel>
+                                    <AlertDialogAction 
+                                        onClick={() => router.post('/dashboard/auth/logout')}
+                                        className="w-24 h-10 text-sm font-medium rounded-lg"
+                                    >
                                         Ya, Keluar
                                     </AlertDialogAction>
-                                </AlertDialogFooter>
+                                </div>
                             </AlertDialogContent>
                         </AlertDialog>
                     </div>
