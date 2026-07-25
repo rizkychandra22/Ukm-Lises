@@ -17,7 +17,8 @@
     "noFallthroughCasesInSwitch": true,
     "types": ["vite/client"],
     "paths": {
-      "@admin/*": ["./*"]
+      "@admin/*": ["./*"],
+      "@/*": ["../FrontEnd-React-Ts/src/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx", "../bootstrap.js"],
