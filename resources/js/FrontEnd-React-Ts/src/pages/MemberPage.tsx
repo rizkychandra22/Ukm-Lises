@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, Search, ArrowUpDown, Eye } from "lucide-react";
 import { useTranslation } from "@/i18n";
@@ -82,25 +82,30 @@ export function MemberPage() {
     setSortConfig({ key, direction });
   };
 
-  const filterAndSortData = (data: any[]) => {
+  const filterAndSortData = (data: typeof members) => {
     let filteredData = [...data];
 
-    // Search filter
+    // Filter by search query
     if (searchQuery) {
-      filteredData = filteredData.filter(
-        (member) =>
-          member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          member.prodi.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+      const searchTerms = searchQuery.toLowerCase().trim().split(/\s+/);
+      
+      filteredData = filteredData.filter((member) => {
+        const searchableText = `${member.name} ${member.prodi}`.toLowerCase();
+        
+        // Memastikan setiap kata yang diketik cocok dengan awalan kata pada nama/jurusan
+        return searchTerms.every(term => 
+          searchableText.includes(` ${term}`) || searchableText.startsWith(term)
+        );
+      });
     }
 
     // Sort logic
     if (sortConfig !== null) {
       filteredData.sort((a, b) => {
-        if (a[sortConfig.key] < b[sortConfig.key]) {
+        if (a[sortConfig.key as keyof typeof a] < b[sortConfig.key as keyof typeof b]) {
           return sortConfig.direction === "asc" ? -1 : 1;
         }
-        if (a[sortConfig.key] > b[sortConfig.key]) {
+        if (a[sortConfig.key as keyof typeof a] > b[sortConfig.key as keyof typeof b]) {
           return sortConfig.direction === "asc" ? 1 : -1;
         }
         return 0;
@@ -110,19 +115,12 @@ export function MemberPage() {
     return filteredData;
   };
 
-  const sortedActiveMembers = useMemo(() => filterAndSortData(activeMembers), [
-    activeMembers,
-    searchQuery,
-    sortConfig,
-  ]);
+  const sortedActiveMembers = filterAndSortData(activeMembers);
 
-  const sortedAlumniMembers = useMemo(() => {
-    let filtered = filterAndSortData(alumniMembers);
-    if (selectedBatch !== "all") {
-      filtered = filtered.filter((m) => m.batch === selectedBatch);
-    }
-    return filtered;
-  }, [alumniMembers, searchQuery, sortConfig, selectedBatch]);
+  let sortedAlumniMembers = filterAndSortData(alumniMembers);
+  if (selectedBatch !== "all") {
+    sortedAlumniMembers = sortedAlumniMembers.filter((m) => m.batch === selectedBatch);
+  }
 
   // Apply pagination
   const totalPagesActive = Math.ceil(sortedActiveMembers.length / itemsPerPage);
@@ -277,7 +275,7 @@ export function MemberPage() {
                 <TableBody>
                   {paginatedActiveMembers.length > 0 ? (
                     paginatedActiveMembers.map((member) => (
-                      <TableRow key={member.id}>
+                      <TableRow key={member.id} className="hover:bg-white/[0.10] transition-colors">
                         <TableCell>
                           <img src={member.img} alt={member.name} className="h-10 w-10 rounded-full object-cover border" />
                         </TableCell>
@@ -344,7 +342,7 @@ export function MemberPage() {
                 <TableBody>
                   {paginatedAlumniMembers.length > 0 ? (
                     paginatedAlumniMembers.map((member) => (
-                      <TableRow key={member.id}>
+                      <TableRow key={member.id} className="hover:bg-white/[0.10] transition-colors">
                         <TableCell>
                           <img src={member.img} alt={member.name} className="h-10 w-10 rounded-full object-cover border" />
                         </TableCell>
