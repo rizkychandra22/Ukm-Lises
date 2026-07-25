@@ -28,10 +28,10 @@ jobs:
         run: npm run lint
 
       - name: Run Typecheck (FrontEnd-React-Ts)
-        run: npx tsc -b resources/js/Frontend-React/tsconfig.json # Sesuaikan path
+        run: npx tsc -p resources/js/FrontEnd-React-Ts/tsconfig.json --noEmit
 
       - name: Run Typecheck (Inertia-React-Ts)
-        run: npx tsc -b resources/js/Admin-Inertia/tsconfig.json # Sesuaikan path
+        run: npx tsc -p resources/js/Inertia-React-Ts/tsconfig.json --noEmit
 
       - name: Build Vite App (SPA & Inertia)
         run: npm run build
