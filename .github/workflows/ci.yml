@@ -69,10 +69,10 @@ jobs:
         run: php artisan migrate:fresh --seed
         env:
           DB_CONNECTION: sqlite
-          DB_DATABASE: :memory:
+          DB_DATABASE: ":memory:"
 
       - name: Execute Backend Tests
         run: php artisan test
         env:
           DB_CONNECTION: sqlite
-          DB_DATABASE: :memory:
+          DB_DATABASE: ":memory:"
