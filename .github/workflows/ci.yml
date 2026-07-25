@@ -84,6 +84,18 @@ jobs:
           DB_USERNAME: postgres
           DB_PASSWORD: password
 
+      - name: Setup Node (For Vite Build)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Build Vite for Tests
+        run: |
+          npm ci
+          npm run build
+        env:
+          NODE_ENV: production
+
       - name: Execute Backend Tests (PHPUnit / Pest)
         run: php artisan test
         env:
