@@ -11,11 +11,6 @@ jobs:
     name: Build & Test (Frontend & Backend)
     runs-on: self-hosted
 
-    # Memaksa runner Windows menggunakan Bash agar semua perintah Linux-style berjalan lancar
-    defaults:
-      run:
-        shell: bash
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -24,7 +19,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: 'npm'
 
       - name: Install NPM Dependencies
@@ -33,8 +28,11 @@ jobs:
       - name: Run ESLint
         run: npm run lint
 
-      - name: Run Typecheck
-        run: npx tsc -b resources/js/FrontEnd-React-Ts/tsconfig.json && npx tsc -b resources/js/Inertia-React-Ts/tsconfig.json
+      - name: Run Typecheck (FrontEnd-React-Ts)
+        run: npx tsc -b resources/js/FrontEnd-React-Ts/tsconfig.json
+
+      - name: Run Typecheck (Inertia-React-Ts)
+        run: npx tsc -b resources/js/Inertia-React-Ts/tsconfig.json
 
       - name: Build Vite App (SPA & Inertia)
         run: npm run build
