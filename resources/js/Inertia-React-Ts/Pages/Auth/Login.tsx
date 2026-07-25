@@ -116,7 +116,7 @@ export default function Login() {
                 </div>
 
                 <div className="relative z-10 text-ink/70 text-xs">
-                    Sistem Manajemen Internal Lises Realese v1.0
+                    Sistem Manajemen Internal Lises Realese v0.1.0
                 </div>
 
                 {/* Decorative glow effects */}
