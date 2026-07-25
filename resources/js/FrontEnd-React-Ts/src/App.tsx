@@ -7,6 +7,7 @@ import { HomePage } from "./pages/HomePage";
 import { NewsPage } from "./pages/NewsPage";
 import { NewsDetailPage } from "./pages/NewsDetailPage";
 import { EventPage } from "./pages/EventPage";
+import { MemberPage } from "./pages/MemberPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
           <Route path="news" element={<NewsPage />} />
           <Route path="news/:slug" element={<NewsDetailPage />} />
           <Route path="event" element={<EventPage />} />
+          <Route path="members" element={<MemberPage />} />
           <Route path="contact" element={<ContactPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>

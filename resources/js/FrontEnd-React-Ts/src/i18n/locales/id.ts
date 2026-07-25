@@ -7,6 +7,7 @@ export default {
       gallery: "Galeri",
       news: "Berita",
       event: "Acara",
+      member: "Anggota",
       contact: "Kontak",
     },
     footer: {
@@ -143,6 +144,12 @@ export default {
       btn_close: "Tutup",
       btn_confirm: "Konfirmasi"
     }
+  },
+
+  MemberPage: {
+    heading: "Anggota",
+    title_t1: "Daftar anggota ukm",
+    title_y1: "Lises",
   },
 
   ContactPage: {
