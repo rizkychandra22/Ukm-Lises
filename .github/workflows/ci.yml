@@ -22,7 +22,7 @@ jobs:
           cache: 'npm'
 
       - name: Install Dependencies (Strict)
-        run: npm ci # Wajib npm ci di CI/CD, bukan npm install
+        run: npm ci
 
       - name: Run ESLint
         run: npm run lint
@@ -42,21 +42,6 @@ jobs:
   backend-checks:
     name: Backend (Tests & Postgres)
     runs-on: self-hosted
-    # Menjalankan database Postgres sungguhan untuk Test Parity
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_DB: testing_db
-          POSTGRES_USER: testing_user
-          POSTGRES_PASSWORD: testing_password
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
 
     steps:
       - name: Checkout Code
@@ -67,7 +52,7 @@ jobs:
         with:
           php-version: '8.2'
           extensions: pdo_pgsql, pgsql, bcmath, ctype, fileinfo, json, mbstring, openssl, pdo, tokenizer, xml
-          coverage: none # Percepat eksekusi jika tidak butuh laporan coverage
+          coverage: none
 
       - name: Cache Composer packages
         uses: actions/cache@v4
@@ -92,9 +77,9 @@ jobs:
           DB_CONNECTION: pgsql
           DB_HOST: 127.0.0.1
           DB_PORT: 5432
-          DB_DATABASE: testing_db
-          DB_USERNAME: testing_user
-          DB_PASSWORD: testing_password
+          DB_DATABASE: lises_test
+          DB_USERNAME: postgres
+          DB_PASSWORD: password
 
       - name: Execute Backend Tests (PHPUnit / Pest)
         run: php artisan test
@@ -102,6 +87,6 @@ jobs:
           DB_CONNECTION: pgsql
           DB_HOST: 127.0.0.1
           DB_PORT: 5432
-          DB_DATABASE: testing_db
-          DB_USERNAME: testing_user
-          DB_PASSWORD: testing_password
+          DB_DATABASE: lises_test
+          DB_USERNAME: postgres
+          DB_PASSWORD: password
