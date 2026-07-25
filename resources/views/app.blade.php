@@ -44,7 +44,7 @@
     {{-- Vite Scripts --}}
     @inertiaHead
     @viteReactRefresh
-    @vite('resources/js/Inertia-React-Ts/app.tsx')
+    @vite('resources/js/app.tsx')
 </head>
 <body class="bg-background text-foreground antialiased">
     @inertia

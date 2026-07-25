@@ -70,7 +70,7 @@ export function AppSidebar() {
 
                 <SidebarGroup>
                     <SidebarGroupLabel className="px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70 mt-2">
-                        Menu Navigasi
+                        Menu
                     </SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
@@ -122,11 +122,11 @@ export function AppSidebar() {
             <SidebarFooter className="border-t border-border/40 p-3">
                 <div className="w-full flex items-center gap-2.5 p-1.5 h-auto">
                     <Avatar className="h-8 w-8">
-                        <AvatarFallback className="bg-primary/10 text-xs font-semibold text-primary">S</AvatarFallback>
+                        <AvatarFallback className="bg-primary/10 text-xs font-semibold text-primary">CA</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col flex-1 text-left overflow-hidden">
-                        <span className="text-[13px] font-medium truncate">System Admin</span>
-                        <span className="text-[10px] text-muted-foreground truncate">Administrator</span>
+                        <span className="text-[13px] font-medium truncate">Core Admin</span>
+                        <span className="text-[10px] text-muted-foreground truncate">@username</span>
                     </div>
                     <div className="flex items-center gap-0.5">
                         <Link href="/settings" className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors" aria-label="Pengaturan" title="Pengaturan">
