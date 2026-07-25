@@ -29,7 +29,7 @@ jobs:
           cache: 'npm'
 
       - name: Install Dependencies
-        run: npm ci || npm install
+        run: npm install
 
       - name: Run ESLint
         run: npm run lint
@@ -57,23 +57,8 @@ jobs:
     name: Backend (PHPUnit Test)
     runs-on: self-hosted
 
-    # Hapus bagian services db ini jika self-hosted runner Anda 
-    # sudah punya database postgres sendiri yang berjalan.
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: testing
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
+    # (Services postgres dihapus karena Windows runner tidak memiliki Docker)
+    # Testing akan menggunakan SQLite (in-memory) agar database asli aman.
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -96,19 +81,11 @@ jobs:
       - name: Run Migrations for Testing
         run: php artisan migrate:fresh --seed
         env:
-          DB_CONNECTION: pgsql
-          DB_HOST: 127.0.0.1
-          DB_PORT: 5432
-          DB_DATABASE: testing
-          DB_USERNAME: postgres
-          DB_PASSWORD: password
+          DB_CONNECTION: sqlite
+          DB_DATABASE: :memory:
 
       - name: Execute Backend Tests
         run: php artisan test
         env:
-          DB_CONNECTION: pgsql
-          DB_HOST: 127.0.0.1
-          DB_PORT: 5432
-          DB_DATABASE: testing
-          DB_USERNAME: postgres
-          DB_PASSWORD: password
+          DB_CONNECTION: sqlite
+          DB_DATABASE: :memory:
