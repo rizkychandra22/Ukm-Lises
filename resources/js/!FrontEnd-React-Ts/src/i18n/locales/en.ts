@@ -1,5 +1,5 @@
 export default {
-  "site-layout": {
+  Layout: {
     nav: {
       brand: "University of Muhammadiyah Sukabumi",
       home: "Home",
@@ -21,10 +21,8 @@ export default {
 
   HomePage: {
     banner: {
-      title_t1: "Resonating in",
-      title_y1: "Tone",
-      title_t2: "Telling Stories Through",
-      title_y2: "Movement",
+      title_t1: "Sabaraya",
+      title_y1: "Sadulur",
       description:
         "UKM Lises Asmarandana is a home for students of Muhammadiyah Sukabumi University who love music and dance - preserving traditions, bringing the stage to life.",
       btn_about: "Get to Know Us",
@@ -66,6 +64,30 @@ export default {
     },
   },
 
+  AboutPage: {
+    heading: "About Us",
+    title_t1: "Igniting tradition through",
+    title_y1: "student art collective",
+    desc_1a: "is a Student Activity Unit in the fields of music and dance arts at Universitas Muhammadiyah Sukabumi. The name",
+    desc_1b: "is derived from a Sundanese song rich in meaning, love for culture, and beauty.",
+    desc_2: "Since its inception, this organization has been a growth space for students looking to learn gamelan, kacapi suling, jaipong, traditional dance creation, and various forms of traditional and contemporary performances.",
+    desc_3: "Every year, Lises Asmarandana performs at campus events, cultural festivals, and collaborative performances with other art communities.",
+    card_name_1: "Vision",
+    card_name_2: "Mission",
+    card_name_3: "Values",
+    card_desc_1: "To become the primary hub for preserving music and dance arts within UMMI and the Sukabumi area.",
+    card_desc_2: "Developing student talents through regular practice, workshops, and high-quality performances.",
+    card_desc_3: "Collectivity, practice discipline, and love for cultural roots while remaining open to innovation."
+  },
+
+  GalleryPage: {
+    heading: "Gallery",
+    title_t1: "Frames of",
+    title_y1: "Stage",
+    title_t2: "practice moments.",
+    desc: "A visual documentation collection of performances, workshops, and togetherness moments of Lises Asmarandana."
+  },
+
   NewsPage: {
     badge: "News",
     title_t1: "News from",
@@ -79,6 +101,69 @@ export default {
     not_found_desc: "Sorry, the article you are looking for is not available or has been deleted.",
     btn_back_news: "Back to News",
     btn_back: "Back",
+  },
+
+  EventPage: {
+    heading: "Events",
+    title_t1: "Attend",
+    title_y1: "our",
+    title_t2: "shows.",
+    buy: "Buy Ticket",
+    no_buy: "Tickets Unavailable",
+    card1: {
+      type: "Exclusive",
+      date: "15 Aug 2026",
+      title: "Charity Concert: Nada Asmarandana",
+      location: "Sukabumi Cultural Center",
+      price: "Rp 50,000",
+      summary: "A charity music and dance performance for humanitarian fundraising, featuring a special collaboration."
+    },
+    card2: {
+      type: "Non-Exclusive",
+      date: "22 Sep 2026",
+      title: "UMMI Cultural Performance",
+      location: "Main Field UMMI Campus",
+      price: "Free",
+      summary: "An open art performance for all students and the general public to celebrate the campus cultural month."
+    },
+    card3: {
+      type: "Exclusive",
+      date: "10 Oct 2026",
+      title: "Gala Night: Harmony of Tatar Sunda",
+      location: "Ballroom Hotel Santika Sukabumi",
+      price: "Rp 100,000",
+      summary: "A spectacular performance featuring stunning lighting and a guest maestro appearance."
+    },
+    dialog: {
+      title: "Buy Ticket",
+      desc: "The payment feature for this event is currently under development.",
+      price: "Price",
+      location: "Location",
+      date: "Date",
+      btn_close: "Close",
+      btn_confirm: "Confirm"
+    }
+  },
+
+  ContactPage: {
+    heading: "Contact",
+    title_t1: "Let's",
+    title_y1: "collaborate",
+    title_t2: "with us.",
+    desc: "Would you like to invite us to perform, collaborate, or join as a member? Please feel free to reach out via the contacts below or visit our secretariat directly.",
+    form: {
+      label1: "Name",
+      placeholder1: "e.g., John Doe",
+      label2: "Email",
+      placeholder2: "e.g., test@gmail.com",
+      label3: "Subject",
+      placeholder3: "e.g., Collaboration / Invitation / Inquiry / others",
+      label4: "Message",
+      placeholder4: "Write the message you want to send",
+      message_success: "Thank you! Your message has been sent.",
+      message_error: "Please fill out all fields before sending the message.",
+      btn_submit: "Send Message"
+    }
   },
 
   NotFoundPage: {

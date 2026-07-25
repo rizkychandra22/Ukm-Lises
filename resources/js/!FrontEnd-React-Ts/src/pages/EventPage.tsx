@@ -14,48 +14,48 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-
-const events = [
-  {
-    id: 1,
-    type: "Eksklusif",
-    date: "15 Agu 2026",
-    title: "Konser Amal: Nada Asmarandana",
-    location: "Gedung Kesenian Sukabumi",
-    price: "Rp 50.000",
-    excerpt:
-      "Pertunjukan musik dan tari amal untuk penggalangan dana kemanusiaan, menampilkan kolaborasi spesial.",
-    img: g3,
-    available: true,
-  },
-  {
-    id: 2,
-    type: "Non-Eksklusif",
-    date: "22 Sep 2026",
-    title: "Pentas Budaya UMMI",
-    location: "Lapangan Utama Kampus UMMI",
-    price: "Gratis",
-    excerpt:
-      "Pentas seni terbuka bagi seluruh mahasiswa dan umum untuk merayakan bulan budaya kampus.",
-    img: g2,
-    available: false,
-  },
-  {
-    id: 3,
-    type: "Eksklusif",
-    date: "10 Okt 2026",
-    title: "Malam Gala: Harmoni Tatar Sunda",
-    location: "Ballroom Hotel Santika Sukabumi",
-    price: "Rp 100.000",
-    excerpt: "Pertunjukan spektakuler dengan tata cahaya memukau dan penampilan maestro tamu.",
-    img: g1,
-    available: true,
-  },
-];
+import { useTranslation } from "@/i18n";
 
 export function EventPage() {
   const [selectedEvent, setSelectedEvent] = useState<number | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { t } = useTranslation("EventPage");
+
+  const events = [
+    {
+      id: 1,
+      type: t("card1.type"),
+      date: t("card1.date"),
+      title: t("card1.title"),
+      location: t("card1.location"),
+      price: t("card1.price"),
+      excerpt: t("card1.summary"),
+      img: g3,
+      available: true,
+    },
+    {
+      id: 2,
+      type: t("card2.type"),
+      date: t("card2.date"),
+      title: t("card2.title"),
+      location: t("card2.location"),
+      price: t("card2.price"),
+      excerpt: t("card2.summary"),
+      img: g2,
+      available: false,
+    },
+    {
+      id: 3,
+      type: t("card3.type"),
+      date: t("card3.date"),
+      title: t("card3.title"),
+      location: t("card3.location"),
+      price: t("card3.price"),
+      excerpt: t("card3.summary"),
+      img: g1,
+      available: true,
+    },
+  ];
 
   const handleBuyTicket = (eventId: number) => {
     setSelectedEvent(eventId);
@@ -70,10 +70,10 @@ export function EventPage() {
         variant="outline"
         className="w-fit gap-2 rounded-full border-primary/40 bg-background/40 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-primary backdrop-blur"
       >
-        <Sparkles className="h-3.5 w-3.5" /> Event
+        <Sparkles className="h-3.5 w-3.5" /> {t("heading")}
       </Badge>
       <h1 className="mt-4 max-w-3xl font-display text-5xl font-bold leading-[1.15] md:text-6xl">
-        Hadirilah <span className="text-gradient-gold">pertunjukan</span> kami.
+        {t("title_t1")} <span className="text-gradient-gold">{t("title_y1")}</span> {t("title_t2")}
       </h1>
 
       <div className="mt-14 grid gap-8 md:grid-cols-3">
@@ -91,7 +91,7 @@ export function EventPage() {
               />
               <Badge
                 className={`absolute left-4 top-4 rounded-full px-3 py-1 text-xs font-semibold ${
-                  event.type === "Eksklusif"
+                  event.type === t("card1.type") || event.type === t("card3.type")
                     ? "bg-gradient-gold text-primary-foreground shadow-gold"
                     : "bg-muted text-muted-foreground border border-border hover:bg-muted"
                 }`}
@@ -120,11 +120,11 @@ export function EventPage() {
                     onClick={() => handleBuyTicket(event.id)}
                     className="rounded-full bg-gradient-gold px-4 py-2 text-sm font-semibold text-primary-foreground shadow-gold transition-transform hover:scale-[1.03]"
                   >
-                    <Ticket className="h-4 w-4 mr-2" /> Beli Tiket
+                    <Ticket className="h-4 w-4 mr-2" /> {t("buy")}
                   </Button>
                 ) : (
                   <span className="text-sm font-medium text-muted-foreground">
-                    Tiket Habis / Bebas
+                    {t("no_buy")}
                   </span>
                 )}
               </div>
@@ -136,14 +136,14 @@ export function EventPage() {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Beli Tiket: {activeEvent?.title}</DialogTitle>
+            <DialogTitle>{t("dialog.title")}: {activeEvent?.title}</DialogTitle>
             <DialogDescription>
-              Fitur pembayaran untuk event ini sedang dalam tahap pengembangan.
+              {t("dialog.desc")}
               <br />
               <br />
-              <strong>Harga:</strong> {activeEvent?.price} <br />
-              <strong>Lokasi:</strong> {activeEvent?.location} <br />
-              <strong>Tanggal:</strong> {activeEvent?.date}
+              <strong>{t("dialog.price")}:</strong> {activeEvent?.price} <br />
+              <strong>{t("dialog.location")}:</strong> {activeEvent?.location} <br />
+              <strong>{t("dialog.date")}:</strong> {activeEvent?.date}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -152,13 +152,13 @@ export function EventPage() {
               variant="outline"
               className="mt-2 sm:mt-0"
             >
-              Tutup
+              {t("dialog.btn_close")}
             </Button>
             <Button
               onClick={() => setIsDialogOpen(false)}
               className="bg-gradient-gold text-primary-foreground"
             >
-              Konfirmasi
+              {t("dialog.btn_confirm")}
             </Button>
           </DialogFooter>
         </DialogContent>

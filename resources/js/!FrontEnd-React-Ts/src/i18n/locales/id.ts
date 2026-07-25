@@ -1,5 +1,5 @@
 export default {
-  "site-layout": {
+  Layout: {
     nav: {
       brand: "Universitas Muhammadiyah Sukabumi",
       home: "Beranda",
@@ -21,10 +21,8 @@ export default {
 
   HomePage: {
     banner: {
-      title_t1: "Bergema dalam",
-      title_y1: "Nada",
-      title_t2: "Bercerita Lewat",
-      title_y2: "Gerak",
+      title_t1: "Sabaraya",
+      title_y1: "Sadulur",
       description:
         "UKM Lises Asmarandana adalah rumah bagi mahasiswa Universitas Muhammadiyah Sukabumi yang mencintai seni musik dan tari - merawat tradisi, menghidupkan panggung.",
       btn_about: "Kenali Kami",
@@ -66,6 +64,30 @@ export default {
     },
   },
 
+  AboutPage: {
+    heading: "Tentang Kami",
+    title_t1: "Menyalakan tradisi lewat",
+    title_y1: "kolektif seni mahasiswa",
+    desc_1a: "adalah Unit Kegiatan Mahasiswa di bidang seni musik dan tari di Universitas Muhammadiyah Sukabumi. Nama",
+    desc_1b: "diambil dari salah satu tembang Sunda yang sarat makna, cinta pada budaya, dan keindahan.",
+    desc_2: "Sejak berdiri, UKM ini menjadi ruang bertumbuh bagi mahasiswa yang ingin belajar gamelan, kacapi suling, jaipong, tari kreasi, dan berbagai bentuk pertunjukan tradisional maupun kontemporer.",
+    desc_3: "Setiap tahun, Lises Asmarandana tampil di acara kampus, festival budaya, dan pementasan kolaboratif bersama komunitas seni lain.",
+    card_name_1: "Visi",
+    card_name_2: "Misi",
+    card_name_3: "Nilai",
+    card_desc_1: "Menjadi wadah utama pelestarian seni musik dan tari di lingkungan UMMI serta Sukabumi.",
+    card_desc_2: "Mengembangkan bakat mahasiswa lewat latihan rutin, workshop, dan pementasan berkualitas.",
+    card_desc_3: "Kolektivitas, disiplin latihan, dan cinta pada akar budaya tanpa menutup diri pada kebaruan."
+  },
+
+  GalleryPage: {
+    heading: "Galeri",
+    title_t1: "Bingkai",
+    title_y1: "Panggung",
+    title_t2: "latihan kami.",
+    desc: "Kumpulan dokumentasi visual dari pementasan, workshop, dan momen kebersamaan Lises Asmarandana."
+  },
+
   NewsPage: {
     badge: "Berita",
     title_t1: "Kabar dari",
@@ -79,6 +101,69 @@ export default {
     not_found_desc: "Maaf, artikel yang Anda cari tidak tersedia atau mungkin sudah dihapus.",
     btn_back_news: "Kembali ke Berita",
     btn_back: "Kembali",
+  },
+
+  EventPage: {
+    heading: "Acara",
+    title_t1: "Hadirilah",
+    title_y1: "pertunjukan",
+    title_t2: "kami.",
+    buy: "Beli Tiket",
+    no_buy: "Tiket Tidak Tersedia",
+    card1: {
+      type: "Eksklusif",
+      date: "15 Agu 2026",
+      title: "Konser Amal: Nada Asmarandana",
+      location: "Gedung Kesenian Sukabumi",
+      price: "Rp 50.000",
+      summary: "Pertunjukan musik dan tari amal untuk penggalangan dana kemanusiaan, menampilkan kolaborasi spesial."
+    },
+    card2: {
+      type: "Non-Eksklusif",
+      date: "22 Sep 2026",
+      title: "Pentas Budaya UMMI",
+      location: "Lapangan Utama Kampus UMMI",
+      price: "Gratis",
+      summary: "Pentas seni terbuka bagi seluruh mahasiswa dan umum untuk merayakan bulan budaya kampus."
+    },
+    card3: {
+      type: "Eksklusif",
+      date: "10 Okt 2026",
+      title: "Malam Gala: Harmoni Tatar Sunda",
+      location: "Ballroom Hotel Santika Sukabumi",
+      price: "Rp 100.000",
+      summary: "Pertunjukan spektakuler dengan tata cahaya memukau dan penampilan maestro tamu."
+    },
+    dialog: {
+      title: "Beli Tiket",
+      desc: "Fitur pembayaran untuk event ini sedang dalam tahap pengembangan.",
+      price: "Harga",
+      location: "Lokasi",
+      date: "Tanggal",
+      btn_close: "Tutup",
+      btn_confirm: "Konfirmasi"
+    }
+  },
+
+  ContactPage: {
+    heading: "Kontak",
+    title_t1: "Mari",
+    title_y1: "berkolaborasi",
+    title_t2: "bersama kami.",
+    desc: "Ingin mengundang kami tampil, kolaborasi, atau bergabung menjadi anggota? Silakan hubungi kami melalui kontak berikut atau secara langsung ke sekretariat kami.",
+    form: {
+      label1: "Nama",
+      placeholder1: "Contoh: John Doe",
+      label2: "Email",
+      placeholder2: "Contoh: test@gmail.com",
+      label3: "Subjek",
+      placeholder3: "Contoh: Kolaborasi / Undangan / Pertanyaan / dan lainnya",
+      label4: "Pesan",
+      placeholder4: "Tuliskan pesan yang ingin Anda kirim",
+      message_success: "Terima kasih! Pesan Anda telah terkirim.",
+      message_error: "Harap isi semua kolom sebelum mengirim pesan.",
+      btn_submit: "Kirim Pesan"
+    }
   },
 
   NotFoundPage: {

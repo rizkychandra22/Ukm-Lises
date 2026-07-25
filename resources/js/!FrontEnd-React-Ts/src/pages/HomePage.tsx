@@ -45,11 +45,11 @@ export function HomePage() {
             <Sparkles className="h-3.5 w-3.5" /> UKM Lises - UMMI
           </Badge>
           <h1 className="mt-6 max-w-4xl font-display text-5xl font-black leading-[1.05] md:text-7xl">
-            {t("banner.title_t1")}{" "}
-            <span className="text-gradient-gold">{t("banner.title_y1")}</span>,
-            <br />
+            <span className="text-gradient-gold">{t("banner.title_y1")}{" "}</span>
+            {t("banner.title_t1")}.
+            {/* <br />
             {t("banner.title_t2")}{" "}
-            <span className="text-gradient-gold">{t("banner.title_y2")}</span>.
+            <span className="text-gradient-gold">{t("banner.title_y2")}</span>. */}
           </h1>
           <p className="mt-6 max-w-2xl text-lg text-muted-foreground">{t("banner.description")}</p>
           <div className="mt-10 flex flex-wrap gap-4">

@@ -1,9 +1,12 @@
 import { Eye, Heart, Sparkles, Target } from "lucide-react";
 import img from "@/assets/gallery-2.jpg";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
+import { useTranslation } from "@/i18n";
 
 export function AboutPage() {
+  const { t } = useTranslation("AboutPage");
+
   return (
     <>
       <section className="mx-auto max-w-7xl px-6 pb-10 pt-12 md:pt-16">
@@ -14,11 +17,11 @@ export function AboutPage() {
           variant="outline"
           className="w-fit gap-2 rounded-full border-primary/40 bg-background/40 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-primary backdrop-blur"
         >
-          <Sparkles className="h-3.5 w-3.5" /> Tentang Kami
+          <Sparkles className="h-3.5 w-3.5" /> {t("heading")}
         </Badge>
         <h1 className="mt-4 max-w-3xl font-display text-5xl font-bold leading-[1.15] md:text-6xl">
-          Menyalakan tradisi lewat{" "}
-          <span className="text-gradient-gold">kolektif seni mahasiswa</span>.
+          {t("title_t1")} <span className="text-gradient-gold">{t("title_y1")}</span>.
+          {/* <span className="text-gradient-gold">{t("title_t2")}</span>. */}
         </h1>
       </section>
 
@@ -35,19 +38,14 @@ export function AboutPage() {
         </div>
         <div className="space-y-5 text-muted-foreground">
           <p>
-            <span className="font-semibold text-foreground">UKM Lises Asmarandana</span> adalah Unit
-            Kegiatan Mahasiswa di bidang seni musik dan tari di Universitas Muhammadiyah Sukabumi.
-            Nama <em>Asmarandana</em> diambil dari salah satu tembang Sunda yang sarat makna, cinta
-            pada budaya, dan keindahan.
+            <span className="font-semibold text-foreground">UKM Lises Asmarandana</span> 
+            {t("desc_1a")} <em>Asmarandana</em> {t("desc_1b")}
           </p>
           <p>
-            Sejak berdiri, UKM ini menjadi ruang bertumbuh bagi mahasiswa yang ingin belajar
-            gamelan, kacapi suling, jaipong, tari kreasi, dan berbagai bentuk pertunjukan
-            tradisional maupun kontemporer.
+            {t("desc_2")}
           </p>
           <p>
-            Setiap tahun, Lises Asmarandana tampil di acara kampus, festival budaya, dan pementasan
-            kolaboratif bersama komunitas seni lain.
+            {t("desc_3")}
           </p>
         </div>
       </section>
@@ -57,18 +55,18 @@ export function AboutPage() {
           {[
             {
               icon: Eye,
-              title: "Visi",
-              desc: "Menjadi wadah utama pelestarian seni musik dan tari di lingkungan UMMI serta Sukabumi.",
+              title: t("card_name_1"),
+              desc: t("card_desc_1"),
             },
             {
               icon: Target,
-              title: "Misi",
-              desc: "Mengembangkan bakat mahasiswa lewat latihan rutin, workshop, dan pementasan berkualitas.",
+              title: t("card_name_2"),
+              desc: t("card_desc_2"),
             },
             {
               icon: Heart,
-              title: "Nilai",
-              desc: "Kolektivitas, disiplin latihan, dan cinta pada akar budaya tanpa menutup diri pada kebaruan.",
+              title: t("card_name_3"),
+              desc: t("card_desc_3"),
             },
           ].map((item) => (
             <Card key={item.title} className="rounded-3xl border-border/60 bg-card">
