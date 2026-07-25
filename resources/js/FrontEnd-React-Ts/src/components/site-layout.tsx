@@ -23,6 +23,7 @@ const getNav = (t: any) => [
   { to: "/gallery", label: t("nav.gallery") },
   { to: "/news", label: t("nav.news") },
   { to: "/event", label: t("nav.event") },
+  { to: "/members", label: t("nav.member") },
   { to: "/contact", label: t("nav.contact") },
 ];
 

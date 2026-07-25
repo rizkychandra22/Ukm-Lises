@@ -7,6 +7,7 @@ export default {
       gallery: "Gallery",
       news: "News",
       event: "Events",
+      member: "Member",
       contact: "Contact",
     },
     footer: {
@@ -143,6 +144,12 @@ export default {
       btn_close: "Close",
       btn_confirm: "Confirm"
     }
+  },
+
+  MemberPage: {
+    heading: "Member",
+    title_t1: "List of members ukm",
+    title_y1: "Lises",
   },
 
   ContactPage: {

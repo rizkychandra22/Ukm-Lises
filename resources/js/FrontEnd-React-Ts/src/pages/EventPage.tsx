@@ -134,7 +134,7 @@ export function EventPage() {
       </div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="w-[80vw] max-w-[400px] sm:max-w-[425px] rounded-xl">
           <DialogHeader>
             <DialogTitle>{t("dialog.title")}: {activeEvent?.title}</DialogTitle>
             <DialogDescription>
