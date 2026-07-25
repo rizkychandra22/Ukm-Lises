@@ -20,6 +20,7 @@ export default defineConfig({
             input: [
                 'resources/js/FrontEnd-React-Ts/src/main.tsx',
                 'resources/js/FrontEnd-React-Ts/src/assets/logo-bg-light.png',
+                'resources/js/Inertia-React-Ts/app.tsx',
             ],
             refresh: true,
         }),
@@ -29,6 +30,7 @@ export default defineConfig({
     resolve: {
         alias: {
             '@': path.resolve(__dirname, './resources/js/FrontEnd-React-Ts/src'),
+            '@admin': path.resolve(__dirname, './resources/js/Inertia-React-Ts'),
         },
         dedupe: ['react', 'react-dom'],
     },
