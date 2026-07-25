@@ -36,7 +36,7 @@ jobs:
 
       # 2. Menjalankan Typecheck (Terpisah agar lebih cepat mendeteksi error TypeScript)
       - name: Run Typecheck
-        run: npx tsc -b resources/js/!FrontEnd-React-Ts/tsconfig.json
+        run: npx tsc -b resources/js/FrontEnd-React-Ts/tsconfig.json
 
       # 3. Menjalankan Frontend Unit Test (Bisa diaktifkan nanti jika sudah memakai Vitest/Jest)
       - name: Run Frontend Tests

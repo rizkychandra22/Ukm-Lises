@@ -33,7 +33,7 @@ jobs:
         run: npm run lint
 
       - name: Run Typecheck
-        run: npx tsc -b resources/js/!FrontEnd-React-Ts/tsconfig.json
+        run: npx tsc -b resources/js/FrontEnd-React-Ts/tsconfig.json
 
       - name: Run Frontend Tests
         run: echo "No frontend tests configured yet."

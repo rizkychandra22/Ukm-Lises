@@ -18,8 +18,8 @@ export default defineConfig({
 
             // ===== CONFIG FRONTEND REACT TS =====
             input: [
-                'resources/js/!FrontEnd-React-Ts/src/main.tsx',
-                'resources/js/!FrontEnd-React-Ts/src/assets/logo-bg-light.png',
+                'resources/js/FrontEnd-React-Ts/src/main.tsx',
+                'resources/js/FrontEnd-React-Ts/src/assets/logo-bg-light.png',
             ],
             refresh: true,
         }),
@@ -28,7 +28,7 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
-            '@': path.resolve(__dirname, './resources/js/!FrontEnd-React-Ts/src'),
+            '@': path.resolve(__dirname, './resources/js/FrontEnd-React-Ts/src'),
         },
         dedupe: ['react', 'react-dom'],
     },

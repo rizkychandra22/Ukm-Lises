@@ -3,5 +3,5 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/{any?}', function () {
-    return view('app');
+    return view('web');
 })->where('any', '^(?!admin|api|dashboard).*$');
