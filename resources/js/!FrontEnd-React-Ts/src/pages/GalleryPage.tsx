@@ -3,6 +3,7 @@ import g2 from "@/assets/gallery-2.jpg";
 import g3 from "@/assets/gallery-3.jpg";
 import g4 from "@/assets/gallery-4.jpg";
 import hero from "@/assets/hero-lises.jpg";
+import { useTranslation } from "@/i18n";
 import { Sparkles } from "lucide-react";
 
 const galleryItems = [
@@ -14,20 +15,21 @@ const galleryItems = [
 ];
 
 export function GalleryPage() {
+  const { t } = useTranslation("GalleryPage");
+
   return (
     <section className="mx-auto max-w-7xl px-6 pb-12 pt-12 md:pb-16 md:pt-16">
       {/* <p className="text-sm uppercase tracking-[0.25em] text-primary">
         Galeri
       </p> */}
       <span className="inline-flex w-fit items-center gap-2 rounded-full border border-primary/40 bg-background/40 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-primary backdrop-blur">
-        <Sparkles className="h-3.5 w-3.5" /> Galeri
+        <Sparkles className="h-3.5 w-3.5" /> {t("heading")}
       </span>
       <h1 className="mt-4 max-w-3xl font-display text-5xl font-bold leading-[1.15] md:text-6xl">
-        Bingkai <span className="text-gradient-gold">panggung</span> & latihan kami.
+        {t("title_t1")} <span className="text-gradient-gold">{t("title_y1")}</span> & {t("title_t2")}
       </h1>
-      <p className="mt-5 max-w-2xl text-muted-foreground">
-        Kumpulan dokumentasi visual dari pementasan, workshop, dan momen kebersamaan Lises
-        Asmarandana.
+      <p className="mt-5 max-w-3xl text-muted-foreground">
+        {t("desc")}
       </p>
 
       <div className="mt-12 grid auto-rows-[220px] gap-4 md:grid-cols-3">

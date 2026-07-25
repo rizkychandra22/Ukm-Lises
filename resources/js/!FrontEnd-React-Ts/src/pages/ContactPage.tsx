@@ -1,11 +1,12 @@
-import { useState } from "react";
 import { Mail, MapPin, Phone, Send, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import { InstagramIcon } from "@/components/ui/icon-svg";
+import { useTranslation } from "@/i18n";
 
 type FieldProps = {
   label: string;
@@ -24,7 +25,6 @@ function Field({ label, name, type = "text", placeholder }: FieldProps) {
         id={name}
         name={name}
         type={type}
-        required
         placeholder={placeholder}
         className="rounded-xl border-border bg-background px-4 py-6 text-sm"
       />
@@ -33,7 +33,7 @@ function Field({ label, name, type = "text", placeholder }: FieldProps) {
 }
 
 export function ContactPage() {
-  const [sent, setSent] = useState(false);
+  const { t } = useTranslation("ContactPage");
 
   return (
     <section className="mx-auto max-w-7xl px-6 pb-12 pt-12 md:pb-16 md:pt-16">
@@ -41,14 +41,13 @@ export function ContactPage() {
         variant="outline"
         className="w-fit gap-2 rounded-full border-primary/40 bg-background/40 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-primary backdrop-blur"
       >
-        <Sparkles className="h-3.5 w-3.5" /> Kontak
+        <Sparkles className="h-3.5 w-3.5" /> {t("heading")}
       </Badge>
       <h1 className="mt-4 max-w-3xl font-display text-5xl font-bold leading-[1.15] md:text-6xl">
-        Mari <span className="text-gradient-gold">berkolaborasi</span> bersama kami.
+        {t("title_t1")} <span className="text-gradient-gold">{t("title_y1")}</span> {t("title_t2")}
       </h1>
-      <p className="mt-5 max-w-2xl text-muted-foreground">
-        Ingin mengundang kami tampil, kolaborasi, atau bergabung menjadi anggota? Silakan hubungi
-        kami melalui kanal berikut.
+      <p className="mt-5 max-w-3xl text-muted-foreground">
+        {t("desc")}
       </p>
 
       <div className="mt-14 flex flex-col gap-10">
@@ -92,26 +91,39 @@ export function ContactPage() {
               <form
                 onSubmit={(event) => {
                   event.preventDefault();
-                  setSent(true);
+                  const formData = new FormData(event.currentTarget);
+                  const name = formData.get("name")?.toString().trim();
+                  const email = formData.get("email")?.toString().trim();
+                  const subject = formData.get("subject")?.toString().trim();
+                  const message = formData.get("message")?.toString().trim();
+
+                  if (!name || !email || !subject || !message) {
+                    toast.error(t("form.message_error"));
+                    return;
+                  }
+
+                  toast.success(t("form.message_success"));
+                  // Optionally reset the form
+                  event.currentTarget.reset();
                 }}
                 className="flex flex-col justify-between h-full space-y-5"
               >
                 <div className="space-y-5">
                   <div className="grid gap-5 sm:grid-cols-2">
-                    <Field label="Nama" name="name" placeholder="Nama lengkap" />
-                    <Field label="Email" name="email" type="email" placeholder="nama@email.com" />
+                    <Field label={t("form.label1")} name="name" placeholder={t("form.placeholder1")} />
+                    <Field label={t("form.label2")} name="email" type="email" placeholder={t("form.placeholder2")} />
                   </div>
                   <Field
-                    label="Subjek"
+                    label={t("form.label3")}
                     name="subject"
-                    placeholder="Kolaborasi / undangan / lainnya"
+                    placeholder={t("form.placeholder3")}
                   />
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Pesan</label>
+                    <label className="text-sm font-medium">{t("form.label4")}</label>
                     <Textarea
-                      required
+                      name="message"
                       rows={6}
-                      placeholder="Tulis pesan Anda..."
+                      placeholder={t("form.placeholder4")}
                       className="rounded-xl border-border bg-background px-4 py-3 text-sm resize-none"
                     />
                   </div>
@@ -121,13 +133,8 @@ export function ContactPage() {
                     type="submit"
                     className="rounded-full bg-gradient-gold px-7 py-6 text-sm font-semibold text-primary-foreground shadow-gold transition-transform hover:scale-[1.02] w-full sm:w-auto"
                   >
-                    <Send className="h-4 w-4 mr-2" /> Kirim Pesan
+                    <Send className="h-4 w-4 mr-2" /> {t("form.btn_submit")}
                   </Button>
-                  {sent && (
-                    <p className="mt-4 text-sm text-primary">
-                      Terima kasih! Pesan Anda telah terkirim.
-                    </p>
-                  )}
                 </div>
               </form>
             </CardContent>
