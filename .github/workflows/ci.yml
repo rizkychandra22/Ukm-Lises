@@ -6,30 +6,29 @@ on:
   pull_request:
     branches: [ "main", "development" ]
 
-concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
-  # ==========================================================
-  # 1. FRONTEND CI (React + TypeScript + Vite + ESLint)
-  # ==========================================================
-  frontend-ci:
-    name: Frontend (Lint + TypeCheck + Build)
+  build-and-test:
+    name: Build & Test (Frontend & Backend)
     runs-on: self-hosted
+
+    # Memaksa runner Windows menggunakan Bash agar semua perintah Linux-style berjalan lancar
+    defaults:
+      run:
+        shell: bash
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      # ================== FRONTEND ==================
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
 
-      - name: Install Dependencies
-        run: npm install
+      - name: Install NPM Dependencies
+        run: npm ci || npm install
 
       - name: Run ESLint
         run: npm run lint
@@ -50,19 +49,7 @@ jobs:
           path: public/build/
           retention-days: 7
 
-  # ==========================================================
-  # 2. BACKEND CI (Laravel PHP)
-  # ==========================================================
-  backend-ci:
-    name: Backend (PHPUnit Test)
-    runs-on: self-hosted
-
-    # (Services postgres dihapus karena Windows runner tidak memiliki Docker)
-    # Testing akan menggunakan SQLite (in-memory) agar database asli aman.
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
+      # ================== BACKEND ==================
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
