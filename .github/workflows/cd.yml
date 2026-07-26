@@ -57,6 +57,6 @@ jobs:
           
           echo "✅ Deployment Successful!"
 
-      # OPSI B: Jika menggunakan Webhook Laravel Cloud (Tinggal uncomment)
-      # - name: Trigger Laravel Cloud Webhook
-      #   run: curl -X POST "${{ secrets.LARAVEL_CLOUD_DEPLOY_WEBHOOK }}"
+      # OPSI B: Jika menggunakan Webhook Laravel Cloud
+      - name: 🌐 Trigger Deploy Webhook
+        run: curl -X POST "${{ secrets.LARAVEL_CLOUD_DEPLOY_WEBHOOK }}"
