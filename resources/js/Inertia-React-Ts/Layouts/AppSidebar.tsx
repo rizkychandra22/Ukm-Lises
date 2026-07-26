@@ -242,7 +242,10 @@ export function AppSidebar() {
                                         Batal
                                     </AlertDialogCancel>
                                     <AlertDialogAction 
-                                        onClick={() => router.post(route('logout'))}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            router.post(route('logout'));
+                                        }}
                                         className="w-24 h-10 text-sm font-medium rounded-lg"
                                     >
                                         Ya, Keluar
