@@ -1,5 +1,5 @@
 import { route as routeFn } from 'ziggy-js';
-// @ts-ignore
+// @ts-expect-error - Ziggy file might not have type declarations
 import { Ziggy } from '../../ziggy';
 
 export function route(name?: string, params?: any, absolute?: boolean): string {
