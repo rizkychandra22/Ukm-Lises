@@ -116,7 +116,7 @@ export default function Login() {
                 </div>
 
                 <div className="relative z-10 text-ink/70 text-xs">
-                    Sistem Manajemen Internal Lises Realese v0.1.0
+                    Sistem Management Operasional Lises Asmarandana
                 </div>
 
                 {/* Decorative glow effects */}
@@ -250,7 +250,7 @@ export default function Login() {
 
                         <div className="text-center pt-4">
                             <p className="text-xs text-muted-foreground">
-                                Sistem Management Operasional Lises Asmarandana
+                                Sistem Manajemen Internal Ukm Lises Realese v1.1.0
                             </p>
                         </div>
                     </form>

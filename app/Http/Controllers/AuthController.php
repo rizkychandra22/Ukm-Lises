@@ -56,4 +56,22 @@ class AuthController extends Controller
 
         return redirect()->route('login')->with('success', 'Anda berhasil keluar');
     }
+
+    /**
+     * Memperbarui profil pengguna.
+     */
+    public function updateProfile(Request $request): RedirectResponse
+    {
+        $user = $request->user();
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'username' => ['required', 'string', 'max:255', \Illuminate\Validation\Rule::unique('users')->ignore($user->id)],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        $this->authService->updateProfile($user, $validated);
+
+        return redirect()->back()->with('success', 'Profil berhasil diperbarui');
+    }
 }
