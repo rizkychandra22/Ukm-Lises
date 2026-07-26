@@ -22,6 +22,9 @@ Route::middleware(['access:Master,Admin'])->prefix('dashboard')->group(function 
 
     // Route untuk Logout
     Route::post('/auth/logout', [AuthController::class, 'logout'])->name('logout');
+    
+    // Route untuk Profile
+    Route::put('/profile', [AuthController::class, 'updateProfile'])->name('profile.update');
 });
 
 // -------------------------------------------------------------

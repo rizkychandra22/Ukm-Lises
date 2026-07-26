@@ -376,7 +376,7 @@ export function MemberPage() {
 
       {/* View Detail Dialog */}
       <Dialog open={!!selectedMember} onOpenChange={(open) => !open && setSelectedMember(null)}>
-        <DialogContent className="w-[80vw] max-w-[400px] sm:max-w-[425px] rounded-xl">
+        <DialogContent className="w-[90vw] max-w-[400px] sm:max-w-[425px] rounded-xl">
           <DialogHeader>
             <DialogTitle>Detail Anggota</DialogTitle>
           </DialogHeader>

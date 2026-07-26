@@ -49,4 +49,21 @@ class AuthService
         request()->session()->invalidate();
         request()->session()->regenerateToken();
     }
+
+    /**
+     * Memperbarui profil user.
+     */
+    public function updateProfile(User $user, array $data): User
+    {
+        $user->name = $data['name'];
+        $user->username = $data['username'];
+        
+        if (!empty($data['password'])) {
+            $user->password = \Illuminate\Support\Facades\Hash::make($data['password']);
+        }
+
+        $user->save();
+
+        return $user;
+    }
 }
