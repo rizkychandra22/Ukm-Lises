@@ -25,7 +25,7 @@ class ListMemberController extends Controller
      */
     public function index()
     {
-        return Inertia::render('ListMember/Index', [
+        return Inertia::render('IndexMember', [
             'members' => BatchMember::with('batch')->latest()->get(),
             'batches' => Batch::select('id', 'year', 'name_id', 'name_en')->orderBy('year', 'desc')->get(),
         ]);
@@ -44,7 +44,7 @@ class ListMemberController extends Controller
 
         $this->batchService->createBatch($validated);
 
-        return redirect()->back()->with('success', 'Data angkatan berhasil ditambahkan!');
+        return redirect()->back()->with('success', 'Data angkatan & akun berhasil ditambahkan!');
     }
 
     public function updateBatch(Request $request, Batch $batch)
@@ -58,14 +58,14 @@ class ListMemberController extends Controller
 
         $this->batchService->updateBatch($batch, $validated);
 
-        return redirect()->back()->with('success', 'Data angkatan berhasil diperbarui!');
+        return redirect()->back()->with('success', 'Data angkatan & akun berhasil diperbarui!');
     }
 
     public function destroyBatch(Batch $batch)
     {
         $batch->delete();
 
-        return redirect()->back()->with('success', 'Data angkatan berhasil dihapus!');
+        return redirect()->back()->with('success', 'Data angkatan & akun berhasil dihapus!');
     }
 
     /* =========================================================================
@@ -78,7 +78,7 @@ class ListMemberController extends Controller
             'batch_id'    => 'required|exists:batches,id',
             'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'name'        => 'required|string|max:255',
-            'prodi'       => 'required|string|max:255',
+            'prodi_id'    => 'required|string|max:255',
             'type'        => 'required|in:Administration,Demisioner',
             'periode'     => 'required_if:type,Administration|nullable|string|max:100',
             'position_id' => 'required_if:type,Administration|nullable|string|max:255',
@@ -95,7 +95,7 @@ class ListMemberController extends Controller
             'batch_id'    => 'required|exists:batches,id',
             'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'name'        => 'required|string|max:255',
-            'prodi'       => 'required|string|max:255',
+            'prodi_id'    => 'required|string|max:255',
             'type'        => 'required|in:Administration,Demisioner',
             'periode'     => 'required_if:type,Administration|nullable|string|max:100',
             'position_id' => 'required_if:type,Administration|nullable|string|max:255',

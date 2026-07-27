@@ -16,7 +16,7 @@ Route::middleware('guest')->group(function () {
 // -------------------------------------------------------------
 // 2. DASHBOARD / ADMIN PANEL (AUTHENTICATED & ACCESSIBLE BY ROLES)
 // -------------------------------------------------------------
-Route::middleware(['access:Master,Admin'])->prefix('dashboard')->group(function () {
+Route::middleware(['access:Master,Admin,User'])->prefix('dashboard')->group(function () {
     Route::get('/', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
@@ -28,7 +28,7 @@ Route::middleware(['access:Master,Admin'])->prefix('dashboard')->group(function 
     // ---------------------------------------------------------
     // ROUTE KELOLA ANGGOTA & ANGKATAN (LIST MEMBER)
     // ---------------------------------------------------------
-    Route::prefix('list-members')->name('list-members.')->group(function () {
+    Route::prefix('list-member')->name('list-member.')->group(function () {
         // Halaman utama
         Route::get('/', [ListMemberController::class, 'index'])->name('index');
 

@@ -4,26 +4,28 @@ namespace App\Services;
 
 use App\Helpers\Translations;
 use App\Models\BatchMember;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 class BatchMemberService
 {
     public function createMember(array $data): BatchMember
     {
-        // 1. Upload Foto jika ada
-        if (isset($data['image']) && $data['image'] instanceof \Illuminate\Http\UploadedFile) {
-            $data['image'] = $data['image']->store('batch-members', 'public');
+        // Upload Foto jika ada
+        if (isset($data['image']) && $data['image'] instanceof UploadedFile) {
+            $data['image'] = $data['image']->store('members', 'public');
         }
 
-        // 2. Logika Status & Auto Translate berdasarkan Type
+        // Logika Status & Auto Translate berdasarkan Type
         if ($data['type'] === 'Demisioner') {
             $data['status'] = 'Deactive';
+            $data['prodi_en'] = Translations::toEnglish($data['prodi_id'] ?? null);
             $data['periode'] = null;
             $data['position_id'] = null;
             $data['position_en'] = null;
         } else {
             $data['status'] = 'Active';
-            // Auto translate posisi jika diisi
+            $data['prodi_en'] = Translations::toEnglish($data['prodi_id'] ?? null);
             $data['position_en'] = Translations::toEnglish($data['position_id'] ?? null);
         }
 
@@ -32,24 +34,26 @@ class BatchMemberService
 
     public function updateMember(BatchMember $member, array $data): BatchMember
     {
-        // 1. Handle Foto Baru
-        if (isset($data['image']) && $data['image'] instanceof \Illuminate\Http\UploadedFile) {
+        // Handle Foto Baru
+        if (isset($data['image']) && $data['image'] instanceof UploadedFile) {
             if ($member->image) {
                 Storage::disk('public')->delete($member->image);
             }
-            $data['image'] = $data['image']->store('batch-members', 'public');
+            $data['image'] = $data['image']->store('members', 'public');
         } else {
             unset($data['image']); // Tetap pakai gambar lama
         }
 
-        // 2. Logika Status & Auto Translate
+        // Logika Status & Auto Translate
         if ($data['type'] === 'Demisioner') {
             $data['status'] = 'Deactive';
             $data['periode'] = null;
+            $data['prodi_en'] = Translations::toEnglish($data['prodi_id'] ?? null);
             $data['position_id'] = null;
             $data['position_en'] = null;
         } else {
             $data['status'] = 'Active';
+            $data['prodi_en'] = Translations::toEnglish($data['prodi_id'] ?? null);
             $data['position_en'] = Translations::toEnglish($data['position_id'] ?? null);
         }
 

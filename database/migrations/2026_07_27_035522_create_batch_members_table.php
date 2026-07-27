@@ -16,7 +16,8 @@ return new class extends Migration
             $table->foreignId('batch_id')->constrained()->onDelete('cascade');
             $table->string('image')->nullable();
             $table->string('name');
-            $table->string('prodi');
+            $table->string('prodi_id');
+            $table->string('prodi_en');
             $table->enum('type', ['Administration', 'Demisioner']);
             $table->enum('status', ['Active', 'Deactive']);
             $table->string('periode')->nullable();
