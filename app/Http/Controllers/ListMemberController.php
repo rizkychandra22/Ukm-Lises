@@ -63,7 +63,7 @@ class ListMemberController extends Controller
 
     public function destroyBatch(Batch $batch)
     {
-        $batch->delete();
+        $this->batchService->deleteBatch($batch);
 
         return redirect()->back()->with('success', 'Data angkatan & akun berhasil dihapus!');
     }

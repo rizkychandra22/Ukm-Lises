@@ -2,8 +2,16 @@ import { useState, useMemo } from 'react';
 import { Head, useForm, usePage } from '@inertiajs/react';
 import { route } from '../Lib/Route';
 import AdminLayout from '../Layouts/AppLayout';
-import { Search, Plus, Edit, Trash2, ArrowUpDown } from 'lucide-react';
+import { Search, Plus, Edit, Trash2, ArrowUpDown, Eye } from 'lucide-react';
 import { toast } from 'sonner';
+
+import {
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+} from "@/components/ui/sheet";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -78,6 +86,8 @@ export default function Index({ members, batches }: Props) {
     };
 
     // --- States ---
+    const [viewingMember, setViewingMember] = useState<BatchMember | null>(null);
+    const [isViewSheetOpen, setIsViewSheetOpen] = useState(false);
     const [activeTab, setActiveTab] = useState("anggota");
     const [activeMemberTab, setActiveMemberTab] = useState("Demisioner");
     const [searchMember, setSearchMember] = useState("");
@@ -354,7 +364,11 @@ export default function Index({ members, batches }: Props) {
                                 onChange={(e) => activeTab === 'anggota' ? setSearchMember(e.target.value) : setSearchBatch(e.target.value)}
                             />
                         </div>
-                        {hasRole(['Master', 'Admin', 'User']) && (
+                        {(() => {
+                            if (activeTab === 'angkatan') return hasRole(['Master', 'Admin']);
+                            if (activeMemberTab === 'Administration') return hasRole(['Master', 'Admin']);
+                            return hasRole(['Master', 'Admin', 'User']);
+                        })() && (
                             <Button className="w-full sm:w-auto" onClick={activeTab === 'anggota' ? handleAddMember : handleAddBatch}>
                                 <Plus className="mr-2 h-4 w-4" /> Tambah {activeTab === 'anggota' ? 'Anggota' : 'Angkatan'}
                             </Button>
@@ -443,9 +457,13 @@ export default function Index({ members, batches }: Props) {
                                             <TableCell>{member.batch?.name_id}</TableCell>
                                             <TableCell className="text-right">
                                                 <div className="flex justify-end gap-2 items-center">
-                                                    {hasRole(['Master', 'User']) ? (
+                                                    <Button className="bg-emerald-600 hover:bg-emerald-700 text-white" size="sm" onClick={() => { setViewingMember(member); setIsViewSheetOpen(true); }}>
+                                                        <Eye className="h-4 w-4 lg:mr-1" /> 
+                                                        <span className="hidden lg:inline">Lihat</span>
+                                                    </Button>
+                                                    {(activeMemberTab === 'Administration' ? hasRole(['Master', 'Admin']) : hasRole(['Master', 'User'])) && (
                                                         <>
-                                                            <Button variant="outline" size="sm" onClick={() => handleEditMember(member)}>
+                                                            <Button className="bg-blue-600 hover:bg-blue-700 text-white" size="sm" onClick={() => handleEditMember(member)}>
                                                                 <Edit className="h-4 w-4 mr-1 md:mr-0 lg:mr-1" /> 
                                                                 <span className="hidden lg:inline">Edit</span>
                                                             </Button>
@@ -454,8 +472,6 @@ export default function Index({ members, batches }: Props) {
                                                                 <span className="hidden lg:inline">Hapus</span>
                                                             </Button>
                                                         </>
-                                                    ) : (
-                                                        <span className="text-xs italic text-muted-foreground mr-2">Hanya Lihat</span>
                                                     )}
                                                 </div>
                                             </TableCell>
@@ -466,6 +482,7 @@ export default function Index({ members, batches }: Props) {
                             </Table>
                         </div>
                     </TabsContent>
+
 
                     {/* TAB ANGKATAN */}
                     <TabsContent value="angkatan">
@@ -503,7 +520,7 @@ export default function Index({ members, batches }: Props) {
                                                 <TableCell className="text-right">
                                                     <div className="flex justify-end gap-2">
                                                         <Button 
-                                                            variant="outline" 
+                                                            className="bg-blue-600 hover:bg-blue-700 text-white" 
                                                             size="sm"
                                                             onClick={() => handleEditBatch(b)}
                                                         >
@@ -680,7 +697,7 @@ export default function Index({ members, batches }: Props) {
                                     onChange={e => setMemberData('type', e.target.value as any)}
                                     required
                                 >
-                                    <option value="Administration">Kepengurusan</option>
+                                    {hasRole(['Master', 'Admin']) && <option value="Administration">Kepengurusan</option>}
                                     <option value="Demisioner">Demisioner</option>
                                 </select>
                                 {memberErrors.type && <span className="text-xs text-red-500">{memberErrors.type}</span>}
@@ -749,6 +766,64 @@ export default function Index({ members, batches }: Props) {
                         </div>
                     </AlertDialogContent>
                 </AlertDialog>
+
+                {/* SHEET LIHAT ANGGOTA */}
+                <Sheet open={isViewSheetOpen} onOpenChange={setIsViewSheetOpen}>
+                    <SheetContent className="overflow-y-auto">
+                        <SheetHeader className="mb-6">
+                            <SheetTitle>Detail Anggota</SheetTitle>
+                            <SheetDescription>
+                                Informasi lengkap anggota UKM Lises.
+                            </SheetDescription>
+                        </SheetHeader>
+                        {viewingMember && (
+                            <div className="space-y-6">
+                                <div className="flex justify-center">
+                                    <img 
+                                        src={viewingMember.image ? viewingMember.image : `https://ui-avatars.com/api/?name=${encodeURIComponent(viewingMember.name)}&background=random`} 
+                                        alt={viewingMember.name} 
+                                        className="w-32 h-32 rounded-full object-cover border-4 border-muted" 
+                                    />
+                                </div>
+                                <div className="space-y-4">
+                                    <div>
+                                        <h4 className="text-sm font-medium text-muted-foreground">Nama Lengkap</h4>
+                                        <p className="font-medium">{viewingMember.name}</p>
+                                    </div>
+                                    <div>
+                                        <h4 className="text-sm font-medium text-muted-foreground">Program Studi</h4>
+                                        <p className="font-medium">{viewingMember.prodi_id}</p>
+                                    </div>
+                                    <div>
+                                        <h4 className="text-sm font-medium text-muted-foreground">Angkatan {viewingMember.batch?.year}</h4>
+                                        <p className="font-medium">{viewingMember.batch?.name_id}</p>
+                                    </div>
+                                    <div>
+                                        <h4 className="text-sm font-medium text-muted-foreground">Status</h4>
+                                        <p className="font-medium">
+                                            {viewingMember.type === 'Administration' ? 'Kepengurusan' : 'Demisioner'} 
+                                            <span className={`ml-2 text-xs px-2 py-0.5 rounded-full ${viewingMember.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                                {viewingMember.status}
+                                            </span>
+                                        </p>
+                                    </div>
+                                    {viewingMember.type === 'Administration' && (
+                                        <>
+                                            <div>
+                                                <h4 className="text-sm font-medium text-muted-foreground">Periode</h4>
+                                                <p className="font-medium">{viewingMember.periode || '-'}</p>
+                                            </div>
+                                            <div>
+                                                <h4 className="text-sm font-medium text-muted-foreground">Jabatan</h4>
+                                                <p className="font-medium">{viewingMember.position_id || '-'}</p>
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+                    </SheetContent>
+                </Sheet>
             </div>
         </AdminLayout>
     );
