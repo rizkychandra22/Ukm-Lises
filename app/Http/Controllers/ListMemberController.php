@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Batch;
 use App\Models\BatchMember;
+use App\Models\Major;
 use App\Services\BatchService;
 use App\Services\BatchMemberService;
 use Illuminate\Http\Request;
@@ -26,7 +27,8 @@ class ListMemberController extends Controller
     public function index()
     {
         return Inertia::render('IndexMember', [
-            'members' => BatchMember::with('batch')->latest()->get(),
+            'majors' => Major::select('id', 'faculty_id', 'faculty_en', 'name_id', 'name_en', 'degree')->get(),
+            'members' => BatchMember::with(['batch', 'major'])->latest()->get(),
             'batches' => Batch::select('id', 'year', 'name_id', 'name_en')->orderBy('year', 'desc')->get(),
         ]);
     }
@@ -76,9 +78,9 @@ class ListMemberController extends Controller
     {
         $validated = $request->validate([
             'batch_id'    => 'required|exists:batches,id',
+            'major_id'    => 'required|exists:majors,id',
             'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'name'        => 'required|string|max:255',
-            'prodi_id'    => 'required|string|max:255',
             'type'        => 'required|in:Administration,Demisioner',
             'periode'     => 'required_if:type,Administration|nullable|string|max:100',
             'position_id' => 'required_if:type,Administration|nullable|string|max:255',
@@ -93,9 +95,9 @@ class ListMemberController extends Controller
     {
         $validated = $request->validate([
             'batch_id'    => 'required|exists:batches,id',
+            'major_id'    => 'required|exists:majors,id',
             'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'name'        => 'required|string|max:255',
-            'prodi_id'    => 'required|string|max:255',
             'type'        => 'required|in:Administration,Demisioner',
             'periode'     => 'required_if:type,Administration|nullable|string|max:100',
             'position_id' => 'required_if:type,Administration|nullable|string|max:255',

@@ -9,7 +9,7 @@ class BatchMember extends Model
 {
     protected $fillable = [
         'batch_id', 'image', 'name',
-        'prodi_id', 'prodi_en',
+        'major_id',
         'type', 'status', 'periode',
         'position_id', 'position_en'
     ];
@@ -17,5 +17,10 @@ class BatchMember extends Model
     public function batch()
     {
         return $this->belongsTo(Batch::class);
+    }
+
+    public function major()
+    {
+        return $this->belongsTo(Major::class);
     }
 }

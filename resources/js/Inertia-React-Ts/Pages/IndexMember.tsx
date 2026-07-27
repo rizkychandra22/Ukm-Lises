@@ -53,27 +53,37 @@ type Batch = {
     name_en: string;
 };
 
+type Major = {
+    id: number;
+    faculty_id: string;
+    faculty_en: string;
+    name_id: string;
+    name_en: string;
+    degree: string | null;
+};
+
 type BatchMember = {
     id: number;
     batch_id: number;
     image: string | null;
     name: string;
-    prodi_id: string;
-    prodi_en: string;
+    major_id: string | number;
     type: 'Administration' | 'Demisioner';
     status: 'Active' | 'Deactive';
     periode: string | null;
     position_id: string | null;
     position_en: string | null;
     batch?: Batch;
+    major?: Major;
 };
 
 type Props = {
     members: BatchMember[];
     batches: Batch[];
+    majors: Major[];
 };
 
-export default function Index({ members, batches }: Props) {
+export default function Index({ members, batches, majors }: Props) {
     const { auth } = usePage<any>().props;
     const user = auth.user;
 
@@ -88,6 +98,10 @@ export default function Index({ members, batches }: Props) {
     // --- States ---
     const [viewingMember, setViewingMember] = useState<BatchMember | null>(null);
     const [isViewSheetOpen, setIsViewSheetOpen] = useState(false);
+    
+    // State Fakultas untuk Filter Program Studi
+    const [selectedFaculty, setSelectedFaculty] = useState<string>('');
+
     const [activeTab, setActiveTab] = useState("anggota");
     const [activeMemberTab, setActiveMemberTab] = useState("Demisioner");
     const [searchMember, setSearchMember] = useState("");
@@ -112,6 +126,21 @@ export default function Index({ members, batches }: Props) {
     const [isDeleteMemberDialogOpen, setIsDeleteMemberDialogOpen] = useState(false);
     const [memberToDelete, setMemberToDelete] = useState<number | null>(null);
 
+    // Derived states untuk Fakultas & Prodi
+    const faculties = useMemo(() => {
+        const unique = new Map<string, string>();
+        majors.forEach(m => {
+            if (!unique.has(m.faculty_id)) {
+                unique.set(m.faculty_id, m.faculty_id);
+            }
+        });
+        return Array.from(unique.values());
+    }, [majors]);
+
+    const availableMajors = useMemo(() => {
+        return majors.filter(m => m.faculty_id === selectedFaculty);
+    }, [majors, selectedFaculty]);
+
     // Form Anggota
     const {
         data: memberData,
@@ -125,7 +154,7 @@ export default function Index({ members, batches }: Props) {
         batch_id: '',
         image: null as File | null,
         name: '',
-        prodi_id: '',
+        major_id: '',
         type: 'Administration',
         periode: '',
         position_id: '',
@@ -136,6 +165,7 @@ export default function Index({ members, batches }: Props) {
     const handleAddMember = () => {
         setEditingMember(null);
         resetMember();
+        setSelectedFaculty('');
         setMemberData('type', activeMemberTab as any);
         setMemberData('_method', 'post');
         setIsMemberModalOpen(true);
@@ -143,11 +173,19 @@ export default function Index({ members, batches }: Props) {
 
     const handleEditMember = (member: BatchMember) => {
         setEditingMember(member);
+        
+        const foundMajor = majors.find(m => m.id === Number(member.major_id));
+        if (foundMajor) {
+            setSelectedFaculty(foundMajor.faculty_id);
+        } else {
+            setSelectedFaculty('');
+        }
+
         setMemberData({
             batch_id: member.batch_id.toString(),
             image: null,
             name: member.name,
-            prodi_id: member.prodi_id,
+            major_id: member.major_id.toString(),
             type: member.type,
             periode: member.periode || '',
             position_id: member.position_id || '',
@@ -309,7 +347,7 @@ export default function Index({ members, batches }: Props) {
         return members.filter(m => 
             (m.type === activeMemberTab) &&
             (m.name.toLowerCase().includes(searchMember.toLowerCase()) || 
-             m.prodi_id.toLowerCase().includes(searchMember.toLowerCase()))
+             (m.major?.name_id || m.major_id.toString()).toLowerCase().includes(searchMember.toLowerCase()))
         );
     }, [members, searchMember, activeMemberTab]);
 
@@ -446,7 +484,7 @@ export default function Index({ members, batches }: Props) {
                                                 />
                                             </TableCell>
                                             <TableCell className="font-medium">{member.name}</TableCell>
-                                            <TableCell>{member.prodi_id}</TableCell>
+                                            <TableCell>{member.major ? `${member.major.degree ? member.major.degree + ' - ' : ''}${member.major.name_id}` : member.major_id}</TableCell>
                                             {activeMemberTab !== 'Demisioner' && (
                                                 <>
                                                     <TableCell>{member.periode || '-'}</TableCell>
@@ -664,15 +702,40 @@ export default function Index({ members, batches }: Props) {
                                 />
                                 {memberErrors.name && <span className="text-xs text-red-500">{memberErrors.name}</span>}
                             </div>
-                            <div>
-                                <label className="block text-sm font-medium mb-1">Program Studi</label>
-                                <Input 
-                                    placeholder="Program Studi"
-                                    value={memberData.prodi_id}
-                                    onChange={e => setMemberData('prodi_id', e.target.value)}
-                                    required
-                                />
-                                {memberErrors.prodi_id && <span className="text-xs text-red-500">{memberErrors.prodi_id}</span>}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Fakultas</label>
+                                    <select 
+                                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                        value={selectedFaculty}
+                                        onChange={e => {
+                                            setSelectedFaculty(e.target.value);
+                                            setMemberData('major_id', '');
+                                        }}
+                                        required
+                                    >
+                                        <option value="" disabled>Pilih Fakultas</option>
+                                        {faculties.map(faculty => (
+                                            <option key={faculty} value={faculty}>{faculty}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Program Studi</label>
+                                    <select 
+                                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                        value={memberData.major_id}
+                                        onChange={e => setMemberData('major_id', e.target.value)}
+                                        required
+                                        disabled={!selectedFaculty}
+                                    >
+                                        <option value="" disabled>Pilih Program Studi</option>
+                                        {availableMajors.map(m => (
+                                            <option key={m.id} value={m.id}>{m.degree ? `${m.degree} - ` : ''}{m.name_id}</option>
+                                        ))}
+                                    </select>
+                                    {memberErrors.major_id && <span className="text-xs text-red-500 mt-1 block">{memberErrors.major_id}</span>}
+                                </div>
                             </div>
                             <div>
                                 <label className="block text-sm font-medium mb-1">Angkatan</label>
@@ -792,7 +855,7 @@ export default function Index({ members, batches }: Props) {
                                     </div>
                                     <div>
                                         <h4 className="text-sm font-medium text-muted-foreground">Program Studi</h4>
-                                        <p className="font-medium">{viewingMember.prodi_id}</p>
+                                        <p className="font-medium">{viewingMember.major ? `${viewingMember.major.degree ? viewingMember.major.degree + ' - ' : ''}${viewingMember.major.name_id}` : viewingMember.major_id}</p>
                                     </div>
                                     <div>
                                         <h4 className="text-sm font-medium text-muted-foreground">Angkatan {viewingMember.batch?.year}</h4>
