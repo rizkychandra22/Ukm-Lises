@@ -17,8 +17,8 @@ class AccountSeeder extends Seeder
 
         // Buat User Master Awal
         $masterUser = User::create([
-            'name'     => 'Master Akun',
-            'username' => 'mastercore',
+            'name'     => 'Developer',
+            'username' => 'dev',
             'password' => bcrypt('password'),
         ]);
         $masterUser->assignRole($masterRole);
