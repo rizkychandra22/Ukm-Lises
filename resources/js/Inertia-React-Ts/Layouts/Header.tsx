@@ -29,7 +29,11 @@ export function Header() {
     // Simple breadcrumb logic
     const segments = url.split('/').filter(Boolean);
     const lastSegment = segments[segments.length - 1];
-    const pageName = lastSegment ? lastSegment.charAt(0).toUpperCase() + lastSegment.slice(1) : 'Dashboard';
+    const formatPageName = (segment: string) => {
+        if (segment === 'list-member') return 'Data Anggota';
+        return segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' ');
+    };
+    const pageName = lastSegment ? formatPageName(lastSegment) : 'Dashboard';
 
     return (
         <header className="flex h-14 shrink-0 items-center justify-between border-b border-border/40 bg-card/80 px-4 backdrop-blur-sm sticky top-0 z-10 dark:bg-background/80">

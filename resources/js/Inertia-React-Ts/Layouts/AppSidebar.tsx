@@ -37,10 +37,6 @@ import {
 import {
     LayoutDashboard,
     Users,
-    Calendar,
-    Box,
-    Wallet,
-    FileText,
     Settings,
     LogOut,
 } from 'lucide-react';
@@ -53,6 +49,7 @@ interface User {
     id: number;
     name?: string;
     username?: string;
+    roles?: string[];
 }
 
 interface SharedProps {
@@ -68,6 +65,14 @@ export function AppSidebar() {
     const { url } = usePage();
     const { theme } = useTheme();
     const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+
+    const hasRole = (roleNames: string | string[]) => {
+        if (!user?.roles) return false;
+        if (Array.isArray(roleNames)) {
+            return roleNames.some(role => user.roles?.includes(role));
+        }
+        return user.roles.includes(roleNames);
+    };
 
     const { data, setData, put, processing, errors } = useForm({
         name: user?.name || '',
@@ -88,7 +93,13 @@ export function AppSidebar() {
         });
     };
 
-    const isActive = (href: string) => url === href || url.startsWith(href + '/');
+    const isActive = (href: string, exact = false) => {
+        const path = href.startsWith('http') ? new URL(href).pathname : href;
+        if (exact) {
+            return url === path;
+        }
+        return url === path || url.startsWith(path + '/');
+    };
 
     return (
         <Sidebar className="border-r border-border">
@@ -112,7 +123,7 @@ export function AppSidebar() {
                             <SidebarMenuItem>
                                 <SidebarMenuButton
                                     asChild
-                                    isActive={isActive('/dashboard')}
+                                    isActive={isActive(route('dashboard'), true)}
                                     className="rounded-xl transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium"
                                 >
                                     <Link href={route('dashboard')}>
@@ -131,46 +142,40 @@ export function AppSidebar() {
                     </SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            <SidebarMenuItem>
-                                <SidebarMenuButton asChild isActive={isActive('/admin/anggota')} className="rounded-xl transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium">
-                                    <Link href="/anggota">
-                                        <Users className="w-[18px] h-[18px]" />
-                                        <span className="text-[13px]">Data Anggota</span>
-                                    </Link>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-                            <SidebarMenuItem>
-                                <SidebarMenuButton asChild isActive={isActive('/admin/jadwal')} className="rounded-xl transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium">
-                                    <Link href="/jadwal">
-                                        <Calendar className="w-[18px] h-[18px]" />
-                                        <span className="text-[13px]">Jadwal Latihan</span>
-                                    </Link>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-                            <SidebarMenuItem>
-                                <SidebarMenuButton asChild isActive={isActive('/admin/inventaris')} className="rounded-xl transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium">
-                                    <Link href="/inventaris">
-                                        <Box className="w-[18px] h-[18px]" />
-                                        <span className="text-[13px]">Inventaris</span>
-                                    </Link>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-                            <SidebarMenuItem>
-                                <SidebarMenuButton asChild isActive={isActive('/admin/keuangan')} className="rounded-xl transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium">
-                                    <Link href="/keuangan">
-                                        <Wallet className="w-[18px] h-[18px]" />
-                                        <span className="text-[13px]">Kas & Keuangan</span>
-                                    </Link>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-                            <SidebarMenuItem>
-                                <SidebarMenuButton asChild isActive={isActive('/admin/surat')} className="rounded-xl transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium">
-                                    <Link href="/surat">
-                                        <FileText className="w-[18px] h-[18px]" />
-                                        <span className="text-[13px]">Surat & Proposal</span>
-                                    </Link>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
+
+                            {/* Main Menu Role User */}
+                            {hasRole(['Master']) && (
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton asChild isActive={isActive(route('list-member.index'))} className="rounded-xl transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium">
+                                        <Link href={route('list-member.index')}>
+                                            <Users className="w-[18px] h-[18px]" />
+                                            <span className="text-[13px]">Data Anggota</span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            )}
+
+                            {hasRole(['Admin']) && (
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton asChild isActive={isActive(route('list-member.index'))} className="rounded-xl transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium">
+                                        <Link href={route('list-member.index')}>
+                                            <Users className="w-[18px] h-[18px]" />
+                                            <span className="text-[13px]">Data Anggota</span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            )}
+                            
+                            {hasRole(['User']) && (
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton asChild isActive={isActive(route('list-member.index'))} className="rounded-xl transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium">
+                                        <Link href={route('list-member.index')}>
+                                            <Users className="w-[18px] h-[18px]" />
+                                            <span className="text-[13px]">Data Anggota</span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            )}
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
@@ -198,7 +203,7 @@ export function AppSidebar() {
                                 <DialogHeader>
                                     <DialogTitle>Update Profil</DialogTitle>
                                 </DialogHeader>
-                                <form onSubmit={onSubmit} className="flex flex-col gap-4 py-4">
+                                <form onSubmit={onSubmit} className="flex flex-col gap-4 py-4 max-h-[75vh] overflow-y-auto no-scrollbar px-1">
                                     <div className="flex flex-col gap-2">
                                         <Label htmlFor="name">Nama Lengkap</Label>
                                         <Input id="name" value={data.name} onChange={e => setData('name', e.target.value)} />
