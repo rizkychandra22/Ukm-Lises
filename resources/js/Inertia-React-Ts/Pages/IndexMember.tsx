@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Head, useForm, router, usePage } from '@inertiajs/react';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import { route } from '../Lib/Route';
 import AdminLayout from '../Layouts/AppLayout';
 import { Search, Plus, Edit, Trash2, ArrowUpDown } from 'lucide-react';
@@ -323,18 +323,20 @@ export default function Index({ members, batches }: Props) {
                 <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
                     {/* LEFT: Main Tabs & Sub Tabs */}
                     <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto items-start sm:items-center">
-                        <Tabs value={activeTab} onValueChange={setActiveTab}>
-                            <TabsList className="grid grid-cols-2 w-full sm:w-64">
-                                <TabsTrigger value="anggota">Anggota</TabsTrigger>
-                                <TabsTrigger value="angkatan">Angkatan</TabsTrigger>
-                            </TabsList>
-                        </Tabs>
+                        {!hasRole(['User']) && (
+                            <Tabs value={activeTab} onValueChange={setActiveTab}>
+                                <TabsList className="grid grid-cols-2 w-full sm:w-64">
+                                    <TabsTrigger value="anggota">Anggota</TabsTrigger>
+                                    <TabsTrigger value="angkatan">Angkatan</TabsTrigger>
+                                </TabsList>
+                            </Tabs>
+                        )}
 
                         {activeTab === 'anggota' && (
                             <Tabs value={activeMemberTab} onValueChange={setActiveMemberTab}>
                                 <TabsList className="grid grid-cols-2 w-full sm:w-64">
-                                    <TabsTrigger value="Administration">Kepengurusan</TabsTrigger>
                                     <TabsTrigger value="Demisioner">Demisioner</TabsTrigger>
+                                    <TabsTrigger value="Administration">Kepengurusan</TabsTrigger>
                                 </TabsList>
                             </Tabs>
                         )}

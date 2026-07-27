@@ -39,7 +39,7 @@ Route::middleware(['access:Master,Admin,User'])->prefix('dashboard')->group(func
 
         // CRUD Anggota (Batch Member)
         Route::post('/members', [ListMemberController::class, 'storeMember'])->name('members.store');
-        Route::post('/members/{batchMember}', [ListMemberController::class, 'updateMember'])->name('members.update');
+        Route::put('/members/{batchMember}', [ListMemberController::class, 'updateMember'])->name('members.update');
         Route::delete('/members/{batchMember}', [ListMemberController::class, 'destroyMember'])->name('members.destroy');
     });
 });
