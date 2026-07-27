@@ -426,7 +426,7 @@ export default function Index({ members, batches }: Props) {
                                         <TableRow key={member.id} className="transition-colors hover:bg-muted/50">
                                             <TableCell>
                                                 <img 
-                                                    src={member.image ? `/storage/${member.image}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random`} 
+                                                    src={member.image ? member.image : `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random`} 
                                                     alt={member.name} 
                                                     className="h-10 w-10 rounded-full object-cover border" 
                                                 />

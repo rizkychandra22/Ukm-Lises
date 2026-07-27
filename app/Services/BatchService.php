@@ -2,19 +2,23 @@
 
 namespace App\Services;
 
-use App\Helpers\Translations;
 use App\Models\Batch;
 use App\Models\User;
+use App\Services\Translations\GoogleTranslateService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class BatchService
 {
+    public function __construct(
+        protected GoogleTranslateService $translator
+    ) {}
+
     public function createBatch(array $data): Batch
     {
         return DB::transaction(function () use ($data) {
             // Auto translate name_id ke name_en
-            $data['name_en'] = Translations::toEnglish($data['name_id'] ?? null);
+            $data['name_en'] = $this->translator->toEnglish($data['name_id'] ?? null);
 
             // Buat User Otomatis untuk Angkatan Ini
             $user = User::create([
@@ -34,11 +38,10 @@ class BatchService
     public function updateBatch(Batch $batch, array $data): Batch
     {
         return DB::transaction(function () use ($batch, $data) {
-            // Persiapkan data untuk update Batch
             $batchData = [
                 'year'    => $data['year'],
                 'name_id' => $data['name_id'],
-                'name_en' => Translations::toEnglish($data['name_id'] ?? null),
+                'name_en' => $this->translator->toEnglish($data['name_id'] ?? null),
             ];
             
             $batch->update($batchData);
@@ -70,10 +73,7 @@ class BatchService
         DB::transaction(function () use ($batch) {
             $userId = $batch->user_id;
             
-            // Hapus Batch (Otomatis menghapus BatchMember berkat cascade onDelete di database)
             $batch->delete();
-
-            // Hapus akun User terkait setelah Batch dihapus
             if ($userId) {
                 User::find($userId)?->delete();
             }
