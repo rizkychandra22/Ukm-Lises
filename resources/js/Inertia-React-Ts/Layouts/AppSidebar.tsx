@@ -93,8 +93,11 @@ export function AppSidebar() {
         });
     };
 
-    const isActive = (href: string) => {
+    const isActive = (href: string, exact = false) => {
         const path = href.startsWith('http') ? new URL(href).pathname : href;
+        if (exact) {
+            return url === path;
+        }
         return url === path || url.startsWith(path + '/');
     };
 
@@ -120,7 +123,7 @@ export function AppSidebar() {
                             <SidebarMenuItem>
                                 <SidebarMenuButton
                                     asChild
-                                    isActive={isActive(route('dashboard'))}
+                                    isActive={isActive(route('dashboard'), true)}
                                     className="rounded-xl transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium"
                                 >
                                     <Link href={route('dashboard')}>
@@ -147,12 +150,6 @@ export function AppSidebar() {
                                         <Link href={route('list-member.index')}>
                                             <Users className="w-[18px] h-[18px]" />
                                             <span className="text-[13px]">Data Anggota</span>
-                                        </Link>
-                                    </SidebarMenuButton>
-                                    <SidebarMenuButton asChild isActive={isActive(route('list-member.index'))} className="rounded-xl transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium">
-                                        <Link href={route('')}>
-                                            <Users className="w-[18px] h-[18px]" />
-                                            <span className="text-[13px]">Data Kepengurusan</span>
                                         </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
@@ -206,7 +203,7 @@ export function AppSidebar() {
                                 <DialogHeader>
                                     <DialogTitle>Update Profil</DialogTitle>
                                 </DialogHeader>
-                                <form onSubmit={onSubmit} className="flex flex-col gap-4 py-4">
+                                <form onSubmit={onSubmit} className="flex flex-col gap-4 py-4 max-h-[75vh] overflow-y-auto no-scrollbar px-1">
                                     <div className="flex flex-col gap-2">
                                         <Label htmlFor="name">Nama Lengkap</Label>
                                         <Input id="name" value={data.name} onChange={e => setData('name', e.target.value)} />

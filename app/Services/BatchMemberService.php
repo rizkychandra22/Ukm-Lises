@@ -19,14 +19,14 @@ class BatchMemberService
         // Logika Status & Auto Translate berdasarkan Type
         if ($data['type'] === 'Demisioner') {
             $data['status'] = 'Deactive';
-            $data['prodi_en'] = Translations::toEnglish($data['prodi_id'] ?? null);
+            $data['prodi_en'] = Translations::toEnglish($data['prodi_id'] ?? null) ?? $data['prodi_id'];
             $data['periode'] = null;
             $data['position_id'] = null;
             $data['position_en'] = null;
         } else {
             $data['status'] = 'Active';
-            $data['prodi_en'] = Translations::toEnglish($data['prodi_id'] ?? null);
-            $data['position_en'] = Translations::toEnglish($data['position_id'] ?? null);
+            $data['prodi_en'] = Translations::toEnglish($data['prodi_id'] ?? null) ?? $data['prodi_id'];
+            $data['position_en'] = Translations::toEnglish($data['position_id'] ?? null) ?? $data['position_id'];
         }
 
         return BatchMember::create($data);
@@ -48,13 +48,13 @@ class BatchMemberService
         if ($data['type'] === 'Demisioner') {
             $data['status'] = 'Deactive';
             $data['periode'] = null;
-            $data['prodi_en'] = Translations::toEnglish($data['prodi_id'] ?? null);
+            $data['prodi_en'] = Translations::toEnglish($data['prodi_id'] ?? null) ?? $data['prodi_id'];
             $data['position_id'] = null;
             $data['position_en'] = null;
         } else {
             $data['status'] = 'Active';
-            $data['prodi_en'] = Translations::toEnglish($data['prodi_id'] ?? null);
-            $data['position_en'] = Translations::toEnglish($data['position_id'] ?? null);
+            $data['prodi_en'] = Translations::toEnglish($data['prodi_id'] ?? null) ?? $data['prodi_id'];
+            $data['position_en'] = Translations::toEnglish($data['position_id'] ?? null) ?? $data['position_id'];
         }
 
         $member->update($data);

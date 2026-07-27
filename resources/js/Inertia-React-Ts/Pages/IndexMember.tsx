@@ -79,7 +79,7 @@ export default function Index({ members, batches }: Props) {
 
     // --- States ---
     const [activeTab, setActiveTab] = useState("anggota");
-    const [activeMemberTab, setActiveMemberTab] = useState("Administration");
+    const [activeMemberTab, setActiveMemberTab] = useState("Demisioner");
     const [searchMember, setSearchMember] = useState("");
     const [searchBatch, setSearchBatch] = useState("");
     
@@ -109,7 +109,8 @@ export default function Index({ members, batches }: Props) {
         post: postMember,
         delete: deleteMemberReq,
         reset: resetMember,
-        processing: processingMember
+        processing: processingMember,
+        errors: memberErrors
     } = useForm({
         batch_id: '',
         image: null as File | null,
@@ -353,9 +354,11 @@ export default function Index({ members, batches }: Props) {
                                 onChange={(e) => activeTab === 'anggota' ? setSearchMember(e.target.value) : setSearchBatch(e.target.value)}
                             />
                         </div>
-                        <Button className="w-full sm:w-auto" onClick={activeTab === 'anggota' ? handleAddMember : handleAddBatch}>
-                            <Plus className="mr-2 h-4 w-4" /> Tambah {activeTab === 'anggota' ? 'Anggota' : 'Angkatan'}
-                        </Button>
+                        {hasRole(['Master', 'Admin', 'User']) && (
+                            <Button className="w-full sm:w-auto" onClick={activeTab === 'anggota' ? handleAddMember : handleAddBatch}>
+                                <Plus className="mr-2 h-4 w-4" /> Tambah {activeTab === 'anggota' ? 'Anggota' : 'Angkatan'}
+                            </Button>
+                        )}
                     </div>
                 </div>
 
@@ -380,7 +383,7 @@ export default function Index({ members, batches }: Props) {
                                                 <ArrowUpDown className="ml-2 h-4 w-4" />
                                             </Button>
                                         </TableHead>
-                                        {activeMemberTab === 'Administration' && (
+                                        {activeMemberTab !== 'Demisioner' && (
                                             <>
                                                 <TableHead>
                                                     <Button variant="ghost" className="-ml-4 hover:bg-transparent">
@@ -430,7 +433,7 @@ export default function Index({ members, batches }: Props) {
                                             </TableCell>
                                             <TableCell className="font-medium">{member.name}</TableCell>
                                             <TableCell>{member.prodi_id}</TableCell>
-                                            {activeMemberTab === 'Administration' && (
+                                            {activeMemberTab !== 'Demisioner' && (
                                                 <>
                                                     <TableCell>{member.periode || '-'}</TableCell>
                                                     <TableCell>{member.position_id || '-'}</TableCell>
@@ -535,7 +538,7 @@ export default function Index({ members, batches }: Props) {
                             </DialogTitle>
                         </DialogHeader>
                         
-                        <form onSubmit={handleSubmitBatch} className="space-y-4 pt-4">
+                        <form onSubmit={handleSubmitBatch} className="space-y-4 pt-4 max-h-[75vh] overflow-y-auto no-scrollbar px-1">
                             <div>
                                 <label className="block text-sm font-medium mb-1">Tahun Angkatan</label>
                                 <Input 
@@ -633,7 +636,7 @@ export default function Index({ members, batches }: Props) {
                             </DialogTitle>
                         </DialogHeader>
                         
-                        <form onSubmit={handleSubmitMember} className="space-y-4 pt-4 max-h-[75vh] overflow-y-auto px-1">
+                        <form onSubmit={handleSubmitMember} className="space-y-4 pt-4 max-h-[75vh] overflow-y-auto no-scrollbar px-1">
                             <div>
                                 <label className="block text-sm font-medium mb-1">Nama Anggota</label>
                                 <Input 
@@ -642,6 +645,7 @@ export default function Index({ members, batches }: Props) {
                                     onChange={e => setMemberData('name', e.target.value)}
                                     required
                                 />
+                                {memberErrors.name && <span className="text-xs text-red-500">{memberErrors.name}</span>}
                             </div>
                             <div>
                                 <label className="block text-sm font-medium mb-1">Program Studi</label>
@@ -651,6 +655,7 @@ export default function Index({ members, batches }: Props) {
                                     onChange={e => setMemberData('prodi_id', e.target.value)}
                                     required
                                 />
+                                {memberErrors.prodi_id && <span className="text-xs text-red-500">{memberErrors.prodi_id}</span>}
                             </div>
                             <div>
                                 <label className="block text-sm font-medium mb-1">Angkatan</label>
@@ -665,6 +670,7 @@ export default function Index({ members, batches }: Props) {
                                         <option key={b.id} value={b.id}>{b.year} - {b.name_id}</option>
                                     ))}
                                 </select>
+                                {memberErrors.batch_id && <span className="text-xs text-red-500">{memberErrors.batch_id}</span>}
                             </div>
                             <div>
                                 <label className="block text-sm font-medium mb-1">Status</label>
@@ -677,6 +683,7 @@ export default function Index({ members, batches }: Props) {
                                     <option value="Administration">Kepengurusan</option>
                                     <option value="Demisioner">Demisioner</option>
                                 </select>
+                                {memberErrors.type && <span className="text-xs text-red-500">{memberErrors.type}</span>}
                             </div>
                             {memberData.type === 'Administration' && (
                                 <>
@@ -688,6 +695,7 @@ export default function Index({ members, batches }: Props) {
                                             onChange={e => setMemberData('periode', e.target.value)}
                                             required
                                         />
+                                        {memberErrors.periode && <span className="text-xs text-red-500">{memberErrors.periode}</span>}
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium mb-1">Jabatan</label>
@@ -697,6 +705,7 @@ export default function Index({ members, batches }: Props) {
                                             onChange={e => setMemberData('position_id', e.target.value)}
                                             required
                                         />
+                                        {memberErrors.position_id && <span className="text-xs text-red-500">{memberErrors.position_id}</span>}
                                     </div>
                                 </>
                             )}
@@ -707,6 +716,7 @@ export default function Index({ members, batches }: Props) {
                                     accept="image/*"
                                     onChange={e => setMemberData('image', e.target.files ? e.target.files[0] : null)}
                                 />
+                                {memberErrors.image && <span className="text-xs text-red-500">{memberErrors.image}</span>}
                             </div>
 
                             <div className="flex justify-end gap-2 pt-4">
@@ -739,7 +749,6 @@ export default function Index({ members, batches }: Props) {
                         </div>
                     </AlertDialogContent>
                 </AlertDialog>
-
             </div>
         </AdminLayout>
     );
