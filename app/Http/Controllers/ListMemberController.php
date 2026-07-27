@@ -50,8 +50,10 @@ class ListMemberController extends Controller
     public function updateBatch(Request $request, Batch $batch)
     {
         $validated = $request->validate([
-            'year'    => 'required|string|max:10',
-            'name_id' => 'required|string|max:255',
+            'year'     => 'required|string|max:10',
+            'name_id'  => 'required|string|max:255',
+            'username' => 'nullable|string|max:255',
+            'password' => 'nullable|string|min:6',
         ]);
 
         $this->batchService->updateBatch($batch, $validated);
