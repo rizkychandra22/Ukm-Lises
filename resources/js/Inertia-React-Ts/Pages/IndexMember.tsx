@@ -569,7 +569,7 @@ export default function Index({ members, batches, majors }: Props) {
                                                         </Button>
                                                         {(() => {
                                                             if (activeMemberTab === 'Administration') return hasRole(['Master', 'Admin']);
-                                                            if (activeMemberTab === 'Demisioner') return hasRole(['Master', 'Admin']);
+                                                            if (activeMemberTab === 'Demisioner') return hasRole(['Master']);
                                                             if (activeMemberTab === 'MyBatch') return hasRole('User') && member.type !== 'Administration';
                                                             return false;
                                                         })() && (
