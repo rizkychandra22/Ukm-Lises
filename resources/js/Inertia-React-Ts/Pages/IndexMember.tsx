@@ -121,6 +121,17 @@ export default function Index({ members, batches, majors }: Props) {
         setSortBatchConfig({ key, direction });
     };
 
+    // Sort State untuk Anggota
+    const [sortMemberConfig, setSortMemberConfig] = useState<{ key: 'name' | 'major_id' | 'periode' | 'position_id' | 'batch_year' | 'batch_name', direction: 'asc' | 'desc' } | null>(null);
+
+    const handleSortMember = (key: 'name' | 'major_id' | 'periode' | 'position_id' | 'batch_year' | 'batch_name') => {
+        let direction: 'asc' | 'desc' = 'asc';
+        if (sortMemberConfig && sortMemberConfig.key === key && sortMemberConfig.direction === 'asc') {
+            direction = 'desc';
+        }
+        setSortMemberConfig({ key, direction });
+    };
+
     // Modal State untuk Anggota
     const [isMemberModalOpen, setIsMemberModalOpen] = useState(false);
     const [editingMember, setEditingMember] = useState<BatchMember | null>(null);
@@ -356,20 +367,45 @@ export default function Index({ members, batches, majors }: Props) {
     }, [batches, searchBatch, sortBatchConfig]);
 
     const filteredMembers = useMemo(() => {
-        return members.filter(m => {
-            let matchTab = false;
-            if (activeMemberTab === 'MyBatch') {
-                matchTab = m.batch_id === userBatch?.id;
-            } else {
-                matchTab = m.type === activeMemberTab;
-            }
+        const result = members.filter(m => {
+            const matchTab = activeMemberTab === 'MyBatch' ? m.batch_id === userBatch?.id : m.type === activeMemberTab;
 
             const matchSearch = m.name.toLowerCase().includes(searchMember.toLowerCase()) ||
                 (m.major?.name_id || m.major_id.toString()).toLowerCase().includes(searchMember.toLowerCase());
 
             return matchTab && matchSearch;
         });
-    }, [members, searchMember, activeMemberTab, userBatch]);
+
+        if (sortMemberConfig) {
+            result.sort((a, b) => {
+                let aValue: any = a[sortMemberConfig.key as keyof BatchMember];
+                let bValue: any = b[sortMemberConfig.key as keyof BatchMember];
+
+                if (sortMemberConfig.key === 'major_id') {
+                    aValue = a.major?.name_id || '';
+                    bValue = b.major?.name_id || '';
+                } else if (sortMemberConfig.key === 'batch_year') {
+                    aValue = a.batch?.year || '';
+                    bValue = b.batch?.year || '';
+                } else if (sortMemberConfig.key === 'batch_name') {
+                    aValue = a.batch?.name_id || '';
+                    bValue = b.batch?.name_id || '';
+                }
+
+                if (!aValue) aValue = '';
+                if (!bValue) bValue = '';
+
+                if (aValue < bValue) {
+                    return sortMemberConfig.direction === 'asc' ? -1 : 1;
+                }
+                if (aValue > bValue) {
+                    return sortMemberConfig.direction === 'asc' ? 1 : -1;
+                }
+                return 0;
+            });
+        }
+        return result;
+    }, [members, searchMember, activeMemberTab, userBatch, sortMemberConfig]);
 
     const showPeriodeJabatan = useMemo(() => {
         if (activeMemberTab === 'Administration') return true;
@@ -456,13 +492,13 @@ export default function Index({ members, batches, majors }: Props) {
                                     <TableRow>
                                         <TableHead>Foto</TableHead>
                                         <TableHead>
-                                            <Button variant="ghost" className="-ml-4 hover:bg-transparent">
+                                            <Button variant="ghost" className="-ml-4 hover:bg-transparent" onClick={() => handleSortMember('name')}>
                                                 Nama Anggota
                                                 <ArrowUpDown className="ml-2 h-4 w-4" />
                                             </Button>
                                         </TableHead>
                                         <TableHead>
-                                            <Button variant="ghost" className="-ml-4 hover:bg-transparent">
+                                            <Button variant="ghost" className="-ml-4 hover:bg-transparent" onClick={() => handleSortMember('major_id')}>
                                                 Jurusan
                                                 <ArrowUpDown className="ml-2 h-4 w-4" />
                                             </Button>
@@ -470,13 +506,13 @@ export default function Index({ members, batches, majors }: Props) {
                                         {showPeriodeJabatan && (
                                             <>
                                                 <TableHead>
-                                                    <Button variant="ghost" className="-ml-4 hover:bg-transparent">
+                                                    <Button variant="ghost" className="-ml-4 hover:bg-transparent" onClick={() => handleSortMember('periode')}>
                                                         Periode
                                                         <ArrowUpDown className="ml-2 h-4 w-4" />
                                                     </Button>
                                                 </TableHead>
                                                 <TableHead>
-                                                    <Button variant="ghost" className="-ml-4 hover:bg-transparent">
+                                                    <Button variant="ghost" className="-ml-4 hover:bg-transparent" onClick={() => handleSortMember('position_id')}>
                                                         Jabatan
                                                         <ArrowUpDown className="ml-2 h-4 w-4" />
                                                     </Button>
@@ -484,13 +520,13 @@ export default function Index({ members, batches, majors }: Props) {
                                             </>
                                         )}
                                         <TableHead>
-                                            <Button variant="ghost" className="-ml-4 hover:bg-transparent">
+                                            <Button variant="ghost" className="-ml-4 hover:bg-transparent" onClick={() => handleSortMember('batch_year')}>
                                                 Tahun
                                                 <ArrowUpDown className="ml-2 h-4 w-4" />
                                             </Button>
                                         </TableHead>
                                         <TableHead>
-                                            <Button variant="ghost" className="-ml-4 hover:bg-transparent">
+                                            <Button variant="ghost" className="-ml-4 hover:bg-transparent" onClick={() => handleSortMember('batch_name')}>
                                                 Nama Angkatan
                                                 <ArrowUpDown className="ml-2 h-4 w-4" />
                                             </Button>
@@ -808,7 +844,7 @@ export default function Index({ members, batches, majors }: Props) {
                                     <div>
                                         <label className="block text-sm font-medium mb-1">Periode</label>
                                         <Input
-                                            placeholder="Contoh: 2024-2025"
+                                            placeholder="Contoh: 2024 - 2025"
                                             value={memberData.periode}
                                             onChange={e => setMemberData('periode', e.target.value)}
                                             required
