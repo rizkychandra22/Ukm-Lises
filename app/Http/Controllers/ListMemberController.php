@@ -29,7 +29,7 @@ class ListMemberController extends Controller
         return Inertia::render('IndexMember', [
             'majors' => Major::select('id', 'faculty_id', 'faculty_en', 'name_id', 'name_en', 'degree')->get(),
             'members' => BatchMember::with(['batch', 'major'])->latest()->get(),
-            'batches' => Batch::select('id', 'year', 'name_id', 'name_en')->orderBy('year', 'desc')->get(),
+            'batches' => Batch::select('id', 'user_id', 'year', 'name_id', 'name_en')->orderBy('year', 'desc')->get(),
         ]);
     }
 

@@ -48,6 +48,7 @@ import {
 // --- Types ---
 type Batch = {
     id: number;
+    user_id?: number;
     year: string;
     name_id: string;
     name_en: string;
@@ -95,18 +96,20 @@ export default function Index({ members, batches, majors }: Props) {
         return user.roles.includes(roleNames);
     };
 
+    const userBatch = useMemo(() => batches.find(b => b.user_id === user?.id), [batches, user]);
+
     // --- States ---
     const [viewingMember, setViewingMember] = useState<BatchMember | null>(null);
     const [isViewSheetOpen, setIsViewSheetOpen] = useState(false);
-    
+
     // State Fakultas untuk Filter Program Studi
     const [selectedFaculty, setSelectedFaculty] = useState<string>('');
 
     const [activeTab, setActiveTab] = useState("anggota");
-    const [activeMemberTab, setActiveMemberTab] = useState("Demisioner");
+    const [activeMemberTab, setActiveMemberTab] = useState(hasRole('User') ? "MyBatch" : "Demisioner");
     const [searchMember, setSearchMember] = useState("");
     const [searchBatch, setSearchBatch] = useState("");
-    
+
     // Sort State untuk Angkatan
     const [sortBatchConfig, setSortBatchConfig] = useState<{ key: 'year' | 'name_id', direction: 'asc' | 'desc' } | null>(null);
 
@@ -166,14 +169,23 @@ export default function Index({ members, batches, majors }: Props) {
         setEditingMember(null);
         resetMember();
         setSelectedFaculty('');
-        setMemberData('type', activeMemberTab as any);
-        setMemberData('_method', 'post');
+        if (activeMemberTab === 'MyBatch') {
+            setMemberData(data => ({
+                ...data,
+                type: 'Demisioner',
+                batch_id: userBatch ? userBatch.id.toString() : '',
+                _method: 'post'
+            }));
+        } else {
+            setMemberData('type', activeMemberTab as any);
+            setMemberData('_method', 'post');
+        }
         setIsMemberModalOpen(true);
     };
 
     const handleEditMember = (member: BatchMember) => {
         setEditingMember(member);
-        
+
         const foundMajor = majors.find(m => m.id === Number(member.major_id));
         if (foundMajor) {
             setSelectedFaculty(foundMajor.faculty_id);
@@ -202,8 +214,8 @@ export default function Index({ members, batches, majors }: Props) {
 
     const handleSubmitMember = (e: React.FormEvent) => {
         e.preventDefault();
-        const endpoint = editingMember 
-            ? route('list-member.members.update', editingMember.id) 
+        const endpoint = editingMember
+            ? route('list-member.members.update', editingMember.id)
             : route('list-member.members.store');
 
         postMember(endpoint, {
@@ -242,14 +254,14 @@ export default function Index({ members, batches, majors }: Props) {
     const [batchToDelete, setBatchToDelete] = useState<number | null>(null);
 
     // Form Angkatan (Batch)
-    const { 
-        data: batchData, 
-        setData: setBatchData, 
-        post: postBatch, 
-        put: putBatch, 
+    const {
+        data: batchData,
+        setData: setBatchData,
+        post: postBatch,
+        put: putBatch,
         delete: deleteBatchReq,
         reset: resetBatch,
-        processing: processingBatch 
+        processing: processingBatch
     } = useForm({
         year: '',
         name_id: '',
@@ -323,8 +335,8 @@ export default function Index({ members, batches, majors }: Props) {
 
         if (searchBatch) {
             const lowercased = searchBatch.toLowerCase();
-            result = result.filter(b => 
-                b.year.toLowerCase().includes(lowercased) || 
+            result = result.filter(b =>
+                b.year.toLowerCase().includes(lowercased) ||
                 b.name_id.toLowerCase().includes(lowercased)
             );
         }
@@ -344,19 +356,34 @@ export default function Index({ members, batches, majors }: Props) {
     }, [batches, searchBatch, sortBatchConfig]);
 
     const filteredMembers = useMemo(() => {
-        return members.filter(m => 
-            (m.type === activeMemberTab) &&
-            (m.name.toLowerCase().includes(searchMember.toLowerCase()) || 
-             (m.major?.name_id || m.major_id.toString()).toLowerCase().includes(searchMember.toLowerCase()))
-        );
-    }, [members, searchMember, activeMemberTab]);
+        return members.filter(m => {
+            let matchTab = false;
+            if (activeMemberTab === 'MyBatch') {
+                matchTab = m.batch_id === userBatch?.id;
+            } else {
+                matchTab = m.type === activeMemberTab;
+            }
+
+            const matchSearch = m.name.toLowerCase().includes(searchMember.toLowerCase()) ||
+                (m.major?.name_id || m.major_id.toString()).toLowerCase().includes(searchMember.toLowerCase());
+
+            return matchTab && matchSearch;
+        });
+    }, [members, searchMember, activeMemberTab, userBatch]);
+
+    const showPeriodeJabatan = useMemo(() => {
+        if (activeMemberTab === 'Administration') return true;
+        if (activeMemberTab === 'Demisioner') return false;
+        // MyBatch
+        return filteredMembers.some(m => m.status === 'Active');
+    }, [activeMemberTab, filteredMembers]);
 
 
     // --- UI Render ---
     return (
         <AdminLayout>
             <Head title="Kelola Anggota & Angkatan" />
-            
+
             <div className="flex flex-col gap-6 max-w-7xl mx-auto pb-12 relative">
                 {/* Header Section */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -383,7 +410,10 @@ export default function Index({ members, batches, majors }: Props) {
 
                         {activeTab === 'anggota' && (
                             <Tabs value={activeMemberTab} onValueChange={setActiveMemberTab}>
-                                <TabsList className="grid grid-cols-2 w-full sm:w-64">
+                                <TabsList className={`grid ${hasRole('User') && userBatch ? 'grid-cols-3 w-full sm:w-96' : 'grid-cols-2 w-full sm:w-64'}`}>
+                                    {hasRole('User') && userBatch && (
+                                        <TabsTrigger value="MyBatch">Angkatan {userBatch.year}</TabsTrigger>
+                                    )}
                                     <TabsTrigger value="Demisioner">Demisioner</TabsTrigger>
                                     <TabsTrigger value="Administration">Kepengurusan</TabsTrigger>
                                 </TabsList>
@@ -405,12 +435,14 @@ export default function Index({ members, batches, majors }: Props) {
                         {(() => {
                             if (activeTab === 'angkatan') return hasRole(['Master', 'Admin']);
                             if (activeMemberTab === 'Administration') return hasRole(['Master', 'Admin']);
-                            return hasRole(['Master', 'Admin', 'User']);
+                            if (activeMemberTab === 'Demisioner') return hasRole(['Master', 'Admin']);
+                            if (activeMemberTab === 'MyBatch') return hasRole('User');
+                            return hasRole(['Master', 'Admin']);
                         })() && (
-                            <Button className="w-full sm:w-auto" onClick={activeTab === 'anggota' ? handleAddMember : handleAddBatch}>
-                                <Plus className="mr-2 h-4 w-4" /> Tambah {activeTab === 'anggota' ? 'Anggota' : 'Angkatan'}
-                            </Button>
-                        )}
+                                <Button className="w-full sm:w-auto" onClick={activeTab === 'anggota' ? handleAddMember : handleAddBatch}>
+                                    <Plus className="mr-2 h-4 w-4" /> Tambah {activeTab === 'anggota' ? 'Anggota' : 'Angkatan'}
+                                </Button>
+                            )}
                     </div>
                 </div>
 
@@ -435,7 +467,7 @@ export default function Index({ members, batches, majors }: Props) {
                                                 <ArrowUpDown className="ml-2 h-4 w-4" />
                                             </Button>
                                         </TableHead>
-                                        {activeMemberTab !== 'Demisioner' && (
+                                        {showPeriodeJabatan && (
                                             <>
                                                 <TableHead>
                                                     <Button variant="ghost" className="-ml-4 hover:bg-transparent">
@@ -469,51 +501,56 @@ export default function Index({ members, batches, majors }: Props) {
                                 <TableBody>
                                     {filteredMembers.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={activeMemberTab === 'Administration' ? 8 : 6} className="text-center h-24 text-muted-foreground">
+                                            <TableCell colSpan={showPeriodeJabatan ? 8 : 6} className="text-center h-24 text-muted-foreground">
                                                 Belum ada anggota.
                                             </TableCell>
                                         </TableRow>
                                     ) : (
                                         filteredMembers.map((member) => (
-                                        <TableRow key={member.id} className="transition-colors hover:bg-muted/50">
-                                            <TableCell>
-                                                <img 
-                                                    src={member.image ? member.image : `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random`} 
-                                                    alt={member.name} 
-                                                    className="h-10 w-10 rounded-full object-cover border" 
-                                                />
-                                            </TableCell>
-                                            <TableCell className="font-medium">{member.name}</TableCell>
-                                            <TableCell>{member.major ? `${member.major.degree ? member.major.degree + ' - ' : ''}${member.major.name_id}` : member.major_id}</TableCell>
-                                            {activeMemberTab !== 'Demisioner' && (
-                                                <>
-                                                    <TableCell>{member.periode || '-'}</TableCell>
-                                                    <TableCell>{member.position_id || '-'}</TableCell>
-                                                </>
-                                            )}
-                                            <TableCell>{member.batch?.year}</TableCell>
-                                            <TableCell>{member.batch?.name_id}</TableCell>
-                                            <TableCell className="text-right">
-                                                <div className="flex justify-end gap-2 items-center">
-                                                    <Button className="bg-emerald-600 hover:bg-emerald-700 text-white" size="sm" onClick={() => { setViewingMember(member); setIsViewSheetOpen(true); }}>
-                                                        <Eye className="h-4 w-4 lg:mr-1" /> 
-                                                        <span className="hidden lg:inline">Lihat</span>
-                                                    </Button>
-                                                    {(activeMemberTab === 'Administration' ? hasRole(['Master', 'Admin']) : hasRole(['Master', 'User'])) && (
-                                                        <>
-                                                            <Button className="bg-blue-600 hover:bg-blue-700 text-white" size="sm" onClick={() => handleEditMember(member)}>
-                                                                <Edit className="h-4 w-4 mr-1 md:mr-0 lg:mr-1" /> 
-                                                                <span className="hidden lg:inline">Edit</span>
-                                                            </Button>
-                                                            <Button variant="destructive" size="sm" onClick={() => handleDeleteMember(member.id)}>
-                                                                <Trash2 className="h-4 w-4 mr-1 md:mr-0 lg:mr-1" /> 
-                                                                <span className="hidden lg:inline">Hapus</span>
-                                                            </Button>
-                                                        </>
-                                                    )}
-                                                </div>
-                                            </TableCell>
-                                        </TableRow>
+                                            <TableRow key={member.id} className="transition-colors hover:bg-muted/50">
+                                                <TableCell>
+                                                    <img
+                                                        src={member.image ? member.image : `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random`}
+                                                        alt={member.name}
+                                                        className="h-10 w-10 rounded-full object-cover border"
+                                                    />
+                                                </TableCell>
+                                                <TableCell className="font-medium">{member.name}</TableCell>
+                                                <TableCell>{member.major ? `${member.major.degree ? member.major.degree + ' - ' : ''}${member.major.name_id}` : member.major_id}</TableCell>
+                                                {showPeriodeJabatan && (
+                                                    <>
+                                                        <TableCell>{member.periode || '-'}</TableCell>
+                                                        <TableCell>{member.position_id || '-'}</TableCell>
+                                                    </>
+                                                )}
+                                                <TableCell>{member.batch?.year}</TableCell>
+                                                <TableCell>{member.batch?.name_id}</TableCell>
+                                                <TableCell className="text-right">
+                                                    <div className="flex justify-end gap-2 items-center">
+                                                        <Button className="bg-emerald-600 hover:bg-emerald-700 text-white" size="sm" onClick={() => { setViewingMember(member); setIsViewSheetOpen(true); }}>
+                                                            <Eye className="h-4 w-4 lg:mr-1" />
+                                                            <span className="hidden lg:inline">Lihat</span>
+                                                        </Button>
+                                                        {(() => {
+                                                            if (activeMemberTab === 'Administration') return hasRole(['Master', 'Admin']);
+                                                            if (activeMemberTab === 'Demisioner') return hasRole(['Master', 'Admin']);
+                                                            if (activeMemberTab === 'MyBatch') return hasRole('User') && member.type !== 'Administration';
+                                                            return false;
+                                                        })() && (
+                                                                <>
+                                                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white" size="sm" onClick={() => handleEditMember(member)}>
+                                                                        <Edit className="h-4 w-4 mr-1 md:mr-0 lg:mr-1" />
+                                                                        <span className="hidden lg:inline">Edit</span>
+                                                                    </Button>
+                                                                    <Button variant="destructive" size="sm" onClick={() => handleDeleteMember(member.id)}>
+                                                                        <Trash2 className="h-4 w-4 mr-1 md:mr-0 lg:mr-1" />
+                                                                        <span className="hidden lg:inline">Hapus</span>
+                                                                    </Button>
+                                                                </>
+                                                            )}
+                                                    </div>
+                                                </TableCell>
+                                            </TableRow>
                                         ))
                                     )}
                                 </TableBody>
@@ -557,25 +594,25 @@ export default function Index({ members, batches, majors }: Props) {
                                                 <TableCell>{b.name_id}</TableCell>
                                                 <TableCell className="text-right">
                                                     <div className="flex justify-end gap-2">
-                                                        <Button 
-                                                            className="bg-blue-600 hover:bg-blue-700 text-white" 
+                                                        <Button
+                                                            className="bg-blue-600 hover:bg-blue-700 text-white"
                                                             size="sm"
                                                             onClick={() => handleEditBatch(b)}
                                                         >
-                                                            <Edit className="h-4 w-4 mr-1 md:mr-0 lg:mr-1" /> 
+                                                            <Edit className="h-4 w-4 mr-1 md:mr-0 lg:mr-1" />
                                                             <span className="hidden lg:inline">Edit</span>
                                                         </Button>
-                                                        <Button 
-                                                            variant="destructive" 
+                                                        <Button
+                                                            variant="destructive"
                                                             size="sm"
                                                             onClick={() => handleDeleteBatch(b.id)}
-                                                        >   
-                                                            <Trash2 className="h-4 w-4 mr-1 md:mr-0 lg:mr-1" /> 
+                                                        >
+                                                            <Trash2 className="h-4 w-4 mr-1 md:mr-0 lg:mr-1" />
                                                             <span className="hidden lg:inline">Hapus</span>
                                                         </Button>
                                                     </div>
                                                 </TableCell>
-                                            </TableRow> 
+                                            </TableRow>
                                         ))
                                     )}
                                 </TableBody>
@@ -592,21 +629,21 @@ export default function Index({ members, batches, majors }: Props) {
                                 {editingBatch ? 'Edit Angkatan' : 'Tambah Angkatan Baru'}
                             </DialogTitle>
                         </DialogHeader>
-                        
+
                         <form onSubmit={handleSubmitBatch} className="space-y-4 pt-4 max-h-[75vh] overflow-y-auto no-scrollbar px-1">
                             <div>
                                 <label className="block text-sm font-medium mb-1">Tahun Angkatan</label>
-                                <Input 
+                                <Input
                                     placeholder="Cth: 2024"
                                     value={batchData.year}
                                     onChange={e => setBatchData('year', e.target.value)}
                                     required
                                 />
                             </div>
-                        
+
                             <div>
                                 <label className="block text-sm font-medium mb-1">Nama Angkatan</label>
-                                <Input 
+                                <Input
                                     placeholder="Cth: Purnawirawan"
                                     value={batchData.name_id}
                                     onChange={e => setBatchData('name_id', e.target.value)}
@@ -622,7 +659,7 @@ export default function Index({ members, batches, majors }: Props) {
                                     </p>
                                     <div>
                                         <label className="block text-sm font-medium mb-1">Username Baru</label>
-                                        <Input 
+                                        <Input
                                             placeholder="Biarkan kosong untuk skip"
                                             value={batchData.username}
                                             onChange={e => setBatchData('username', e.target.value)}
@@ -630,7 +667,7 @@ export default function Index({ members, batches, majors }: Props) {
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium mb-1">Password Baru</label>
-                                        <Input 
+                                        <Input
                                             type="password"
                                             placeholder="Biarkan kosong untuk skip"
                                             value={batchData.password}
@@ -641,15 +678,15 @@ export default function Index({ members, batches, majors }: Props) {
                             )}
 
                             <div className="pt-4 flex justify-end gap-2">
-                                <Button 
-                                    type="button" 
-                                    variant="outline" 
+                                <Button
+                                    type="button"
+                                    variant="outline"
                                     onClick={handleCancelEditBatch}
                                 >
                                     Batal
                                 </Button>
-                                <Button 
-                                    type="submit" 
+                                <Button
+                                    type="submit"
                                     disabled={processingBatch}
                                 >
                                     {editingBatch ? 'Simpan Perubahan' : 'Buat Angkatan'}
@@ -690,11 +727,11 @@ export default function Index({ members, batches, majors }: Props) {
                                 {editingMember ? 'Edit Anggota' : 'Tambah Anggota Baru'}
                             </DialogTitle>
                         </DialogHeader>
-                        
+
                         <form onSubmit={handleSubmitMember} className="space-y-4 pt-4 max-h-[75vh] overflow-y-auto no-scrollbar px-1">
                             <div>
                                 <label className="block text-sm font-medium mb-1">Nama Anggota</label>
-                                <Input 
+                                <Input
                                     placeholder="Nama Lengkap"
                                     value={memberData.name}
                                     onChange={e => setMemberData('name', e.target.value)}
@@ -705,7 +742,7 @@ export default function Index({ members, batches, majors }: Props) {
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Fakultas</label>
-                                    <select 
+                                    <select
                                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                         value={selectedFaculty}
                                         onChange={e => {
@@ -722,7 +759,7 @@ export default function Index({ members, batches, majors }: Props) {
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Program Studi</label>
-                                    <select 
+                                    <select
                                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                         value={memberData.major_id}
                                         onChange={e => setMemberData('major_id', e.target.value)}
@@ -739,11 +776,12 @@ export default function Index({ members, batches, majors }: Props) {
                             </div>
                             <div>
                                 <label className="block text-sm font-medium mb-1">Angkatan</label>
-                                <select 
+                                <select
                                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                     value={memberData.batch_id}
                                     onChange={e => setMemberData('batch_id', e.target.value)}
                                     required
+                                    disabled={activeMemberTab === 'MyBatch'}
                                 >
                                     <option value="" disabled>Pilih Angkatan</option>
                                     {batches.map(b => (
@@ -754,7 +792,7 @@ export default function Index({ members, batches, majors }: Props) {
                             </div>
                             <div>
                                 <label className="block text-sm font-medium mb-1">Status</label>
-                                <select 
+                                <select
                                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                     value={memberData.type}
                                     onChange={e => setMemberData('type', e.target.value as any)}
@@ -769,7 +807,7 @@ export default function Index({ members, batches, majors }: Props) {
                                 <>
                                     <div>
                                         <label className="block text-sm font-medium mb-1">Periode</label>
-                                        <Input 
+                                        <Input
                                             placeholder="Contoh: 2024-2025"
                                             value={memberData.periode}
                                             onChange={e => setMemberData('periode', e.target.value)}
@@ -779,7 +817,7 @@ export default function Index({ members, batches, majors }: Props) {
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium mb-1">Jabatan</label>
-                                        <Input 
+                                        <Input
                                             placeholder="Contoh: Ketua Umum"
                                             value={memberData.position_id}
                                             onChange={e => setMemberData('position_id', e.target.value)}
@@ -791,7 +829,7 @@ export default function Index({ members, batches, majors }: Props) {
                             )}
                             <div>
                                 <label className="block text-sm font-medium mb-1">Foto Profile (Opsional)</label>
-                                <Input 
+                                <Input
                                     type="file"
                                     accept="image/*"
                                     onChange={e => setMemberData('image', e.target.files ? e.target.files[0] : null)}
@@ -842,43 +880,43 @@ export default function Index({ members, batches, majors }: Props) {
                         {viewingMember && (
                             <div className="space-y-6">
                                 <div className="flex justify-center">
-                                    <img 
-                                        src={viewingMember.image ? viewingMember.image : `https://ui-avatars.com/api/?name=${encodeURIComponent(viewingMember.name)}&background=random`} 
-                                        alt={viewingMember.name} 
-                                        className="w-32 h-32 rounded-full object-cover border-4 border-muted" 
+                                    <img
+                                        src={viewingMember.image ? viewingMember.image : `https://ui-avatars.com/api/?name=${encodeURIComponent(viewingMember.name)}&background=random`}
+                                        alt={viewingMember.name}
+                                        className="w-32 h-32 rounded-full object-cover border-4 border-muted"
                                     />
                                 </div>
                                 <div className="space-y-4">
                                     <div>
-                                        <h4 className="text-sm font-medium text-muted-foreground">Nama Lengkap</h4>
-                                        <p className="font-medium">{viewingMember.name}</p>
+                                        <p className="text-sm font-medium text-muted-foreground">Nama Lengkap</p>
+                                        <h4 className="text-lg font-medium">{viewingMember.name}</h4>
                                     </div>
                                     <div>
-                                        <h4 className="text-sm font-medium text-muted-foreground">Program Studi</h4>
-                                        <p className="font-medium">{viewingMember.major ? `${viewingMember.major.degree ? viewingMember.major.degree + ' - ' : ''}${viewingMember.major.name_id}` : viewingMember.major_id}</p>
+                                        <p className="text-sm font-medium text-muted-foreground">Program Studi</p>
+                                        <h4 className="text-lg font-medium">{viewingMember.major ? `${viewingMember.major.degree ? viewingMember.major.degree + ' - ' : ''}${viewingMember.major.name_id}` : viewingMember.major_id}</h4>
                                     </div>
                                     <div>
-                                        <h4 className="text-sm font-medium text-muted-foreground">Angkatan {viewingMember.batch?.year}</h4>
-                                        <p className="font-medium">{viewingMember.batch?.name_id}</p>
+                                        <p className="text-sm font-medium text-muted-foreground">Angkatan Tahun <b>{viewingMember.batch?.year}</b></p>
+                                        <h4 className="text-lg font-medium">{viewingMember.batch?.name_id}</h4>
                                     </div>
                                     <div>
-                                        <h4 className="text-sm font-medium text-muted-foreground">Status</h4>
-                                        <p className="font-medium">
-                                            {viewingMember.type === 'Administration' ? 'Kepengurusan' : 'Demisioner'} 
+                                        <p className="text-sm font-medium text-muted-foreground">Status</p>
+                                        <h4 className="text-lg font-medium">
+                                            {viewingMember.type === 'Administration' ? 'Kepengurusan' : 'Demisioner'}
                                             <span className={`ml-2 text-xs px-2 py-0.5 rounded-full ${viewingMember.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                                                 {viewingMember.status}
                                             </span>
-                                        </p>
+                                        </h4>
                                     </div>
                                     {viewingMember.type === 'Administration' && (
                                         <>
                                             <div>
-                                                <h4 className="text-sm font-medium text-muted-foreground">Periode</h4>
-                                                <p className="font-medium">{viewingMember.periode || '-'}</p>
+                                                <p className="text-sm font-medium text-muted-foreground">Periode</p>
+                                                <h4 className="text-lg font-medium">{viewingMember.periode || '-'}</h4>
                                             </div>
                                             <div>
-                                                <h4 className="text-sm font-medium text-muted-foreground">Jabatan</h4>
-                                                <p className="font-medium">{viewingMember.position_id || '-'}</p>
+                                                <p className="text-sm font-medium text-muted-foreground">Jabatan</p>
+                                                <h4 className="text-lg font-medium">{viewingMember.position_id || '-'}</h4>
                                             </div>
                                         </>
                                     )}
