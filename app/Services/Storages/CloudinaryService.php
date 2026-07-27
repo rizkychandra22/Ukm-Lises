@@ -13,20 +13,12 @@ class CloudinaryService
 
     public function __construct()
     {
-        // SDK otomatis membaca CLOUDINARY_URL dari file .env
         $this->cloudinary = new Cloudinary();
-        
-        // Ambil cloud_name dari konfig SDK
         $this->cloudName = $this->cloudinary->configuration->cloud->cloudName ?? '';
     }
 
     /**
-     * Upload Single File ke Cloudinary dengan Retry Mechanism
-     *
-     * @param UploadedFile $file File dari $request->file()
-     * @param string $folder Folder tujuan di Cloudinary 
-     * @return array{url: string, public_id: string}
-     * @throws Throwable
+     * Upload Single File ke Cloudinary
      */
     public function upload(UploadedFile $file, string $folder = 'Ukm-Lises'): array
     {
@@ -35,10 +27,10 @@ class CloudinaryService
             'resource_type' => $this->getResourceType($file),
         ];
 
-        // Jalankan upload dengan mekanisme retry
         $result = $this->uploadWithRetry($file->getRealPath(), $options);
 
-        $publicId = $result['public_id'];
+        $randomId = pathinfo($result['public_id'], PATHINFO_BASENAME);
+        $publicId = trim($folder, '/') . '/' . $randomId;
         $type = $result['resource_type'] ?? 'image';
 
         return [
@@ -48,34 +40,16 @@ class CloudinaryService
     }
 
     /**
-     * Upload Multiple Files sekaligus
-     *
-     * @param array<UploadedFile> $files Array file dari $request->file('photos')
-     * @param string $folder Folder tujuan di Cloudinary
-     * @return array<array{url: string, public_id: string}>
-     */
-    public function uploadMultiple(array $files, string $folder = 'Ukm-Lises'): array
-    {
-        $uploadedResults = [];
-
-        foreach ($files as $file) {
-            if ($file instanceof UploadedFile && $file->isValid()) {
-                $uploadedResults[] = $this->upload($file, $folder);
-            }
-        }
-
-        return $uploadedResults;
-    }
-
-    /**
      * Hapus Asset dari Cloudinary berdasarkan public_id
      */
     public function delete(string $publicId, string $resourceType = 'image'): bool
     {
         try {
-            $result = $this->cloudinary->uploadApi()->destroy($publicId, [
+            $cleanPublicId = preg_replace('/\.[^.]+$/', '', $publicId);
+
+            $result = $this->cloudinary->uploadApi()->destroy($cleanPublicId, [
                 'resource_type' => $resourceType,
-                'invalidate' => true,
+                'invalidate'    => true,
             ]);
 
             return isset($result['result']) && $result['result'] === 'ok';
@@ -85,11 +59,31 @@ class CloudinaryService
     }
 
     /**
-     * Generate Direct URL tanpa hit API Admin Cloudinary (Sangat Cepat)
+     * Ekstrak public_id dari URL Cloudinary
      */
+    public function getPublicIdFromUrl(?string $url): ?string
+    {
+        if (empty($url) || !str_contains($url, config('cloudinary.base_url'))) {
+            return null;
+        }
+
+        $path = parse_url($url, PHP_URL_PATH);
+        
+        if (!$path) {
+            return null;
+        }
+
+        // Mengambil path folder + filename setelah /upload/ (mengabaikan versi v123456)
+        if (preg_match('/\/upload\/(?:[^\/]+\/)?(?:v\d+\/)?(.+)$/', $path, $matches)) {
+            return preg_replace('/\.[^.]+$/', '', $matches[1]);
+        }
+
+        return null;
+    }
+
     public function generateUrl(string $publicId, string $type = 'image', string $transforms = 'f_auto,q_auto'): string
     {
-        $baseUrl = rtrim(config('cloudinary.base_url', 'https://res.cloudinary.com'), '/');
+        $baseUrl = rtrim(config('cloudinary.base_url'), '/');
         $base = "{$baseUrl}/{$this->cloudName}";
 
         return match ($type) {
@@ -99,16 +93,13 @@ class CloudinaryService
         };
     }
 
-    /**
-     * Retry upload otomatis jika terjadi error koneksi / cURL
-     */
     protected function uploadWithRetry(mixed $source, array $options): array
     {
         $maxAttempts = 4;
 
         for ($attempt = 1; $attempt <= $maxAttempts; $attempt++) {
             try {
-                set_time_limit(300); // Mencegah PHP timeout saat upload file besar
+                set_time_limit(300);
 
                 if (is_resource($source)) {
                     @rewind($source);
@@ -116,14 +107,12 @@ class CloudinaryService
 
                 $response = $this->cloudinary->uploadApi()->upload($source, $options);
 
-                // Konversi objek Cloudinary\Api\ApiResponse menjadi Array murni PHP
                 return $response->getArrayCopy();
             } catch (Throwable $e) {
                 if ($attempt >= $maxAttempts || ! $this->isRetryableException($e)) {
                     throw $e;
                 }
 
-                // Exponential backoff delay: 0.4 detik, 0.8 detik, 1.6 detik
                 usleep(400000 * (2 ** ($attempt - 1)));
             }
         }
@@ -131,9 +120,6 @@ class CloudinaryService
         throw new \RuntimeException('Gagal mengunggah file setelah beberapa percobaan.');
     }
 
-    /**
-     * Cek apakah error merupakan gangguan koneksi sementara yang layak di-retry
-     */
     protected function isRetryableException(Throwable $e): bool
     {
         $message = strtolower($e->getMessage());
@@ -147,9 +133,6 @@ class CloudinaryService
             || str_contains($message, 'failed to connect');
     }
 
-    /**
-     * Deteksi tipe resource berdasarkan MimeType
-     */
     protected function getResourceType(UploadedFile $file): string
     {
         $mime = $file->getMimeType();
