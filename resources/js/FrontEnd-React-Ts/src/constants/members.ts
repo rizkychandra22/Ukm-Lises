@@ -208,7 +208,7 @@ export const useMembers = () => {
       prodi: getRandom(prodis),
       position: "Ketua Umum",
       batch: "2021",
-      batch_name: "Angkatan Pranata",
+      batch_name: "Anggalarang Dharma Wijaya",
       status: "Non-Aktif",
     },
     {
@@ -218,7 +218,7 @@ export const useMembers = () => {
       prodi: getRandom(prodis),
       position: "Ketua Umum",
       batch: "2021",
-      batch_name: "Angkatan Pranata",
+      batch_name: "Anggalarang Dharma Wijaya",
       status: "Non-Aktif",
     },
     {
@@ -228,7 +228,7 @@ export const useMembers = () => {
       prodi: getRandom(prodis),
       position: "Ketua Umum",
       batch: "2021",
-      batch_name: "Angkatan Pranata",
+      batch_name: "Anggalarang Dharma Wijaya",
       status: "Non-Aktif",
     },
     {
@@ -238,7 +238,7 @@ export const useMembers = () => {
       prodi: getRandom(prodis),
       position: "Ketua Umum",
       batch: "2021",
-      batch_name: "Angkatan Pranata",
+      batch_name: "Anggalarang Dharma Wijaya",
       status: "Non-Aktif",
     },
     {
@@ -248,7 +248,7 @@ export const useMembers = () => {
       prodi: getRandom(prodis),
       position: "Ketua Umum",
       batch: "2021",
-      batch_name: "Angkatan Pranata",
+      batch_name: "Anggalarang Dharma Wijaya",
       status: "Non-Aktif",
     },
     {
@@ -258,7 +258,7 @@ export const useMembers = () => {
       prodi: getRandom(prodis),
       position: "Ketua Umum",
       batch: "2021",
-      batch_name: "Angkatan Pranata",
+      batch_name: "Anggalarang Dharma Wijaya",
       status: "Non-Aktif",
     },
     {
@@ -268,7 +268,7 @@ export const useMembers = () => {
       prodi: getRandom(prodis),
       position: "Ketua Umum",
       batch: "2021",
-      batch_name: "Angkatan Pranata",
+      batch_name: "Anggalarang Dharma Wijaya",
       status: "Non-Aktif",
     },
     {
@@ -278,7 +278,7 @@ export const useMembers = () => {
       prodi: getRandom(prodis),
       position: "Ketua Umum",
       batch: "2021",
-      batch_name: "Angkatan Pranata",
+      batch_name: "Anggalarang Dharma Wijaya",
       status: "Non-Aktif",
     },
     {
@@ -288,7 +288,7 @@ export const useMembers = () => {
       prodi: getRandom(prodis),
       position: "Ketua Umum",
       batch: "2021",
-      batch_name: "Angkatan Pranata",
+      batch_name: "Anggalarang Dharma Wijaya",
       status: "Non-Aktif",
     },
     {
@@ -298,7 +298,7 @@ export const useMembers = () => {
       prodi: getRandom(prodis),
       position: "Ketua Umum",
       batch: "2021",
-      batch_name: "Angkatan Pranata",
+      batch_name: "Anggalarang Dharma Wijaya",
       status: "Non-Aktif",
     },
     {
@@ -308,7 +308,7 @@ export const useMembers = () => {
       prodi: getRandom(prodis),
       position: "Ketua Umum",
       batch: "2021",
-      batch_name: "Angkatan Pranata",
+      batch_name: "Anggalarang Dharma Wijaya",
       status: "Non-Aktif",
     },
     {
@@ -318,7 +318,7 @@ export const useMembers = () => {
       prodi: getRandom(prodis),
       position: "Ketua Umum",
       batch: "2021",
-      batch_name: "Angkatan Pranata",
+      batch_name: "Anggalarang Dharma Wijaya",
       status: "Non-Aktif",
     },
     {
@@ -328,7 +328,7 @@ export const useMembers = () => {
       prodi: getRandom(prodis),
       position: "Ketua Umum",
       batch: "2021",
-      batch_name: "Angkatan Pranata",
+      batch_name: "Anggalarang Dharma Wijaya",
       status: "Non-Aktif",
     },
     {
@@ -338,7 +338,7 @@ export const useMembers = () => {
       prodi: getRandom(prodis),
       position: "Ketua Umum",
       batch: "2021",
-      batch_name: "Angkatan Pranata",
+      batch_name: "Anggalarang Dharma Wijaya",
       status: "Non-Aktif",
     },
     {
@@ -348,7 +348,7 @@ export const useMembers = () => {
       prodi: getRandom(prodis),
       position: "Ketua Umum",
       batch: "2021",
-      batch_name: "Angkatan Pranata",
+      batch_name: "Anggalarang Dharma Wijaya",
       status: "Non-Aktif",
     },
     {

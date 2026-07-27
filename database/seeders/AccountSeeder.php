@@ -13,11 +13,12 @@ class AccountSeeder extends Seeder
         // Buat Role
         $masterRole = Role::create(['name' => 'Master']);
         $adminRole  = Role::create(['name' => 'Admin']);
+        $userRole = Role::create(['name' => 'User']);
 
         // Buat User Master Awal
         $masterUser = User::create([
-            'name'     => 'Master Akun',
-            'username' => 'mastercore',
+            'name'     => 'Developer',
+            'username' => 'dev',
             'password' => bcrypt('password'),
         ]);
         $masterUser->assignRole($masterRole);

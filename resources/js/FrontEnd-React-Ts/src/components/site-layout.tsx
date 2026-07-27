@@ -209,9 +209,19 @@ export function SiteLayout() {
             <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
               {nav.map((item) => (
                 <li key={item.to}>
-                  <Link to={item.to} className="hover:text-primary">
+                  <NavLink
+                    to={item.to}
+                    end={item.to === "/"}
+                    className={({ isActive }) =>
+                      `transition-colors hover:text-primary ${
+                        isActive
+                          ? "font-semibold text-primary"
+                          : "text-muted-foreground"
+                      }`
+                    }
+                  >
                     {item.label}
-                  </Link>
+                  </NavLink>
                 </li>
               ))}
             </ul>

@@ -7,10 +7,14 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "ext-intl": "*",
+        "ext-zip": "*",
+        "cloudinary/cloudinary_php": "^3.1",
         "inertiajs/inertia-laravel": "^3.1",
         "laravel/framework": "^13.8",
         "laravel/tinker": "^3.0",
         "spatie/laravel-permission": "^8.3",
+        "stichoza/google-translate-php": "^5.3",
         "tightenco/ziggy": "^2.6"
     },
     "require-dev": {

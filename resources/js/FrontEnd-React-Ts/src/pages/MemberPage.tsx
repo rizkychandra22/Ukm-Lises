@@ -67,7 +67,15 @@ export function MemberPage() {
   // Get unique batches for alumni filter
   const uniqueBatches = Array.from(
     new Set(alumniMembers.map((m) => m.batch))
-  ).sort((a, b) => b.localeCompare(a)); // sort descending
+  )
+    .sort((a, b) => b.localeCompare(a))
+    .map((batch) => {
+      const member = alumniMembers.find((m) => m.batch === batch);
+      return {
+        batch,
+        batch_name: member?.batch_name || '',
+      };
+    }); // sort descending
 
   // Reset pagination when search, sort, filter, or tab changes
   useEffect(() => {
@@ -199,7 +207,7 @@ export function MemberPage() {
         >
           {/* Top Controls Layout */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-            <TabsList>
+            <TabsList className="grid grid-cols-2 w-full sm:w-64">
               <TabsTrigger value="kepengurusan">Kepengurusan</TabsTrigger>
               <TabsTrigger value="alumni">Alumni</TabsTrigger>
             </TabsList>
@@ -207,14 +215,14 @@ export function MemberPage() {
             <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
               {activeTab === "alumni" && (
                 <Select value={selectedBatch} onValueChange={setSelectedBatch}>
-                  <SelectTrigger className="w-full sm:w-[200px]">
+                  <SelectTrigger className="w-full sm:w-64">
                     <SelectValue placeholder="Filter Angkatan" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Semua Angkatan</SelectItem>
-                    {uniqueBatches.map((batch) => (
+                    <SelectItem value="all">Semua Tahun Angkatan</SelectItem>
+                    {uniqueBatches.map(({ batch, batch_name }) => (
                       <SelectItem key={batch} value={batch}>
-                        Angkatan {batch}
+                        {batch} {batch_name ? `- ${batch_name}` : ''}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -269,7 +277,7 @@ export function MemberPage() {
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                       </Button>
                     </TableHead>
-                    <TableHead className="text-right">Aksi</TableHead>
+                    <TableHead className="text-right">Detail</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -336,7 +344,7 @@ export function MemberPage() {
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                       </Button>
                     </TableHead>
-                    <TableHead className="text-right">Aksi</TableHead>
+                    <TableHead className="text-right">Detail</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
