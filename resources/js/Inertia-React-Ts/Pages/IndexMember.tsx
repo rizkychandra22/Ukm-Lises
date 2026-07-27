@@ -400,8 +400,8 @@ export default function Index({ members, batches, majors }: Props) {
                     {/* LEFT: Main Tabs & Sub Tabs */}
                     <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto items-start sm:items-center">
                         {!hasRole(['User']) && (
-                            <Tabs value={activeTab} onValueChange={setActiveTab}>
-                                <TabsList className="grid grid-cols-2 w-full sm:w-64">
+                            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full sm:w-64">
+                                <TabsList className="grid grid-cols-2">
                                     <TabsTrigger value="anggota">Anggota</TabsTrigger>
                                     <TabsTrigger value="angkatan">Angkatan</TabsTrigger>
                                 </TabsList>
@@ -409,8 +409,8 @@ export default function Index({ members, batches, majors }: Props) {
                         )}
 
                         {activeTab === 'anggota' && (
-                            <Tabs value={activeMemberTab} onValueChange={setActiveMemberTab}>
-                                <TabsList className={`grid ${hasRole('User') && userBatch ? 'grid-cols-3 w-full sm:w-96' : 'grid-cols-2 w-full sm:w-64'}`}>
+                            <Tabs value={activeMemberTab} onValueChange={setActiveMemberTab} className={hasRole('User') && userBatch ? 'w-full sm:w-80 relative' : 'w-full sm:w-64 relative'}>
+                                <TabsList className={`grid ${hasRole('User') && userBatch ? 'grid-cols-3 w-full' : 'grid-cols-2 w-full'}`}>
                                     {hasRole('User') && userBatch && (
                                         <TabsTrigger value="MyBatch">Angkatan {userBatch.year}</TabsTrigger>
                                     )}
@@ -512,7 +512,7 @@ export default function Index({ members, batches, majors }: Props) {
                                                     <img
                                                         src={member.image ? member.image : `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random`}
                                                         alt={member.name}
-                                                        className="h-10 w-10 rounded-full object-cover border"
+                                                        className="h-10 w-10 min-w-10 min-h-10 shrink-0 rounded-full object-cover border"
                                                     />
                                                 </TableCell>
                                                 <TableCell className="font-medium">{member.name}</TableCell>
@@ -883,40 +883,40 @@ export default function Index({ members, batches, majors }: Props) {
                                     <img
                                         src={viewingMember.image ? viewingMember.image : `https://ui-avatars.com/api/?name=${encodeURIComponent(viewingMember.name)}&background=random`}
                                         alt={viewingMember.name}
-                                        className="w-32 h-32 rounded-full object-cover border-4 border-muted"
+                                        className="w-32 h-32 min-w-32 min-h-32 shrink-0 rounded-full object-cover border-4 border-muted"
                                     />
                                 </div>
                                 <div className="space-y-4">
                                     <div>
-                                        <p className="text-sm font-medium text-muted-foreground">Nama Lengkap</p>
-                                        <h4 className="text-lg font-medium">{viewingMember.name}</h4>
+                                        <h4 className="text-sm font-medium text-muted-foreground">Nama Lengkap</h4>
+                                        <p className="text-md font-medium">{viewingMember.name}</p>
                                     </div>
                                     <div>
-                                        <p className="text-sm font-medium text-muted-foreground">Program Studi</p>
-                                        <h4 className="text-lg font-medium">{viewingMember.major ? `${viewingMember.major.degree ? viewingMember.major.degree + ' - ' : ''}${viewingMember.major.name_id}` : viewingMember.major_id}</h4>
+                                        <h4 className="text-sm font-medium text-muted-foreground">Program Studi</h4>
+                                        <p className="text-md font-medium">{viewingMember.major ? `${viewingMember.major.degree ? viewingMember.major.degree + ' - ' : ''}${viewingMember.major.name_id}` : viewingMember.major_id}</p>
                                     </div>
                                     <div>
-                                        <p className="text-sm font-medium text-muted-foreground">Angkatan Tahun <b>{viewingMember.batch?.year}</b></p>
-                                        <h4 className="text-lg font-medium">{viewingMember.batch?.name_id}</h4>
+                                        <h4 className="text-sm font-medium text-muted-foreground">Angkatan Tahun <b>{viewingMember.batch?.year}</b></h4>
+                                        <p className="text-md font-medium">{viewingMember.batch?.name_id}</p>
                                     </div>
                                     <div>
-                                        <p className="text-sm font-medium text-muted-foreground">Status</p>
-                                        <h4 className="text-lg font-medium">
+                                        <h4 className="text-sm font-medium text-muted-foreground">Status</h4>
+                                        <p className="text-md font-medium">
                                             {viewingMember.type === 'Administration' ? 'Kepengurusan' : 'Demisioner'}
                                             <span className={`ml-2 text-xs px-2 py-0.5 rounded-full ${viewingMember.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                                                 {viewingMember.status}
                                             </span>
-                                        </h4>
+                                        </p>
                                     </div>
                                     {viewingMember.type === 'Administration' && (
                                         <>
                                             <div>
-                                                <p className="text-sm font-medium text-muted-foreground">Periode</p>
-                                                <h4 className="text-lg font-medium">{viewingMember.periode || '-'}</h4>
+                                                <h4 className="text-sm font-medium text-muted-foreground">Periode</h4>
+                                                <p className="text-md font-medium">{viewingMember.periode || '-'}</p>
                                             </div>
                                             <div>
-                                                <p className="text-sm font-medium text-muted-foreground">Jabatan</p>
-                                                <h4 className="text-lg font-medium">{viewingMember.position_id || '-'}</h4>
+                                                <h4 className="text-sm font-medium text-muted-foreground">Jabatan</h4>
+                                                <p className="text-md font-medium">{viewingMember.position_id || '-'}</p>
                                             </div>
                                         </>
                                     )}

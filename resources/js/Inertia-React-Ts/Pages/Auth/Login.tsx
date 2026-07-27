@@ -250,7 +250,7 @@ export default function Login() {
 
                         <div className="text-center pt-4">
                             <p className="text-xs text-muted-foreground">
-                                Sistem Manajemen Internal Ukm Lises Realese v1.3.0
+                                Sistem Manajemen Internal Ukm Lises Realese v1.3.2
                             </p>
                         </div>
                     </form>
