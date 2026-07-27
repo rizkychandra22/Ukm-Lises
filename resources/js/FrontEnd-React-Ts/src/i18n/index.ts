@@ -9,7 +9,7 @@ export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];
 
 export const LANGUAGE_LABELS: Record<SupportedLanguage, string> = {
   en: "English",
-  id: "Bahasa Indonesia",
+  id: "Indonesia",
 };
 
 export const LANGUAGE_FLAGS: Record<SupportedLanguage, string> = {
