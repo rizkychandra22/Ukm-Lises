@@ -436,8 +436,8 @@ export default function Index({ members, batches, majors }: Props) {
                     {/* LEFT: Main Tabs & Sub Tabs */}
                     <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto items-start sm:items-center">
                         {!hasRole(['User']) && (
-                            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full sm:w-64">
-                                <TabsList className="grid grid-cols-2">
+                            <Tabs value={activeTab} onValueChange={setActiveTab}>
+                                <TabsList className="grid grid-cols-2 w-full">
                                     <TabsTrigger value="anggota">Anggota</TabsTrigger>
                                     <TabsTrigger value="angkatan">Angkatan</TabsTrigger>
                                 </TabsList>
@@ -445,7 +445,7 @@ export default function Index({ members, batches, majors }: Props) {
                         )}
 
                         {activeTab === 'anggota' && (
-                            <Tabs value={activeMemberTab} onValueChange={setActiveMemberTab} className={hasRole('User') && userBatch ? 'w-full sm:w-80 relative' : 'w-full sm:w-64 relative'}>
+                            <Tabs value={activeMemberTab} onValueChange={setActiveMemberTab} className={hasRole('User') && userBatch ? 'w-full sm:w-80 relative' : 'sm:w-64 relative'}>
                                 <TabsList className={`grid ${hasRole('User') && userBatch ? 'grid-cols-3 w-full' : 'grid-cols-2 w-full'}`}>
                                     {hasRole('User') && userBatch && (
                                         <TabsTrigger value="MyBatch">Angkatan {userBatch.year}</TabsTrigger>
@@ -475,7 +475,7 @@ export default function Index({ members, batches, majors }: Props) {
                             if (activeMemberTab === 'MyBatch') return hasRole('User');
                             return hasRole(['Master', 'Admin']);
                         })() && (
-                                <Button className="w-full sm:w-auto" onClick={activeTab === 'anggota' ? handleAddMember : handleAddBatch}>
+                                <Button className="w-full sm:w-auto shrink-0" onClick={activeTab === 'anggota' ? handleAddMember : handleAddBatch}>
                                     <Plus className="mr-2 h-4 w-4" /> Tambah {activeTab === 'anggota' ? 'Anggota' : 'Angkatan'}
                                 </Button>
                             )}
