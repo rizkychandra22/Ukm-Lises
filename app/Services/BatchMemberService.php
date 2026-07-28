@@ -25,13 +25,11 @@ class BatchMemberService
         // 2. Logika Status & Auto Translate
         if (($data['type'] ?? null) === 'Demisioner') {
             $data['status'] = 'Deactive';
-            $data['prodi_en'] = $this->translator->toEnglish($data['prodi_id'] ?? null) ?? ($data['prodi_id'] ?? null);
             $data['periode'] = null;
             $data['position_id'] = null;
             $data['position_en'] = null;
         } else {
             $data['status'] = 'Active';
-            $data['prodi_en'] = $this->translator->toEnglish($data['prodi_id'] ?? null) ?? ($data['prodi_id'] ?? null);
             $data['position_en'] = $this->translator->toEnglish($data['position_id'] ?? null) ?? ($data['position_id'] ?? null);
         }
 
@@ -63,12 +61,10 @@ class BatchMemberService
         if (($data['type'] ?? null) === 'Demisioner') {
             $data['status'] = 'Deactive';
             $data['periode'] = null;
-            $data['prodi_en'] = $this->translator->toEnglish($data['prodi_id'] ?? null) ?? ($data['prodi_id'] ?? null);
             $data['position_id'] = null;
             $data['position_en'] = null;
         } else {
             $data['status'] = 'Active';
-            $data['prodi_en'] = $this->translator->toEnglish($data['prodi_id'] ?? null) ?? ($data['prodi_id'] ?? null);
             $data['position_en'] = $this->translator->toEnglish($data['position_id'] ?? null) ?? ($data['position_id'] ?? null);
         }
 

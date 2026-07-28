@@ -14,10 +14,9 @@ return new class extends Migration
         Schema::create('batch_members', function (Blueprint $table) {
             $table->id();
             $table->foreignId('batch_id')->constrained()->onDelete('cascade');
+            $table->foreignId('major_id')->constrained()->onDelete('cascade');
             $table->string('image')->nullable();
             $table->string('name');
-            $table->string('prodi_id');
-            $table->string('prodi_en');
             $table->enum('type', ['Administration', 'Demisioner']);
             $table->enum('status', ['Active', 'Deactive']);
             $table->string('periode')->nullable();

@@ -138,7 +138,10 @@ export function AppSidebar() {
 
                 <SidebarGroup>
                     <SidebarGroupLabel className="px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70 mt-2">
-                        Menu
+                        {hasRole(['Master', 'Admin', 'User']) && auth.user?.roles?.[0]
+                            ? `Menu ${auth.user.roles[0]}`
+                            : null
+                        }
                     </SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
@@ -190,7 +193,7 @@ export function AppSidebar() {
                     </Avatar>
                     <div className="flex flex-col flex-1 text-left overflow-hidden">
                         <span className="text-[13px] font-medium truncate">{user?.name || "Akun User"}</span>
-                        <span className="text-[10px] text-muted-foreground truncate">{user?.username || "@username"}</span>
+                        <span className="text-[10px] text-muted-foreground truncate">{auth.user?.roles?.join(', ') + ' - ' + user?.username || "@username"}</span>
                     </div>
                     <div className="flex items-center gap-5">
                         <Dialog open={isProfileModalOpen} onOpenChange={setIsProfileModalOpen}>
