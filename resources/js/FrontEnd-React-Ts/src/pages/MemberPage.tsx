@@ -443,23 +443,44 @@ export function MemberPage() {
                 <p className="text-muted-foreground text-sm font-medium">{selectedMember.major?.degree ? `${selectedMember.major.degree} - ` : ''}{isEn ? (selectedMember.major?.nameEn || selectedMember.major?.nameId) : selectedMember.major?.nameId}</p>
               </div>
               
-              <div className="w-full mt-4 space-y-3 bg-muted/50 p-4 rounded-lg">
-                <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">Status</span>
-                  <span className="text-sm font-medium">{selectedMember.status === "Active" ? "Aktif" : "Non-Aktif"}</span>
-                </div>
-                {selectedMember.status === "Active" && (
-                  <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">Jabatan</span>
-                    <span className="text-sm font-medium">{isEn ? (selectedMember.positionEn || selectedMember.positionId) : selectedMember.positionId || '-'}</span>
-                  </div>
+              <div className="w-full mt-6 space-y-4 bg-muted/30 p-5 rounded-xl border shadow-inner">
+                {selectedMember.type === "Administration" && (
+                  <>
+                    <div className="flex items-center justify-between border-b border-border/50 pb-3">
+                      <span className="text-sm text-muted-foreground font-medium">Jabatan</span>
+                      <span className="text-sm font-semibold text-right max-w-[200px] break-words">
+                        {isEn ? (selectedMember.positionEn || selectedMember.positionId) : selectedMember.positionId || '-'}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between border-b border-border/50 pb-3">
+                      <span className="text-sm text-muted-foreground font-medium">Periode</span>
+                      <span className="text-sm font-semibold text-right">{selectedMember.periode || '-'}</span>
+                    </div>
+                  </>
                 )}
-                <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">Angkatan</span>
-                  <span className="text-sm font-medium text-right">
-                    {selectedMember.batch?.year} <br />
-                    <span className="text-xs text-muted-foreground">{isEn ? (selectedMember.batch?.nameEn || selectedMember.batch?.nameId) : selectedMember.batch?.nameId}</span>
-                  </span>
+
+                <div className="flex items-center justify-between border-b border-border/50 pb-3">
+                  <span className="text-sm text-muted-foreground font-medium">Status</span>
+                  <Badge 
+                    className={selectedMember.type === "Administration" 
+                      ? "rounded-md bg-amber-600 hover:bg-amber-500 text-white border-transparent" 
+                      : "rounded-md bg-emerald-600 hover:bg-emerald-500 text-white border-transparent"
+                    }
+                  >
+                    {selectedMember.type === "Administration" ? "Kepengurusan" : "Demisioner"}
+                  </Badge>
+                </div>
+                
+                <div className="flex flex-col gap-1 pt-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground font-medium">Angkatan</span>
+                    <span className="text-sm font-bold text-right">{selectedMember.batch?.year}</span>
+                  </div>
+                  <div className="text-right mt-1">
+                    <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                      {isEn ? (selectedMember.batch?.nameEn || selectedMember.batch?.nameId) : selectedMember.batch?.nameId}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
