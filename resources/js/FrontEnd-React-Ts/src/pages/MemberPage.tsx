@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, Search, ArrowUpDown, Eye } from "lucide-react";
 import { useTranslation } from "@/i18n";
-import { useMembers } from "@/constants/members";
+import { getMembers, type Member, type MemberType } from "@/lib/api/member";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -48,10 +48,25 @@ type SortConfig = {
 } | null;
 
 export function MemberPage() {
-  const { t } = useTranslation("MemberPage");
-  const members = useMembers();
+  const { t, i18n } = useTranslation("MemberPage");
+  const isEn = i18n.language === 'en';
+  const [members, setMembers] = useState<Member[]>([]);
 
-  const [activeTab, setActiveTab] = useState("kepengurusan");
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const membersData = await getMembers();
+        if (membersData && Array.isArray(membersData)) {
+          setMembers(membersData);
+        }
+      } catch (error) {
+        console.error("Failed to fetch members:", error);
+      }
+    };
+    fetchMembers();
+  }, []);
+
+  const [activeTab, setActiveTab] = useState("Kepengurusan");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedBatch, setSelectedBatch] = useState("all");
   const [sortConfig, setSortConfig] = useState<SortConfig>(null);
@@ -61,21 +76,26 @@ export function MemberPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10; // Number of items to display per page
 
-  const activeMembers = members.filter((m) => m.status === "Aktif");
-  const alumniMembers = members.filter((m) => m.status === "Non-Aktif");
+  const activeMembers = members.filter((m) => m.status === "Active");
+  const alumniMembers = members.filter((m) => m.status === "Deactive");
 
   // Get unique batches for alumni filter
   const uniqueBatches = Array.from(
-    new Set(alumniMembers.map((m) => m.batch))
+    new Set(alumniMembers.map((m) => m.batch?.id).filter(Boolean))
   )
-    .sort((a, b) => b.localeCompare(a))
-    .map((batch) => {
-      const member = alumniMembers.find((m) => m.batch === batch);
+    .sort((a, b) => {
+      const batchA = alumniMembers.find(m => m.batch?.id === a)?.batch?.year || 0;
+      const batchB = alumniMembers.find(m => m.batch?.id === b)?.batch?.year || 0;
+      return batchB - batchA;
+    })
+    .map((batchId) => {
+      const member = alumniMembers.find((m) => m.batch?.id === batchId);
       return {
-        batch,
-        batch_name: member?.batch_name || '',
+        batch: batchId?.toString() || '',
+        batch_name: isEn ? (member?.batch?.nameEn || member?.batch?.nameId) : member?.batch?.nameId || '',
+        year: member?.batch?.year || 0,
       };
-    }); // sort descending
+    });
 
   // Reset pagination when search, sort, filter, or tab changes
   useEffect(() => {
@@ -90,6 +110,18 @@ export function MemberPage() {
     setSortConfig({ key, direction });
   };
 
+  const getSortValue = (member: Member, key: string): any => {
+    switch (key) {
+      case "name": return member.name?.toLowerCase();
+      case "prodi": return (isEn ? (member.major?.nameEn || member.major?.nameId) : member.major?.nameId)?.toLowerCase();
+      case "periode": return member.periode?.toLowerCase();
+      case "position": return (isEn ? (member.positionEn || member.positionId) : member.positionId)?.toLowerCase();
+      case "batch": return member.batch?.year;
+      case "batch_name": return (isEn ? (member.batch?.nameEn || member.batch?.nameId) : member.batch?.nameId)?.toLowerCase();
+      default: return "";
+    }
+  };
+
   const filterAndSortData = (data: typeof members) => {
     let filteredData = [...data];
 
@@ -98,7 +130,8 @@ export function MemberPage() {
       const searchTerms = searchQuery.toLowerCase().trim().split(/\s+/);
       
       filteredData = filteredData.filter((member) => {
-        const searchableText = `${member.name} ${member.prodi}`.toLowerCase();
+        const majorName = isEn ? (member.major?.nameEn || member.major?.nameId) : member.major?.nameId;
+        const searchableText = `${member.name} ${majorName || ''}`.toLowerCase();
         
         // Memastikan setiap kata yang diketik cocok dengan awalan kata pada nama/jurusan
         return searchTerms.every(term => 
@@ -110,10 +143,13 @@ export function MemberPage() {
     // Sort logic
     if (sortConfig !== null) {
       filteredData.sort((a, b) => {
-        if (a[sortConfig.key as keyof typeof a] < b[sortConfig.key as keyof typeof b]) {
+        const valA = getSortValue(a, sortConfig.key);
+        const valB = getSortValue(b, sortConfig.key);
+
+        if (valA < valB) {
           return sortConfig.direction === "asc" ? -1 : 1;
         }
-        if (a[sortConfig.key as keyof typeof a] > b[sortConfig.key as keyof typeof b]) {
+        if (valA > valB) {
           return sortConfig.direction === "asc" ? 1 : -1;
         }
         return 0;
@@ -127,7 +163,7 @@ export function MemberPage() {
 
   let sortedAlumniMembers = filterAndSortData(alumniMembers);
   if (selectedBatch !== "all") {
-    sortedAlumniMembers = sortedAlumniMembers.filter((m) => m.batch === selectedBatch);
+    sortedAlumniMembers = sortedAlumniMembers.filter((m) => m.batch?.id?.toString() === selectedBatch);
   }
 
   // Apply pagination
@@ -208,21 +244,21 @@ export function MemberPage() {
           {/* Top Controls Layout */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
             <TabsList className="grid grid-cols-2 w-full sm:w-64">
-              <TabsTrigger value="kepengurusan">Kepengurusan</TabsTrigger>
-              <TabsTrigger value="alumni">Alumni</TabsTrigger>
+              <TabsTrigger value="Kepengurusan">Kepengurusan</TabsTrigger>
+              <TabsTrigger value="Demisioner">Demisioner</TabsTrigger>
             </TabsList>
 
             <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-              {activeTab === "alumni" && (
+              {activeTab === "Demisioner" && (
                 <Select value={selectedBatch} onValueChange={setSelectedBatch}>
                   <SelectTrigger className="w-full sm:w-64">
                     <SelectValue placeholder="Filter Angkatan" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">Semua Tahun Angkatan</SelectItem>
-                    {uniqueBatches.map(({ batch, batch_name }) => (
+                    {uniqueBatches.map(({ batch, batch_name, year }) => (
                       <SelectItem key={batch} value={batch}>
-                        {batch} {batch_name ? `- ${batch_name}` : ''}
+                        {year} {batch_name ? `- ${batch_name}` : ''}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -241,7 +277,7 @@ export function MemberPage() {
             </div>
           </div>
 
-          <TabsContent value="kepengurusan">
+          <TabsContent value="Kepengurusan">
             <div className="rounded-md border bg-card">
               <Table>
                 <TableHeader>
@@ -256,6 +292,12 @@ export function MemberPage() {
                     <TableHead>
                       <Button variant="ghost" onClick={() => handleSort("prodi")} className="-ml-4">
                         Jurusan
+                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                      </Button>
+                    </TableHead>
+                    <TableHead>
+                      <Button variant="ghost" onClick={() => handleSort("periode")} className="-ml-4">
+                        Periode
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                       </Button>
                     </TableHead>
@@ -285,13 +327,14 @@ export function MemberPage() {
                     paginatedActiveMembers.map((member) => (
                       <TableRow key={member.id} className="hover:bg-white/[0.10] transition-colors">
                         <TableCell>
-                          <img src={member.img} alt={member.name} className="h-10 w-10 rounded-full object-cover border" />
+                          <img src={member.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random`} alt={member.name} className="h-10 w-10 min-w-10 min-h-10 rounded-full object-cover border" />
                         </TableCell>
                         <TableCell className="font-medium">{member.name}</TableCell>
-                        <TableCell>{member.prodi}</TableCell>
-                        <TableCell>{member.position}</TableCell>
-                        <TableCell>{member.batch}</TableCell>
-                        <TableCell>{member.batch_name}</TableCell>
+                        <TableCell>{member.major?.degree ? `${member.major.degree} - ` : ''}{isEn ? (member.major?.nameEn || member.major?.nameId) : member.major?.nameId}</TableCell>
+                        <TableCell>{member.periode || '-'}</TableCell>
+                        <TableCell>{isEn ? (member.positionEn || member.positionId) : member.positionId || '-'}</TableCell>
+                        <TableCell>{member.batch?.year}</TableCell>
+                        <TableCell>{isEn ? (member.batch?.nameEn || member.batch?.nameId) : member.batch?.nameId}</TableCell>
                         <TableCell className="text-right">
                           <Button variant="ghost" size="icon" onClick={() => setSelectedMember(member)}>
                             <Eye className="h-4 w-4" />
@@ -314,7 +357,7 @@ export function MemberPage() {
             {renderPagination(totalPagesActive)}
           </TabsContent>
 
-          <TabsContent value="alumni">
+          <TabsContent value="Demisioner">
             <div className="rounded-md border bg-card">
               <Table>
                 <TableHeader>
@@ -352,12 +395,12 @@ export function MemberPage() {
                     paginatedAlumniMembers.map((member) => (
                       <TableRow key={member.id} className="hover:bg-white/[0.10] transition-colors">
                         <TableCell>
-                          <img src={member.img} alt={member.name} className="h-10 w-10 rounded-full object-cover border" />
+                          <img src={member.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random`} alt={member.name} className="h-10 w-10 min-w-10 min-h-10 rounded-full object-cover border" />
                         </TableCell>
                         <TableCell className="font-medium">{member.name}</TableCell>
-                        <TableCell>{member.prodi}</TableCell>
-                        <TableCell>{member.batch}</TableCell>
-                        <TableCell>{member.batch_name}</TableCell>
+                        <TableCell>{member.major?.degree ? `${member.major.degree} - ` : ''}{isEn ? (member.major?.nameEn || member.major?.nameId) : member.major?.nameId}</TableCell>
+                        <TableCell>{member.batch?.year}</TableCell>
+                        <TableCell>{isEn ? (member.batch?.nameEn || member.batch?.nameId) : member.batch?.nameId}</TableCell>
                         <TableCell className="text-right">
                           <Button variant="ghost" size="icon" onClick={() => setSelectedMember(member)}>
                             <Eye className="h-4 w-4" />
@@ -391,31 +434,31 @@ export function MemberPage() {
           {selectedMember && (
             <div className="flex flex-col items-center gap-4 py-4">
               <img 
-                src={selectedMember.img} 
+                src={selectedMember.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedMember.name)}&background=random`} 
                 alt={selectedMember.name} 
                 className="h-32 w-32 rounded-full object-cover border-4 border-primary/20"
               />
               <div className="text-center">
                 <h3 className="text-xl font-bold">{selectedMember.name}</h3>
-                <p className="text-muted-foreground text-sm font-medium">{selectedMember.prodi}</p>
+                <p className="text-muted-foreground text-sm font-medium">{selectedMember.major?.degree ? `${selectedMember.major.degree} - ` : ''}{isEn ? (selectedMember.major?.nameEn || selectedMember.major?.nameId) : selectedMember.major?.nameId}</p>
               </div>
               
               <div className="w-full mt-4 space-y-3 bg-muted/50 p-4 rounded-lg">
                 <div className="flex justify-between">
                   <span className="text-sm text-muted-foreground">Status</span>
-                  <span className="text-sm font-medium">{selectedMember.status}</span>
+                  <span className="text-sm font-medium">{selectedMember.status === "Active" ? "Aktif" : "Non-Aktif"}</span>
                 </div>
-                {selectedMember.status === "Aktif" && (
+                {selectedMember.status === "Active" && (
                   <div className="flex justify-between">
                     <span className="text-sm text-muted-foreground">Jabatan</span>
-                    <span className="text-sm font-medium">{selectedMember.position}</span>
+                    <span className="text-sm font-medium">{isEn ? (selectedMember.positionEn || selectedMember.positionId) : selectedMember.positionId || '-'}</span>
                   </div>
                 )}
                 <div className="flex justify-between">
                   <span className="text-sm text-muted-foreground">Angkatan</span>
                   <span className="text-sm font-medium text-right">
-                    {selectedMember.batch} <br />
-                    <span className="text-xs text-muted-foreground">{selectedMember.batch_name}</span>
+                    {selectedMember.batch?.year} <br />
+                    <span className="text-xs text-muted-foreground">{isEn ? (selectedMember.batch?.nameEn || selectedMember.batch?.nameId) : selectedMember.batch?.nameId}</span>
                   </span>
                 </div>
               </div>
