@@ -3,7 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ListMemberController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+use App\Http\Controllers\DashboardController;
 
 // -------------------------------------------------------------
 // 1. AUTHENTICATION ROUTES (GUEST ONLY)
@@ -17,9 +17,7 @@ Route::middleware('guest')->group(function () {
 // 2. DASHBOARD / ADMIN PANEL (AUTHENTICATED & ACCESSIBLE BY ROLES)
 // -------------------------------------------------------------
 Route::middleware(['access:Master,Admin,User'])->prefix('dashboard')->group(function () {
-    Route::get('/', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     // Route untuk Logout & Update Profile
     Route::post('/auth/logout', [AuthController::class, 'logout'])->name('logout');
