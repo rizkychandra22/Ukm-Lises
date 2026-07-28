@@ -574,7 +574,7 @@ export default function Index({ members, batches, majors }: Props) {
                                                             return false;
                                                         })() && (
                                                                 <>
-                                                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white" size="sm" onClick={() => handleEditMember(member)}>
+                                                                    <Button className="bg-indigo-600 hover:bg-indigo-700 text-white" size="sm" onClick={() => handleEditMember(member)}>
                                                                         <Edit className="h-4 w-4 mr-1 md:mr-0 lg:mr-1" />
                                                                         <span className="hidden lg:inline">Edit</span>
                                                                     </Button>
@@ -631,7 +631,7 @@ export default function Index({ members, batches, majors }: Props) {
                                                 <TableCell className="text-right">
                                                     <div className="flex justify-end gap-2">
                                                         <Button
-                                                            className="bg-blue-600 hover:bg-blue-700 text-white"
+                                                            className="bg-indigo-600 hover:bg-indigo-700 text-white"
                                                             size="sm"
                                                             onClick={() => handleEditBatch(b)}
                                                         >
