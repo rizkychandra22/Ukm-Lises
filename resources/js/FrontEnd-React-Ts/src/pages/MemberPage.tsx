@@ -41,6 +41,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type SortConfig = {
   key: string;
@@ -51,16 +52,20 @@ export function MemberPage() {
   const { t, i18n } = useTranslation("MemberPage");
   const isEn = i18n.language === 'en';
   const [members, setMembers] = useState<Member[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchMembers = async () => {
       try {
+        setIsLoading(true);
         const membersData = await getMembers();
         if (membersData && Array.isArray(membersData)) {
           setMembers(membersData);
         }
       } catch (error) {
         console.error("Failed to fetch members:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchMembers();
@@ -323,7 +328,24 @@ export function MemberPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {paginatedActiveMembers.length > 0 ? (
+                  {isLoading ? (
+                    Array.from({ length: 5 }).map((_, index) => (
+                      <TableRow key={index}>
+                        <TableCell>
+                          <Skeleton className="h-10 w-10 rounded-full" />
+                        </TableCell>
+                        <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
+                        <TableCell><Skeleton className="h-4 w-[120px]" /></TableCell>
+                        <TableCell><Skeleton className="h-4 w-[80px]" /></TableCell>
+                        <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
+                        <TableCell><Skeleton className="h-4 w-[60px]" /></TableCell>
+                        <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
+                        <TableCell className="text-right">
+                          <Skeleton className="h-8 w-8 rounded-md ml-auto" />
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : paginatedActiveMembers.length > 0 ? (
                     paginatedActiveMembers.map((member) => (
                       <TableRow key={member.id} className="hover:bg-white/[0.10] transition-colors">
                         <TableCell>
@@ -344,8 +366,8 @@ export function MemberPage() {
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={7} className="h-24 text-center">
-                        Tidak ada data ditemukan.
+                      <TableCell colSpan={8} className="h-24 text-center text-muted-foreground">
+                        Tidak ada data yang ditemukan.
                       </TableCell>
                     </TableRow>
                   )}
@@ -391,7 +413,22 @@ export function MemberPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {paginatedAlumniMembers.length > 0 ? (
+                  {isLoading ? (
+                    Array.from({ length: 5 }).map((_, index) => (
+                      <TableRow key={index}>
+                        <TableCell>
+                          <Skeleton className="h-10 w-10 rounded-full" />
+                        </TableCell>
+                        <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
+                        <TableCell><Skeleton className="h-4 w-[120px]" /></TableCell>
+                        <TableCell><Skeleton className="h-4 w-[60px]" /></TableCell>
+                        <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
+                        <TableCell className="text-right">
+                          <Skeleton className="h-8 w-8 rounded-md ml-auto" />
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : paginatedAlumniMembers.length > 0 ? (
                     paginatedAlumniMembers.map((member) => (
                       <TableRow key={member.id} className="hover:bg-white/[0.10] transition-colors">
                         <TableCell>
@@ -410,8 +447,8 @@ export function MemberPage() {
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={6} className="h-24 text-center">
-                        Tidak ada data ditemukan.
+                      <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
+                        Tidak ada data yang ditemukan.
                       </TableCell>
                     </TableRow>
                   )}
