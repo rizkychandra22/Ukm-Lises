@@ -385,7 +385,7 @@ export default function Index({ members, batches, majors }: Props) {
 
     const filteredMembers = useMemo(() => {
         const result = members.filter(m => {
-            let matchTab = false;
+            let matchTab: boolean;
             if (activeMemberTab === 'MyBatch') {
                 matchTab = m.batch_id === userBatch?.id;
             } else if (activeMemberTab === 'Administration' || activeMemberTab === 'Pengurus' || activeMemberTab === 'Kepengurusan') {
