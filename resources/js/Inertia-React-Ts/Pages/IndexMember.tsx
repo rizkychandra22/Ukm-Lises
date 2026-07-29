@@ -531,10 +531,10 @@ export default function Index({ members, batches, majors }: Props) {
                         />
                     </div>
 
-                    {/* RIGHT: Dropdown Filters & Add Button (Side-by-side on mobile) */}
-                    <div className="flex flex-row items-center gap-2.5 w-full lg:w-auto">
+                    {/* RIGHT: Dropdown Filters & Add Button (Responsive for Mobile & Desktop) */}
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full lg:w-auto">
                         {activeTab === 'anggota' && (
-                            <>
+                            <div className="flex flex-row items-center gap-2.5 w-full sm:w-auto">
                                 {/* Dropdown 1: Kategori Anggota (Khusus Admin & Developer) */}
                                 {!hasRole('User') && (
                                     <Select value={activeMemberTab} onValueChange={setActiveMemberTab}>
@@ -579,7 +579,7 @@ export default function Index({ members, batches, majors }: Props) {
                                         </SelectContent>
                                     </Select>
                                 )}
-                            </>
+                            </div>
                         )}
 
                         {/* Add Button */}
