@@ -454,7 +454,7 @@ export default function Index({ members, batches, majors }: Props) {
                     <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto items-start sm:items-center">
                         {!hasRole(['User']) && (
                             <Tabs value={activeTab} onValueChange={setActiveTab}>
-                                <TabsList className="grid grid-cols-2">
+                                <TabsList className="grid grid-cols-2 w-full">
                                     <TabsTrigger value="anggota">Anggota</TabsTrigger>
                                     <TabsTrigger value="angkatan">Angkatan</TabsTrigger>
                                 </TabsList>
@@ -462,19 +462,19 @@ export default function Index({ members, batches, majors }: Props) {
                         )}
 
                         {activeTab === 'anggota' && (
-                            <Tabs value={activeMemberTab} onValueChange={setActiveMemberTab} className="w-full sm:w-auto relative">
-                                <TabsList className="grid grid-cols-3 w-full sm:inline-flex sm:w-auto p-1 h-auto sm:h-10">
+                            <Tabs value={activeMemberTab} onValueChange={setActiveMemberTab} className={hasRole('User') && userBatch ? 'w-full sm:w-80 relative' : 'w-full sm:w-96 relative'}>
+                                <TabsList className="grid grid-cols-3 w-full">
                                     {hasRole('User') && userBatch ? (
                                         <>
-                                            <TabsTrigger value="MyBatch" className="px-2 sm:px-4 text-xs sm:text-sm whitespace-nowrap">Angkatan {userBatch.year}</TabsTrigger>
-                                            <TabsTrigger value="Demisioner" className="px-2 sm:px-4 text-xs sm:text-sm whitespace-nowrap">Demisioner</TabsTrigger>
-                                            <TabsTrigger value="Administration" className="px-2 sm:px-4 text-xs sm:text-sm whitespace-nowrap">Kepengurusan</TabsTrigger>
+                                            <TabsTrigger value="MyBatch">Angkatan {userBatch.year}</TabsTrigger>
+                                            <TabsTrigger value="Demisioner">Demisioner</TabsTrigger>
+                                            <TabsTrigger value="Administration">Kepengurusan</TabsTrigger>
                                         </>
                                     ) : (
                                         <>
-                                            <TabsTrigger value="Demisioner" className="px-2 sm:px-4 text-xs sm:text-sm whitespace-nowrap">Demisioner</TabsTrigger>
-                                            <TabsTrigger value="Administration" className="px-2 sm:px-4 text-xs sm:text-sm whitespace-nowrap">Kepengurusan</TabsTrigger>
-                                            <TabsTrigger value="AnggotaLainnya" className="px-2 sm:px-4 text-xs sm:text-sm whitespace-nowrap">Anggota Lainnya</TabsTrigger>
+                                            <TabsTrigger value="Demisioner">Demisioner</TabsTrigger>
+                                            <TabsTrigger value="Administration">Kepengurusan</TabsTrigger>
+                                            <TabsTrigger value="AnggotaLainnya">Anggota Lainnya</TabsTrigger>
                                         </>
                                     )}
                                 </TabsList>
@@ -483,7 +483,7 @@ export default function Index({ members, batches, majors }: Props) {
                     </div>
 
                     {/* RIGHT: Search & Add Button */}
-                    <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
+                    <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto items-center">
                         <div className="relative w-full sm:w-80">
                             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                             <Input
@@ -912,13 +912,13 @@ export default function Index({ members, batches, majors }: Props) {
                                     );
                                 }
 
-                                let orgStatusValue = '';
+                                 let orgStatusValue = '';
                                 if (memberData.status === 'Active') {
                                     orgStatusValue = 'Kepengurusan';
                                 } else if (memberData.position_id === 'Anggota Biasa') {
                                     orgStatusValue = 'Anggota Biasa';
-                                } else if (memberData.position_id === 'Mahasiswa Baru') {
-                                    orgStatusValue = 'Mahasiswa Baru';
+                                } else if (memberData.position_id === 'Anggota Baru') {
+                                    orgStatusValue = 'Anggota Baru';
                                 }
 
                                 return (
@@ -934,7 +934,7 @@ export default function Index({ members, batches, majors }: Props) {
                                                         setMemberData(data => ({
                                                             ...data,
                                                             status: 'Active',
-                                                            position_id: data.position_id === 'Anggota Biasa' || data.position_id === 'Mahasiswa Baru' ? '' : data.position_id
+                                                            position_id: data.position_id === 'Anggota Biasa' || data.position_id === 'Anggota Baru' ? '' : data.position_id
                                                         }));
                                                     } else if (val === 'Anggota Biasa') {
                                                         setMemberData(data => ({
@@ -942,11 +942,11 @@ export default function Index({ members, batches, majors }: Props) {
                                                             status: 'Deactive',
                                                             position_id: 'Anggota Biasa'
                                                         }));
-                                                    } else if (val === 'Mahasiswa Baru') {
+                                                    } else if (val === 'Anggota Baru') {
                                                         setMemberData(data => ({
                                                             ...data,
                                                             status: 'Deactive',
-                                                            position_id: 'Mahasiswa Baru'
+                                                            position_id: 'Anggota Baru'
                                                         }));
                                                     }
                                                 }}
@@ -955,7 +955,7 @@ export default function Index({ members, batches, majors }: Props) {
                                                 <option value="" disabled>Pilih Status</option>
                                                 <option value="Kepengurusan">Kepengurusan</option>
                                                 <option value="Anggota Biasa">Anggota Biasa</option>
-                                                <option value="Mahasiswa Baru">Mahasiswa Baru</option>
+                                                <option value="Anggota Baru">Anggota Baru</option>
                                             </select>
                                         </div>
 

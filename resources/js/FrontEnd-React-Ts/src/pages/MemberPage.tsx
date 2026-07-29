@@ -256,10 +256,10 @@ export function MemberPage() {
         >
           {/* Top Controls Layout */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-            <TabsList className="grid grid-cols-3 w-full sm:inline-flex sm:w-auto p-1 h-auto sm:h-10">
-              <TabsTrigger value="Demisioner" className="px-2 sm:px-4 text-xs sm:text-sm whitespace-nowrap">Demisioner</TabsTrigger>
-              <TabsTrigger value="Kepengurusan" className="px-2 sm:px-4 text-xs sm:text-sm whitespace-nowrap">Kepengurusan</TabsTrigger>
-              <TabsTrigger value="AnggotaLainnya" className="px-2 sm:px-4 text-xs sm:text-sm whitespace-nowrap">Anggota Lainnya</TabsTrigger>
+            <TabsList className="grid grid-cols-3 w-full sm:w-96">
+              <TabsTrigger value="Demisioner">Demisioner</TabsTrigger>
+              <TabsTrigger value="Kepengurusan">Kepengurusan</TabsTrigger>
+              <TabsTrigger value="AnggotaLainnya">Anggota Lainnya</TabsTrigger>
             </TabsList>
 
             <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
