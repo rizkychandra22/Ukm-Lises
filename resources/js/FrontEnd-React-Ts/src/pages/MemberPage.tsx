@@ -95,6 +95,10 @@ export function MemberPage() {
 
     if (memberStatusFilter === "pengurus") {
       return m.status === "Active";
+    } else if (memberStatusFilter === "biasa") {
+      return m.status === "Deactive" && m.positionId === "Anggota Biasa";
+    } else if (memberStatusFilter === "baru") {
+      return m.status === "Deactive" && m.positionId === "Anggota Baru";
     }
 
     return true;
