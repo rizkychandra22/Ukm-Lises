@@ -254,41 +254,57 @@ export function MemberPage() {
           onValueChange={setActiveTab} 
           className="w-full"
         >
-          {/* Top Controls Layout */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-            <TabsList className="grid grid-cols-3 w-full sm:w-96">
-              <TabsTrigger value="Demisioner">Demisioner</TabsTrigger>
-              <TabsTrigger value="Kepengurusan">Kepengurusan</TabsTrigger>
-              <TabsTrigger value="AnggotaLainnya">Anggota Lainnya</TabsTrigger>
+          {/* Tabs Row (Shadcn Underline Tab Style) */}
+          <div className="w-full border-b border-border mb-4">
+            <TabsList className="flex h-auto p-0 bg-transparent gap-4 justify-start rounded-none border-none">
+              <TabsTrigger
+                value="Demisioner"
+                className="rounded-none border-b-2 border-transparent px-1 pb-2.5 pt-1.5 font-medium text-muted-foreground shadow-none data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:text-foreground"
+              >
+                Demisioner
+              </TabsTrigger>
+              <TabsTrigger
+                value="Kepengurusan"
+                className="rounded-none border-b-2 border-transparent px-1 pb-2.5 pt-1.5 font-medium text-muted-foreground shadow-none data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:text-foreground"
+              >
+                Kepengurusan
+              </TabsTrigger>
+              <TabsTrigger
+                value="AnggotaLainnya"
+                className="rounded-none border-b-2 border-transparent px-1 pb-2.5 pt-1.5 font-medium text-muted-foreground shadow-none data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:text-foreground"
+              >
+                Anggota Lainnya
+              </TabsTrigger>
             </TabsList>
+          </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-              {activeTab === "Demisioner" && (
-                <Select value={selectedBatch} onValueChange={setSelectedBatch}>
-                  <SelectTrigger className="w-full sm:w-64">
-                    <SelectValue placeholder="Filter Angkatan" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Semua Tahun Angkatan</SelectItem>
-                    {uniqueBatches.map(({ batch, batch_name, year }) => (
-                      <SelectItem key={batch} value={batch}>
-                        {year} {batch_name ? `- ${batch_name}` : ''}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-              
-              <div className="relative w-full sm:w-64">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  placeholder="Cari nama atau jurusan..."
-                  className="pl-10"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
+          {/* Controls Row (Filter & Search) */}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+            <div className="relative w-full sm:w-80">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Cari nama atau jurusan..."
+                className="pl-10"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
+
+            {activeTab === "Demisioner" && (
+              <Select value={selectedBatch} onValueChange={setSelectedBatch}>
+                <SelectTrigger className="w-full sm:w-64">
+                  <SelectValue placeholder="Filter Angkatan" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Semua Tahun Angkatan</SelectItem>
+                  {uniqueBatches.map(({ batch, batch_name, year }) => (
+                    <SelectItem key={batch} value={batch}>
+                      {year} {batch_name ? `- ${batch_name}` : ''}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
           </div>
 
           <TabsContent value="Kepengurusan">
