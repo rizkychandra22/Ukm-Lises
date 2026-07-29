@@ -531,14 +531,14 @@ export default function Index({ members, batches, majors }: Props) {
                         />
                     </div>
 
-                    {/* RIGHT: Dropdown Filters & Add Button */}
-                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full lg:w-auto">
+                    {/* RIGHT: Dropdown Filters & Add Button (Side-by-side on mobile) */}
+                    <div className="flex flex-row items-center gap-2.5 w-full lg:w-auto">
                         {activeTab === 'anggota' && (
                             <>
                                 {/* Dropdown 1: Kategori Anggota (Khusus Admin & Developer) */}
                                 {!hasRole('User') && (
                                     <Select value={activeMemberTab} onValueChange={setActiveMemberTab}>
-                                        <SelectTrigger className="h-8 w-full sm:w-40 rounded-lg text-[13px] bg-muted/50 border-border/60">
+                                        <SelectTrigger className="h-8 flex-1 sm:w-40 rounded-lg text-[13px] bg-muted/50 border-border/60">
                                             <SelectValue placeholder="Pilih Kategori" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -551,7 +551,7 @@ export default function Index({ members, batches, majors }: Props) {
                                 {/* Dropdown 2: Status Organisasi (Tampil pada tab Kepengurusan untuk semua Role termasuk User) */}
                                 {activeMemberTab === 'Administration' && (
                                     <Select value={memberStatusFilter} onValueChange={setMemberStatusFilter}>
-                                        <SelectTrigger className="h-8 w-full sm:w-44 rounded-lg text-[13px] bg-muted/50 border-border/60">
+                                        <SelectTrigger className="h-8 flex-1 sm:w-44 rounded-lg text-[13px] bg-muted/50 border-border/60">
                                             <SelectValue placeholder="Semua Anggota" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -566,7 +566,7 @@ export default function Index({ members, batches, majors }: Props) {
                                 {/* Dropdown 3: Filter Angkatan (Tampil pada tab Demisioner) */}
                                 {activeMemberTab === 'Demisioner' && (
                                     <Select value={demisionerBatchFilter} onValueChange={setDemisionerBatchFilter}>
-                                        <SelectTrigger className="h-8 w-full sm:w-44 rounded-lg text-[13px] bg-muted/50 border-border/60">
+                                        <SelectTrigger className="h-8 flex-1 sm:w-44 rounded-lg text-[13px] bg-muted/50 border-border/60">
                                             <SelectValue placeholder="Filter Angkatan" />
                                         </SelectTrigger>
                                         <SelectContent>

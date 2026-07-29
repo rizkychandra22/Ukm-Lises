@@ -74,6 +74,7 @@ export function MemberPage() {
   const [activeTab, setActiveTab] = useState("Kepengurusan");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedBatch, setSelectedBatch] = useState("all");
+  const [memberStatusFilter, setMemberStatusFilter] = useState("all");
   const [sortConfig, setSortConfig] = useState<SortConfig>(null);
   const [selectedMember, setSelectedMember] = useState<any>(null);
 
@@ -81,8 +82,17 @@ export function MemberPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10; // Number of items to display per page
 
-  const activeMembers = members.filter((m) => m.type === "Pengurus" && m.status === "Active" && m.batch?.status !== "Deactive");
-  const newMembers = members.filter((m) => m.type === "Pengurus" && m.status === "Deactive" && m.batch?.status !== "Deactive");
+  const activeMembers = members.filter((m) => {
+    const isActiveBatch = m.batch?.status !== "Deactive";
+    if (!isActiveBatch) return false;
+
+    if (memberStatusFilter === "pengurus") {
+      return m.status === "Active";
+    }
+
+    return true;
+  });
+
   const alumniMembers = members.filter((m) => m.type === "Demisioner" || m.batch?.status === "Deactive");
 
   // Get unique batches for alumni filter
@@ -106,7 +116,7 @@ export function MemberPage() {
   // Reset pagination when search, sort, filter, or tab changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, sortConfig, selectedBatch, activeTab]);
+  }, [searchQuery, sortConfig, selectedBatch, memberStatusFilter, activeTab]);
 
   const handleSort = (key: string) => {
     let direction: "asc" | "desc" = "asc";
@@ -166,7 +176,6 @@ export function MemberPage() {
   };
 
   const sortedActiveMembers = filterAndSortData(activeMembers);
-  const sortedNewMembers = filterAndSortData(newMembers);
 
   let sortedAlumniMembers = filterAndSortData(alumniMembers);
   if (selectedBatch !== "all") {
@@ -176,12 +185,6 @@ export function MemberPage() {
   // Apply pagination
   const totalPagesActive = Math.ceil(sortedActiveMembers.length / itemsPerPage);
   const paginatedActiveMembers = sortedActiveMembers.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
-  const totalPagesNew = Math.ceil(sortedNewMembers.length / itemsPerPage);
-  const paginatedNewMembers = sortedNewMembers.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -254,33 +257,55 @@ export function MemberPage() {
           onValueChange={setActiveTab} 
           className="w-full"
         >
-          {/* Tabs Row (Shadcn Underline Tab Style) */}
-          <div className="w-full border-b border-border mb-4">
-            <TabsList className="flex h-auto p-0 bg-transparent gap-4 justify-start rounded-none border-none">
-              <TabsTrigger
-                value="Demisioner"
-                className="rounded-none border-b-2 border-transparent px-1 pb-2.5 pt-1.5 font-medium text-muted-foreground shadow-none data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:text-foreground"
-              >
-                Demisioner
-              </TabsTrigger>
-              <TabsTrigger
-                value="Kepengurusan"
-                className="rounded-none border-b-2 border-transparent px-1 pb-2.5 pt-1.5 font-medium text-muted-foreground shadow-none data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:text-foreground"
-              >
-                Kepengurusan
-              </TabsTrigger>
-              <TabsTrigger
-                value="AnggotaLainnya"
-                className="rounded-none border-b-2 border-transparent px-1 pb-2.5 pt-1.5 font-medium text-muted-foreground shadow-none data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:text-foreground"
-              >
-                Anggota Lainnya
-              </TabsTrigger>
-            </TabsList>
-          </div>
+          {/* Controls Row (Category & Filter Selects on LEFT, Search on FAR RIGHT) */}
+          <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 mb-6">
+            {/* LEFT: Category Select & Filter Select (Side-by-side on mobile) */}
+            <div className="flex flex-row gap-2.5 items-center w-full md:w-auto">
+              {/* Select 1: Kategori Dropdown (Kepengurusan / Demisioner) */}
+              <Select value={activeTab} onValueChange={setActiveTab}>
+                <SelectTrigger className="w-1/2 sm:w-44">
+                  <SelectValue placeholder="Pilih Kategori" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Kepengurusan">Kepengurusan</SelectItem>
+                  <SelectItem value="Demisioner">Demisioner</SelectItem>
+                </SelectContent>
+              </Select>
 
-          {/* Controls Row (Filter & Search) */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
-            <div className="relative w-full sm:w-80">
+              {/* Select 2: Filter Dropdown (Next to Kategori Dropdown) */}
+              {activeTab === "Kepengurusan" && (
+                <Select value={memberStatusFilter} onValueChange={setMemberStatusFilter}>
+                  <SelectTrigger className="w-1/2 sm:w-48">
+                    <SelectValue placeholder="Semua Anggota" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Semua Anggota</SelectItem>
+                    <SelectItem value="pengurus">Anggota Pengurus</SelectItem>
+                    <SelectItem value="biasa">Anggota Biasa</SelectItem>
+                    <SelectItem value="baru">Anggota Baru</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+
+              {activeTab === "Demisioner" && (
+                <Select value={selectedBatch} onValueChange={setSelectedBatch}>
+                  <SelectTrigger className="w-1/2 sm:w-56">
+                    <SelectValue placeholder="Filter Angkatan" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Semua Tahun Angkatan</SelectItem>
+                    {uniqueBatches.map(({ batch, batch_name, year }) => (
+                      <SelectItem key={batch} value={batch}>
+                        {year} {batch_name ? `- ${batch_name}` : ''}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            </div>
+
+            {/* FAR RIGHT: Search Input Box */}
+            <div className="relative w-full md:w-80">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder="Cari nama atau jurusan..."
@@ -289,22 +314,6 @@ export function MemberPage() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-
-            {activeTab === "Demisioner" && (
-              <Select value={selectedBatch} onValueChange={setSelectedBatch}>
-                <SelectTrigger className="w-full sm:w-64">
-                  <SelectValue placeholder="Filter Angkatan" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Semua Tahun Angkatan</SelectItem>
-                  {uniqueBatches.map(({ batch, batch_name, year }) => (
-                    <SelectItem key={batch} value={batch}>
-                      {year} {batch_name ? `- ${batch_name}` : ''}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
           </div>
 
           <TabsContent value="Kepengurusan">
@@ -402,95 +411,6 @@ export function MemberPage() {
             
             {/* Pagination for Kepengurusan */}
             {renderPagination(totalPagesActive)}
-          </TabsContent>
-
-          <TabsContent value="AnggotaLainnya">
-            <div className="rounded-md border bg-card">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-16">Foto</TableHead>
-                    <TableHead>
-                      <Button variant="ghost" onClick={() => handleSort("name")} className="-ml-4">
-                        Nama Anggota
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
-                      </Button>
-                    </TableHead>
-                    <TableHead>
-                      <Button variant="ghost" onClick={() => handleSort("prodi")} className="-ml-4">
-                        Jurusan
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
-                      </Button>
-                    </TableHead>
-                    <TableHead>
-                      <Button variant="ghost" onClick={() => handleSort("position")} className="-ml-4">
-                        Jabatan/Status
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
-                      </Button>
-                    </TableHead>
-                    <TableHead>
-                      <Button variant="ghost" onClick={() => handleSort("batch")} className="-ml-4">
-                        Tahun
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
-                      </Button>
-                    </TableHead>
-                    <TableHead>
-                      <Button variant="ghost" onClick={() => handleSort("batch_name")} className="-ml-4">
-                        Nama Angkatan
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
-                      </Button>
-                    </TableHead>
-                    <TableHead className="text-right">Detail</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {isLoading ? (
-                    Array.from({ length: 5 }).map((_, index) => (
-                      <TableRow key={index}>
-                        <TableCell>
-                          <Skeleton className="h-10 w-10 rounded-full" />
-                        </TableCell>
-                        <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-[120px]" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-[60px]" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
-                        <TableCell className="text-right">
-                          <Skeleton className="h-8 w-8 rounded-md ml-auto" />
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : paginatedNewMembers.length > 0 ? (
-                    paginatedNewMembers.map((member) => (
-                      <TableRow key={member.id} className="hover:bg-white/[0.10] transition-colors">
-                        <TableCell>
-                          <img src={member.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random`} alt={member.name} className="h-10 w-10 min-w-10 min-h-10 rounded-full object-cover border" />
-                        </TableCell>
-                        <TableCell className="font-medium">{member.name}</TableCell>
-                        <TableCell>{member.major?.degree ? `${member.major.degree} - ` : ''}{isEn ? (member.major?.nameEn || member.major?.nameId) : member.major?.nameId}</TableCell>
-                        <TableCell>{isEn ? (member.positionEn || member.positionId) : member.positionId || '-'}</TableCell>
-                        <TableCell>{member.batch?.year}</TableCell>
-                        <TableCell>{isEn ? (member.batch?.nameEn || member.batch?.nameId) : member.batch?.nameId}</TableCell>
-                        <TableCell className="text-right">
-                          <Button variant="ghost" size="icon" onClick={() => setSelectedMember(member)}>
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
-                        Tidak ada data yang ditemukan.
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-
-            {/* Pagination for Anggota Lainnya */}
-            {renderPagination(totalPagesNew)}
           </TabsContent>
 
           <TabsContent value="Demisioner">
