@@ -518,9 +518,9 @@ export default function Index({ members, batches, majors }: Props) {
                     </div>
                 </div>
 
-                {/* Controls Row (Search on LEFT, Dropdown Filters & Tambah Button on RIGHT) */}
+                {/* Controls Row (Search Box on Top, 2 Selects in Middle, Add Button on Bottom for Mobile) */}
                 <div className="flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-3">
-                    {/* LEFT: Search Input (matching Header search style: h-8, rounded-lg, bg-muted/50, text-[13px]) */}
+                    {/* Row 1 on Mobile: Search Input (LEFT on Desktop) */}
                     <div className="relative w-full lg:w-80">
                         <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
                         <Input
@@ -531,14 +531,15 @@ export default function Index({ members, batches, majors }: Props) {
                         />
                     </div>
 
-                    {/* RIGHT: Dropdown Filters & Add Button (Responsive for Mobile & Desktop) */}
+                    {/* Row 2 (2 Selects) & Row 3 (Add Button) on Mobile (RIGHT on Desktop) */}
                     <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full lg:w-auto">
-                        {activeTab === 'anggota' && (
-                            <div className="flex flex-row items-center gap-2.5 w-full sm:w-auto">
+                        {/* Dropdown Filters Container (Only rendered when dropdowns exist) */}
+                        {activeTab === 'anggota' && (activeMemberTab === 'Administration' || activeMemberTab === 'Demisioner' || !hasRole('User')) && (
+                            <div className="flex flex-row items-center gap-2.5 w-full sm:w-auto min-w-0">
                                 {/* Dropdown 1: Kategori Anggota (Khusus Admin & Developer) */}
                                 {!hasRole('User') && (
                                     <Select value={activeMemberTab} onValueChange={setActiveMemberTab}>
-                                        <SelectTrigger className="h-8 flex-1 sm:w-40 rounded-lg text-[13px] bg-muted/50 border-border/60">
+                                        <SelectTrigger className="h-8 flex-1 min-w-0 sm:w-40 rounded-lg text-[13px] bg-muted/50 border-border/60">
                                             <SelectValue placeholder="Pilih Kategori" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -551,7 +552,7 @@ export default function Index({ members, batches, majors }: Props) {
                                 {/* Dropdown 2: Status Organisasi (Tampil pada tab Kepengurusan untuk semua Role termasuk User) */}
                                 {activeMemberTab === 'Administration' && (
                                     <Select value={memberStatusFilter} onValueChange={setMemberStatusFilter}>
-                                        <SelectTrigger className="h-8 flex-1 sm:w-44 rounded-lg text-[13px] bg-muted/50 border-border/60">
+                                        <SelectTrigger className="h-8 flex-1 min-w-0 sm:w-44 rounded-lg text-[13px] bg-muted/50 border-border/60">
                                             <SelectValue placeholder="Semua Anggota" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -566,8 +567,8 @@ export default function Index({ members, batches, majors }: Props) {
                                 {/* Dropdown 3: Filter Angkatan (Tampil pada tab Demisioner) */}
                                 {activeMemberTab === 'Demisioner' && (
                                     <Select value={demisionerBatchFilter} onValueChange={setDemisionerBatchFilter}>
-                                        <SelectTrigger className="h-8 flex-1 sm:w-44 rounded-lg text-[13px] bg-muted/50 border-border/60">
-                                            <SelectValue placeholder="Filter Angkatan" />
+                                        <SelectTrigger className="h-8 flex-1 min-w-0 sm:w-44 rounded-lg text-[13px] bg-muted/50 border-border/60">
+                                            <SelectValue placeholder="Filter Angkatan" className="truncate" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="all" className="text-[13px]">Semua Angkatan</SelectItem>
@@ -582,7 +583,7 @@ export default function Index({ members, batches, majors }: Props) {
                             </div>
                         )}
 
-                        {/* Add Button */}
+                        {/* Row 3 on Mobile: Add Button (Full width on Mobile, Right on Desktop) */}
                         {(() => {
                             if (activeTab === 'angkatan') return hasRole(['Developer', 'Admin']);
                             if (activeMemberTab === 'Administration' || activeMemberTab === 'Demisioner') return hasRole(['Developer', 'Admin']);
