@@ -135,6 +135,13 @@ export async function getMembers(params?: QueryMemberParams): Promise<Member[]> 
   return Array.isArray(rawData) ? rawData.map(normalizeMember) : [];
 }
 
+export async function getBatches(): Promise<Batch[]> {
+  const response = await apiClient.get<ApiResponse<unknown[]>>('/batches');
+  const rawData = response.data?.data;
+
+  return Array.isArray(rawData) ? (rawData.map(normalizeBatch).filter(Boolean) as Batch[]) : [];
+}
+
 /**
  * Helper khusus memisahkan Pengurus (Administration) dan Demisioner secara paralel
  */

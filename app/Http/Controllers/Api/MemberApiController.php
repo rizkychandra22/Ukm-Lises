@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Batch;
 use App\Models\BatchMember;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -31,6 +32,19 @@ class MemberApiController extends Controller
             'success' => true,
             'message' => 'Data sharing transaction successfully retrieved',
             'data'    => $members,
+        ]);
+    }
+
+    /**
+     * Ambil data angkatan untuk halaman depan
+     */
+    public function batches(): JsonResponse
+    {
+        $batches = Batch::orderBy('year', 'desc')->get();
+        return response()->json([
+            'success' => true,
+            'message' => 'Data angkatan successfully retrieved',
+            'data'    => $batches,
         ]);
     }
 }

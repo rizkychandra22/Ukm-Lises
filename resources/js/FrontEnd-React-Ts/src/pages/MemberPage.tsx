@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, Search, ArrowUpDown, Eye } from "lucide-react";
 import { useTranslation } from "@/i18n";
-import { getMembers, type Member, type MemberType } from "@/lib/api/member";
+import { getMembers, getBatches, type Member, type Batch, type MemberType } from "@/lib/api/member";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -52,23 +52,30 @@ export function MemberPage() {
   const { t, i18n } = useTranslation("MemberPage");
   const isEn = i18n.language === 'en';
   const [members, setMembers] = useState<Member[]>([]);
+  const [batches, setBatches] = useState<Batch[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchMembers = async () => {
+    const fetchData = async () => {
       try {
         setIsLoading(true);
-        const membersData = await getMembers();
+        const [membersData, batchesData] = await Promise.all([
+          getMembers(),
+          getBatches(),
+        ]);
         if (membersData && Array.isArray(membersData)) {
           setMembers(membersData);
         }
+        if (batchesData && Array.isArray(batchesData)) {
+          setBatches(batchesData);
+        }
       } catch (error) {
-        console.error("Failed to fetch members:", error);
+        console.error("Failed to fetch member/batch data:", error);
       } finally {
         setIsLoading(false);
       }
     };
-    fetchMembers();
+    fetchData();
   }, []);
 
   const [activeTab, setActiveTab] = useState("Kepengurusan");
@@ -95,23 +102,25 @@ export function MemberPage() {
 
   const alumniMembers = members.filter((m) => m.type === "Demisioner" || m.batch?.status === "Deactive");
 
-  // Get unique batches for alumni filter
-  const uniqueBatches = Array.from(
-    new Set(alumniMembers.map((m) => m.batch?.id).filter(Boolean))
+  // Get batches list for dropdown filter
+  const uniqueBatches = (batches.length > 0
+    ? batches
+    : Array.from(new Set(alumniMembers.map((m) => m.batch?.id).filter(Boolean))).map((batchId) => {
+        const member = alumniMembers.find((m) => m.batch?.id === batchId);
+        return {
+          id: batchId || 0,
+          nameId: member?.batch?.nameId || '',
+          nameEn: member?.batch?.nameEn,
+          year: member?.batch?.year || 0,
+        };
+      })
   )
-    .sort((a, b) => {
-      const batchA = alumniMembers.find(m => m.batch?.id === a)?.batch?.year || 0;
-      const batchB = alumniMembers.find(m => m.batch?.id === b)?.batch?.year || 0;
-      return batchB - batchA;
-    })
-    .map((batchId) => {
-      const member = alumniMembers.find((m) => m.batch?.id === batchId);
-      return {
-        batch: batchId?.toString() || '',
-        batch_name: isEn ? (member?.batch?.nameEn || member?.batch?.nameId) : member?.batch?.nameId || '',
-        year: member?.batch?.year || 0,
-      };
-    });
+    .sort((a, b) => b.year - a.year)
+    .map((b) => ({
+      batch: b.id.toString(),
+      batch_name: isEn ? (b.nameEn || b.nameId) : b.nameId,
+      year: b.year,
+    }));
 
   // Reset pagination when search, sort, filter, or tab changes
   useEffect(() => {
