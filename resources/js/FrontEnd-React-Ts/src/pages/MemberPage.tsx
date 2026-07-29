@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, Search, ArrowUpDown, Eye } from "lucide-react";
 import { useTranslation } from "@/i18n";
-import { getMembers, type Member, type MemberType } from "@/lib/api/member";
+import { getMembers, getBatches, type Member, type Batch, type MemberType } from "@/lib/api/member";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -52,28 +52,36 @@ export function MemberPage() {
   const { t, i18n } = useTranslation("MemberPage");
   const isEn = i18n.language === 'en';
   const [members, setMembers] = useState<Member[]>([]);
+  const [batches, setBatches] = useState<Batch[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchMembers = async () => {
+    const fetchData = async () => {
       try {
         setIsLoading(true);
-        const membersData = await getMembers();
+        const [membersData, batchesData] = await Promise.all([
+          getMembers(),
+          getBatches(),
+        ]);
         if (membersData && Array.isArray(membersData)) {
           setMembers(membersData);
         }
+        if (batchesData && Array.isArray(batchesData)) {
+          setBatches(batchesData);
+        }
       } catch (error) {
-        console.error("Failed to fetch members:", error);
+        console.error("Failed to fetch member/batch data:", error);
       } finally {
         setIsLoading(false);
       }
     };
-    fetchMembers();
+    fetchData();
   }, []);
 
   const [activeTab, setActiveTab] = useState("Kepengurusan");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedBatch, setSelectedBatch] = useState("all");
+  const [memberStatusFilter, setMemberStatusFilter] = useState("all");
   const [sortConfig, setSortConfig] = useState<SortConfig>(null);
   const [selectedMember, setSelectedMember] = useState<any>(null);
 
@@ -81,31 +89,43 @@ export function MemberPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10; // Number of items to display per page
 
-  const activeMembers = members.filter((m) => m.status === "Active");
-  const alumniMembers = members.filter((m) => m.status === "Deactive");
+  const activeMembers = members.filter((m) => {
+    const isActiveBatch = m.batch?.status !== "Deactive";
+    if (!isActiveBatch) return false;
 
-  // Get unique batches for alumni filter
-  const uniqueBatches = Array.from(
-    new Set(alumniMembers.map((m) => m.batch?.id).filter(Boolean))
+    if (memberStatusFilter === "pengurus") {
+      return m.status === "Active";
+    }
+
+    return true;
+  });
+
+  const alumniMembers = members.filter((m) => m.type === "Demisioner" || m.batch?.status === "Deactive");
+
+  // Get batches list for dropdown filter
+  const uniqueBatches = (batches.length > 0
+    ? batches
+    : Array.from(new Set(alumniMembers.map((m) => m.batch?.id).filter(Boolean))).map((batchId) => {
+        const member = alumniMembers.find((m) => m.batch?.id === batchId);
+        return {
+          id: batchId || 0,
+          nameId: member?.batch?.nameId || '',
+          nameEn: member?.batch?.nameEn,
+          year: member?.batch?.year || 0,
+        };
+      })
   )
-    .sort((a, b) => {
-      const batchA = alumniMembers.find(m => m.batch?.id === a)?.batch?.year || 0;
-      const batchB = alumniMembers.find(m => m.batch?.id === b)?.batch?.year || 0;
-      return batchB - batchA;
-    })
-    .map((batchId) => {
-      const member = alumniMembers.find((m) => m.batch?.id === batchId);
-      return {
-        batch: batchId?.toString() || '',
-        batch_name: isEn ? (member?.batch?.nameEn || member?.batch?.nameId) : member?.batch?.nameId || '',
-        year: member?.batch?.year || 0,
-      };
-    });
+    .sort((a, b) => b.year - a.year)
+    .map((b) => ({
+      batch: b.id.toString(),
+      batch_name: isEn ? (b.nameEn || b.nameId) : b.nameId,
+      year: b.year,
+    }));
 
   // Reset pagination when search, sort, filter, or tab changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, sortConfig, selectedBatch, activeTab]);
+  }, [searchQuery, sortConfig, selectedBatch, memberStatusFilter, activeTab]);
 
   const handleSort = (key: string) => {
     let direction: "asc" | "desc" = "asc";
@@ -246,17 +266,39 @@ export function MemberPage() {
           onValueChange={setActiveTab} 
           className="w-full"
         >
-          {/* Top Controls Layout */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-            <TabsList className="grid grid-cols-2 w-full sm:w-64">
-              <TabsTrigger value="Kepengurusan">Kepengurusan</TabsTrigger>
-              <TabsTrigger value="Demisioner">Demisioner</TabsTrigger>
-            </TabsList>
+          {/* Controls Row (Category & Filter Selects on LEFT, Search on FAR RIGHT) */}
+          <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 mb-6">
+            {/* LEFT: Category Select & Filter Select (Side-by-side on mobile) */}
+            <div className="flex flex-row gap-2.5 items-center w-full md:w-auto">
+              {/* Select 1: Kategori Dropdown (Kepengurusan / Demisioner) */}
+              <Select value={activeTab} onValueChange={setActiveTab}>
+                <SelectTrigger className="w-1/2 sm:w-44">
+                  <SelectValue placeholder="Pilih Kategori" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Kepengurusan">Kepengurusan</SelectItem>
+                  <SelectItem value="Demisioner">Demisioner</SelectItem>
+                </SelectContent>
+              </Select>
 
-            <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+              {/* Select 2: Filter Dropdown (Next to Kategori Dropdown) */}
+              {activeTab === "Kepengurusan" && (
+                <Select value={memberStatusFilter} onValueChange={setMemberStatusFilter}>
+                  <SelectTrigger className="w-1/2 sm:w-48">
+                    <SelectValue placeholder="Semua Anggota" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Semua Anggota</SelectItem>
+                    <SelectItem value="pengurus">Anggota Pengurus</SelectItem>
+                    <SelectItem value="biasa">Anggota Biasa</SelectItem>
+                    <SelectItem value="baru">Anggota Baru</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+
               {activeTab === "Demisioner" && (
                 <Select value={selectedBatch} onValueChange={setSelectedBatch}>
-                  <SelectTrigger className="w-full sm:w-64">
+                  <SelectTrigger className="w-1/2 sm:w-56">
                     <SelectValue placeholder="Filter Angkatan" />
                   </SelectTrigger>
                   <SelectContent>
@@ -269,16 +311,17 @@ export function MemberPage() {
                   </SelectContent>
                 </Select>
               )}
-              
-              <div className="relative w-full sm:w-64">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  placeholder="Cari nama atau jurusan..."
-                  className="pl-10"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
+            </div>
+
+            {/* FAR RIGHT: Search Input Box */}
+            <div className="relative w-full md:w-80">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Cari nama atau jurusan..."
+                className="pl-10"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
           </div>
 

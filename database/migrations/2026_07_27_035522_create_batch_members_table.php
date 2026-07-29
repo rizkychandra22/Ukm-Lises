@@ -17,8 +17,8 @@ return new class extends Migration
             $table->foreignId('major_id')->constrained()->onDelete('cascade');
             $table->string('image')->nullable();
             $table->string('name');
-            $table->enum('type', ['Administration', 'Demisioner']);
-            $table->enum('status', ['Active', 'Deactive']);
+            $table->enum('type', ['Demisioner', 'Pengurus']);
+            $table->enum('status', ['Active', 'Deactive'])->default('Active');
             $table->string('periode')->nullable();
             $table->string('position_id')->nullable();
             $table->string('position_en')->nullable();

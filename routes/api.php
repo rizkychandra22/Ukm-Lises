@@ -16,5 +16,6 @@ Route::get('/user', function (Request $request) {
 | di halaman Landing Page atau halaman publik lainnya.
 */
 
-// Endpoint Get Data Anggota Public
+// Endpoint Get Data Anggota & Angkatan Public
 Route::get('/members', [MemberApiController::class, 'index']);
+Route::get('/batches', [MemberApiController::class, 'batches']);

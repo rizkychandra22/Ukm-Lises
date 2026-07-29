@@ -138,7 +138,7 @@ export function AppSidebar() {
 
                 <SidebarGroup>
                     <SidebarGroupLabel className="px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70 mt-2">
-                        {hasRole(['Master', 'Admin', 'User']) && auth.user?.roles?.[0]
+                        {hasRole(['Developer', 'Admin', 'User']) && auth.user?.roles?.[0]
                             ? `Menu ${auth.user.roles[0]}`
                             : null
                         }
@@ -147,7 +147,7 @@ export function AppSidebar() {
                         <SidebarMenu>
 
                             {/* Main Menu Role User */}
-                            {hasRole(['Master']) && (
+                            {hasRole(['Developer']) && (
                                 <SidebarMenuItem>
                                     <SidebarMenuButton asChild isActive={isActive(route('list-member.index'))} className="rounded-xl transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium">
                                         <Link href={route('list-member.index')}>
