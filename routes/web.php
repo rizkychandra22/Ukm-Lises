@@ -16,7 +16,7 @@ Route::middleware('guest')->group(function () {
 // -------------------------------------------------------------
 // 2. DASHBOARD / ADMIN PANEL (AUTHENTICATED & ACCESSIBLE BY ROLES)
 // -------------------------------------------------------------
-Route::middleware(['access:Master,Admin,User'])->prefix('dashboard')->group(function () {
+Route::middleware(['access:Developer,Admin,User'])->prefix('dashboard')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     // Route untuk Logout & Update Profile

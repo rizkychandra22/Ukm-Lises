@@ -23,15 +23,7 @@ class BatchMemberService
         }
 
         // 2. Logika Status & Auto Translate
-        if (($data['type'] ?? null) === 'Demisioner') {
-            $data['status'] = 'Deactive';
-            $data['periode'] = null;
-            $data['position_id'] = null;
-            $data['position_en'] = null;
-        } else {
-            $data['status'] = 'Active';
-            $data['position_en'] = $this->translator->toEnglish($data['position_id'] ?? null) ?? ($data['position_id'] ?? null);
-        }
+        $data = $this->processMemberStatusData($data);
 
         return BatchMember::create($data);
     }
@@ -58,15 +50,7 @@ class BatchMemberService
         }
 
         // 2. Logika Status & Auto Translate
-        if (($data['type'] ?? null) === 'Demisioner') {
-            $data['status'] = 'Deactive';
-            $data['periode'] = null;
-            $data['position_id'] = null;
-            $data['position_en'] = null;
-        } else {
-            $data['status'] = 'Active';
-            $data['position_en'] = $this->translator->toEnglish($data['position_id'] ?? null) ?? ($data['position_id'] ?? null);
-        }
+        $data = $this->processMemberStatusData($data);
 
         // 3. Update Database
         $member->update($data);
@@ -86,5 +70,25 @@ class BatchMemberService
 
         // 3. Hapus record dari Database
         $member->delete();
+    }
+
+    private function processMemberStatusData(array $data): array
+    {
+        $batch = isset($data['batch_id']) ? \App\Models\Batch::find($data['batch_id']) : null;
+
+        if (($batch && $batch->status === 'Deactive') || ($data['type'] ?? null) === 'Demisioner') {
+            $data['type'] = 'Demisioner';
+            $data['status'] = 'Deactive';
+            $data['periode'] = null;
+            $data['position_id'] = null;
+            $data['position_en'] = null;
+        } else {
+            $data['type'] = 'Pengurus';
+            if (!empty($data['position_id'])) {
+                $data['position_en'] = $this->translator->toEnglish($data['position_id']) ?? $data['position_id'];
+            }
+        }
+
+        return $data;
     }
 }

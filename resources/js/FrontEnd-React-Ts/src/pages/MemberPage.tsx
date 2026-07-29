@@ -81,8 +81,9 @@ export function MemberPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10; // Number of items to display per page
 
-  const activeMembers = members.filter((m) => m.status === "Active");
-  const alumniMembers = members.filter((m) => m.status === "Deactive");
+  const activeMembers = members.filter((m) => m.type === "Pengurus" && m.status === "Active" && m.batch?.status !== "Deactive");
+  const newMembers = members.filter((m) => m.type === "Pengurus" && m.status === "Deactive" && m.batch?.status !== "Deactive");
+  const alumniMembers = members.filter((m) => m.type === "Demisioner" || m.batch?.status === "Deactive");
 
   // Get unique batches for alumni filter
   const uniqueBatches = Array.from(
@@ -165,6 +166,7 @@ export function MemberPage() {
   };
 
   const sortedActiveMembers = filterAndSortData(activeMembers);
+  const sortedNewMembers = filterAndSortData(newMembers);
 
   let sortedAlumniMembers = filterAndSortData(alumniMembers);
   if (selectedBatch !== "all") {
@@ -174,6 +176,12 @@ export function MemberPage() {
   // Apply pagination
   const totalPagesActive = Math.ceil(sortedActiveMembers.length / itemsPerPage);
   const paginatedActiveMembers = sortedActiveMembers.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const totalPagesNew = Math.ceil(sortedNewMembers.length / itemsPerPage);
+  const paginatedNewMembers = sortedNewMembers.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -248,9 +256,10 @@ export function MemberPage() {
         >
           {/* Top Controls Layout */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-            <TabsList className="grid grid-cols-2 w-full sm:w-64">
-              <TabsTrigger value="Kepengurusan">Kepengurusan</TabsTrigger>
-              <TabsTrigger value="Demisioner">Demisioner</TabsTrigger>
+            <TabsList className="grid grid-cols-3 w-full sm:inline-flex sm:w-auto p-1 h-auto sm:h-10">
+              <TabsTrigger value="Demisioner" className="px-2 sm:px-4 text-xs sm:text-sm whitespace-nowrap">Demisioner</TabsTrigger>
+              <TabsTrigger value="Kepengurusan" className="px-2 sm:px-4 text-xs sm:text-sm whitespace-nowrap">Kepengurusan</TabsTrigger>
+              <TabsTrigger value="AnggotaLainnya" className="px-2 sm:px-4 text-xs sm:text-sm whitespace-nowrap">Anggota Lainnya</TabsTrigger>
             </TabsList>
 
             <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
@@ -377,6 +386,95 @@ export function MemberPage() {
             
             {/* Pagination for Kepengurusan */}
             {renderPagination(totalPagesActive)}
+          </TabsContent>
+
+          <TabsContent value="AnggotaLainnya">
+            <div className="rounded-md border bg-card">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-16">Foto</TableHead>
+                    <TableHead>
+                      <Button variant="ghost" onClick={() => handleSort("name")} className="-ml-4">
+                        Nama Anggota
+                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                      </Button>
+                    </TableHead>
+                    <TableHead>
+                      <Button variant="ghost" onClick={() => handleSort("prodi")} className="-ml-4">
+                        Jurusan
+                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                      </Button>
+                    </TableHead>
+                    <TableHead>
+                      <Button variant="ghost" onClick={() => handleSort("position")} className="-ml-4">
+                        Jabatan/Status
+                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                      </Button>
+                    </TableHead>
+                    <TableHead>
+                      <Button variant="ghost" onClick={() => handleSort("batch")} className="-ml-4">
+                        Tahun
+                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                      </Button>
+                    </TableHead>
+                    <TableHead>
+                      <Button variant="ghost" onClick={() => handleSort("batch_name")} className="-ml-4">
+                        Nama Angkatan
+                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                      </Button>
+                    </TableHead>
+                    <TableHead className="text-right">Detail</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {isLoading ? (
+                    Array.from({ length: 5 }).map((_, index) => (
+                      <TableRow key={index}>
+                        <TableCell>
+                          <Skeleton className="h-10 w-10 rounded-full" />
+                        </TableCell>
+                        <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
+                        <TableCell><Skeleton className="h-4 w-[120px]" /></TableCell>
+                        <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
+                        <TableCell><Skeleton className="h-4 w-[60px]" /></TableCell>
+                        <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
+                        <TableCell className="text-right">
+                          <Skeleton className="h-8 w-8 rounded-md ml-auto" />
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : paginatedNewMembers.length > 0 ? (
+                    paginatedNewMembers.map((member) => (
+                      <TableRow key={member.id} className="hover:bg-white/[0.10] transition-colors">
+                        <TableCell>
+                          <img src={member.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random`} alt={member.name} className="h-10 w-10 min-w-10 min-h-10 rounded-full object-cover border" />
+                        </TableCell>
+                        <TableCell className="font-medium">{member.name}</TableCell>
+                        <TableCell>{member.major?.degree ? `${member.major.degree} - ` : ''}{isEn ? (member.major?.nameEn || member.major?.nameId) : member.major?.nameId}</TableCell>
+                        <TableCell>{isEn ? (member.positionEn || member.positionId) : member.positionId || '-'}</TableCell>
+                        <TableCell>{member.batch?.year}</TableCell>
+                        <TableCell>{isEn ? (member.batch?.nameEn || member.batch?.nameId) : member.batch?.nameId}</TableCell>
+                        <TableCell className="text-right">
+                          <Button variant="ghost" size="icon" onClick={() => setSelectedMember(member)}>
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
+                        Tidak ada data yang ditemukan.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+
+            {/* Pagination for Anggota Lainnya */}
+            {renderPagination(totalPagesNew)}
           </TabsContent>
 
           <TabsContent value="Demisioner">

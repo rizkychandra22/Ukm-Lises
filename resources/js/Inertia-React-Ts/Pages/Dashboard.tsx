@@ -45,7 +45,7 @@ export default function Dashboard() {
                     <div>
                         <h2 className="text-2xl font-bold text-foreground font-display tracking-tight">Dashboard</h2>
                         <p className="text-sm text-muted-foreground mt-1">
-                            {hasRole('Master') ? (
+                            {hasRole('Developer') ? (
                                 <>Halo <i><b>{user?.roles?.[0]}</b></i>, selamat datang kembali, silakan pantau data web dan server Anda.</>
                             ) : hasRole('Admin') ? (
                                 <>Halo <i><b>{user?.name}</b></i>, selamat datang kembali di pusat management internal <b>Lises Asmarandana</b>.</>

@@ -19,6 +19,7 @@ class BatchService
         return DB::transaction(function () use ($data) {
             // Auto translate name_id ke name_en
             $data['name_en'] = $this->translator->toEnglish($data['name_id'] ?? null);
+            $data['status'] = $data['status'] ?? 'Active';
 
             // Buat User Otomatis untuk Angkatan Ini
             $user = User::create([
@@ -42,6 +43,7 @@ class BatchService
                 'year'    => $data['year'],
                 'name_id' => $data['name_id'],
                 'name_en' => $this->translator->toEnglish($data['name_id'] ?? null),
+                'status'  => $data['status'] ?? $batch->status ?? 'Active',
             ];
             
             $batch->update($batchData);

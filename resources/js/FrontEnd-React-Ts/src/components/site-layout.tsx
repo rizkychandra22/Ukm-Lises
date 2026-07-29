@@ -268,9 +268,7 @@ export function SiteLayout() {
             <a
               href="https://portofolio-rizky-chandra.laravel.cloud/"
               className="text-primary hover:underline"
-            >
-              {" "}
-              Chndr
+            > Rizky Chandra
             </a>
           </p>
         </div>

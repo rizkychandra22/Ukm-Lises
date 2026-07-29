@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Models\User;
 
-#[Fillable(['user_id', 'year', 'name_id', 'name_en'])]
+#[Fillable(['user_id', 'year', 'name_id', 'name_en', 'status'])]
 
 class Batch extends Model
 {

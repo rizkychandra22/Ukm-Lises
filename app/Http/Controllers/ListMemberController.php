@@ -29,7 +29,7 @@ class ListMemberController extends Controller
         return Inertia::render('IndexMember', [
             'majors' => Major::select('id', 'faculty_id', 'faculty_en', 'name_id', 'name_en', 'degree')->get(),
             'members' => BatchMember::with(['batch', 'major'])->latest()->get(),
-            'batches' => Batch::select('id', 'user_id', 'year', 'name_id', 'name_en')->orderBy('year', 'desc')->get(),
+            'batches' => Batch::select('id', 'user_id', 'year', 'name_id', 'name_en', 'status')->orderBy('year', 'desc')->get(),
         ]);
     }
 
@@ -42,6 +42,7 @@ class ListMemberController extends Controller
         $validated = $request->validate([
             'year'    => 'required|string|max:10',
             'name_id' => 'required|string|max:255',
+            'status'  => 'required|in:Active,Deactive',
         ]);
 
         $this->batchService->createBatch($validated);
@@ -54,6 +55,7 @@ class ListMemberController extends Controller
         $validated = $request->validate([
             'year'     => 'required|string|max:10',
             'name_id'  => 'required|string|max:255',
+            'status'   => 'required|in:Active,Deactive',
             'username' => 'nullable|string|max:255',
             'password' => 'nullable|string|min:6',
         ]);
@@ -81,10 +83,19 @@ class ListMemberController extends Controller
             'major_id'    => 'required|exists:majors,id',
             'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'name'        => 'required|string|max:255',
-            'type'        => 'required|in:Administration,Demisioner',
-            'periode'     => 'required_if:type,Administration|nullable|string|max:100',
-            'position_id' => 'required_if:type,Administration|nullable|string|max:255',
+            'type'        => 'required|in:Demisioner,Pengurus',
+            'status'      => 'nullable|in:Active,Deactive',
+            'periode'     => 'nullable|string|max:100',
+            'position_id' => 'nullable|string|max:255',
         ]);
+
+        $user = auth()->user();
+        if ($user->hasRole('User')) {
+            $userBatch = Batch::where('user_id', $user->id)->first();
+            if (!$userBatch || $validated['batch_id'] != $userBatch->id) {
+                abort(403, 'Anda hanya dapat mengelola data anggota dari angkatan Anda sendiri.');
+            }
+        }
 
         $this->batchMemberService->createMember($validated);
 
@@ -98,10 +109,27 @@ class ListMemberController extends Controller
             'major_id'    => 'required|exists:majors,id',
             'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'name'        => 'required|string|max:255',
-            'type'        => 'required|in:Administration,Demisioner',
-            'periode'     => 'required_if:type,Administration|nullable|string|max:100',
-            'position_id' => 'required_if:type,Administration|nullable|string|max:255',
+            'type'        => 'required|in:Demisioner,Pengurus',
+            'status'      => 'nullable|in:Active,Deactive',
+            'periode'     => 'nullable|string|max:100',
+            'position_id' => 'nullable|string|max:255',
         ]);
+
+        $user = auth()->user();
+        if ($user->hasRole('Admin')) {
+            if (!($batchMember->type === 'Pengurus' && $batchMember->status === 'Active')) {
+                abort(403, 'Admin hanya dapat mengedit anggota yang sedang menjabat dalam kepengurusan.');
+            }
+        }
+        if ($user->hasRole('User')) {
+            $userBatch = Batch::where('user_id', $user->id)->first();
+            if (!$userBatch || $batchMember->batch_id != $userBatch->id || $validated['batch_id'] != $userBatch->id) {
+                abort(403, 'Anda hanya dapat mengelola data anggota dari angkatan Anda sendiri.');
+            }
+            if ($batchMember->type === 'Pengurus' && $batchMember->status === 'Active') {
+                abort(403, 'Anggota yang sedang menjabat dalam kepengurusan hanya dapat dikelola oleh Admin.');
+            }
+        }
 
         $this->batchMemberService->updateMember($batchMember, $validated);
 
@@ -110,6 +138,22 @@ class ListMemberController extends Controller
 
     public function destroyMember(BatchMember $batchMember)
     {
+        $user = auth()->user();
+        if ($user->hasRole('Admin')) {
+            if (!($batchMember->type === 'Pengurus' && $batchMember->status === 'Active')) {
+                abort(403, 'Admin hanya dapat menghapus anggota yang sedang menjabat dalam kepengurusan.');
+            }
+        }
+        if ($user->hasRole('User')) {
+            $userBatch = Batch::where('user_id', $user->id)->first();
+            if (!$userBatch || $batchMember->batch_id != $userBatch->id) {
+                abort(403, 'Anda hanya dapat mengelola data anggota dari angkatan Anda sendiri.');
+            }
+            if ($batchMember->type === 'Pengurus' && $batchMember->status === 'Active') {
+                abort(403, 'Anggota yang sedang menjabat dalam kepengurusan tidak dapat dihapus oleh akun angkatan.');
+            }
+        }
+
         $this->batchMemberService->deleteMember($batchMember);
 
         return redirect()->back()->with('success', 'Anggota berhasil dihapus!');
