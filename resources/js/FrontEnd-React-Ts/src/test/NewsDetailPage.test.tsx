@@ -25,6 +25,7 @@ vi.mock('@/constants/news', () => ({
       date: '31 July 2026',
       tag: 'Kegiatan',
       img: 'test.jpg',
+      excerpt: 'Test excerpt',
       content: '<p>Safe Content</p><script data-testid="xss-script">alert("xss")</script>'
     }
   ]
