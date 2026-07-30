@@ -678,9 +678,8 @@ export default function Index({ members, batches, majors }: Props) {
                                                 <TableCell>{member.batch?.name_id}</TableCell>
                                                  <TableCell className="text-right">
                                                     <div className="flex justify-end gap-2 items-center">
-                                                        <Button className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg h-8 px-3 text-[13px] font-medium" size="sm" onClick={() => { setViewingMember(member); setIsViewSheetOpen(true); }}>
-                                                            <Eye className="h-3.5 w-3.5 lg:mr-1.5" />
-                                                            <span className="hidden lg:inline">Lihat</span>
+                                                        <Button className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg h-8 w-8 p-0" size="sm" onClick={() => { setViewingMember(member); setIsViewSheetOpen(true); }} title="Lihat Detail">
+                                                            <Eye className="h-4 w-4" />
                                                         </Button>
                                                         {(() => {
                                                             if (hasRole('Developer')) return true;
@@ -694,9 +693,8 @@ export default function Index({ members, batches, majors }: Props) {
                                                             }
                                                             return false;
                                                         })() && (
-                                                            <Button className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg h-8 px-3 text-[13px] font-medium" size="sm" onClick={() => handleEditMember(member)}>
-                                                                <Edit className="h-3.5 w-3.5 mr-1 md:mr-0 lg:mr-1.5" />
-                                                                <span className="hidden lg:inline">Edit</span>
+                                                            <Button className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg h-8 w-8 p-0" size="sm" onClick={() => handleEditMember(member)} title="Edit Anggota">
+                                                                <Edit className="h-4 w-4" />
                                                             </Button>
                                                         )}
                                                         {(() => {
@@ -711,9 +709,8 @@ export default function Index({ members, batches, majors }: Props) {
                                                             }
                                                             return false;
                                                         })() && (
-                                                            <Button variant="destructive" size="sm" className="rounded-lg h-8 px-3 text-[13px] font-medium" onClick={() => handleDeleteMember(member.id)}>
-                                                                <Trash2 className="h-3.5 w-3.5 mr-1 md:mr-0 lg:mr-1.5" />
-                                                                <span className="hidden lg:inline">Hapus</span>
+                                                            <Button variant="destructive" size="sm" className="rounded-lg h-8 w-8 p-0" onClick={() => handleDeleteMember(member.id)} title="Hapus Anggota">
+                                                                <Trash2 className="h-4 w-4" />
                                                             </Button>
                                                         )}
                                                     </div>
@@ -769,21 +766,21 @@ export default function Index({ members, batches, majors }: Props) {
                                                 <TableCell className="text-right">
                                                     <div className="flex justify-end gap-2">
                                                         <Button
-                                                            className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg h-8 px-3 text-[13px] font-medium"
+                                                            className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg h-8 w-8 p-0"
                                                             size="sm"
                                                             onClick={() => handleEditBatch(b)}
+                                                            title="Edit Angkatan"
                                                         >
-                                                            <Edit className="h-3.5 w-3.5 mr-1 md:mr-0 lg:mr-1.5" />
-                                                            <span className="hidden lg:inline">Edit</span>
+                                                            <Edit className="h-4 w-4" />
                                                         </Button>
                                                         <Button
                                                             variant="destructive"
                                                             size="sm"
-                                                            className="rounded-lg h-8 px-3 text-[13px] font-medium"
+                                                            className="rounded-lg h-8 w-8 p-0"
                                                             onClick={() => handleDeleteBatch(b.id)}
+                                                            title="Hapus Angkatan"
                                                         >
-                                                            <Trash2 className="h-3.5 w-3.5 mr-1 md:mr-0 lg:mr-1.5" />
-                                                            <span className="hidden lg:inline">Hapus</span>
+                                                            <Trash2 className="h-4 w-4" />
                                                         </Button>
                                                     </div>
                                                 </TableCell>

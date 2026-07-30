@@ -39,6 +39,7 @@ import {
     Users,
     Settings,
     LogOut,
+    LucideLink,
 } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import LogoDark from '@/assets/logo-bg-dark.png';
@@ -130,6 +131,15 @@ export function AppSidebar() {
                                         <LayoutDashboard className="w-[18px] h-[18px]" />
                                         <span className="text-[13px]">Dashboard</span>
                                     </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    className="rounded-xl transition-all"
+                                    onClick={() => window.open('/', '_blank')}
+                                >
+                                    <LucideLink className="w-[18px] h-[18px]" />
+                                    <span className="text-[13px]">Lihat Website</span>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
                         </SidebarMenu>
