@@ -17,8 +17,6 @@ import {
 import {
   Tabs,
   TabsContent,
-  TabsList,
-  TabsTrigger,
 } from "@/components/ui/tabs";
 import {
   Select,
@@ -280,8 +278,8 @@ export function MemberPage() {
                   <SelectValue placeholder="Pilih Kategori" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Kepengurusan">Kepengurusan</SelectItem>
-                  <SelectItem value="Demisioner">Demisioner</SelectItem>
+                  <SelectItem value="Kepengurusan">{t('tabs.administration')}</SelectItem>
+                  <SelectItem value="Demisioner">{t('tabs.demisioner')}</SelectItem>
                 </SelectContent>
               </Select>
 
@@ -292,10 +290,10 @@ export function MemberPage() {
                     <SelectValue placeholder="Semua Anggota" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Semua Anggota</SelectItem>
-                    <SelectItem value="pengurus">Anggota Pengurus</SelectItem>
-                    <SelectItem value="biasa">Anggota Biasa</SelectItem>
-                    <SelectItem value="baru">Anggota Baru</SelectItem>
+                    <SelectItem value="all">{t('tabs.all_member')}</SelectItem>
+                    <SelectItem value="pengurus">{t('tabs.admin_member')}</SelectItem>
+                    <SelectItem value="biasa">{t('tabs.reguler_member')}</SelectItem>
+                    <SelectItem value="baru">{t('tabs.new_member')}</SelectItem>
                   </SelectContent>
                 </Select>
               )}
@@ -306,7 +304,7 @@ export function MemberPage() {
                     <SelectValue placeholder="Filter Angkatan" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Semua Tahun Angkatan</SelectItem>
+                    <SelectItem value="all">{t('tabs.all_batch')}</SelectItem>
                     {uniqueBatches.map(({ batch, batch_name, year }) => (
                       <SelectItem key={batch} value={batch}>
                         {year} {batch_name ? `- ${batch_name}` : ''}
@@ -321,7 +319,7 @@ export function MemberPage() {
             <div className="relative w-full md:w-80">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                placeholder="Cari nama atau jurusan..."
+                placeholder={t("search")}
                 className="pl-10"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -334,44 +332,44 @@ export function MemberPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Foto</TableHead>
+                    <TableHead>{t("table.img")}</TableHead>
                     <TableHead>
                       <Button variant="ghost" onClick={() => handleSort("name")} className="-ml-4">
-                        Nama Anggota
+                        {t("table.name")}
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                       </Button>
                     </TableHead>
                     <TableHead>
                       <Button variant="ghost" onClick={() => handleSort("prodi")} className="-ml-4">
-                        Jurusan
+                        {t("table.major")}
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                       </Button>
                     </TableHead>
                     <TableHead>
                       <Button variant="ghost" onClick={() => handleSort("periode")} className="-ml-4">
-                        Periode
+                        {t("table.period")}
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                       </Button>
                     </TableHead>
                     <TableHead>
                       <Button variant="ghost" onClick={() => handleSort("position")} className="-ml-4">
-                        Jabatan
+                        {t("table.position")}
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                       </Button>
                     </TableHead>
                     <TableHead>
                       <Button variant="ghost" onClick={() => handleSort("batch")} className="-ml-4">
-                        Tahun
+                        {t("table.year")}
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                       </Button>
                     </TableHead>
                     <TableHead>
                       <Button variant="ghost" onClick={() => handleSort("batch_name")} className="-ml-4">
-                        Nama Angkatan
+                        {t("table.batch_name")}
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                       </Button>
                     </TableHead>
-                    <TableHead className="text-right">Detail</TableHead>
+                    <TableHead className="text-right">{t("table.show")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -414,7 +412,7 @@ export function MemberPage() {
                   ) : (
                     <TableRow>
                       <TableCell colSpan={8} className="h-24 text-center text-muted-foreground">
-                        Tidak ada data yang ditemukan.
+                        {t("table.not_found")}
                       </TableCell>
                     </TableRow>
                   )}
@@ -431,32 +429,32 @@ export function MemberPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Foto</TableHead>
+                    <TableHead>{t("table.img")}</TableHead>
                     <TableHead>
                       <Button variant="ghost" onClick={() => handleSort("name")} className="-ml-4">
-                        Nama Anggota
+                        {t("table.name")}
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                       </Button>
                     </TableHead>
                     <TableHead>
                       <Button variant="ghost" onClick={() => handleSort("prodi")} className="-ml-4">
-                        Jurusan
+                        {t("table.major")}
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                       </Button>
                     </TableHead>
                     <TableHead>
                       <Button variant="ghost" onClick={() => handleSort("batch")} className="-ml-4">
-                        Tahun
+                        {t("table.year")}
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                       </Button>
                     </TableHead>
                     <TableHead>
                       <Button variant="ghost" onClick={() => handleSort("batch_name")} className="-ml-4">
-                        Nama Angkatan
+                        {t("table.batch_name")}
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                       </Button>
                     </TableHead>
-                    <TableHead className="text-right">Detail</TableHead>
+                    <TableHead className="text-right">{t("table.show")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -495,7 +493,7 @@ export function MemberPage() {
                   ) : (
                     <TableRow>
                       <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
-                        Tidak ada data yang ditemukan.
+                        {t("table.not_found")}
                       </TableCell>
                     </TableRow>
                   )}
@@ -513,7 +511,7 @@ export function MemberPage() {
       <Dialog open={!!selectedMember} onOpenChange={(open) => !open && setSelectedMember(null)}>
         <DialogContent className="w-[90vw] max-w-[400px] sm:max-w-[425px] rounded-xl">
           <DialogHeader>
-            <DialogTitle>Detail Anggota</DialogTitle>
+            <DialogTitle>{t("card.detail")}</DialogTitle>
           </DialogHeader>
           {selectedMember && (
             <div className="flex flex-col items-center gap-4 py-4">
@@ -528,36 +526,48 @@ export function MemberPage() {
               </div>
               
               <div className="w-full mt-6 space-y-4 bg-muted/30 p-5 rounded-xl border shadow-inner">
-                {selectedMember.type === "Administration" && (
+                {selectedMember.batch?.status !== "Deactive" && (
                   <>
                     <div className="flex items-center justify-between border-b border-border/50 pb-3">
-                      <span className="text-sm text-muted-foreground font-medium">Jabatan</span>
+                      <span className="text-sm text-muted-foreground font-medium">{t("card.position")}</span>
                       <span className="text-sm font-semibold text-right max-w-[200px] break-words">
                         {isEn ? (selectedMember.positionEn || selectedMember.positionId) : selectedMember.positionId || '-'}
                       </span>
                     </div>
                     <div className="flex items-center justify-between border-b border-border/50 pb-3">
-                      <span className="text-sm text-muted-foreground font-medium">Periode</span>
+                      <span className="text-sm text-muted-foreground font-medium">{t("card.period")}</span>
                       <span className="text-sm font-semibold text-right">{selectedMember.periode || '-'}</span>
                     </div>
                   </>
                 )}
 
                 <div className="flex items-center justify-between border-b border-border/50 pb-3">
-                  <span className="text-sm text-muted-foreground font-medium">Status</span>
-                  <Badge 
-                    className={selectedMember.type === "Administration" 
-                      ? "rounded-md bg-amber-600 hover:bg-amber-500 text-white border-transparent" 
-                      : "rounded-md bg-emerald-600 hover:bg-emerald-500 text-white border-transparent"
-                    }
-                  >
-                    {selectedMember.type === "Administration" ? "Kepengurusan" : "Demisioner"}
-                  </Badge>
+                  <span className="text-sm text-muted-foreground font-medium">{t("card.status")}</span>
+                  <div className="flex gap-2 justify-end">
+                    <Badge 
+                      className={selectedMember.batch?.status !== "Deactive" 
+                        ? "rounded-md bg-emerald-600 hover:bg-emerald-500 text-white border-transparent" 
+                        : "rounded-md bg-amber-600 hover:bg-amber-500 text-white border-transparent"
+                      }
+                    >
+                      {selectedMember.batch?.status !== "Deactive" ? isEn ? "Administration" : "Kepengurusan" : isEn ? "Demisioner" : "Demisioner"}
+                    </Badge>
+                    {selectedMember.batch?.status !== "Deactive" && (
+                      <Badge 
+                        className={selectedMember.status === "Active" 
+                          ? "rounded-md bg-blue-600 hover:bg-blue-500 text-white border-transparent" 
+                          : "rounded-md bg-slate-500 hover:bg-slate-400 text-white border-transparent"
+                        }
+                      >
+                        {selectedMember.status === "Active" ? isEn ? "Active" : "Aktif" : isEn ? "Deactive" : "Tidak Aktif"}
+                      </Badge>
+                    )}
+                  </div>
                 </div>
                 
                 <div className="flex flex-col gap-1 pt-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground font-medium">Angkatan</span>
+                    <span className="text-sm text-muted-foreground font-medium">{t("card.batch")}</span>
                     <span className="text-sm font-bold text-right">{selectedMember.batch?.year}</span>
                   </div>
                   <div className="text-right mt-1">

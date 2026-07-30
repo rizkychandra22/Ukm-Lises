@@ -150,6 +150,34 @@ export default {
     heading: "Member",
     title_t1: "List of members ukm",
     title_y1: "Lises",
+    tabs: {
+      administration: 'Administration',
+      demisioner: 'Demicioner',
+      all_batch: 'All Batch Year',
+      all_member: 'All Member',
+      admin_member: 'Administration Member',
+      reguler_member: 'Regular Member',
+      new_member: 'New Member',
+    },
+    card: {
+      detail: 'Detail Member',
+      batch: 'Batch',
+      period: 'Period',
+      position: 'Position',
+      status: 'Status',
+    },
+    search: 'Search by name or major...',
+    table: {
+      img: 'Image',
+      name: 'Name Member',
+      major: 'Major',
+      year: 'Year',
+      batch_name: 'Batch Name',
+      period: 'Period',
+      position: 'Position',
+      show: 'Show',
+      not_found: 'Not found data'
+    },
   },
 
   ContactPage: {

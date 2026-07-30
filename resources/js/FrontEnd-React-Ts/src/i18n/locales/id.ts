@@ -150,6 +150,34 @@ export default {
     heading: "Anggota",
     title_t1: "Daftar anggota ukm",
     title_y1: "Lises",
+    tabs: {
+      administration: 'Kepengurusan',
+      demisioner: 'Demisioner',
+      all_batch: 'Semua Tahun Angkatan',
+      all_member: 'Semua Anggota',
+      admin_member: 'Anggota Pengurus',
+      reguler_member: 'Anggota Biasa',
+      new_member: 'Anggota Baru',
+    },
+    card: {
+      detail: 'Detail Anggota',
+      batch: 'Angkatan',
+      period: 'Periode',
+      position: 'Jabatan',
+      status: 'Status',
+    },
+    search: 'Cari berdasarkan nama atau jurusan...',
+    table: {
+      img: 'Foto',
+      name: 'Nama Anggota',
+      major: 'Jurusan',
+      year: 'Tahun',
+      batch_name: 'Nama Angkatan',
+      period: 'Periode',
+      position: 'Jabatan',
+      show: 'Lihat',
+      not_found: 'Tidak ada data yang ditemukan.'
+    },
   },
 
   ContactPage: {
