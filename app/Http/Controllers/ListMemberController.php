@@ -39,6 +39,10 @@ class ListMemberController extends Controller
 
     public function storeBatch(Request $request)
     {
+        if (!auth()->user()->hasAnyRole(['Developer', 'Admin'])) {
+            abort(403, 'Hanya Developer dan Admin yang dapat mengelola data angkatan.');
+        }
+
         $validated = $request->validate([
             'year'    => 'required|string|max:10',
             'name_id' => 'required|string|max:255',
@@ -52,6 +56,10 @@ class ListMemberController extends Controller
 
     public function updateBatch(Request $request, Batch $batch)
     {
+        if (!auth()->user()->hasAnyRole(['Developer', 'Admin'])) {
+            abort(403, 'Hanya Developer dan Admin yang dapat mengelola data angkatan.');
+        }
+
         $validated = $request->validate([
             'year'     => 'required|string|max:10',
             'name_id'  => 'required|string|max:255',
@@ -67,6 +75,10 @@ class ListMemberController extends Controller
 
     public function destroyBatch(Batch $batch)
     {
+        if (!auth()->user()->hasAnyRole(['Developer', 'Admin'])) {
+            abort(403, 'Hanya Developer dan Admin yang dapat mengelola data angkatan.');
+        }
+
         $this->batchService->deleteBatch($batch);
 
         return redirect()->back()->with('success', 'Data angkatan & akun berhasil dihapus!');

@@ -8,6 +8,9 @@ use App\Models\BatchMember;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+use App\Http\Resources\BatchResource;
+use App\Http\Resources\MemberResource;
+
 class MemberApiController extends Controller
 {
     /**
@@ -31,7 +34,7 @@ class MemberApiController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Data sharing transaction successfully retrieved',
-            'data'    => $members,
+            'data'    => MemberResource::collection($members),
         ]);
     }
 
@@ -44,7 +47,7 @@ class MemberApiController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Data angkatan successfully retrieved',
-            'data'    => $batches,
+            'data'    => BatchResource::collection($batches),
         ]);
     }
 }

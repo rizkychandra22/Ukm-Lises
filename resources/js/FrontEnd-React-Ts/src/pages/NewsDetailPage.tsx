@@ -1,3 +1,4 @@
+import DOMPurify from 'dompurify';
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, CalendarDays, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -62,7 +63,7 @@ export function NewsDetailPage() {
 
       <div
         className="mt-12 max-w-none text-lg leading-relaxed text-muted-foreground space-y-6"
-        dangerouslySetInnerHTML={{ __html: post.content }}
+        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
       />
     </article>
   );
