@@ -114,7 +114,7 @@ export function NewsDetailPage() {
         </div>
 
         {/* Title */}
-        <h1 className="mt-4 max-w-4xl font-display text-xl font-bold leading-[1.15] md:text-2xl lg:text-4xl">
+        <h1 className="mt-4 max-w-3xl font-display text-3xl font-bold leading-[1.15] md:text-4xl">
           {post.title}
         </h1>
 

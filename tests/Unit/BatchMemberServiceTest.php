@@ -135,7 +135,7 @@ class BatchMemberServiceTest extends TestCase
 
     public function test_create_member_with_image_upload()
     {
-        $file = UploadedFile::fake()->image('avatar.jpg');
+        $file = UploadedFile::fake()->create('avatar.jpg', 100, 'image/jpeg');
 
         $this->cloudinaryServiceMock
             ->shouldReceive('upload')
@@ -170,7 +170,7 @@ class BatchMemberServiceTest extends TestCase
             'image' => 'https://cloudinary.com/old_avatar.jpg'
         ]);
 
-        $newFile = UploadedFile::fake()->image('new_avatar.jpg');
+        $newFile = UploadedFile::fake()->create('new_avatar.jpg', 100, 'image/jpeg');
 
         $this->cloudinaryServiceMock
             ->shouldReceive('getPublicIdFromUrl')
