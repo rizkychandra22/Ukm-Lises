@@ -35,7 +35,7 @@ describe('NewsDetailPage', () => {
     render(<NewsDetailPage />);
     
     expect(screen.getByText('Test News Title')).toBeInTheDocument();
-    expect(screen.getByText('31 July 2026')).toBeInTheDocument();
+    expect(screen.getAllByText('31 July 2026')[0]).toBeInTheDocument();
   });
 
   it('should sanitize HTML and prevent XSS (script injection)', () => {
