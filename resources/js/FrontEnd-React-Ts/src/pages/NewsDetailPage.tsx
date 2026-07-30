@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { usePosts } from "@/constants/news";
 import { useTranslation } from "@/i18n";
+import { SEOHead } from "@/components/SEOHead";
 
 export function NewsDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -30,7 +31,13 @@ export function NewsDetailPage() {
   }
 
   return (
-    <article className="mx-auto max-w-4xl px-6 pb-12 pt-12 md:pb-16 md:pt-16">
+    <>
+      <SEOHead
+        pageKey="newsDetail"
+        customTitle={`${post.title} - Lises Asmarandana`}
+        customDescription={post.summary || post.title}
+      />
+      <article className="mx-auto max-w-4xl px-6 pb-12 pt-12 md:pb-16 md:pt-16">
       <Button
         asChild
         variant="ghost"
@@ -66,5 +73,6 @@ export function NewsDetailPage() {
         dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
       />
     </article>
+    </>
   );
 }

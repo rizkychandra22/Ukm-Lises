@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/i18n";
+import { SEOHead } from "@/components/SEOHead";
 
 export function EventPage() {
   const [selectedEvent, setSelectedEvent] = useState<number | null>(null);
@@ -65,7 +66,9 @@ export function EventPage() {
   const activeEvent = events.find((e) => e.id === selectedEvent);
 
   return (
-    <section className="mx-auto max-w-7xl px-6 pb-12 pt-12 md:pb-16 md:pt-16">
+    <>
+      <SEOHead pageKey="events" />
+      <section className="mx-auto max-w-7xl px-6 pb-12 pt-12 md:pb-16 md:pt-16">
       <Badge
         variant="outline"
         className="w-fit gap-2 rounded-full border-primary/40 bg-background/40 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-primary backdrop-blur"
@@ -164,5 +167,6 @@ export function EventPage() {
         </DialogContent>
       </Dialog>
     </section>
+    </>
   );
 }

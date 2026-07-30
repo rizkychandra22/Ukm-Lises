@@ -5,13 +5,16 @@ import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/c
 import { Button } from "@/components/ui/button";
 import { usePosts } from "@/constants/news";
 import { useTranslation } from "@/i18n";
+import { SEOHead } from "@/components/SEOHead";
 
 export function NewsPage() {
   const { t } = useTranslation("NewsPage");
   const posts = usePosts();
 
   return (
-    <section className="mx-auto max-w-7xl px-6 pb-12 pt-12 md:pb-16 md:pt-16">
+    <>
+      <SEOHead pageKey="news" />
+      <section className="mx-auto max-w-7xl px-6 pb-12 pt-12 md:pb-16 md:pt-16">
       {/* <p className="text-sm uppercase tracking-[0.25em] text-primary">News</p> */}
       <Badge
         variant="outline"
@@ -62,5 +65,6 @@ export function NewsPage() {
         ))}
       </div>
     </section>
+    </>
   );
 }

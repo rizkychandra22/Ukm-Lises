@@ -3,12 +3,14 @@ import img from "@/assets/gallery-2.jpg";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { useTranslation } from "@/i18n";
+import { SEOHead } from "@/components/SEOHead";
 
 export function AboutPage() {
   const { t } = useTranslation("AboutPage");
 
   return (
     <>
+      <SEOHead pageKey="about" />
       <section className="mx-auto max-w-7xl px-6 pb-10 pt-12 md:pt-16">
         {/* <p className="text-sm uppercase tracking-[0.25em] text-primary">
           Tentang Kami

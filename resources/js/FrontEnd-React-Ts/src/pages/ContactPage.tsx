@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { InstagramIcon } from "@/components/ui/icon-svg";
 import { useTranslation } from "@/i18n";
+import { SEOHead } from "@/components/SEOHead";
 
 type FieldProps = {
   label: string;
@@ -36,7 +37,9 @@ export function ContactPage() {
   const { t } = useTranslation("ContactPage");
 
   return (
-    <section className="mx-auto max-w-7xl px-6 pb-12 pt-12 md:pb-16 md:pt-16">
+    <>
+      <SEOHead pageKey="contact" />
+      <section className="mx-auto max-w-7xl px-6 pb-12 pt-12 md:pb-16 md:pt-16">
       <Badge
         variant="outline"
         className="w-fit gap-2 rounded-full border-primary/40 bg-background/40 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-primary backdrop-blur"
@@ -182,5 +185,6 @@ export function ContactPage() {
         </div>
       </div>
     </section>
+    </>
   );
 }

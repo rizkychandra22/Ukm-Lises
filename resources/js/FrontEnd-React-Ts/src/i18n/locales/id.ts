@@ -14,7 +14,7 @@ export default {
       desc: "UKM Lises Asmarandana adalah unit kegiatan mahasiswa yang berfokus pada pelestarian seni tradisional Sunda, khususnya musik dan tari kreasi.",
       links: "Navigasi Menu",
       social: "Sosial Media",
-      copyright: "© 2026 UKM Lises Asmarandana. Hak Cipta Dilindungi.",
+      copyright: "© 2026 Lises Asmarandana. Hak Cipta Dilindungi.",
       outhor: "Dibuat Oleh",
       address: "Sekretariat UKM - Kampus UMMI",
     },
@@ -249,6 +249,49 @@ export default {
         'Prestasi ini tentunya menjadi motivasi besar bagi seluruh anggota UKM Lises Asmarandana untuk terus berkarya dan meningkatkan kualitas diri. "Ini bukan akhir, melainkan langkah awal untuk mencapai panggung-panggung yang lebih besar lagi," ungkap ketua divisi tari dengan penuh haru saat menerima penghargaan.',
       author: "Admin Lises Asmarandana",
       btn_readmore: "Baca Selengkapnya",
+    },
+  },
+
+  seo: {
+    home: {
+      title: "Lises Asmarandana | Seni Musik & Tari UMMI Sukabumi",
+      description: "Situs resmi UKM Seni Musik dan Tari Lises Asmarandana Universitas Muhammadiyah Sukabumi. Melestarikan seni budaya Sunda dan Nusantara.",
+      keywords: "UKM Lises Asmarandana, UKM Seni UMMI, Seni Tari Sukabumi, Musik Tradisional Sunda, UMMI Sukabumi",
+    },
+    about: {
+      title: "Tentang Kami - Lises Asmarandana",
+      description: "Profil, sejarah, visi misi, dan struktur organisasi UKM Seni Musik dan Tari Lises Asmarandana UMMI Sukabumi.",
+      keywords: "Profil UKM Lises, Sejarah Lises Asmarandana, Visi Misi UKM Seni UMMI",
+    },
+    members: {
+      title: "Daftar Anggota & Kepengurusan - Lises Asmarandana",
+      description: "Daftar anggota aktif, struktur kepengurusan, dan demisioner UKM Lises Asmarandana UMMI Sukabumi.",
+      keywords: "Pengurus UKM Lises, Anggota Lises UMMI, Demisioner Lises Asmarandana",
+    },
+    events: {
+      title: "Agenda & Acara - Lises Asmarandana",
+      description: "Jadwal pementasan, festival budaya, dan kegiatan seni UKM Lises Asmarandana Universitas Muhammadiyah Sukabumi.",
+      keywords: "Event UKM Lises, Pementasan Seni UMMI, Festival Tari Sukabumi",
+    },
+    news: {
+      title: "Berita & Artikel - Lises Asmarandana",
+      description: "Kabar terbaru, liputan acara, dan artikel seni budaya dari UKM Lises Asmarandana UMMI.",
+      keywords: "Berita UKM Lises, Artikel Seni UMMI, Prestasi Lises Asmarandana",
+    },
+    newsDetail: {
+      title: "Detail Berita - Lises Asmarandana",
+      description: "Baca selengkapnya mengenai berita, artikel, dan kabar terbaru dari Lises Asmarandana Universitas Muhammadiyah Sukabumi.",
+      keywords: "Detail Berita Lises, Kabar Lises Asmarandana, Liputan UMMI",
+    },
+    gallery: {
+      title: "Galeri Dokumentasi - Lises Asmarandana",
+      description: "Dokumentasi foto dan video kegiatan pementasan, latihan, dan penampilan UKM Lises Asmarandana.",
+      keywords: "Galeri Lises, Foto Pementasan UMMI, Video Tari Lises",
+    },
+    contact: {
+      title: "Hubungi Kami - Lises Asmarandana",
+      description: "Kontak resmi, lokasi Sekretariat, dan media sosial UKM Lises Asmarandana UMMI Sukabumi.",
+      keywords: "Kontak UKM Lises, Alamat UMMI Sukabumi, Media Sosial Lises",
     },
   },
 };

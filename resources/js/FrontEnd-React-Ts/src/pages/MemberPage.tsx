@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, Search, ArrowUpDown, Eye } from "lucide-react";
 import { useTranslation } from "@/i18n";
+import { SEOHead } from "@/components/SEOHead";
 import { getMembers, getBatches, type Member, type Batch, type MemberType } from "@/lib/api/member";
 
 import { Input } from "@/components/ui/input";
@@ -252,6 +253,7 @@ export function MemberPage() {
 
   return (
     <>
+      <SEOHead pageKey="members" />
       <section className="mx-auto max-w-7xl px-6 pb-10 pt-12 md:pt-16">
         <Badge
           variant="outline"

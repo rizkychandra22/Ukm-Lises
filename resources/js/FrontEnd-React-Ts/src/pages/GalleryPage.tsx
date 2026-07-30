@@ -4,6 +4,7 @@ import g3 from "@/assets/gallery-3.jpg";
 import g4 from "@/assets/gallery-4.jpg";
 import hero from "@/assets/hero-lises.jpg";
 import { useTranslation } from "@/i18n";
+import { SEOHead } from "@/components/SEOHead";
 import { Sparkles } from "lucide-react";
 
 const galleryItems = [
@@ -18,7 +19,9 @@ export function GalleryPage() {
   const { t } = useTranslation("GalleryPage");
 
   return (
-    <section className="mx-auto max-w-7xl px-6 pb-12 pt-12 md:pb-16 md:pt-16">
+    <>
+      <SEOHead pageKey="gallery" />
+      <section className="mx-auto max-w-7xl px-6 pb-12 pt-12 md:pb-16 md:pt-16">
       {/* <p className="text-sm uppercase tracking-[0.25em] text-primary">
         Galeri
       </p> */}
@@ -52,5 +55,6 @@ export function GalleryPage() {
         ))}
       </div>
     </section>
+    </>
   );
 }
