@@ -104,7 +104,7 @@ export function MemberPage() {
     return true;
   });
 
-  const alumniMembers = members.filter((m) => m.type === "Demisioner" || m.batch?.status === "Deactive");
+  const alumniMembers = members.filter((m) => m.batch?.status === "Deactive");
 
   // Get batches list for dropdown filter
   const uniqueBatches = (batches.length > 0

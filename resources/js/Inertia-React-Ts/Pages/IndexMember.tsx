@@ -199,10 +199,13 @@ export default function Index({ members, batches, majors }: Props) {
         const targetBatch = batches.find(b => b.id.toString() === defaultBatchId);
 
         const isDeactiveBatch = targetBatch?.status === 'Deactive';
+        
+        // Prevent pre-selecting an Active batch when adding a member in the Demisioner tab
+        const initialBatchId = (activeMemberTab === 'Demisioner' && !isDeactiveBatch) ? '' : defaultBatchId;
 
         setMemberData(data => ({
             ...data,
-            batch_id: defaultBatchId,
+            batch_id: initialBatchId,
             type: (isDeactiveBatch || activeMemberTab === 'Demisioner') ? 'Demisioner' : 'Pengurus',
             status: (isDeactiveBatch || activeMemberTab === 'Demisioner') ? 'Deactive' : ('' as any),
             periode: '',
@@ -408,7 +411,8 @@ export default function Index({ members, batches, majors }: Props) {
                     }
                 }
             } else {
-                matchTab = m.type === 'Demisioner' || m.batch?.status === 'Deactive';
+                // Tab Demisioner: strictly only show members from Deactive batches
+                matchTab = m.batch?.status === 'Deactive';
                 if (matchTab && demisionerBatchFilter !== 'all') {
                     matchTab = m.batch_id?.toString() === demisionerBatchFilter;
                 }
