@@ -96,7 +96,10 @@ class RegisterController extends Controller
 
         $this->batchMemberService->createMember($memberData);
 
-        $request->session()->flash('success', 'Registrasi berhasil! Selamat bergabung di Lises Asmarandana.');
+        $request->session()->flash('success', [
+            'title' => 'Pendaftaran Berhasil!',
+            'message' => 'Silahkan tunggu informasi selanjutnya dari kami yaa, sampai ketemu nanti yaa! 👋'
+        ]);
         return Inertia::location(route('web'));
     }
 }

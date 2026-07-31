@@ -1,6 +1,6 @@
-import { Head, useForm, Link } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
 import React, { useState, useEffect } from 'react';
-import { Moon, Sun, ArrowLeft } from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -46,9 +46,8 @@ export default function Register({ majors }: { majors: any[] }) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post('/register', {
+        post('/member/registration', {
             onSuccess: () => {
-                toast.success('Registrasi berhasil! Selamat bergabung di Lises Asmarandana.');
                 reset();
             },
             onError: () => {
@@ -66,9 +65,9 @@ export default function Register({ majors }: { majors: any[] }) {
             <div className="hidden lg:flex w-[50%] bg-gradient-gold p-8 flex-col justify-between relative overflow-hidden">
                 <div className="relative z-10 flex items-center justify-between">
                     <h2 className="text-ink font-bold text-base tracking-tighter uppercase font-display">Lises Asmarandana</h2>
-                    <Link href="/" className="flex items-center text-ink/80 hover:text-ink transition-colors text-sm font-medium gap-2">
+                    {/* <Link href="/" className="flex items-center text-ink/80 hover:text-ink transition-colors text-sm font-medium gap-2">
                         <ArrowLeft className="w-4 h-4" /> Kembali ke Beranda
-                    </Link>
+                    </Link> */}
                 </div>
 
                 <div className="relative z-10 space-y-4 max-w-md">

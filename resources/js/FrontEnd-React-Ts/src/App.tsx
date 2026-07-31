@@ -18,7 +18,12 @@ function App() {
     // @ts-expect-error window.flashMessage injected by Laravel
     if (window.flashMessage) {
       // @ts-expect-error window.flashMessage injected by Laravel
-      toast.success(window.flashMessage);
+      const msg = window.flashMessage;
+      if (typeof msg === 'object' && msg !== null) {
+        toast.success(msg.title || 'Berhasil', { description: msg.message });
+      } else {
+        toast.success(String(msg));
+      }
       // @ts-expect-error window.flashMessage injected by Laravel
       window.flashMessage = null;
     }
