@@ -3,7 +3,7 @@ import apiClient from '../api-client';
 // ---------------------------------------------------------------------------
 // TYPES
 // ---------------------------------------------------------------------------
-export type MemberType = 'Administration' | 'Demisioner';
+export type MemberType = 'Pengurus' | 'Demisioner';
 export type MemberStatus = 'Active' | 'Deactive';
 
 export interface Major {
@@ -20,6 +20,7 @@ export interface Batch {
   nameId: string;
   nameEn?: string;
   year: number;
+  status?: 'Active' | 'Deactive';
 }
 
 export interface Member {
@@ -92,6 +93,7 @@ function normalizeBatch(raw: unknown): Batch | undefined {
     nameId: toStringOrUndefined(item.name_id) ?? toStringOrUndefined(item.nameId) ?? '-',
     nameEn: toStringOrUndefined(item.name_en) ?? toStringOrUndefined(item.nameEn),
     year: toNumber(item.year),
+    status: item.status === 'Deactive' ? 'Deactive' : 'Active',
   };
 }
 
@@ -104,7 +106,7 @@ export function normalizeMember(raw: unknown): Member {
     majorId: toNumber(item.major_id ?? item.majorId),
     name: toStringOrUndefined(item.name) ?? 'Tanpa Nama',
     image: toStringOrUndefined(item.image) ?? toStringOrUndefined(item.image_url),
-    type: item.type === 'Demisioner' ? 'Demisioner' : 'Administration',
+    type: item.type === 'Demisioner' ? 'Demisioner' : 'Pengurus',
     status: item.status === 'Deactive' ? 'Deactive' : 'Active',
     periode: toStringOrUndefined(item.periode),
     positionId: toStringOrUndefined(item.position_id) ?? toStringOrUndefined(item.positionId),
@@ -133,6 +135,13 @@ export async function getMembers(params?: QueryMemberParams): Promise<Member[]> 
   return Array.isArray(rawData) ? rawData.map(normalizeMember) : [];
 }
 
+export async function getBatches(): Promise<Batch[]> {
+  const response = await apiClient.get<ApiResponse<unknown[]>>('/batches');
+  const rawData = response.data?.data;
+
+  return Array.isArray(rawData) ? (rawData.map(normalizeBatch).filter(Boolean) as Batch[]) : [];
+}
+
 /**
  * Helper khusus memisahkan Pengurus (Administration) dan Demisioner secara paralel
  */
@@ -140,7 +149,7 @@ export async function getCategorizedMembers(): Promise<{ administration: Member[
   const allMembers = await getMembers({ status: 'Active' });
 
   return {
-    administration: allMembers.filter((m) => m.type === 'Administration'),
+    administration: allMembers.filter((m) => m.type === 'Pengurus'),
     demisioner: allMembers.filter((m) => m.type === 'Demisioner'),
   };
 }

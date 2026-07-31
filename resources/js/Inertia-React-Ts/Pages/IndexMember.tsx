@@ -44,6 +44,13 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 // --- Types ---
 type Batch = {
@@ -52,6 +59,7 @@ type Batch = {
     year: string;
     name_id: string;
     name_en: string;
+    status: 'Active' | 'Deactive';
 };
 
 type Major = {
@@ -69,7 +77,7 @@ type BatchMember = {
     image: string | null;
     name: string;
     major_id: string | number;
-    type: 'Administration' | 'Demisioner';
+    type: 'Demisioner' | 'Pengurus';
     status: 'Active' | 'Deactive';
     periode: string | null;
     position_id: string | null;
@@ -106,7 +114,9 @@ export default function Index({ members, batches, majors }: Props) {
     const [selectedFaculty, setSelectedFaculty] = useState<string>('');
 
     const [activeTab, setActiveTab] = useState("anggota");
-    const [activeMemberTab, setActiveMemberTab] = useState(hasRole('User') ? "MyBatch" : "Demisioner");
+    const [activeMemberTab, setActiveMemberTab] = useState(hasRole('User') ? "MyBatch" : "Administration");
+    const [memberStatusFilter, setMemberStatusFilter] = useState("all");
+    const [demisionerBatchFilter, setDemisionerBatchFilter] = useState("all");
     const [searchMember, setSearchMember] = useState("");
     const [searchBatch, setSearchBatch] = useState("");
 
@@ -169,7 +179,8 @@ export default function Index({ members, batches, majors }: Props) {
         image: null as File | null,
         name: '',
         major_id: '',
-        type: 'Administration',
+        type: 'Pengurus' as 'Demisioner' | 'Pengurus',
+        status: 'Active' as 'Active' | 'Deactive',
         periode: '',
         position_id: '',
         _method: 'post'
@@ -180,17 +191,20 @@ export default function Index({ members, batches, majors }: Props) {
         setEditingMember(null);
         resetMember();
         setSelectedFaculty('');
-        if (activeMemberTab === 'MyBatch') {
-            setMemberData(data => ({
-                ...data,
-                type: 'Demisioner',
-                batch_id: userBatch ? userBatch.id.toString() : '',
-                _method: 'post'
-            }));
-        } else {
-            setMemberData('type', activeMemberTab as any);
-            setMemberData('_method', 'post');
-        }
+        const defaultBatchId = userBatch ? userBatch.id.toString() : '';
+        const targetBatch = batches.find(b => b.id.toString() === defaultBatchId);
+
+        const isDeactiveBatch = targetBatch?.status === 'Deactive';
+
+        setMemberData(data => ({
+            ...data,
+            batch_id: defaultBatchId,
+            type: isDeactiveBatch ? 'Demisioner' : 'Pengurus',
+            status: '' as any,
+            periode: '',
+            position_id: '',
+            _method: 'post'
+        }));
         setIsMemberModalOpen(true);
     };
 
@@ -210,6 +224,7 @@ export default function Index({ members, batches, majors }: Props) {
             name: member.name,
             major_id: member.major_id.toString(),
             type: member.type,
+            status: member.status,
             periode: member.periode || '',
             position_id: member.position_id || '',
             _method: 'put'
@@ -276,6 +291,7 @@ export default function Index({ members, batches, majors }: Props) {
     } = useForm({
         year: '',
         name_id: '',
+        status: 'Active' as 'Active' | 'Deactive',
         username: '',
         password: ''
     });
@@ -292,6 +308,7 @@ export default function Index({ members, batches, majors }: Props) {
         setBatchData({
             year: batch.year,
             name_id: batch.name_id,
+            status: batch.status || 'Active',
             username: '',
             password: ''
         });
@@ -368,10 +385,33 @@ export default function Index({ members, batches, majors }: Props) {
 
     const filteredMembers = useMemo(() => {
         const result = members.filter(m => {
-            const matchTab = activeMemberTab === 'MyBatch' ? m.batch_id === userBatch?.id : m.type === activeMemberTab;
+            let matchTab: boolean;
+            if (activeMemberTab === 'MyBatch') {
+                matchTab = m.batch_id === userBatch?.id;
+            } else if (activeMemberTab === 'Administration' || activeMemberTab === 'Pengurus' || activeMemberTab === 'Kepengurusan') {
+                matchTab = m.batch?.status !== 'Deactive';
+                if (matchTab) {
+                    if (memberStatusFilter === 'pengurus') {
+                        matchTab = m.status === 'Active';
+                    } else if (memberStatusFilter === 'biasa') {
+                        matchTab = m.status === 'Deactive' && m.position_id === 'Anggota Biasa';
+                    } else if (memberStatusFilter === 'baru') {
+                        matchTab = m.status === 'Deactive' && m.position_id === 'Anggota Baru';
+                    }
+                }
+            } else {
+                matchTab = m.type === 'Demisioner' || m.batch?.status === 'Deactive';
+                if (matchTab && demisionerBatchFilter !== 'all') {
+                    matchTab = m.batch_id?.toString() === demisionerBatchFilter;
+                }
+            }
 
-            const matchSearch = m.name.toLowerCase().includes(searchMember.toLowerCase()) ||
-                (m.major?.name_id || m.major_id.toString()).toLowerCase().includes(searchMember.toLowerCase());
+            const query = searchMember.toLowerCase();
+            const matchSearch = !query ||
+                m.name.toLowerCase().includes(query) ||
+                (m.major?.name_id || m.major_id.toString()).toLowerCase().includes(query) ||
+                (m.position_id || '').toLowerCase().includes(query) ||
+                (m.batch?.year || '').toString().toLowerCase().includes(query);
 
             return matchTab && matchSearch;
         });
@@ -405,13 +445,13 @@ export default function Index({ members, batches, majors }: Props) {
             });
         }
         return result;
-    }, [members, searchMember, activeMemberTab, userBatch, sortMemberConfig]);
+    }, [members, searchMember, activeMemberTab, memberStatusFilter, demisionerBatchFilter, userBatch, sortMemberConfig]);
 
     const showPeriodeJabatan = useMemo(() => {
-        if (activeMemberTab === 'Administration') return true;
+        if (activeMemberTab === 'Administration' || activeMemberTab === 'Pengurus' || activeMemberTab === 'Kepengurusan') return true;
         if (activeMemberTab === 'Demisioner') return false;
         // MyBatch
-        return filteredMembers.some(m => m.status === 'Active');
+        return filteredMembers.some(m => m.status === 'Active' || m.position_id);
     }, [activeMemberTab, filteredMembers]);
 
 
@@ -420,65 +460,140 @@ export default function Index({ members, batches, majors }: Props) {
         <AdminLayout>
             <Head title="Kelola Anggota & Angkatan" />
 
-            <div className="flex flex-col gap-6 max-w-7xl mx-auto pb-12 relative">
+            <div className="flex flex-col gap-4 max-w-7xl mx-auto pb-12 relative">
                 {/* Header Section */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div>
-                        <h2 className="text-2xl font-bold text-foreground font-display tracking-tight">Manajemen Data Anggota</h2>
-                        <p className="text-sm text-muted-foreground mt-1">
-                            Kelola data anggota dan data angkatan
-                        </p>
+                <div>
+                    <h2 className="text-2xl font-bold text-foreground font-display tracking-tight">Manajemen Data Anggota</h2>
+                    <p className="text-sm text-muted-foreground mt-1">
+                        Kelola data anggota dan data angkatan
+                    </p>
+                </div>
+
+                {/* Tabs Row (Shadcn Underline Style) */}
+                <div className="w-full border-b border-border">
+                    <div className="flex flex-col sm:flex-row gap-4 w-full items-start sm:items-center">
+                        {!hasRole(['User']) ? (
+                            <Tabs value={activeTab} onValueChange={setActiveTab}>
+                                <TabsList className="flex h-auto p-0 bg-transparent gap-4 justify-start rounded-none border-none">
+                                    <TabsTrigger
+                                        value="anggota"
+                                        className="rounded-none border-b-2 border-transparent px-1 pb-2.5 pt-1.5 font-medium text-muted-foreground shadow-none data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:text-foreground"
+                                    >
+                                        Anggota
+                                    </TabsTrigger>
+                                    <TabsTrigger
+                                        value="angkatan"
+                                        className="rounded-none border-b-2 border-transparent px-1 pb-2.5 pt-1.5 font-medium text-muted-foreground shadow-none data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:text-foreground"
+                                    >
+                                        Angkatan
+                                    </TabsTrigger>
+                                </TabsList>
+                            </Tabs>
+                        ) : (
+                            userBatch && (
+                                <Tabs value={activeMemberTab} onValueChange={setActiveMemberTab} className="w-full sm:w-auto relative">
+                                    <TabsList className="grid grid-cols-3 w-full sm:flex sm:w-auto h-auto p-0 bg-transparent sm:gap-6 justify-start rounded-none border-none">
+                                        <TabsTrigger
+                                            value="MyBatch"
+                                            className="w-full sm:w-auto text-center sm:text-left rounded-none border-b-2 border-transparent px-1 pb-2.5 pt-1.5 font-medium text-muted-foreground shadow-none data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:text-foreground"
+                                        >
+                                            Angkatan {userBatch.year}
+                                        </TabsTrigger>
+                                        <TabsTrigger
+                                            value="Demisioner"
+                                            className="w-full sm:w-auto text-center sm:text-left rounded-none border-b-2 border-transparent px-1 pb-2.5 pt-1.5 font-medium text-muted-foreground shadow-none data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:text-foreground"
+                                        >
+                                            Demisioner
+                                        </TabsTrigger>
+                                        <TabsTrigger
+                                            value="Administration"
+                                            className="w-full sm:w-auto text-center sm:text-left rounded-none border-b-2 border-transparent px-1 pb-2.5 pt-1.5 font-medium text-muted-foreground shadow-none data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:text-foreground"
+                                        >
+                                            Kepengurusan
+                                        </TabsTrigger>
+                                    </TabsList>
+                                </Tabs>
+                            )
+                        )}
                     </div>
                 </div>
 
-                {/* Unified Controls Container */}
-                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-                    {/* LEFT: Main Tabs & Sub Tabs */}
-                    <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto items-start sm:items-center">
-                        {!hasRole(['User']) && (
-                            <Tabs value={activeTab} onValueChange={setActiveTab}>
-                                <TabsList className="grid grid-cols-2 w-full">
-                                    <TabsTrigger value="anggota">Anggota</TabsTrigger>
-                                    <TabsTrigger value="angkatan">Angkatan</TabsTrigger>
-                                </TabsList>
-                            </Tabs>
-                        )}
-
-                        {activeTab === 'anggota' && (
-                            <Tabs value={activeMemberTab} onValueChange={setActiveMemberTab} className={hasRole('User') && userBatch ? 'w-full sm:w-80 relative' : 'sm:w-64 relative'}>
-                                <TabsList className={`grid ${hasRole('User') && userBatch ? 'grid-cols-3 w-full' : 'grid-cols-2 w-full'}`}>
-                                    {hasRole('User') && userBatch && (
-                                        <TabsTrigger value="MyBatch">Angkatan {userBatch.year}</TabsTrigger>
-                                    )}
-                                    <TabsTrigger value="Demisioner">Demisioner</TabsTrigger>
-                                    <TabsTrigger value="Administration">Kepengurusan</TabsTrigger>
-                                </TabsList>
-                            </Tabs>
-                        )}
+                {/* Controls Row (Search Box on Top, 2 Selects in Middle, Add Button on Bottom for Mobile) */}
+                <div className="flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-3">
+                    {/* Row 1 on Mobile: Search Input (LEFT on Desktop) */}
+                    <div className="relative w-full lg:w-80">
+                        <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                            placeholder={activeTab === 'anggota' ? "Cari anggota berdasarkan nama atau prodi..." : "Cari angkatan..."}
+                            className="pl-9 h-8 bg-muted/50 border border-border/60 rounded-lg text-[13px] shadow-none focus:bg-background transition-colors"
+                            value={activeTab === 'anggota' ? searchMember : searchBatch}
+                            onChange={(e) => activeTab === 'anggota' ? setSearchMember(e.target.value) : setSearchBatch(e.target.value)}
+                        />
                     </div>
 
-                    {/* RIGHT: Search & Add Button */}
-                    <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
-                        <div className="relative w-full sm:w-80">
-                            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                            <Input
-                                placeholder={activeTab === 'anggota' ? "Cari anggota berdasarkan nama atau prodi..." : "Cari angkatan..."}
-                                className="pl-10"
-                                value={activeTab === 'anggota' ? searchMember : searchBatch}
-                                onChange={(e) => activeTab === 'anggota' ? setSearchMember(e.target.value) : setSearchBatch(e.target.value)}
-                            />
-                        </div>
+                    {/* Row 2 (2 Selects) & Row 3 (Add Button) on Mobile (RIGHT on Desktop) */}
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full lg:w-auto">
+                        {/* Dropdown Filters Container (Only rendered when dropdowns exist) */}
+                        {activeTab === 'anggota' && (activeMemberTab === 'Administration' || activeMemberTab === 'Demisioner' || !hasRole('User')) && (
+                            <div className="flex flex-row items-center gap-2.5 w-full sm:w-auto min-w-0">
+                                {/* Dropdown 1: Kategori Anggota (Khusus Admin & Developer) */}
+                                {!hasRole('User') && (
+                                    <Select value={activeMemberTab} onValueChange={setActiveMemberTab}>
+                                        <SelectTrigger className="h-8 flex-1 min-w-0 sm:w-40 rounded-lg text-[13px] bg-muted/50 border-border/60">
+                                            <SelectValue placeholder="Pilih Kategori" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="Administration" className="text-[13px]">Kepengurusan</SelectItem>
+                                            <SelectItem value="Demisioner" className="text-[13px]">Demisioner</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                )}
+
+                                {/* Dropdown 2: Status Organisasi (Tampil pada tab Kepengurusan untuk semua Role termasuk User) */}
+                                {activeMemberTab === 'Administration' && (
+                                    <Select value={memberStatusFilter} onValueChange={setMemberStatusFilter}>
+                                        <SelectTrigger className="h-8 flex-1 min-w-0 sm:w-44 rounded-lg text-[13px] bg-muted/50 border-border/60">
+                                            <SelectValue placeholder="Semua Anggota" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="all" className="text-[13px]">Semua Anggota</SelectItem>
+                                            <SelectItem value="pengurus" className="text-[13px]">Anggota Pengurus</SelectItem>
+                                            <SelectItem value="biasa" className="text-[13px]">Anggota Biasa</SelectItem>
+                                            <SelectItem value="baru" className="text-[13px]">Anggota Baru</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                )}
+
+                                {/* Dropdown 3: Filter Angkatan (Tampil pada tab Demisioner) */}
+                                {activeMemberTab === 'Demisioner' && (
+                                    <Select value={demisionerBatchFilter} onValueChange={setDemisionerBatchFilter}>
+                                        <SelectTrigger className="h-8 flex-1 min-w-0 sm:w-44 rounded-lg text-[13px] bg-muted/50 border-border/60">
+                                            <SelectValue placeholder="Filter Angkatan" className="truncate" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="all" className="text-[13px]">Semua Angkatan</SelectItem>
+                                            {batches.filter(b => b.status === 'Deactive').map((b) => (
+                                                <SelectItem key={b.id} value={b.id.toString()} className="text-[13px]">
+                                                    {b.year} {b.name_id ? `- ${b.name_id}` : ''}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Row 3 on Mobile: Add Button (Full width on Mobile, Right on Desktop) */}
                         {(() => {
-                            if (activeTab === 'angkatan') return hasRole(['Master', 'Admin']);
-                            if (activeMemberTab === 'Administration') return hasRole(['Master', 'Admin']);
-                            if (activeMemberTab === 'Demisioner') return hasRole(['Master', 'Admin']);
+                            if (activeTab === 'angkatan') return hasRole(['Developer', 'Admin']);
+                            if (activeMemberTab === 'Administration' || activeMemberTab === 'Demisioner') return hasRole(['Developer', 'Admin']);
                             if (activeMemberTab === 'MyBatch') return hasRole('User');
-                            return hasRole(['Master', 'Admin']);
+                            return hasRole(['Developer', 'Admin']);
                         })() && (
-                                <Button className="w-full sm:w-auto shrink-0" onClick={activeTab === 'anggota' ? handleAddMember : handleAddBatch}>
-                                    <Plus className="mr-2 h-4 w-4" /> Tambah {activeTab === 'anggota' ? 'Anggota' : 'Angkatan'}
-                                </Button>
-                            )}
+                            <Button size="sm" className="h-8 px-3.5 rounded-lg text-[13px] font-medium w-full sm:w-auto shrink-0 shadow-sm" onClick={activeTab === 'anggota' ? handleAddMember : handleAddBatch}>
+                                <Plus className="mr-1.5 h-3.5 w-3.5" /> Tambah {activeTab === 'anggota' ? 'Anggota' : 'Angkatan'}
+                            </Button>
+                        )}
                     </div>
                 </div>
 
@@ -561,29 +676,43 @@ export default function Index({ members, batches, majors }: Props) {
                                                 )}
                                                 <TableCell>{member.batch?.year}</TableCell>
                                                 <TableCell>{member.batch?.name_id}</TableCell>
-                                                <TableCell className="text-right">
+                                                 <TableCell className="text-right">
                                                     <div className="flex justify-end gap-2 items-center">
-                                                        <Button className="bg-emerald-600 hover:bg-emerald-700 text-white" size="sm" onClick={() => { setViewingMember(member); setIsViewSheetOpen(true); }}>
-                                                            <Eye className="h-4 w-4 lg:mr-1" />
-                                                            <span className="hidden lg:inline">Lihat</span>
+                                                        <Button className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg h-8 w-8 p-0" size="sm" onClick={() => { setViewingMember(member); setIsViewSheetOpen(true); }} title="Lihat Detail">
+                                                            <Eye className="h-4 w-4" />
                                                         </Button>
                                                         {(() => {
-                                                            if (activeMemberTab === 'Administration') return hasRole(['Master', 'Admin']);
-                                                            if (activeMemberTab === 'Demisioner') return hasRole(['Master']);
-                                                            if (activeMemberTab === 'MyBatch') return hasRole('User') && member.type !== 'Administration';
+                                                            if (hasRole('Developer')) return true;
+                                                            if (hasRole('Admin')) {
+                                                                return member.type === 'Pengurus' && member.status === 'Active';
+                                                            }
+                                                            if (hasRole('User')) {
+                                                                if (activeMemberTab !== 'MyBatch') return false;
+                                                                if (member.batch_id !== userBatch?.id) return false;
+                                                                return member.status === 'Deactive';
+                                                            }
                                                             return false;
                                                         })() && (
-                                                                <>
-                                                                    <Button className="bg-indigo-600 hover:bg-indigo-700 text-white" size="sm" onClick={() => handleEditMember(member)}>
-                                                                        <Edit className="h-4 w-4 mr-1 md:mr-0 lg:mr-1" />
-                                                                        <span className="hidden lg:inline">Edit</span>
-                                                                    </Button>
-                                                                    <Button variant="destructive" size="sm" onClick={() => handleDeleteMember(member.id)}>
-                                                                        <Trash2 className="h-4 w-4 mr-1 md:mr-0 lg:mr-1" />
-                                                                        <span className="hidden lg:inline">Hapus</span>
-                                                                    </Button>
-                                                                </>
-                                                            )}
+                                                            <Button className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg h-8 w-8 p-0" size="sm" onClick={() => handleEditMember(member)} title="Edit Anggota">
+                                                                <Edit className="h-4 w-4" />
+                                                            </Button>
+                                                        )}
+                                                        {(() => {
+                                                            if (hasRole('Developer')) return true;
+                                                            if (hasRole('Admin')) {
+                                                                return member.type === 'Pengurus' && member.status === 'Active';
+                                                            }
+                                                            if (hasRole('User')) {
+                                                                if (activeMemberTab !== 'MyBatch') return false;
+                                                                if (member.batch_id !== userBatch?.id) return false;
+                                                                return member.status === 'Deactive';
+                                                            }
+                                                            return false;
+                                                        })() && (
+                                                            <Button variant="destructive" size="sm" className="rounded-lg h-8 w-8 p-0" onClick={() => handleDeleteMember(member.id)} title="Hapus Anggota">
+                                                                <Trash2 className="h-4 w-4" />
+                                                            </Button>
+                                                        )}
                                                     </div>
                                                 </TableCell>
                                             </TableRow>
@@ -613,6 +742,7 @@ export default function Index({ members, batches, majors }: Props) {
                                                 <ArrowUpDown className="ml-2 h-4 w-4" />
                                             </Button>
                                         </TableHead>
+                                        <TableHead>Status</TableHead>
                                         <TableHead className="text-right">Aksi</TableHead>
                                     </TableRow>
                                 </TableHeader>
@@ -628,23 +758,29 @@ export default function Index({ members, batches, majors }: Props) {
                                             <TableRow key={b.id}>
                                                 <TableCell className="font-medium">{b.year}</TableCell>
                                                 <TableCell>{b.name_id}</TableCell>
+                                                <TableCell>
+                                                    <span className={`text-xs px-2 py-1 rounded-full font-medium ${b.status === 'Deactive' ? 'bg-amber-500/10 text-amber-600 border border-amber-500/20' : 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20'}`}>
+                                                        {b.status === 'Deactive' ? 'Deactive' : 'Active'}
+                                                    </span>
+                                                </TableCell>
                                                 <TableCell className="text-right">
                                                     <div className="flex justify-end gap-2">
                                                         <Button
-                                                            className="bg-indigo-600 hover:bg-indigo-700 text-white"
+                                                            className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg h-8 w-8 p-0"
                                                             size="sm"
                                                             onClick={() => handleEditBatch(b)}
+                                                            title="Edit Angkatan"
                                                         >
-                                                            <Edit className="h-4 w-4 mr-1 md:mr-0 lg:mr-1" />
-                                                            <span className="hidden lg:inline">Edit</span>
+                                                            <Edit className="h-4 w-4" />
                                                         </Button>
                                                         <Button
                                                             variant="destructive"
                                                             size="sm"
+                                                            className="rounded-lg h-8 w-8 p-0"
                                                             onClick={() => handleDeleteBatch(b.id)}
+                                                            title="Hapus Angkatan"
                                                         >
-                                                            <Trash2 className="h-4 w-4 mr-1 md:mr-0 lg:mr-1" />
-                                                            <span className="hidden lg:inline">Hapus</span>
+                                                            <Trash2 className="h-4 w-4" />
                                                         </Button>
                                                     </div>
                                                 </TableCell>
@@ -687,6 +823,19 @@ export default function Index({ members, batches, majors }: Props) {
                                 />
                             </div>
 
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Status</label>
+                                <select
+                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                    value={batchData.status}
+                                    onChange={e => setBatchData('status', e.target.value as any)}
+                                    required
+                                >
+                                    <option value="Active">Active (Mahasiswa)</option>
+                                    <option value="Deactive">Deactive (Alumni)</option>
+                                </select>
+                            </div>
+
                             {/* Jika sedang edit, tampilkan opsional ubah kredensial */}
                             {editingBatch && (
                                 <div className="pt-4 mt-4 border-t border-border/50 space-y-4">
@@ -717,12 +866,16 @@ export default function Index({ members, batches, majors }: Props) {
                                 <Button
                                     type="button"
                                     variant="outline"
+                                    size="sm"
+                                    className="h-8 px-3.5 rounded-lg text-[13px] font-medium"
                                     onClick={handleCancelEditBatch}
                                 >
                                     Batal
                                 </Button>
                                 <Button
                                     type="submit"
+                                    size="sm"
+                                    className="h-8 px-3.5 rounded-lg text-[13px] font-medium"
                                     disabled={processingBatch}
                                 >
                                     {editingBatch ? 'Simpan Perubahan' : 'Buat Angkatan'}
@@ -745,10 +898,10 @@ export default function Index({ members, batches, majors }: Props) {
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <div className="flex flex-row justify-center gap-3 mt-2">
-                            <AlertDialogCancel className="w-24 mt-0 border border-border bg-background hover:bg-muted text-foreground rounded-lg h-10 text-sm font-medium">
+                            <AlertDialogCancel className="w-24 mt-0 border border-border bg-background hover:bg-muted text-foreground rounded-lg h-8 text-[13px] font-medium">
                                 Batal
                             </AlertDialogCancel>
-                            <AlertDialogAction onClick={confirmDeleteBatch} className="w-24 h-10 text-sm font-medium rounded-lg bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                            <AlertDialogAction onClick={confirmDeleteBatch} className="w-24 h-8 text-[13px] font-medium rounded-lg bg-destructive text-destructive-foreground hover:bg-destructive/90">
                                 Hapus
                             </AlertDialogAction>
                         </div>
@@ -815,7 +968,18 @@ export default function Index({ members, batches, majors }: Props) {
                                 <select
                                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                     value={memberData.batch_id}
-                                    onChange={e => setMemberData('batch_id', e.target.value)}
+                                    onChange={e => {
+                                        const selectedId = e.target.value;
+                                        const targetB = batches.find(b => b.id.toString() === selectedId);
+                                        const isDeactive = targetB?.status === 'Deactive';
+                                        setMemberData(data => ({
+                                            ...data,
+                                            batch_id: selectedId,
+                                            type: isDeactive ? 'Demisioner' : 'Pengurus',
+                                            status: isDeactive ? 'Deactive' : '' as any,
+                                            position_id: ''
+                                        }));
+                                    }}
                                     required
                                     disabled={activeMemberTab === 'MyBatch'}
                                 >
@@ -826,43 +990,92 @@ export default function Index({ members, batches, majors }: Props) {
                                 </select>
                                 {memberErrors.batch_id && <span className="text-xs text-red-500">{memberErrors.batch_id}</span>}
                             </div>
-                            <div>
-                                <label className="block text-sm font-medium mb-1">Status</label>
-                                <select
-                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                    value={memberData.type}
-                                    onChange={e => setMemberData('type', e.target.value as any)}
-                                    required
-                                >
-                                    {hasRole(['Master', 'Admin']) && <option value="Administration">Kepengurusan</option>}
-                                    <option value="Demisioner">Demisioner</option>
-                                </select>
-                                {memberErrors.type && <span className="text-xs text-red-500">{memberErrors.type}</span>}
-                            </div>
-                            {memberData.type === 'Administration' && (
-                                <>
-                                    <div>
-                                        <label className="block text-sm font-medium mb-1">Periode</label>
-                                        <Input
-                                            placeholder="Contoh: 2024 - 2025"
-                                            value={memberData.periode}
-                                            onChange={e => setMemberData('periode', e.target.value)}
-                                            required
-                                        />
-                                        {memberErrors.periode && <span className="text-xs text-red-500">{memberErrors.periode}</span>}
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium mb-1">Jabatan</label>
-                                        <Input
-                                            placeholder="Contoh: Ketua Umum"
-                                            value={memberData.position_id}
-                                            onChange={e => setMemberData('position_id', e.target.value)}
-                                            required
-                                        />
-                                        {memberErrors.position_id && <span className="text-xs text-red-500">{memberErrors.position_id}</span>}
-                                    </div>
-                                </>
-                            )}
+
+                            {(() => {
+                                const selectedBatch = batches.find(b => b.id.toString() === memberData.batch_id);
+                                const isDeactiveBatch = selectedBatch?.status === 'Deactive';
+
+                                if (isDeactiveBatch) {
+                                    return (
+                                        <div className="p-3 bg-muted/40 rounded-lg text-xs text-muted-foreground">
+                                            Status anggota otomatis di-lock sebagai <b>Demisioner / Alumni</b> karena angkatan ini berstatus Deactive.
+                                        </div>
+                                    );
+                                }
+
+                                 let orgStatusValue = '';
+                                if (memberData.status === 'Active') {
+                                    orgStatusValue = 'Kepengurusan';
+                                } else if (memberData.position_id === 'Anggota Biasa') {
+                                    orgStatusValue = 'Anggota Biasa';
+                                } else if (memberData.position_id === 'Anggota Baru') {
+                                    orgStatusValue = 'Anggota Baru';
+                                }
+
+                                return (
+                                    <>
+                                        <div>
+                                            <label className="block text-sm font-medium mb-1">Status Organisasi</label>
+                                            <select
+                                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                                value={orgStatusValue}
+                                                onChange={e => {
+                                                    const val = e.target.value;
+                                                    if (val === 'Kepengurusan') {
+                                                        setMemberData(data => ({
+                                                            ...data,
+                                                            status: 'Active',
+                                                            position_id: data.position_id === 'Anggota Biasa' || data.position_id === 'Anggota Baru' ? '' : data.position_id
+                                                        }));
+                                                    } else if (val === 'Anggota Biasa') {
+                                                        setMemberData(data => ({
+                                                            ...data,
+                                                            status: 'Deactive',
+                                                            position_id: 'Anggota Biasa'
+                                                        }));
+                                                    } else if (val === 'Anggota Baru') {
+                                                        setMemberData(data => ({
+                                                            ...data,
+                                                            status: 'Deactive',
+                                                            position_id: 'Anggota Baru'
+                                                        }));
+                                                    }
+                                                }}
+                                                required
+                                            >
+                                                <option value="" disabled>Pilih Status</option>
+                                                <option value="Kepengurusan">Kepengurusan</option>
+                                                <option value="Anggota Biasa">Anggota Biasa</option>
+                                                <option value="Anggota Baru">Anggota Baru</option>
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-sm font-medium mb-1">Periode Kepengurusan</label>
+                                            <Input
+                                                placeholder="Contoh: 2025 - 2026"
+                                                value={memberData.periode}
+                                                onChange={e => setMemberData('periode', e.target.value)}
+                                                required
+                                            />
+                                            {memberErrors.periode && <span className="text-xs text-red-500">{memberErrors.periode}</span>}
+                                        </div>
+
+                                        {orgStatusValue === 'Kepengurusan' && (
+                                            <div>
+                                                <label className="block text-sm font-medium mb-1">Jabatan</label>
+                                                <Input
+                                                    placeholder="Contoh: Ketua Umum / Kadep SBD"
+                                                    value={memberData.position_id}
+                                                    onChange={e => setMemberData('position_id', e.target.value)}
+                                                    required
+                                                />
+                                                {memberErrors.position_id && <span className="text-xs text-red-500">{memberErrors.position_id}</span>}
+                                            </div>
+                                        )}
+                                    </>
+                                );
+                            })()}
                             <div>
                                 <label className="block text-sm font-medium mb-1">Foto Profile (Opsional)</label>
                                 <Input
@@ -874,8 +1087,8 @@ export default function Index({ members, batches, majors }: Props) {
                             </div>
 
                             <div className="flex justify-end gap-2 pt-4">
-                                <Button type="button" variant="outline" onClick={handleCancelEditMember}>Batal</Button>
-                                <Button type="submit" disabled={processingMember}>Simpan</Button>
+                                <Button type="button" variant="outline" size="sm" className="h-8 px-3.5 rounded-lg text-[13px] font-medium" onClick={handleCancelEditMember}>Batal</Button>
+                                <Button type="submit" size="sm" className="h-8 px-3.5 rounded-lg text-[13px] font-medium" disabled={processingMember}>Simpan</Button>
                             </div>
                         </form>
                     </DialogContent>
@@ -894,10 +1107,10 @@ export default function Index({ members, batches, majors }: Props) {
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <div className="flex flex-row justify-center gap-3 mt-2">
-                            <AlertDialogCancel className="w-24 mt-0 border border-border bg-background hover:bg-muted text-foreground rounded-lg h-10 text-sm font-medium">
+                            <AlertDialogCancel className="w-24 mt-0 border border-border bg-background hover:bg-muted text-foreground rounded-lg h-8 text-[13px] font-medium">
                                 Batal
                             </AlertDialogCancel>
-                            <AlertDialogAction onClick={confirmDeleteMember} className="w-24 h-10 text-sm font-medium rounded-lg bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                            <AlertDialogAction onClick={confirmDeleteMember} className="w-24 h-8 text-[13px] font-medium rounded-lg bg-destructive text-destructive-foreground hover:bg-destructive/90">
                                 Hapus
                             </AlertDialogAction>
                         </div>
@@ -938,13 +1151,13 @@ export default function Index({ members, batches, majors }: Props) {
                                     <div>
                                         <h4 className="text-sm font-medium text-muted-foreground">Status</h4>
                                         <p className="text-md font-medium">
-                                            {viewingMember.type === 'Administration' ? 'Kepengurusan' : 'Demisioner'}
+                                            {viewingMember.type === 'Pengurus' ? 'Kepengurusan' : 'Demisioner'}
                                             <span className={`ml-2 text-xs px-2 py-0.5 rounded-full ${viewingMember.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                                                 {viewingMember.status}
                                             </span>
                                         </p>
                                     </div>
-                                    {viewingMember.type === 'Administration' && (
+                                    {viewingMember.type === 'Pengurus' && (
                                         <>
                                             <div>
                                                 <h4 className="text-sm font-medium text-muted-foreground">Periode</h4>

@@ -17,6 +17,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { useTranslation } from "@/i18n";
 import { usePosts } from "@/constants/news";
+import { SEOHead } from "@/components/SEOHead";
+import { ScrollTop } from "@/components/scroll-top";
 
 export function HomePage() {
   const { t } = useTranslation("HomePage");
@@ -24,6 +26,7 @@ export function HomePage() {
 
   return (
     <>
+      <SEOHead pageKey="home" />
       <section className="relative overflow-hidden">
         <img
           src={hero}
@@ -252,6 +255,8 @@ export function HomePage() {
           </CardContent>
         </Card>
       </section>
+
+      <ScrollTop />
     </>
   );
 }

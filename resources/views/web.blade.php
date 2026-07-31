@@ -41,6 +41,30 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 
+    {{-- JSON-LD Schema.org Structured Data for Google --}}
+    <script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "EducationalOrganization",
+      "name": "UKM Lises Asmarandana",
+      "alternateName": ["Lises Asmarandana UMMI", "Seni Musik dan Tari UMMI"],
+      "url": "{{ url('/') }}",
+      "logo": "{{ url(Vite::asset('resources/js/FrontEnd-React-Ts/src/assets/logo-bg-light.png')) }}",
+      "description": "Unit Kegiatan Mahasiswa Seni Musik dan Tari Lises Asmarandana Universitas Muhammadiyah Sukabumi.",
+      "address": {
+        "@@type": "PostalAddress",
+        "addressLocality": "Sukabumi",
+        "addressRegion": "Jawa Barat",
+        "addressCountry": "ID"
+      },
+      "parentOrganization": {
+        "@@type": "CollegeOrUniversity",
+        "name": "Universitas Muhammadiyah Sukabumi",
+        "url": "https://ummi.ac.id"
+      }
+    }
+    </script>
+
     {{-- Vite Scripts --}}
     @viteReactRefresh
     @vite('resources/js/FrontEnd-React-Ts/src/main.tsx')

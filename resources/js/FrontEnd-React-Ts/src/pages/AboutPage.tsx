@@ -3,12 +3,15 @@ import img from "@/assets/gallery-2.jpg";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { useTranslation } from "@/i18n";
+import { SEOHead } from "@/components/SEOHead";
+import { ScrollTop } from "@/components/scroll-top";
 
 export function AboutPage() {
   const { t } = useTranslation("AboutPage");
 
   return (
     <>
+      <SEOHead pageKey="about" />
       <section className="mx-auto max-w-7xl px-6 pb-10 pt-12 md:pt-16">
         {/* <p className="text-sm uppercase tracking-[0.25em] text-primary">
           Tentang Kami
@@ -19,7 +22,7 @@ export function AboutPage() {
         >
           <Sparkles className="h-3.5 w-3.5" /> {t("heading")}
         </Badge>
-        <h1 className="mt-4 max-w-3xl font-display text-5xl font-bold leading-[1.15] md:text-6xl">
+        <h1 className="mt-4 max-w-3xl font-display text-3xl font-bold leading-[1.15] md:text-4xl">
           {t("title_t1")} <span className="text-gradient-gold">{t("title_y1")}</span>.
           {/* <span className="text-gradient-gold">{t("title_t2")}</span>. */}
         </h1>
@@ -81,6 +84,8 @@ export function AboutPage() {
           ))}
         </div>
       </section>
+
+      <ScrollTop />
     </>
   );
 }

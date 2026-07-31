@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ListMemberController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SitemapController;
 
 // -------------------------------------------------------------
 // 1. AUTHENTICATION ROUTES (GUEST ONLY)
@@ -16,7 +17,7 @@ Route::middleware('guest')->group(function () {
 // -------------------------------------------------------------
 // 2. DASHBOARD / ADMIN PANEL (AUTHENTICATED & ACCESSIBLE BY ROLES)
 // -------------------------------------------------------------
-Route::middleware(['access:Master,Admin,User'])->prefix('dashboard')->group(function () {
+Route::middleware(['access:Developer,Admin,User'])->prefix('dashboard')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     // Route untuk Logout & Update Profile
@@ -43,9 +44,11 @@ Route::middleware(['access:Master,Admin,User'])->prefix('dashboard')->group(func
 });
 
 // -------------------------------------------------------------
-// 3. LANDING PAGE PUBLIK (PURE REACT SPA)
+// 3. SITEMAP XML & LANDING PAGE PUBLIK (PURE REACT SPA)
 // -------------------------------------------------------------
+Route::get('/sitemap.xml', [SitemapController::class, 'index']);
+
 // Catch-all route untuk menangani halaman publik selain auth, dashboard, & api
 Route::get('/{any?}', function () {
     return view('web');
-})->where('any', '^(?!auth|admin|api|dashboard).*$');
+})->where('any', '^(?!auth|admin|api|dashboard|sitemap\.xml).*$');

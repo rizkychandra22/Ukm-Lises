@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('year');
             $table->string('name_id');
             $table->string('name_en');
+            $table->enum('status', ['Active', 'Deactive'])->default('Active');
             $table->timestamps();
         });
     }

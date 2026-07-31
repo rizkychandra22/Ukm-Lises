@@ -39,6 +39,7 @@ import {
     Users,
     Settings,
     LogOut,
+    LucideLink,
 } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import LogoDark from '@/assets/logo-bg-dark.png';
@@ -132,13 +133,22 @@ export function AppSidebar() {
                                     </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    className="rounded-xl transition-all"
+                                    onClick={() => window.open('/', '_blank')}
+                                >
+                                    <LucideLink className="w-[18px] h-[18px]" />
+                                    <span className="text-[13px]">Lihat Website</span>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
 
                 <SidebarGroup>
                     <SidebarGroupLabel className="px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70 mt-2">
-                        {hasRole(['Master', 'Admin', 'User']) && auth.user?.roles?.[0]
+                        {hasRole(['Developer', 'Admin', 'User']) && auth.user?.roles?.[0]
                             ? `Menu ${auth.user.roles[0]}`
                             : null
                         }
@@ -147,7 +157,7 @@ export function AppSidebar() {
                         <SidebarMenu>
 
                             {/* Main Menu Role User */}
-                            {hasRole(['Master']) && (
+                            {hasRole(['Developer']) && (
                                 <SidebarMenuItem>
                                     <SidebarMenuButton asChild isActive={isActive(route('list-member.index'))} className="rounded-xl transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium">
                                         <Link href={route('list-member.index')}>

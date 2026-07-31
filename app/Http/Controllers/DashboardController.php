@@ -11,8 +11,14 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $demisionerCount = BatchMember::where('type', 'Demisioner')->count();
-        $kepengurusanCount = BatchMember::where('type', 'Administration')->count();
+        $demisionerCount = BatchMember::whereHas('batch', function ($query) {
+            $query->where('status', 'Deactive');
+        })->count();
+
+        $kepengurusanCount = BatchMember::whereHas('batch', function ($query) {
+            $query->where('status', 'Active');
+        })->count();
+
         $totalAnggota = $demisionerCount + $kepengurusanCount;
         $totalAngkatan = Batch::count();
 

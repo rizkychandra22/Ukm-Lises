@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Bell, Search, Sun, Moon } from 'lucide-react';
 import { useTheme } from '@admin/Components/ThemeProvider';
+import { toast } from 'sonner';
 
 
 export function Header() {
@@ -70,10 +71,18 @@ export function Header() {
             <div className="ml-auto flex items-center gap-1">
                 <div className="relative hidden md:flex items-center w-64 mr-2">
                     <Search className="absolute left-3 w-4 h-4 text-muted-foreground" />
-                    <Input type="text" placeholder="Cari data..." className="pl-9 h-8 bg-muted/50 border-none rounded-lg text-[13px]" />
+                    <Input 
+                        type="text" 
+                        placeholder="Cari data..." 
+                        className="pl-9 h-8 bg-muted/50 border-none rounded-lg text-[13px] cursor-pointer" 
+                        onClick={() => toast.info('Search feature still in development process.')}
+                        readOnly
+                    />
                 </div>
 
-                <Button variant="ghost" size="icon" className="relative rounded-xl w-8 h-8">
+                <Button variant="ghost" size="icon" className="relative rounded-xl w-8 h-8"
+                    onClick={() => toast.info('Notification feature still in development process.')}
+                >
                     <Bell className="w-[18px] h-[18px] text-muted-foreground" />
                     <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-red-500 rounded-full border border-card"></span>
                 </Button>

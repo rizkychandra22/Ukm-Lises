@@ -15,9 +15,7 @@ function resolveApiBaseUrl(): string {
       return import.meta.env.VITE_API_BASE_URL_DEV;
     }
 
-    if (host === '127.0.0.1') {
-      return 'http://127.0.0.1:8000/api';
-    }
+    return `${window.location.origin}/api`;
   }
 
   // Fallback otomatis localhost
