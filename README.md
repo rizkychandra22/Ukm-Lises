@@ -1,20 +1,27 @@
 <div align="center">
   <img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="300" alt="Laravel Logo">
   <br/>
-  <br/>
-
+  
   # 🎭 UKM Lises Asmarandana - Official Website & Portal
   
   **Platform Profil & Sistem Informasi Manajemen Anggota UKM Seni Musik & Tari Lises Asmarandana**<br/>
   *Universitas Muhammadiyah Sukabumi (UMMI)*
 
   <p align="center">
-    <img src="https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" alt="Laravel" />
-    <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
-    <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
-    <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind" />
-    <img src="https://img.shields.io/badge/Inertia.js-9553E9?style=for-the-badge&logo=inertia&logoColor=white" alt="Inertia" />
-    <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
+    <img src="https://img.shields.io/badge/Version-1.4.0-blue.svg" alt="Version 1.4.0">
+    <img src="https://img.shields.io/badge/Laravel-11.x-FF2D20?style=flat&logo=laravel&logoColor=white" alt="Laravel" />
+    <img src="https://img.shields.io/badge/React-18.x-20232A?style=flat&logo=react&logoColor=61DAFB" alt="React" />
+    <img src="https://img.shields.io/badge/TypeScript-5.x-007ACC?style=flat&logo=typescript&logoColor=white" alt="TypeScript" />
+    <img src="https://img.shields.io/badge/Tailwind_CSS-3.x-38B2AC?style=flat&logo=tailwind-css&logoColor=white" alt="Tailwind" />
+    <img src="https://img.shields.io/badge/PostgreSQL-16-316192?style=flat&logo=postgresql&logoColor=white" alt="PostgreSQL" />
+  </p>
+
+  <p align="center">
+    <a href="#-tentang-proyek">Tentang Proyek</a> •
+    <a href="#-fitur-unggulan">Fitur Unggulan</a> •
+    <a href="#-arsitektur-aplikasi">Arsitektur</a> •
+    <a href="#-teknologi">Teknologi</a> •
+    <a href="#-panduan-instalasi">Instalasi</a>
   </p>
 </div>
 
@@ -22,127 +29,140 @@
 
 ## 📖 Tentang Proyek
 
-Website ini adalah platform resmi terintegrasi untuk **UKM Lises Asmarandana** yang berfungsi sebagai **Company Profile (Landing Page)** sekaligus **Sistem Informasi Manajemen** untuk pengurus dan anggota. 
+**UKM Lises Asmarandana Web Portal** adalah platform resmi terintegrasi yang dirancang khusus untuk memenuhi kebutuhan organisasi seni musik dan tari di lingkungan perguruan tinggi. Website ini berfungsi ganda sebagai **Company Profile (Landing Page)** yang elegan untuk publik, sekaligus **Sistem Informasi Manajemen (Admin Dashboard)** yang andal untuk pengurus dan anggota internal.
 
-Proyek ini menggunakan arsitektur *Hybrid* modern yang memadukan kekuatan **Laravel** di sisi *backend* dengan ekosistem **React & TypeScript** di sisi *frontend*.
-
-### 🏗️ Arsitektur Aplikasi
-Aplikasi ini dibagi menjadi dua bagian *frontend* yang berjalan pada satu aplikasi Laravel:
-1. **Public Landing Page (SPA Murni)**: Menggunakan murni *React Router DOM* dan berkomunikasi dengan *backend* melalui **REST API via Axios**. Menyediakan pengalaman navigasi yang sangat cepat (*Single Page Application*) tanpa *reload* halaman.
-2. **Admin Dashboard (Inertia.js)**: Menggunakan **Inertia.js** untuk menjembatani *routing* Laravel dengan komponen React secara transparan. Memudahkan manajemen data tanpa perlu membangun API terpisah untuk fitur admin.
-
-## ✨ Fitur Utama
-
-- 🌍 **Bilingual Support (i18n)** - Landing page mendukung multi-bahasa (Indonesia & Inggris).
-- 🎨 **Modern & Responsive UI** - Dibangun dengan **Tailwind CSS** dan komponen UI dari **Shadcn UI**.
-- 👥 **Manajemen Anggota Pengurus** - Sistem pengelolaan data anggota, mencakup status Kepengurusan (Aktif) dan Demisioner (Alumni).
-- 🏛️ **Manajemen Angkatan (Batch)** - Pengelompokan anggota berdasarkan tahun dan nama angkatan.
-- ⚡ **Fast Navigation** - Transisi instan antar halaman berkat implementasi SPA (*Single Page Application*).
-- 🔒 **Secure Authentication** - Sistem login dan peran (Role) yang aman menggunakan Spatie Role Permission Laravel.
-
-## 🛠️ Teknologi yang Digunakan
-
-### Backend
-* [**Laravel 13**](https://laravel.com/) - PHP Framework
-* **PostgreSQL** - Database Relasional
-* **REST API** - Endpoints untuk Landing Page SPA
-
-### Frontend
-* [**React 18**](https://reactjs.org/) - UI Library
-* [**TypeScript**](https://www.typescriptlang.org/) - Static Type Checker
-* [**Inertia.js**](https://inertiajs.com/) - Menghubungkan Laravel & React (Untuk Admin Dashboard)
-* [**React Router DOM**](https://reactrouter.com/) - Routing untuk Landing Page SPA
-* [**Axios**](https://axios-http.com/) - HTTP Client untuk pemanggilan API
-* [**Tailwind CSS**](https://tailwindcss.com/) - Utility-first CSS framework
-* [**Shadcn UI**](https://ui.shadcn.com/) - Reusable UI Components
-* [**i18next**](https://www.i18next.com/) - Internationalization (Multi-bahasa)
+Dikembangkan dengan pendekatan *Hybrid Architecture* modern, aplikasi ini memaksimalkan kekuatan backend **Laravel** dan reaktivitas ekosistem **React & TypeScript** di sisi frontend.
 
 ---
 
-## 🚀 Cara Menjalankan Aplikasi di Lokal (Development)
+## ✨ Fitur Unggulan
 
-Ikuti langkah-langkah berikut untuk menjalankan *project* ini di komputer Anda:
+- 🌍 **Bilingual Support (i18n)** — Landing page mendukung multi-bahasa (Indonesia & Inggris) secara dinamis.
+- 🚀 **SEO Optimized** — Penambahan metadata dinamis (`<SEOHead />`) di setiap halaman publik untuk pencarian mesin telusur yang optimal.
+- 🎨 **Modern & Premium UI/UX** — Antarmuka elegan dan responsif dibangun dengan **Tailwind CSS** dan **Shadcn UI** dengan estetika premium (Glassmorphism, gradients, micro-animations).
+- 👥 **Manajemen Anggota & Pengurus** — Sistem tata kelola data anggota komprehensif, dari status *Kepengurusan* hingga *Demisioner*.
+- 🖼️ **Cloudinary Media Management** — Integrasi penyimpanan cloud untuk penanganan gambar dan aset media yang efisien tanpa membebani server lokal.
+- ⚡ **Lightning Fast Navigation** — Transisi antarmuka tanpa *reload* ala *Single Page Application* (SPA).
+- 🔒 **Role-based Access Control (RBAC)** — Autentikasi dan pembatasan hak akses aman menggunakan *Spatie Permission*.
+- 🧪 **Automated Testing** — Didukung oleh integrasi *Unit Test* dan CI/CD pipeline menggunakan **PHPUnit/Pest** (Backend) dan **Vitest** (Frontend).
+
+---
+
+## 🏗️ Arsitektur Aplikasi
+
+Proyek ini mendemonstrasikan implementasi arsitektur frontend ganda di atas satu backend Laravel:
+
+1. **Public Landing Page (Pure SPA)** 
+   Menggunakan *React Router DOM* standar yang berkomunikasi dengan *backend* via **REST API (Axios)**. Memberikan pengalaman interaktif maksimal bagi pengunjung situs.
+2. **Admin Dashboard (Inertia.js)** 
+   Menggunakan **Inertia.js** untuk menjembatani *routing* Laravel dengan komponen React secara *seamless*, tanpa memerlukan perancangan API terpisah untuk pengelolaan data internal.
+
+---
+
+## 🛠️ Teknologi
+
+<details>
+<summary><b>💻 Backend Engine</b></summary>
+
+- [**Laravel**](https://laravel.com/) - Kerangka kerja PHP tangguh
+- **PostgreSQL** - Basis data relasional berskala besar
+- **Spatie Permission** - Sistem otorisasi RBAC
+- **Cloudinary SDK** - Manajemen penyimpanan aset awan
+- **PHPUnit / Pest** - Kerangka kerja pengujian (Testing)
+</details>
+
+<details>
+<summary><b>🎨 Frontend Ecosystem</b></summary>
+
+- [**React 18**](https://reactjs.org/) - Perpustakaan UI interaktif
+- [**TypeScript**](https://www.typescriptlang.org/) - Pengetikan statis untuk keamanan kode
+- [**Inertia.js**](https://inertiajs.com/) - Adaptor monolith modern
+- [**React Router DOM**](https://reactrouter.com/) - Manajemen rute SPA
+- [**Tailwind CSS**](https://tailwindcss.com/) & [**Shadcn UI**](https://ui.shadcn.com/) - Sistem desain fungsional dan estetis
+- [**i18next**](https://www.i18next.com/) - Lokalisasi aplikasi
+- [**Vitest**](https://vitest.dev/) - Pengujian komponen sisi klien
+</details>
+
+---
+
+## 🚀 Panduan Instalasi (Development)
+
+Siapkan lingkungan lokal Anda dengan mengikuti panduan singkat ini:
 
 ### 1. Kebutuhan Sistem
-Pastikan Anda telah menginstal:
 - **PHP** >= 8.2
+- **Node.js** (LTS) & **NPM**
 - **Composer**
-- **Node.js** (Disarankan versi LTS terbaru) & **NPM**
 - **PostgreSQL**
 
-### 2. Instalasi Backend (Laravel)
-
+### 2. Konfigurasi Repositori
 ```bash
-# Kloning repositori
+# 1. Kloning repositori
 git clone https://github.com/rizkychandra22/Ukm-Lises.git
 cd Ukm-Lises
 
-# Instal dependensi PHP
+# 2. Instal dependensi PHP (Backend)
 composer install
 
-# Salin file .env
-cp .env.example .env
+# 3. Instal dependensi NPM (Frontend)
+npm install
 
-# Generate application key
+# 4. Siapkan Environment Variables
+cp .env.example .env
 php artisan key:generate
 ```
 
-### 3. Konfigurasi Database
-Buka file `.env` dan sesuaikan kredensial database Anda:
+### 3. Konfigurasi Database & Cloudinary
+Buka file `.env` dan atur kredensial berikut:
 ```env
 DB_CONNECTION=pgsql
 DB_HOST=127.0.0.1
 DB_PORT=5432
-DB_DATABASE=nama_database_anda
+DB_DATABASE=lises_db
 DB_USERNAME=postgres
-DB_PASSWORD=
+DB_PASSWORD=passwordmu
+
+# Konfigurasi Cloudinary
+CLOUDINARY_URL=cloudinary://API_KEY:API_SECRET@CLOUD_NAME
 ```
-Lalu jalankan migrasi dan seeder untuk data awal:
+Setelah itu, lakukan migrasi dan seeding data awal:
 ```bash
 php artisan migrate --seed
 ```
 
-### 4. Instalasi Frontend (React & Tailwind)
-Buka terminal baru di direktori proyek yang sama, lalu jalankan:
-```bash
-# Instal dependensi NPM
-npm install
+### 4. Menjalankan Server
+Gunakan dua terminal terpisah untuk menjalankan aplikasi:
 
-# Jalankan Vite server untuk kompilasi asset frontend secara realtime
+**Terminal 1 (Vite Development Server):**
+```bash
 npm run dev
 ```
 
-### 5. Jalankan Server Laravel
-Kembali ke terminal pertama, jalankan lokal server Laravel:
+**Terminal 2 (Laravel Development Server):**
 ```bash
 php artisan serve
 ```
-
-Aplikasi kini dapat diakses melalui: **`http://localhost:8000`**
+Aplikasi Publik & Dashboard kini dapat diakses di: **`http://localhost:8000`**
 
 ---
 
-## 📂 Struktur Direktori Utama Frontend
+## 🧪 Pengujian (Testing)
 
-```text
-resources/
-└── js/
-    ├── FrontEnd-React-Ts/       # Area Landing Page (Pure React SPA + Axios)
-    │   ├── src/
-    │   │   ├── components/      # UI Components Publik
-    │   │   ├── i18n/            # Konfigurasi Multi-bahasa
-    │   │   ├── pages/           # Halaman Landing Page
-    │   │   └── ...
-    │
-    ├── Inertia-React-Ts/        # Area Admin Dashboard (Inertia + React)
-    │   ├── Components/          # UI Components Admin (Shadcn Radix-UI)
-    │   ├── Layouts/             # Layout Dashboard & Sidebar
-    │   ├── Pages/               # Halaman Dashboard Admin
-    │   └── ...
+Proyek ini dilengkapi dengan skenario pengujian otomatis untuk menjaga keandalan kode.
+
+**Backend Tests (PHPUnit):**
+```bash
+php artisan test
+```
+
+**Frontend Tests (Vitest):**
+```bash
+npm run test
 ```
 
 ---
 
 <p align="center">
-  Dibuat ❤️ oleh <b>Rizky Chandra</b> untuk <b>UKM Lises Asmarandana UMMI</b>
+  Dibuat dengan ❤️ dan dedikasi oleh <b>Rizky Chandra</b> untuk <b>UKM Lises Asmarandana UMMI</b>.<br/>
+  <i>Copyright © 2026. All rights reserved.</i>
 </p>

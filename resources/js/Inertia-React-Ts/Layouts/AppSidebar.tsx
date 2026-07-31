@@ -256,7 +256,7 @@ export function AppSidebar() {
                                     </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <div className="flex flex-row justify-center gap-3 mt-2">
-                                    <AlertDialogCancel className="w-24 mt-0 border border-border bg-background hover:bg-muted text-foreground rounded-lg h-10 text-sm font-medium">
+                                    <AlertDialogCancel className="w-24 mt-0 border border-border bg-background hover:bg-muted text-foreground rounded-lg h-8 text-[13px] font-medium">
                                         Batal
                                     </AlertDialogCancel>
                                     <AlertDialogAction 
@@ -264,7 +264,7 @@ export function AppSidebar() {
                                             e.preventDefault();
                                             router.post(route('logout'));
                                         }}
-                                        className="w-24 h-10 text-sm font-medium rounded-lg"
+                                        className="w-24  h-8 text-[13px] font-medium rounded-lg"
                                     >
                                         Ya, Keluar
                                     </AlertDialogAction>
