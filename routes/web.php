@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ListMemberController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
@@ -12,6 +13,9 @@ use App\Http\Controllers\SitemapController;
 Route::middleware('guest')->group(function () {
     Route::get('/auth/login', [AuthController::class, 'index'])->name('login');
     Route::post('/auth/login', [AuthController::class, 'login']);
+
+    Route::get('/register', [RegisterController::class, 'create'])->name('register');
+    Route::post('/register', [RegisterController::class, 'store']);
 });
 
 // -------------------------------------------------------------
@@ -51,4 +55,4 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index']);
 // Catch-all route untuk menangani halaman publik selain auth, dashboard, & api
 Route::get('/{any?}', function () {
     return view('web');
-})->where('any', '^(?!auth|admin|api|dashboard|sitemap\.xml).*$');
+})->where('any', '^(?!auth|admin|api|dashboard|sitemap\.xml).*$')->name('web');

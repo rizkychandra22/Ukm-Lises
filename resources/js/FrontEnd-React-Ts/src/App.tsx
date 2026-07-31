@@ -1,5 +1,8 @@
+import { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { SiteLayout } from "./components/site-layout";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
 import { AboutPage } from "./pages/AboutPage";
 import { ContactPage } from "./pages/ContactPage";
 import { GalleryPage } from "./pages/GalleryPage";
@@ -11,8 +14,19 @@ import { MemberPage } from "./pages/MemberPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 
 function App() {
+  useEffect(() => {
+    // @ts-expect-error window.flashMessage injected by Laravel
+    if (window.flashMessage) {
+      // @ts-expect-error window.flashMessage injected by Laravel
+      toast.success(window.flashMessage);
+      // @ts-expect-error window.flashMessage injected by Laravel
+      window.flashMessage = null;
+    }
+  }, []);
+
   return (
     <BrowserRouter>
+      <Toaster />
       <Routes>
         <Route path="/" element={<SiteLayout />}>
           <Route index element={<HomePage />} />
