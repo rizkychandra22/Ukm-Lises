@@ -814,6 +814,7 @@ export default function Index({ members, batches, majors }: Props) {
                             <div>
                                 <label className="block text-sm font-medium mb-1">Tahun Angkatan</label>
                                 <Input
+                                    className="h-8 text-[13px]"
                                     placeholder="Cth: 2024"
                                     value={batchData.year}
                                     onChange={e => setBatchData('year', e.target.value)}
@@ -824,6 +825,7 @@ export default function Index({ members, batches, majors }: Props) {
                             <div>
                                 <label className="block text-sm font-medium mb-1">Nama Angkatan</label>
                                 <Input
+                                    className="h-8 text-[13px]"
                                     placeholder="Cth: Purnawirawan"
                                     value={batchData.name_id}
                                     onChange={e => setBatchData('name_id', e.target.value)}
@@ -833,15 +835,18 @@ export default function Index({ members, batches, majors }: Props) {
 
                             <div>
                                 <label className="block text-sm font-medium mb-1">Status</label>
-                                <select
-                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                    value={batchData.status}
-                                    onChange={e => setBatchData('status', e.target.value as any)}
-                                    required
+                                <Select
+                                    value={batchData.status || undefined}
+                                    onValueChange={val => setBatchData('status', val as any)}
                                 >
-                                    <option value="Active">Active (Mahasiswa)</option>
-                                    <option value="Deactive">Deactive (Alumni)</option>
-                                </select>
+                                    <SelectTrigger className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-1.5 text-[13px] ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                        <SelectValue placeholder="Pilih Status" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="Active">Active (Mahasiswa)</SelectItem>
+                                        <SelectItem value="Deactive">Deactive (Alumni)</SelectItem>
+                                    </SelectContent>
+                                </Select>
                             </div>
 
                             {!editingBatch && (
@@ -864,6 +869,7 @@ export default function Index({ members, batches, majors }: Props) {
                                     <div>
                                         <label className="block text-sm font-medium mb-1">Username Baru</label>
                                         <Input
+                                            className="h-8 text-[13px]"
                                             placeholder="Biarkan kosong untuk skip"
                                             value={batchData.username}
                                             onChange={e => setBatchData('username', e.target.value)}
@@ -872,6 +878,7 @@ export default function Index({ members, batches, majors }: Props) {
                                     <div>
                                         <label className="block text-sm font-medium mb-1">Password Baru</label>
                                         <Input
+                                            className="h-8 text-[13px]"
                                             type="password"
                                             placeholder="Biarkan kosong untuk skip"
                                             value={batchData.password}
@@ -940,6 +947,7 @@ export default function Index({ members, batches, majors }: Props) {
                             <div>
                                 <label className="block text-sm font-medium mb-1">Nama Anggota</label>
                                 <Input
+                                    className="h-8 text-[13px]"
                                     placeholder="Nama Lengkap"
                                     value={memberData.name}
                                     onChange={e => setMemberData('name', e.target.value)}
@@ -950,46 +958,51 @@ export default function Index({ members, batches, majors }: Props) {
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Fakultas</label>
-                                    <select
-                                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                        value={selectedFaculty}
-                                        onChange={e => {
-                                            setSelectedFaculty(e.target.value);
+                                    <Select
+                                        value={selectedFaculty || undefined}
+                                        onValueChange={val => {
+                                            setSelectedFaculty(val);
                                             setMemberData('major_id', '');
                                         }}
-                                        required
                                     >
-                                        <option value="" disabled>Pilih Fakultas</option>
-                                        {faculties.map(faculty => (
-                                            <option key={faculty} value={faculty}>{faculty}</option>
-                                        ))}
-                                    </select>
+                                        <SelectTrigger className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-1.5 text-[13px] ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                            <SelectValue placeholder="Pilih Fakultas" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {faculties.map(faculty => (
+                                                <SelectItem key={faculty} value={faculty}>{faculty}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Program Studi</label>
-                                    <select
-                                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                        value={memberData.major_id}
-                                        onChange={e => setMemberData('major_id', e.target.value)}
-                                        required
+                                    <Select
+                                        value={memberData.major_id || undefined}
+                                        onValueChange={val => setMemberData('major_id', val)}
                                         disabled={!selectedFaculty}
                                     >
-                                        <option value="" disabled>Pilih Program Studi</option>
-                                        {availableMajors.map(m => (
-                                            <option key={m.id} value={m.id}>{m.degree ? `${m.degree} - ` : ''}{m.name_id}</option>
-                                        ))}
-                                    </select>
+                                        <SelectTrigger className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-1.5 text-[13px] ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                            <SelectValue placeholder="Pilih Program Studi" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {availableMajors.map(m => (
+                                                <SelectItem key={m.id} value={m.id.toString()}>
+                                                    {m.degree ? `${m.degree} - ` : ''}{m.name_id}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                     {memberErrors.major_id && <span className="text-xs text-red-500 mt-1 block">{memberErrors.major_id}</span>}
                                 </div>
                             </div>
                             
                             <div>
                                 <label className="block text-sm font-medium mb-1">Tipe Anggota</label>
-                                <select
-                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                    value={memberData.type}
-                                    onChange={e => {
-                                        const newType = e.target.value as 'Pengurus' | 'Demisioner';
+                                <Select
+                                    value={memberData.type || undefined}
+                                    onValueChange={val => {
+                                        const newType = val as 'Pengurus' | 'Demisioner';
                                         setMemberData(data => {
                                             const newBatches = batches.filter(b => newType === 'Demisioner' ? b.status === 'Deactive' : b.status === 'Active');
                                             const isBatchValid = newBatches.some(b => b.id.toString() === data.batch_id);
@@ -1004,18 +1017,22 @@ export default function Index({ members, batches, majors }: Props) {
                                     }}
                                     disabled={activeMemberTab === 'Demisioner'}
                                 >
-                                    <option value="Pengurus">Kepengurusan</option>
-                                    <option value="Demisioner">Demisioner</option>
-                                </select>
+                                    <SelectTrigger className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-1.5 text-[13px] ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                        <SelectValue placeholder="Pilih Tipe Anggota" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="Pengurus">Kepengurusan</SelectItem>
+                                        <SelectItem value="Demisioner">Demisioner</SelectItem>
+                                    </SelectContent>
+                                </Select>
                             </div>
 
                             <div>
                                 <label className="block text-sm font-medium mb-1">Angkatan</label>
-                                <select
-                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                    value={memberData.batch_id}
-                                    onChange={e => {
-                                        const selectedId = e.target.value;
+                                <Select
+                                    value={memberData.batch_id || undefined}
+                                    onValueChange={val => {
+                                        const selectedId = val;
                                         const targetB = batches.find(b => b.id.toString() === selectedId);
                                         const isDeactive = targetB?.status === 'Deactive';
                                         const isForcedDemisioner = activeMemberTab === 'Demisioner' || isDeactive;
@@ -1027,16 +1044,19 @@ export default function Index({ members, batches, majors }: Props) {
                                             position_id: ''
                                         }));
                                     }}
-                                    required
                                     disabled={activeMemberTab === 'MyBatch'}
                                 >
-                                    <option value="" disabled>Pilih Angkatan</option>
-                                    {batches
-                                        .filter(b => memberData.type === 'Demisioner' ? b.status === 'Deactive' : b.status === 'Active')
-                                        .map(b => (
-                                        <option key={b.id} value={b.id}>{b.year} - {b.name_id}</option>
-                                    ))}
-                                </select>
+                                    <SelectTrigger className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-1.5 text-[13px] ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                        <SelectValue placeholder="Pilih Angkatan" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {batches
+                                            .filter(b => memberData.type === 'Demisioner' ? b.status === 'Deactive' : b.status === 'Active')
+                                            .map(b => (
+                                            <SelectItem key={b.id} value={b.id.toString()}>{b.year} - {b.name_id}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                                 {memberErrors.batch_id && <span className="text-xs text-red-500">{memberErrors.batch_id}</span>}
                             </div>
 
@@ -1070,11 +1090,9 @@ export default function Index({ members, batches, majors }: Props) {
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             <div>
                                                 <label className="block text-sm font-medium mb-1">Status Organisasi</label>
-                                                <select
-                                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                                    value={orgStatusValue}
-                                                    onChange={e => {
-                                                        const val = e.target.value;
+                                                <Select
+                                                    value={orgStatusValue || undefined}
+                                                    onValueChange={val => {
                                                         if (val === 'Kepengurusan') {
                                                             setMemberData(data => ({
                                                                 ...data,
@@ -1095,18 +1113,22 @@ export default function Index({ members, batches, majors }: Props) {
                                                             }));
                                                         }
                                                     }}
-                                                    required
                                                 >
-                                                    <option value="" disabled>Pilih Status</option>
-                                                    <option value="Kepengurusan">Kepengurusan</option>
-                                                    <option value="Anggota Biasa">Anggota Biasa</option>
-                                                    <option value="Anggota Baru">Anggota Baru</option>
-                                                </select>
+                                                    <SelectTrigger className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-1.5 text-[13px] ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                                        <SelectValue placeholder="Pilih Status" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="Kepengurusan">Kepengurusan</SelectItem>
+                                                        <SelectItem value="Anggota Biasa">Anggota Biasa</SelectItem>
+                                                        <SelectItem value="Anggota Baru">Anggota Baru</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
                                             </div>
 
                                             <div>
                                                 <label className="block text-sm font-medium mb-1">Periode Kepengurusan</label>
                                                 <Input
+                                                    className="h-8 text-[13px]"
                                                     placeholder="Contoh: 2025 - 2026"
                                                     value={memberData.periode}
                                                     onChange={e => setMemberData('periode', e.target.value)}
@@ -1120,6 +1142,7 @@ export default function Index({ members, batches, majors }: Props) {
                                             <div>
                                                 <label className="block text-sm font-medium mb-1">Jabatan</label>
                                                 <Input
+                                                    className="h-8 text-[13px]"
                                                     placeholder="Contoh: Ketua Umum / Kadep SBD"
                                                     value={memberData.position_id}
                                                     onChange={e => setMemberData('position_id', e.target.value)}
@@ -1136,6 +1159,7 @@ export default function Index({ members, batches, majors }: Props) {
                                 <div>
                                     <label className="block text-sm font-medium mb-1">No. WhatsApp (Opsional)</label>
                                     <Input
+                                        className="h-8 text-[13px]"
                                         placeholder="Cth: 08123456789"
                                         value={memberData.whatsapp}
                                         onChange={e => setMemberData('whatsapp', e.target.value)}
@@ -1144,6 +1168,7 @@ export default function Index({ members, batches, majors }: Props) {
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Username IG (Opsional)</label>
                                     <Input
+                                        className="h-8 text-[13px]"
                                         placeholder="Cth: lisesasmarandana"
                                         value={memberData.instagram}
                                         onChange={e => setMemberData('instagram', e.target.value)}
@@ -1153,6 +1178,7 @@ export default function Index({ members, batches, majors }: Props) {
                             <div>
                                 <label className="block text-sm font-medium mb-1">Foto Profile (Opsional)</label>
                                 <Input
+                                    className="h-8 text-[13px]"
                                     type="file"
                                     accept="image/*"
                                     onChange={e => setMemberData('image', e.target.files ? e.target.files[0] : null)}
