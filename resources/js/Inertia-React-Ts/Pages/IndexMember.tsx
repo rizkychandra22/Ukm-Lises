@@ -1072,7 +1072,7 @@ export default function Index({ members, batches, majors }: Props) {
                                     return null;
                                 }
 
-                                 let orgStatusValue = '';
+                                let orgStatusValue = '';
                                 if (memberData.status === 'Active') {
                                     orgStatusValue = 'Kepengurusan';
                                 } else if (memberData.position_id === 'Anggota Biasa') {
@@ -1174,7 +1174,7 @@ export default function Index({ members, batches, majors }: Props) {
                             <div>
                                 <label className="block text-sm font-medium mb-1">Foto Profile (Opsional)</label>
                                 <Input
-                                    className="h-8 text-[13px]"
+                                    className="bg-background text-sm file:text-foreground file:bg-muted file:border-0 file:rounded-md file:px-2 file:py-1 file:mr-2"
                                     type="file"
                                     accept="image/*"
                                     onChange={e => setMemberData('image', e.target.files ? e.target.files[0] : null)}
