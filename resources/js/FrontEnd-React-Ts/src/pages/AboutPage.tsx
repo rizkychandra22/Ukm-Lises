@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { useTranslation } from "@/i18n";
 import { SEOHead } from "@/components/SEOHead";
+import { ScrollTop } from "@/components/scroll-top";
 
 export function AboutPage() {
   const { t } = useTranslation("AboutPage");
@@ -83,6 +84,8 @@ export function AboutPage() {
           ))}
         </div>
       </section>
+
+      <ScrollTop />
     </>
   );
 }

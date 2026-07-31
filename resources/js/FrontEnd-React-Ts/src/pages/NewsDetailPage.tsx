@@ -19,6 +19,7 @@ import { Separator } from "@/components/ui/separator";
 import { usePosts } from "@/constants/news";
 import { useTranslation } from "@/i18n";
 import { SEOHead } from "@/components/SEOHead";
+import { ScrollTop } from "@/components/scroll-top";
 
 export function NewsDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -28,13 +29,6 @@ export function NewsDetailPage() {
   const relatedPosts = posts.filter((p) => p.slug !== slug).slice(0, 4);
 
   const [copied, setCopied] = useState(false);
-  const [showTop, setShowTop] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setShowTop(window.scrollY > 500);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   if (!post) {
     return (
@@ -155,15 +149,15 @@ export function NewsDetailPage() {
           {/* Article Content */}
           <div
             className="
-              max-w-none text-base leading-[1.8] text-muted-foreground space-y-5
-              [&>p]:leading-[1.8]
-              [&>h2]:mt-10 [&>h2]:mb-3 [&>h2]:font-display [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:text-foreground
-              [&>h3]:mt-7 [&>h3]:mb-2 [&>h3]:font-display [&>h3]:text-xl [&>h3]:font-bold [&>h3]:text-foreground
-              [&>blockquote]:my-6 [&>blockquote]:border-l-4 [&>blockquote]:border-primary/60
+              max-w-none text-base leading-relaxed text-muted-foreground
+              [&>p]:mt-4 [&>p]:mb-4 [&>p]:last:mb-0 [&>p]:text-justify [&>p]:indent-8
+              [&>h2]:mt-6 [&>h2]:mb-2 [&>h2]:font-display [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:text-foreground
+              [&>h3]:mt-4 [&>h3]:mb-2 [&>h3]:font-display [&>h3]:text-xl [&>h3]:font-bold [&>h3]:text-foreground
+              [&>blockquote]:my-5 [&>blockquote]:border-l-4 [&>blockquote]:border-primary/60
               [&>blockquote]:bg-card/50 [&>blockquote]:rounded-r-2xl [&>blockquote]:px-5 [&>blockquote]:py-4
               [&>blockquote]:italic [&>blockquote]:text-foreground/80
-              [&>img]:my-6 [&>img]:rounded-2xl [&>img]:border [&>img]:border-border/60
-              [&>ul]:list-disc [&>ul]:pl-6 [&>ol]:list-decimal [&>ol]:pl-6
+              [&>img]:my-5 [&>img]:rounded-2xl [&>img]:border [&>img]:border-border/60
+              [&>ul]:list-disc [&>ul]:my-2 [&>ul]:pl-6 [&>ol]:list-decimal [&>ol]:my-2 [&>ol]:pl-6
             "
             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
           />
@@ -175,7 +169,7 @@ export function NewsDetailPage() {
         <Separator className="mb-10 bg-border/40" />
         <div className="space-y-5 text-center">
           <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">
-            Bagikan Berita
+            {t("share_news")}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Button
@@ -183,7 +177,7 @@ export function NewsDetailPage() {
               variant="outline"
               className="rounded-full border-border/60 bg-card gap-2 text-sm hover:border-emerald-500/40 hover:bg-emerald-500/10 hover:text-emerald-400 transition-all"
             >
-              <MessageCircle className="h-4 w-4" /> WhatsApp
+              <MessageCircle className="h-4 w-4" /> {t("share_wa")}
             </Button>
             <Button
               onClick={handleCopy}
@@ -191,13 +185,13 @@ export function NewsDetailPage() {
               className="rounded-full border-border/60 bg-card gap-2 text-sm hover:border-primary/40 hover:bg-primary/10 hover:text-primary transition-all"
             >
               {copied ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4" />}
-              {copied ? "Tersalin!" : "Salin Tautan"}
+              {copied ? t("salin_link_true") : t("share_link")}
             </Button>
             <Button
               onClick={handleShare}
               className="rounded-full bg-gradient-gold shadow-gold gap-2 text-sm font-semibold text-primary-foreground hover:opacity-90 transition-all"
             >
-              <Share2 className="h-4 w-4" /> Bagikan
+              <Share2 className="h-4 w-4" /> {t("share")}
             </Button>
           </div>
         </div>
@@ -211,7 +205,7 @@ export function NewsDetailPage() {
           <div className="mb-8 flex items-end justify-between gap-4">
             <div>
               <h2 className="font-display text-3xl font-bold text-primary">
-                Berita Lainnya
+                {t("news")}
               </h2>
             </div>
             <Button
@@ -220,7 +214,7 @@ export function NewsDetailPage() {
               className="hidden rounded-full bg-gradient-gold shadow-gold sm:inline-flex text-sm font-semibold text-primary-foreground hover:opacity-90 gap-1.5"
             >
               <Link to="/news">
-                Lihat Semua <ArrowUpRight className="h-4 w-4" />
+                {t("cta_dekstop")} <ArrowUpRight className="h-4 w-4" />
               </Link>
             </Button>
           </div>
@@ -278,26 +272,14 @@ export function NewsDetailPage() {
               className="rounded-full border-border/60 text-sm text-primary"
             >
               <Link to="/news">
-                Lihat Semua Berita <ArrowUpRight className="ml-1.5 h-4 w-4" />
+                {t("cta_mobile")} <ArrowUpRight className="ml-1.5 h-4 w-4" />
               </Link>
             </Button>
           </div>
         </section>
       )}
 
-      {/* ─── Scroll to Top FAB ─── */}
-      <button
-        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        aria-label="Scroll to top"
-        className={`
-          fixed bottom-6 right-6 z-50 grid h-11 w-11 place-items-center rounded-full
-          bg-gradient-gold shadow-gold text-primary-foreground
-          transition-all duration-300
-          ${showTop ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0 pointer-events-none"}
-        `}
-      >
-        <ChevronUp className="h-5 w-5" />
-      </button>
+      <ScrollTop />
     </>
   );
 }

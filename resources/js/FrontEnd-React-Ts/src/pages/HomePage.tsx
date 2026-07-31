@@ -18,6 +18,7 @@ import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/c
 import { useTranslation } from "@/i18n";
 import { usePosts } from "@/constants/news";
 import { SEOHead } from "@/components/SEOHead";
+import { ScrollTop } from "@/components/scroll-top";
 
 export function HomePage() {
   const { t } = useTranslation("HomePage");
@@ -254,6 +255,8 @@ export function HomePage() {
           </CardContent>
         </Card>
       </section>
+
+      <ScrollTop />
     </>
   );
 }

@@ -41,6 +41,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ScrollTop } from "@/components/scroll-top";
 
 type SortConfig = {
   key: string;
@@ -583,6 +584,8 @@ export function MemberPage() {
           )}
         </DialogContent>
       </Dialog>
+
+      <ScrollTop />
     </>
   );
 }

@@ -17,9 +17,9 @@ export const usePosts = () => {
       img: g1,
       content: `
         <p>${t("news_1.desc_1")}</p>
-        <br/>
+        
         <p>${t("news_1.desc_2")}</p>
-        <br/>
+        
         <p>${t("news_1.desc_3")}</p>
       `,
     },
@@ -33,9 +33,9 @@ export const usePosts = () => {
       img: g3,
       content: `
         <p>${t("news_2.desc_1")}</p>
-        <br/>
+        
         <p>${t("news_2.desc_2")}</p>
-        <br/>
+        
         <p>${t("news_2.desc_3")}</p>
       `,
     },
@@ -49,9 +49,9 @@ export const usePosts = () => {
       img: g2,
       content: `
         <p>${t("news_3.desc_1")}</p>
-        <br/>
+        
         <p>${t("news_3.desc_2")}</p>
-        <br/>
+        
         <p>${t("news_3.desc_3")}</p>
       `,
     },

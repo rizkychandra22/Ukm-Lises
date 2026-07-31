@@ -16,7 +16,7 @@ export default {
       social: "Social Media",
       copyright: "© 2026 Lises Asmarandana. All Rights Reserved.",
       outhor: "Created by",
-      address: "Secretariat UKM - UMMI Campus",
+      address: "Secretariat UKM — UMMI Campus",
     },
   },
 
@@ -102,6 +102,14 @@ export default {
     not_found_desc: "Sorry, the article you are looking for is not available or has been deleted.",
     btn_back_news: "Back to News",
     btn_back: "Back",
+    share_news: 'Share News',
+    share_wa: 'WhatsApp',
+    share_link: 'Copy Link',
+    salin_link_true: 'Link Copied',
+    share: 'Share',
+    news: 'Other News',
+    cta_dekstop: 'Show All',
+    cta_mobile: 'Show All News',
   },
 
   EventPage: {
@@ -259,37 +267,37 @@ export default {
       keywords: "UKM Lises Asmarandana, UMMI Art Club, Sukabumi Dance Art, Sundanese Traditional Music, UMMI Sukabumi",
     },
     about: {
-      title: "About Us - Lises Asmarandana",
+      title: "About Us — Lises Asmarandana",
       description: "Profile, history, vision mission, and organizational structure of UKM Music and Dance Art Lises Asmarandana UMMI.",
       keywords: "UKM Lises Profile, History of Lises Asmarandana, Vision Mission UMMI Art Club",
     },
     members: {
-      title: "Members & Management - Lises Asmarandana",
+      title: "Members & Management — Lises Asmarandana",
       description: "List of active members, management structure, and alumni of UKM Lises Asmarandana UMMI Sukabumi.",
       keywords: "UKM Lises Management, Lises UMMI Members, Lises Asmarandana Alumni",
     },
     events: {
-      title: "Events & Agenda - UKM Lises Asmarandana",
+      title: "Events & Agenda — UKM Lises Asmarandana",
       description: "Schedule of performances, cultural festivals, and art activities of UKM Lises Asmarandana UMMI.",
       keywords: "UKM Lises Events, UMMI Art Performances, Sukabumi Dance Festival",
     },
     news: {
-      title: "News & Articles - Lises Asmarandana",
+      title: "News & Articles — Lises Asmarandana",
       description: "Latest news, event coverage, and cultural art articles from UKM Lises Asmarandana UMMI.",
       keywords: "UKM Lises News, UMMI Art Articles, Lises Asmarandana Achievements",
     },
     newsDetail: {
-      title: "News Detail - Lises Asmarandana",
+      title: "News Detail — Lises Asmarandana",
       description: "Read more about news, articles, and latest updates from Lises Asmarandana Universitas Muhammadiyah Sukabumi.",
       keywords: "Lises News Detail, Lises Asmarandana Updates, UMMI Coverage",
     },
     gallery: {
-      title: "Documentation Gallery - UKM Lises Asmarandana",
+      title: "Documentation Gallery — UKM Lises Asmarandana",
       description: "Photo and video documentation of performances, practice sessions, and shows of UKM Lises Asmarandana.",
       keywords: "Lises Gallery, UMMI Performance Photos, Lises Dance Videos",
     },
     contact: {
-      title: "Contact Us - UKM Lises Asmarandana",
+      title: "Contact Us — UKM Lises Asmarandana",
       description: "Official contact, Secretariat location, and social media of UKM Lises Asmarandana UMMI Sukabumi.",
       keywords: "UKM Lises Contact, UMMI Sukabumi Address, Lises Social Media",
     },
