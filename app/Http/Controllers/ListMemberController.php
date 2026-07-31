@@ -99,6 +99,8 @@ class ListMemberController extends Controller
             'status'      => 'nullable|in:Active,Deactive',
             'periode'     => 'nullable|string|max:100',
             'position_id' => 'nullable|string|max:255',
+            'whatsapp'    => 'nullable|string|max:255',
+            'instagram'   => 'nullable|string|max:255',
         ]);
 
         $user = auth()->user();
@@ -125,6 +127,8 @@ class ListMemberController extends Controller
             'status'      => 'nullable|in:Active,Deactive',
             'periode'     => 'nullable|string|max:100',
             'position_id' => 'nullable|string|max:255',
+            'whatsapp'    => 'nullable|string|max:255',
+            'instagram'   => 'nullable|string|max:255',
         ]);
 
         $user = auth()->user();

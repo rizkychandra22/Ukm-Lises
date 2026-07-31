@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { Head, useForm, usePage } from '@inertiajs/react';
 import { route } from '../Lib/Route';
 import AdminLayout from '../Layouts/AppLayout';
-import { Search, Plus, Edit, Trash2, ArrowUpDown, Eye } from 'lucide-react';
+import { Search, Plus, Edit, Trash2, ArrowUpDown, Eye, Info } from 'lucide-react';
 import { toast } from 'sonner';
 
 import {
@@ -82,6 +82,8 @@ type BatchMember = {
     periode: string | null;
     position_id: string | null;
     position_en: string | null;
+    instagram: string | null;
+    whatsapp: string | null;
     batch?: Batch;
     major?: Major;
 };
@@ -183,6 +185,8 @@ export default function Index({ members, batches, majors }: Props) {
         status: 'Active' as 'Active' | 'Deactive',
         periode: '',
         position_id: '',
+        whatsapp: '',
+        instagram: '',
         _method: 'post'
     });
 
@@ -195,14 +199,19 @@ export default function Index({ members, batches, majors }: Props) {
         const targetBatch = batches.find(b => b.id.toString() === defaultBatchId);
 
         const isDeactiveBatch = targetBatch?.status === 'Deactive';
+        
+        // Prevent pre-selecting an Active batch when adding a member in the Demisioner tab
+        const initialBatchId = (activeMemberTab === 'Demisioner' && !isDeactiveBatch) ? '' : defaultBatchId;
 
         setMemberData(data => ({
             ...data,
-            batch_id: defaultBatchId,
-            type: isDeactiveBatch ? 'Demisioner' : 'Pengurus',
-            status: '' as any,
+            batch_id: initialBatchId,
+            type: (isDeactiveBatch || activeMemberTab === 'Demisioner') ? 'Demisioner' : 'Pengurus',
+            status: (isDeactiveBatch || activeMemberTab === 'Demisioner') ? 'Deactive' : ('' as any),
             periode: '',
             position_id: '',
+            whatsapp: '',
+            instagram: '',
             _method: 'post'
         }));
         setIsMemberModalOpen(true);
@@ -227,6 +236,8 @@ export default function Index({ members, batches, majors }: Props) {
             status: member.status,
             periode: member.periode || '',
             position_id: member.position_id || '',
+            whatsapp: member.whatsapp || '',
+            instagram: member.instagram || '',
             _method: 'put'
         });
         setIsMemberModalOpen(true);
@@ -400,7 +411,8 @@ export default function Index({ members, batches, majors }: Props) {
                     }
                 }
             } else {
-                matchTab = m.type === 'Demisioner' || m.batch?.status === 'Deactive';
+                // Tab Demisioner: strictly only show members from Deactive batches
+                matchTab = m.batch?.status === 'Deactive';
                 if (matchTab && demisionerBatchFilter !== 'all') {
                     matchTab = m.batch_id?.toString() === demisionerBatchFilter;
                 }
@@ -806,6 +818,7 @@ export default function Index({ members, batches, majors }: Props) {
                             <div>
                                 <label className="block text-sm font-medium mb-1">Tahun Angkatan</label>
                                 <Input
+                                    className="h-8 text-[13px]"
                                     placeholder="Cth: 2024"
                                     value={batchData.year}
                                     onChange={e => setBatchData('year', e.target.value)}
@@ -816,6 +829,7 @@ export default function Index({ members, batches, majors }: Props) {
                             <div>
                                 <label className="block text-sm font-medium mb-1">Nama Angkatan</label>
                                 <Input
+                                    className="h-8 text-[13px]"
                                     placeholder="Cth: Purnawirawan"
                                     value={batchData.name_id}
                                     onChange={e => setBatchData('name_id', e.target.value)}
@@ -825,16 +839,30 @@ export default function Index({ members, batches, majors }: Props) {
 
                             <div>
                                 <label className="block text-sm font-medium mb-1">Status</label>
-                                <select
-                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                    value={batchData.status}
-                                    onChange={e => setBatchData('status', e.target.value as any)}
-                                    required
+                                <Select
+                                    value={batchData.status || undefined}
+                                    onValueChange={val => setBatchData('status', val as any)}
                                 >
-                                    <option value="Active">Active (Mahasiswa)</option>
-                                    <option value="Deactive">Deactive (Alumni)</option>
-                                </select>
+                                    <SelectTrigger className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-1.5 text-[13px] ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                        <SelectValue placeholder="Pilih Status" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="Active">Active (Mahasiswa)</SelectItem>
+                                        <SelectItem value="Deactive">Deactive (Alumni)</SelectItem>
+                                    </SelectContent>
+                                </Select>
                             </div>
+
+                            {!editingBatch && (
+                                <div className="pt-4 mt-4 border-t border-border/50">
+                                    <div className="flex items-start gap-2 bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 p-3 rounded-md">
+                                        <Info className="h-4 w-4 mt-0.5 shrink-0" />
+                                        <p className="text-xs leading-relaxed">
+                                            Pemberitahuan: Sistem akan otomatis membuatkan akun akses untuk angkatan ini dengan Username <span className="font-semibold">lises{batchData.year || '202X'}</span> dan Password bawaan: <span className="font-semibold">password</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
 
                             {/* Jika sedang edit, tampilkan opsional ubah kredensial */}
                             {editingBatch && (
@@ -845,6 +873,7 @@ export default function Index({ members, batches, majors }: Props) {
                                     <div>
                                         <label className="block text-sm font-medium mb-1">Username Baru</label>
                                         <Input
+                                            className="h-8 text-[13px]"
                                             placeholder="Biarkan kosong untuk skip"
                                             value={batchData.username}
                                             onChange={e => setBatchData('username', e.target.value)}
@@ -853,6 +882,7 @@ export default function Index({ members, batches, majors }: Props) {
                                     <div>
                                         <label className="block text-sm font-medium mb-1">Password Baru</label>
                                         <Input
+                                            className="h-8 text-[13px]"
                                             type="password"
                                             placeholder="Biarkan kosong untuk skip"
                                             value={batchData.password}
@@ -921,6 +951,7 @@ export default function Index({ members, batches, majors }: Props) {
                             <div>
                                 <label className="block text-sm font-medium mb-1">Nama Anggota</label>
                                 <Input
+                                    className="h-8 text-[13px]"
                                     placeholder="Nama Lengkap"
                                     value={memberData.name}
                                     onChange={e => setMemberData('name', e.target.value)}
@@ -931,79 +962,117 @@ export default function Index({ members, batches, majors }: Props) {
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Fakultas</label>
-                                    <select
-                                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                        value={selectedFaculty}
-                                        onChange={e => {
-                                            setSelectedFaculty(e.target.value);
+                                    <Select
+                                        value={selectedFaculty || undefined}
+                                        onValueChange={val => {
+                                            setSelectedFaculty(val);
                                             setMemberData('major_id', '');
                                         }}
-                                        required
                                     >
-                                        <option value="" disabled>Pilih Fakultas</option>
-                                        {faculties.map(faculty => (
-                                            <option key={faculty} value={faculty}>{faculty}</option>
-                                        ))}
-                                    </select>
+                                        <SelectTrigger className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-1.5 text-[13px] ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                            <SelectValue placeholder="Pilih Fakultas" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {faculties.map(faculty => (
+                                                <SelectItem key={faculty} value={faculty}>{faculty}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Program Studi</label>
-                                    <select
-                                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                        value={memberData.major_id}
-                                        onChange={e => setMemberData('major_id', e.target.value)}
-                                        required
+                                    <Select
+                                        value={memberData.major_id || undefined}
+                                        onValueChange={val => setMemberData('major_id', val)}
                                         disabled={!selectedFaculty}
                                     >
-                                        <option value="" disabled>Pilih Program Studi</option>
-                                        {availableMajors.map(m => (
-                                            <option key={m.id} value={m.id}>{m.degree ? `${m.degree} - ` : ''}{m.name_id}</option>
-                                        ))}
-                                    </select>
+                                        <SelectTrigger className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-1.5 text-[13px] ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                            <SelectValue placeholder="Pilih Program Studi" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {availableMajors.map(m => (
+                                                <SelectItem key={m.id} value={m.id.toString()}>
+                                                    {m.degree ? `${m.degree} - ` : ''}{m.name_id}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                     {memberErrors.major_id && <span className="text-xs text-red-500 mt-1 block">{memberErrors.major_id}</span>}
                                 </div>
                             </div>
+                            
+                            {!(hasRole('User') && userBatch?.status === 'Deactive') && (
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Tipe Anggota</label>
+                                    <Select
+                                        value={memberData.type || undefined}
+                                        disabled={hasRole('User')}
+                                        onValueChange={val => {
+                                            const newType = val as 'Pengurus' | 'Demisioner';
+                                            setMemberData(data => {
+                                                const newBatches = batches.filter(b => newType === 'Demisioner' ? b.status === 'Deactive' : b.status === 'Active');
+                                                const isBatchValid = newBatches.some(b => b.id.toString() === data.batch_id);
+                                                
+                                                return {
+                                                    ...data,
+                                                    type: newType,
+                                                    status: newType === 'Demisioner' ? 'Deactive' : ('' as any),
+                                                    position_id: newType === 'Demisioner' ? '' : data.position_id,
+                                                    batch_id: isBatchValid ? data.batch_id : ''
+                                                };
+                                            });
+                                        }}
+                                    >
+                                        <SelectTrigger className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-1.5 text-[13px] ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                            <SelectValue placeholder="Pilih Tipe Anggota" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="Pengurus">Kepengurusan</SelectItem>
+                                            <SelectItem value="Demisioner">Demisioner</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            )}
+                            
                             <div>
                                 <label className="block text-sm font-medium mb-1">Angkatan</label>
-                                <select
-                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                    value={memberData.batch_id}
-                                    onChange={e => {
-                                        const selectedId = e.target.value;
-                                        const targetB = batches.find(b => b.id.toString() === selectedId);
-                                        const isDeactive = targetB?.status === 'Deactive';
-                                        setMemberData(data => ({
-                                            ...data,
-                                            batch_id: selectedId,
-                                            type: isDeactive ? 'Demisioner' : 'Pengurus',
-                                            status: isDeactive ? 'Deactive' : '' as any,
-                                            position_id: ''
-                                        }));
-                                    }}
-                                    required
+                                <Select
+                                    value={memberData.batch_id || undefined}
+                                    onValueChange={val => setMemberData('batch_id', val)}
                                     disabled={activeMemberTab === 'MyBatch'}
                                 >
-                                    <option value="" disabled>Pilih Angkatan</option>
-                                    {batches.map(b => (
-                                        <option key={b.id} value={b.id}>{b.year} - {b.name_id}</option>
-                                    ))}
-                                </select>
+                                    <SelectTrigger className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-1.5 text-[13px] ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                        <SelectValue placeholder="Pilih Angkatan" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {batches
+                                            .filter(b => memberData.type === 'Demisioner' ? b.status === 'Deactive' : b.status === 'Active')
+                                            .map(b => (
+                                                <SelectItem key={b.id} value={b.id.toString()}>{b.year} - {b.name_id}</SelectItem>
+                                            ))
+                                        }
+                                    </SelectContent>
+                                </Select>
                                 {memberErrors.batch_id && <span className="text-xs text-red-500">{memberErrors.batch_id}</span>}
                             </div>
 
                             {(() => {
                                 const selectedBatch = batches.find(b => b.id.toString() === memberData.batch_id);
                                 const isDeactiveBatch = selectedBatch?.status === 'Deactive';
+                                const isDemisionerForm = isDeactiveBatch || memberData.type === 'Demisioner';
 
-                                if (isDeactiveBatch) {
-                                    return (
-                                        <div className="p-3 bg-muted/40 rounded-lg text-xs text-muted-foreground">
-                                            Status anggota otomatis di-lock sebagai <b>Demisioner / Alumni</b> karena angkatan ini berstatus Deactive.
-                                        </div>
-                                    );
+                                if (isDemisionerForm) {
+                                    if (isDeactiveBatch) {
+                                        return (
+                                            <div className="p-3 bg-muted/40 rounded-lg text-xs text-muted-foreground">
+                                                Angkatan ini berstatus Deactive, tipe anggota dikunci sebagai <b>Demisioner / Alumni</b>.
+                                            </div>
+                                        );
+                                    }
+                                    return null;
                                 }
 
-                                 let orgStatusValue = '';
+                                let orgStatusValue = '';
                                 if (memberData.status === 'Active') {
                                     orgStatusValue = 'Kepengurusan';
                                 } else if (memberData.position_id === 'Anggota Biasa') {
@@ -1014,57 +1083,62 @@ export default function Index({ members, batches, majors }: Props) {
 
                                 return (
                                     <>
-                                        <div>
-                                            <label className="block text-sm font-medium mb-1">Status Organisasi</label>
-                                            <select
-                                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                                value={orgStatusValue}
-                                                onChange={e => {
-                                                    const val = e.target.value;
-                                                    if (val === 'Kepengurusan') {
-                                                        setMemberData(data => ({
-                                                            ...data,
-                                                            status: 'Active',
-                                                            position_id: data.position_id === 'Anggota Biasa' || data.position_id === 'Anggota Baru' ? '' : data.position_id
-                                                        }));
-                                                    } else if (val === 'Anggota Biasa') {
-                                                        setMemberData(data => ({
-                                                            ...data,
-                                                            status: 'Deactive',
-                                                            position_id: 'Anggota Biasa'
-                                                        }));
-                                                    } else if (val === 'Anggota Baru') {
-                                                        setMemberData(data => ({
-                                                            ...data,
-                                                            status: 'Deactive',
-                                                            position_id: 'Anggota Baru'
-                                                        }));
-                                                    }
-                                                }}
-                                                required
-                                            >
-                                                <option value="" disabled>Pilih Status</option>
-                                                <option value="Kepengurusan">Kepengurusan</option>
-                                                <option value="Anggota Biasa">Anggota Biasa</option>
-                                                <option value="Anggota Baru">Anggota Baru</option>
-                                            </select>
-                                        </div>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-sm font-medium mb-1">Status Organisasi</label>
+                                                <Select
+                                                    value={orgStatusValue || undefined}
+                                                    onValueChange={val => {
+                                                        if (val === 'Kepengurusan') {
+                                                            setMemberData(data => ({
+                                                                ...data,
+                                                                status: 'Active',
+                                                                position_id: data.position_id === 'Anggota Biasa' || data.position_id === 'Anggota Baru' ? '' : data.position_id
+                                                            }));
+                                                        } else if (val === 'Anggota Biasa') {
+                                                            setMemberData(data => ({
+                                                                ...data,
+                                                                status: 'Deactive',
+                                                                position_id: 'Anggota Biasa'
+                                                            }));
+                                                        } else if (val === 'Anggota Baru') {
+                                                            setMemberData(data => ({
+                                                                ...data,
+                                                                status: 'Deactive',
+                                                                position_id: 'Anggota Baru'
+                                                            }));
+                                                        }
+                                                    }}
+                                                >
+                                                    <SelectTrigger className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-1.5 text-[13px] ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                                        <SelectValue placeholder="Pilih Status" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="Kepengurusan">Kepengurusan</SelectItem>
+                                                        <SelectItem value="Anggota Biasa">Anggota Biasa</SelectItem>
+                                                        <SelectItem value="Anggota Baru">Anggota Baru</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
 
-                                        <div>
-                                            <label className="block text-sm font-medium mb-1">Periode Kepengurusan</label>
-                                            <Input
-                                                placeholder="Contoh: 2025 - 2026"
-                                                value={memberData.periode}
-                                                onChange={e => setMemberData('periode', e.target.value)}
-                                                required
-                                            />
-                                            {memberErrors.periode && <span className="text-xs text-red-500">{memberErrors.periode}</span>}
+                                            <div>
+                                                <label className="block text-sm font-medium mb-1">Periode Kepengurusan</label>
+                                                <Input
+                                                    className="h-8 text-[13px]"
+                                                    placeholder="Contoh: 2025 - 2026"
+                                                    value={memberData.periode}
+                                                    onChange={e => setMemberData('periode', e.target.value)}
+                                                    required
+                                                />
+                                                {memberErrors.periode && <span className="text-xs text-red-500">{memberErrors.periode}</span>}
+                                            </div>
                                         </div>
 
                                         {orgStatusValue === 'Kepengurusan' && (
                                             <div>
                                                 <label className="block text-sm font-medium mb-1">Jabatan</label>
                                                 <Input
+                                                    className="h-8 text-[13px]"
                                                     placeholder="Contoh: Ketua Umum / Kadep SBD"
                                                     value={memberData.position_id}
                                                     onChange={e => setMemberData('position_id', e.target.value)}
@@ -1076,9 +1150,31 @@ export default function Index({ members, batches, majors }: Props) {
                                     </>
                                 );
                             })()}
+                            
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">No. WhatsApp (Opsional)</label>
+                                    <Input
+                                        className="h-8 text-[13px]"
+                                        placeholder="Cth: 08123456789"
+                                        value={memberData.whatsapp}
+                                        onChange={e => setMemberData('whatsapp', e.target.value)}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Username IG (Opsional)</label>
+                                    <Input
+                                        className="h-8 text-[13px]"
+                                        placeholder="Cth: lisesasmarandana"
+                                        value={memberData.instagram}
+                                        onChange={e => setMemberData('instagram', e.target.value)}
+                                    />
+                                </div>
+                            </div>
                             <div>
                                 <label className="block text-sm font-medium mb-1">Foto Profile (Opsional)</label>
                                 <Input
+                                    className="bg-background text-sm file:text-foreground file:bg-muted file:border-0 file:rounded-md file:px-2 file:py-1 file:mr-2"
                                     type="file"
                                     accept="image/*"
                                     onChange={e => setMemberData('image', e.target.files ? e.target.files[0] : null)}
@@ -1119,56 +1215,68 @@ export default function Index({ members, batches, majors }: Props) {
 
                 {/* SHEET LIHAT ANGGOTA */}
                 <Sheet open={isViewSheetOpen} onOpenChange={setIsViewSheetOpen}>
-                    <SheetContent className="overflow-y-auto">
-                        <SheetHeader className="mb-6">
+                    <SheetContent className="overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                        <SheetHeader className="mb-4">
                             <SheetTitle>Detail Anggota</SheetTitle>
                             <SheetDescription>
                                 Informasi lengkap anggota UKM Lises.
                             </SheetDescription>
                         </SheetHeader>
                         {viewingMember && (
-                            <div className="space-y-6">
+                            <div className="space-y-4">
                                 <div className="flex justify-center">
                                     <img
                                         src={viewingMember.image ? viewingMember.image : `https://ui-avatars.com/api/?name=${encodeURIComponent(viewingMember.name)}&background=random`}
                                         alt={viewingMember.name}
-                                        className="w-32 h-32 min-w-32 min-h-32 shrink-0 rounded-full object-cover border-4 border-muted"
+                                        className="w-24 h-24 min-w-24 min-h-24 shrink-0 rounded-full object-cover border-4 border-muted shadow-sm"
                                     />
                                 </div>
-                                <div className="space-y-4">
-                                    <div>
+                                <div className="grid grid-cols-2 gap-y-3 gap-x-4">
+                                    <div className="col-span-2">
                                         <h4 className="text-sm font-medium text-muted-foreground">Nama Lengkap</h4>
-                                        <p className="text-md font-medium">{viewingMember.name}</p>
+                                        <p className="text-base font-medium">{viewingMember.name}</p>
                                     </div>
-                                    <div>
+                                    <div className="col-span-2">
                                         <h4 className="text-sm font-medium text-muted-foreground">Program Studi</h4>
-                                        <p className="text-md font-medium">{viewingMember.major ? `${viewingMember.major.degree ? viewingMember.major.degree + ' - ' : ''}${viewingMember.major.name_id}` : viewingMember.major_id}</p>
+                                        <p className="text-base font-medium">{viewingMember.major ? `${viewingMember.major.degree ? viewingMember.major.degree + ' - ' : ''}${viewingMember.major.name_id}` : viewingMember.major_id}</p>
                                     </div>
-                                    <div>
+                                    <div className="col-span-2">
                                         <h4 className="text-sm font-medium text-muted-foreground">Angkatan Tahun <b>{viewingMember.batch?.year}</b></h4>
-                                        <p className="text-md font-medium">{viewingMember.batch?.name_id}</p>
+                                        <p className="text-base font-medium">{viewingMember.batch?.name_id}</p>
                                     </div>
-                                    <div>
+                                    {viewingMember.type === 'Pengurus' && (
+                                        <div className="col-span-2">
+                                            <h4 className="text-sm font-medium text-muted-foreground">Jabatan</h4>
+                                            <p className="text-base font-medium">{viewingMember.position_id || '-'}</p>
+                                        </div>
+                                    )}
+                                    <div className={viewingMember.type === 'Pengurus' ? 'col-span-1' : 'col-span-2'}>
                                         <h4 className="text-sm font-medium text-muted-foreground">Status</h4>
-                                        <p className="text-md font-medium">
+                                        <p className="text-base font-medium flex items-center">
                                             {viewingMember.type === 'Pengurus' ? 'Kepengurusan' : 'Demisioner'}
-                                            <span className={`ml-2 text-xs px-2 py-0.5 rounded-full ${viewingMember.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                            <span className={`ml-2 text-xs leading-none px-2 py-0.5 rounded-full ${viewingMember.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                                                 {viewingMember.status}
                                             </span>
                                         </p>
                                     </div>
                                     {viewingMember.type === 'Pengurus' && (
-                                        <>
-                                            <div>
-                                                <h4 className="text-sm font-medium text-muted-foreground">Periode</h4>
-                                                <p className="text-md font-medium">{viewingMember.periode || '-'}</p>
-                                            </div>
-                                            <div>
-                                                <h4 className="text-sm font-medium text-muted-foreground">Jabatan</h4>
-                                                <p className="text-md font-medium">{viewingMember.position_id || '-'}</p>
-                                            </div>
-                                        </>
+                                        <div className="col-span-1 ml-3">
+                                            <h4 className="text-sm font-medium text-muted-foreground">Periode</h4>
+                                            <p className="text-base font-medium">{viewingMember.periode || '-'}</p>
+                                        </div>
                                     )}
+                                    <div className="col-span-2 pt-2 mt-1 border-t border-border/50">
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <h4 className="text-sm font-medium text-muted-foreground">WhatsApp</h4>
+                                                <p className="text-base font-medium">{viewingMember.whatsapp || '-'}</p>
+                                            </div>
+                                            <div className="ml-3">
+                                                <h4 className="text-sm font-medium text-muted-foreground">Instagram</h4>
+                                                <p className="text-base font-medium">{viewingMember.instagram || '-'}</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         )}

@@ -104,7 +104,7 @@ export function MemberPage() {
     return true;
   });
 
-  const alumniMembers = members.filter((m) => m.type === "Demisioner" || m.batch?.status === "Deactive");
+  const alumniMembers = members.filter((m) => m.batch?.status === "Deactive");
 
   // Get batches list for dropdown filter
   const uniqueBatches = (batches.length > 0
@@ -116,9 +116,11 @@ export function MemberPage() {
           nameId: member?.batch?.nameId || '',
           nameEn: member?.batch?.nameEn,
           year: member?.batch?.year || 0,
+          status: member?.batch?.status || 'Deactive',
         };
       })
   )
+    .filter(b => b.status === 'Deactive')
     .sort((a, b) => b.year - a.year)
     .map((b) => ({
       batch: b.id.toString(),
@@ -528,23 +530,23 @@ export function MemberPage() {
                 <p className="text-muted-foreground text-sm font-medium">{selectedMember.major?.degree ? `${selectedMember.major.degree} - ` : ''}{isEn ? (selectedMember.major?.nameEn || selectedMember.major?.nameId) : selectedMember.major?.nameId}</p>
               </div>
               
-              <div className="w-full mt-6 space-y-4 bg-muted/30 p-5 rounded-xl border shadow-inner">
+              <div className="w-full mt-4 space-y-2 bg-muted/30 p-4 rounded-xl border shadow-inner">
                 {selectedMember.batch?.status !== "Deactive" && (
                   <>
-                    <div className="flex items-center justify-between border-b border-border/50 pb-3">
+                    <div className="flex items-center justify-between border-b border-border/50 pb-2">
                       <span className="text-sm text-muted-foreground font-medium">{t("card.position")}</span>
                       <span className="text-sm font-semibold text-right max-w-[200px] break-words">
                         {isEn ? (selectedMember.positionEn || selectedMember.positionId) : selectedMember.positionId || '-'}
                       </span>
                     </div>
-                    <div className="flex items-center justify-between border-b border-border/50 pb-3">
+                    <div className="flex items-center justify-between border-b border-border/50 pb-2">
                       <span className="text-sm text-muted-foreground font-medium">{t("card.period")}</span>
                       <span className="text-sm font-semibold text-right">{selectedMember.periode || '-'}</span>
                     </div>
                   </>
                 )}
 
-                <div className="flex items-center justify-between border-b border-border/50 pb-3">
+                <div className="flex items-center justify-between border-b border-border/50 pb-2">
                   <span className="text-sm text-muted-foreground font-medium">{t("card.status")}</span>
                   <div className="flex gap-2 justify-end">
                     <Badge 
@@ -568,15 +570,26 @@ export function MemberPage() {
                   </div>
                 </div>
                 
-                <div className="flex flex-col gap-1 pt-1">
+                <div className="flex flex-col">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-muted-foreground font-medium">{t("card.batch")}</span>
                     <span className="text-sm font-bold text-right">{selectedMember.batch?.year}</span>
                   </div>
-                  <div className="text-right mt-1">
+                  <div className="text-right mt-0.5">
                     <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
                       {isEn ? (selectedMember.batch?.nameEn || selectedMember.batch?.nameId) : selectedMember.batch?.nameId}
                     </span>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-1.5 pt-2 border-t border-border/50">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground font-medium">WhatsApp</span>
+                    <span className="text-sm font-semibold text-right">{selectedMember.whatsapp || '-'}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground font-medium">Instagram</span>
+                    <span className="text-sm font-semibold text-right">{selectedMember.instagram || '-'}</span>
                   </div>
                 </div>
               </div>

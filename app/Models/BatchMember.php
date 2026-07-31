@@ -11,7 +11,8 @@ class BatchMember extends Model
         'batch_id', 'image', 'name',
         'major_id',
         'type', 'status', 'periode',
-        'position_id', 'position_en'
+        'position_id', 'position_en',
+        'instagram', 'whatsapp'
     ];
 
     public function batch()

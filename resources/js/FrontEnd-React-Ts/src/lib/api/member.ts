@@ -34,6 +34,8 @@ export interface Member {
   periode?: string;
   positionId?: string;
   positionEn?: string;
+  instagram?: string;
+  whatsapp?: string;
   batch?: Batch;
   major?: Major;
 }
@@ -111,6 +113,8 @@ export function normalizeMember(raw: unknown): Member {
     periode: toStringOrUndefined(item.periode),
     positionId: toStringOrUndefined(item.position_id) ?? toStringOrUndefined(item.positionId),
     positionEn: toStringOrUndefined(item.position_en) ?? toStringOrUndefined(item.positionEn),
+    instagram: toStringOrUndefined(item.instagram),
+    whatsapp: toStringOrUndefined(item.whatsapp),
     batch: normalizeBatch(item.batch),
     major: normalizeMajor(item.major),
   };

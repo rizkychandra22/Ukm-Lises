@@ -23,6 +23,8 @@ class MemberResource extends JsonResource
             'position_id' => $this->position_id,
             'position_en' => $this->position_en,
             'image' => $this->image,
+            'whatsapp' => $this->whatsapp,
+            'instagram' => $this->instagram,
             'batch_id' => $this->batch_id,
             'major_id' => $this->major_id,
             'batch' => new BatchResource($this->whenLoaded('batch')),
