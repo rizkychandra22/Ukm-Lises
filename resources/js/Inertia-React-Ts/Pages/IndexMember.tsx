@@ -1006,16 +1006,16 @@ export default function Index({ members, batches, majors }: Props) {
                                         setMemberData(data => {
                                             const newBatches = batches.filter(b => newType === 'Demisioner' ? b.status === 'Deactive' : b.status === 'Active');
                                             const isBatchValid = newBatches.some(b => b.id.toString() === data.batch_id);
+                                            
                                             return {
                                                 ...data,
                                                 type: newType,
                                                 status: newType === 'Demisioner' ? 'Deactive' : ('' as any),
-                                                position_id: '',
+                                                position_id: newType === 'Demisioner' ? '' : data.position_id,
                                                 batch_id: isBatchValid ? data.batch_id : ''
                                             };
                                         });
                                     }}
-                                    disabled={activeMemberTab === 'Demisioner'}
                                 >
                                     <SelectTrigger className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-1.5 text-[13px] ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
                                         <SelectValue placeholder="Pilih Tipe Anggota" />
@@ -1026,24 +1026,12 @@ export default function Index({ members, batches, majors }: Props) {
                                     </SelectContent>
                                 </Select>
                             </div>
-
+                            
                             <div>
                                 <label className="block text-sm font-medium mb-1">Angkatan</label>
                                 <Select
                                     value={memberData.batch_id || undefined}
-                                    onValueChange={val => {
-                                        const selectedId = val;
-                                        const targetB = batches.find(b => b.id.toString() === selectedId);
-                                        const isDeactive = targetB?.status === 'Deactive';
-                                        const isForcedDemisioner = activeMemberTab === 'Demisioner' || isDeactive;
-                                        setMemberData(data => ({
-                                            ...data,
-                                            batch_id: selectedId,
-                                            type: isForcedDemisioner ? 'Demisioner' : 'Pengurus',
-                                            status: isForcedDemisioner ? 'Deactive' : ('' as any),
-                                            position_id: ''
-                                        }));
-                                    }}
+                                    onValueChange={val => setMemberData('batch_id', val)}
                                     disabled={activeMemberTab === 'MyBatch'}
                                 >
                                     <SelectTrigger className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-1.5 text-[13px] ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
@@ -1053,8 +1041,9 @@ export default function Index({ members, batches, majors }: Props) {
                                         {batches
                                             .filter(b => memberData.type === 'Demisioner' ? b.status === 'Deactive' : b.status === 'Active')
                                             .map(b => (
-                                            <SelectItem key={b.id} value={b.id.toString()}>{b.year} - {b.name_id}</SelectItem>
-                                        ))}
+                                                <SelectItem key={b.id} value={b.id.toString()}>{b.year} - {b.name_id}</SelectItem>
+                                            ))
+                                        }
                                     </SelectContent>
                                 </Select>
                                 {memberErrors.batch_id && <span className="text-xs text-red-500">{memberErrors.batch_id}</span>}

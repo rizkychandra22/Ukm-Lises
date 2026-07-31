@@ -116,9 +116,11 @@ export function MemberPage() {
           nameId: member?.batch?.nameId || '',
           nameEn: member?.batch?.nameEn,
           year: member?.batch?.year || 0,
+          status: member?.batch?.status || 'Deactive',
         };
       })
   )
+    .filter(b => b.status === 'Deactive')
     .sort((a, b) => b.year - a.year)
     .map((b) => ({
       batch: b.id.toString(),
