@@ -1001,35 +1001,38 @@ export default function Index({ members, batches, majors }: Props) {
                                 </div>
                             </div>
                             
-                            <div>
-                                <label className="block text-sm font-medium mb-1">Tipe Anggota</label>
-                                <Select
-                                    value={memberData.type || undefined}
-                                    onValueChange={val => {
-                                        const newType = val as 'Pengurus' | 'Demisioner';
-                                        setMemberData(data => {
-                                            const newBatches = batches.filter(b => newType === 'Demisioner' ? b.status === 'Deactive' : b.status === 'Active');
-                                            const isBatchValid = newBatches.some(b => b.id.toString() === data.batch_id);
-                                            
-                                            return {
-                                                ...data,
-                                                type: newType,
-                                                status: newType === 'Demisioner' ? 'Deactive' : ('' as any),
-                                                position_id: newType === 'Demisioner' ? '' : data.position_id,
-                                                batch_id: isBatchValid ? data.batch_id : ''
-                                            };
-                                        });
-                                    }}
-                                >
-                                    <SelectTrigger className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-1.5 text-[13px] ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
-                                        <SelectValue placeholder="Pilih Tipe Anggota" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="Pengurus">Kepengurusan</SelectItem>
-                                        <SelectItem value="Demisioner">Demisioner</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
+                            {!(hasRole('User') && userBatch?.status === 'Deactive') && (
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Tipe Anggota</label>
+                                    <Select
+                                        value={memberData.type || undefined}
+                                        disabled={hasRole('User')}
+                                        onValueChange={val => {
+                                            const newType = val as 'Pengurus' | 'Demisioner';
+                                            setMemberData(data => {
+                                                const newBatches = batches.filter(b => newType === 'Demisioner' ? b.status === 'Deactive' : b.status === 'Active');
+                                                const isBatchValid = newBatches.some(b => b.id.toString() === data.batch_id);
+                                                
+                                                return {
+                                                    ...data,
+                                                    type: newType,
+                                                    status: newType === 'Demisioner' ? 'Deactive' : ('' as any),
+                                                    position_id: newType === 'Demisioner' ? '' : data.position_id,
+                                                    batch_id: isBatchValid ? data.batch_id : ''
+                                                };
+                                            });
+                                        }}
+                                    >
+                                        <SelectTrigger className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-1.5 text-[13px] ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                            <SelectValue placeholder="Pilih Tipe Anggota" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="Pengurus">Kepengurusan</SelectItem>
+                                            <SelectItem value="Demisioner">Demisioner</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            )}
                             
                             <div>
                                 <label className="block text-sm font-medium mb-1">Angkatan</label>
