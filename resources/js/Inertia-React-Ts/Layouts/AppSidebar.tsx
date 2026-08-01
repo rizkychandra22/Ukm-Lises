@@ -37,9 +37,10 @@ import {
 import {
     LayoutDashboard,
     Users,
+    LucideLink,
+    ImageIcon,
     Settings,
     LogOut,
-    LucideLink,
 } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import LogoDark from '@/assets/logo-bg-dark.png';
@@ -117,7 +118,10 @@ export function AppSidebar() {
             <SidebarContent className="px-2 py-2 no-scrollbar">
                 <SidebarGroup>
                     <SidebarGroupLabel className="px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">
-                        Beranda
+                        {hasRole(['Developer', 'Admin', 'User']) && auth.user?.roles?.[0]
+                            ? `Beranda ${auth.user.roles[0]}`
+                            : null
+                        }
                     </SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
@@ -148,15 +152,12 @@ export function AppSidebar() {
 
                 <SidebarGroup>
                     <SidebarGroupLabel className="px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70 mt-2">
-                        {hasRole(['Developer', 'Admin', 'User']) && auth.user?.roles?.[0]
-                            ? `Menu ${auth.user.roles[0]}`
-                            : null
-                        }
+                        Menu Utama
                     </SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
 
-                            {/* Main Menu Role User */}
+                            {/* Main Menu Role User, Admin & Developer */}
                             {hasRole(['Developer']) && (
                                 <SidebarMenuItem>
                                     <SidebarMenuButton asChild isActive={isActive(route('list-member.index'))} className="rounded-xl transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium">
@@ -189,7 +190,45 @@ export function AppSidebar() {
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
                             )}
+
                         </SidebarMenu>
+                    </SidebarGroupContent>
+                </SidebarGroup>
+
+                <SidebarGroup>
+                    <SidebarGroupLabel className="px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70 mt-2">
+                        Menu Website
+                    </SidebarGroupLabel>
+                    <SidebarGroupContent>
+                        {/* Main Menu Role Admin & Developer */}
+                        {hasRole(['Admin', 'Developer']) && (
+                            <SidebarMenu>
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton asChild isActive={isActive(route('gallery.index'))} className="rounded-xl transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium">
+                                        <Link href={route('gallery.index')}>
+                                            <ImageIcon className="w-[18px] h-[18px]" />
+                                            <span className="text-[13px]">Data Galeri</span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                                {/* <SidebarMenuItem>
+                                    <SidebarMenuButton asChild isActive={isActive(route('news.index'))} className="rounded-xl transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium">
+                                        <Link href={route('news.index')}>
+                                            <Newspaper className="w-[18px] h-[18px]" />
+                                            <span className="text-[13px]">Data Berita</span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton asChild isActive={isActive(route('event.index'))} className="rounded-xl transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium">
+                                        <Link href={route('event.index')}>
+                                            <Calendar className="w-[18px] h-[18px]" />
+                                            <span className="text-[13px]">Data Acara</span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem> */}
+                            </SidebarMenu>
+                        )}
                     </SidebarGroupContent>
                 </SidebarGroup>
             </SidebarContent>

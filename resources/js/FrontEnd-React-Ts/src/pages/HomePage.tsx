@@ -19,10 +19,31 @@ import { useTranslation } from "@/i18n";
 import { usePosts } from "@/constants/news";
 import { SEOHead } from "@/components/SEOHead";
 import { ScrollTop } from "@/components/scroll-top";
+import { useState, useEffect, useRef } from "react";
+import { getGalleries, Gallery } from "@/lib/api/gallery";
+import Autoplay from "embla-carousel-autoplay";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function HomePage() {
-  const { t } = useTranslation("HomePage");
+  const { t, i18n } = useTranslation("HomePage");
+  const isEn = i18n.language === 'en';
   const posts = usePosts();
+  const plugin = useRef(Autoplay({ delay: 4000, stopOnInteraction: true }));
+  
+  const [sliderImages, setSliderImages] = useState<Gallery[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchGalleries = async () => {
+      setIsLoading(true);
+      const data = await getGalleries();
+      const activeData = data.filter(g => g.is_active).slice(0, 3);
+      setSliderImages(activeData);
+      setIsLoading(false);
+    };
+    fetchGalleries();
+  }, []);
 
   return (
     <>
@@ -153,23 +174,51 @@ export function HomePage() {
             {t("section_momen.link")} <ArrowRight className="ml-1 h-4 w-4" />
           </Link>
         </div>
-        <div className="mt-10 grid gap-4 md:grid-cols-3">
-          {[g1, g2, g3].map((src, index) => (
-            <div
-              key={index}
-              className="group relative aspect-[4/5] overflow-hidden rounded-2xl border border-border/60"
-            >
-              <img
-                src={src}
-                alt={`Momen ${index + 1}`}
-                width={800}
-                height={800}
-                loading="lazy"
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+        <div className="mt-10">
+          {isLoading ? (
+            <div className="grid gap-4 md:grid-cols-3">
+               {[1,2,3].map(i => <Skeleton key={i} className="aspect-[4/5] rounded-2xl w-full" />)}
             </div>
-          ))}
+          ) : sliderImages.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 text-muted-foreground border border-dashed rounded-2xl">
+               <p>Belum ada momen galeri.</p>
+            </div>
+          ) : (
+             <Carousel
+               plugins={[plugin.current]}
+               className="w-full"
+               opts={{ align: "start", loop: true }}
+             >
+               <CarouselContent>
+                 {sliderImages.map((item) => {
+                   const title = isEn ? item.title_en : item.title_id;
+                   const desc = isEn ? item.desc_en : item.desc_id;
+                   
+                   return (
+                     <CarouselItem key={item.id} className="md:basis-1/2 lg:basis-1/3">
+                       <div className="group relative aspect-[4/5] overflow-hidden rounded-2xl border border-border/60">
+                         <img
+                           src={`/storage/${item.image}`}
+                           alt={title}
+                           loading="lazy"
+                           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                         />
+                         <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+                         <div className="absolute bottom-4 left-4 right-4 translate-y-3 opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">
+                           <div className="font-medium text-primary text-sm md:text-base">{title}</div>
+                           {desc && <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{desc}</p>}
+                         </div>
+                       </div>
+                     </CarouselItem>
+                   );
+                 })}
+               </CarouselContent>
+               <div className="hidden md:block">
+                 <CarouselPrevious className="-left-4" />
+                 <CarouselNext className="-right-4" />
+               </div>
+             </Carousel>
+          )}
         </div>
       </section>
 

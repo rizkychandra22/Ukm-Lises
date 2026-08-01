@@ -19,3 +19,6 @@ Route::get('/user', function (Request $request) {
 // Endpoint Get Data Anggota & Angkatan Public
 Route::get('/members', [MemberApiController::class, 'index']);
 Route::get('/batches', [MemberApiController::class, 'batches']);
+
+// Endpoint Content Public
+Route::get('/galleries', [\App\Http\Controllers\Api\ContentController::class, 'galleries']);

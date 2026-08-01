@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Head, useForm, usePage } from '@inertiajs/react';
 import { route } from '../Lib/Route';
-import AdminLayout from '../Layouts/AppLayout';
+import DashboardLayout from '../Layouts/AppLayout';
 import { Search, Plus, Edit, Trash2, ArrowUpDown, Eye, Info } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -199,7 +199,7 @@ export default function Index({ members, batches, majors }: Props) {
         const targetBatch = batches.find(b => b.id.toString() === defaultBatchId);
 
         const isDeactiveBatch = targetBatch?.status === 'Deactive';
-        
+
         // Prevent pre-selecting an Active batch when adding a member in the Demisioner tab
         const initialBatchId = (activeMemberTab === 'Demisioner' && !isDeactiveBatch) ? '' : defaultBatchId;
 
@@ -469,13 +469,13 @@ export default function Index({ members, batches, majors }: Props) {
 
     // --- UI Render ---
     return (
-        <AdminLayout>
+        <DashboardLayout>
             <Head title="Kelola Anggota & Angkatan" />
 
             <div className="flex flex-col gap-4 max-w-7xl mx-auto pb-12 relative">
                 {/* Header Section */}
                 <div>
-                    <h2 className="text-2xl font-bold text-foreground font-display tracking-tight">Manajemen Data Anggota</h2>
+                    <h2 className="text-2xl font-bold text-foreground font-display tracking-tight">Manajemen Keanggotaan</h2>
                     <p className="text-sm text-muted-foreground mt-1">
                         Kelola data anggota dan data angkatan
                     </p>
@@ -602,10 +602,10 @@ export default function Index({ members, batches, majors }: Props) {
                             if (activeMemberTab === 'MyBatch') return hasRole('User');
                             return hasRole(['Developer', 'Admin']);
                         })() && (
-                            <Button size="sm" className="h-8 px-3.5 rounded-lg text-[13px] font-medium w-full sm:w-auto shrink-0 shadow-sm" onClick={activeTab === 'anggota' ? handleAddMember : handleAddBatch}>
-                                <Plus className="mr-1.5 h-3.5 w-3.5" /> Tambah {activeTab === 'anggota' ? 'Anggota' : 'Angkatan'}
-                            </Button>
-                        )}
+                                <Button size="sm" className="h-8 px-3.5 rounded-lg text-[13px] font-medium w-full sm:w-auto shrink-0 shadow-sm" onClick={activeTab === 'anggota' ? handleAddMember : handleAddBatch}>
+                                    <Plus className="h-3.5 w-3.5" /> Tambah {activeTab === 'anggota' ? 'Anggota' : 'Angkatan'}
+                                </Button>
+                            )}
                     </div>
                 </div>
 
@@ -688,7 +688,7 @@ export default function Index({ members, batches, majors }: Props) {
                                                 )}
                                                 <TableCell>{member.batch?.year}</TableCell>
                                                 <TableCell>{member.batch?.name_id}</TableCell>
-                                                 <TableCell className="text-right">
+                                                <TableCell className="text-right">
                                                     <div className="flex justify-end gap-2 items-center">
                                                         <Button className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg h-8 w-8 p-0" size="sm" onClick={() => { setViewingMember(member); setIsViewSheetOpen(true); }} title="Lihat Detail">
                                                             <Eye className="h-4 w-4" />
@@ -705,10 +705,10 @@ export default function Index({ members, batches, majors }: Props) {
                                                             }
                                                             return false;
                                                         })() && (
-                                                            <Button className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg h-8 w-8 p-0" size="sm" onClick={() => handleEditMember(member)} title="Edit Anggota">
-                                                                <Edit className="h-4 w-4" />
-                                                            </Button>
-                                                        )}
+                                                                <Button className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg h-8 w-8 p-0" size="sm" onClick={() => handleEditMember(member)} title="Edit Anggota">
+                                                                    <Edit className="h-4 w-4" />
+                                                                </Button>
+                                                            )}
                                                         {(() => {
                                                             if (hasRole('Developer')) return true;
                                                             if (hasRole('Admin')) {
@@ -721,10 +721,10 @@ export default function Index({ members, batches, majors }: Props) {
                                                             }
                                                             return false;
                                                         })() && (
-                                                            <Button variant="destructive" size="sm" className="rounded-lg h-8 w-8 p-0" onClick={() => handleDeleteMember(member.id)} title="Hapus Anggota">
-                                                                <Trash2 className="h-4 w-4" />
-                                                            </Button>
-                                                        )}
+                                                                <Button variant="destructive" size="sm" className="rounded-lg h-8 w-8 p-0" onClick={() => handleDeleteMember(member.id)} title="Hapus Anggota">
+                                                                    <Trash2 className="h-4 w-4" />
+                                                                </Button>
+                                                            )}
                                                     </div>
                                                 </TableCell>
                                             </TableRow>
@@ -854,22 +854,23 @@ export default function Index({ members, batches, majors }: Props) {
                             </div>
 
                             {!editingBatch && (
-                                <div className="pt-4 mt-4 border-t border-border/50">
                                     <div className="flex items-start gap-2 bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 p-3 rounded-md">
                                         <Info className="h-4 w-4 mt-0.5 shrink-0" />
                                         <p className="text-xs leading-relaxed">
                                             Pemberitahuan: Sistem akan otomatis membuatkan akun akses untuk angkatan ini dengan Username <span className="font-semibold">lises{batchData.year || '202X'}</span> dan Password bawaan: <span className="font-semibold">password</span>
                                         </p>
                                     </div>
-                                </div>
                             )}
 
                             {/* Jika sedang edit, tampilkan opsional ubah kredensial */}
                             {editingBatch && (
-                                <div className="pt-4 mt-4 border-t border-border/50 space-y-4">
-                                    <p className="text-xs text-muted-foreground">
-                                        Opsional: Isi kolom di bawah jika ingin mengubah akses akun untuk angkatan ini. (Biarkan kosong jika tidak diubah)
-                                    </p>
+                                <>
+                                    <div className="flex items-start gap-2 bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 p-3 rounded-md">
+                                        <Info className="h-4 w-4 mt-0.5 shrink-0" />
+                                        <p className="text-xs leading-relaxed">
+                                            Opsional: Isi kolom di bawah jika ingin mengubah akses akun untuk angkatan ini. (Biarkan kosong jika tidak diubah)
+                                        </p>
+                                    </div>
                                     <div>
                                         <label className="block text-sm font-medium mb-1">Username Baru</label>
                                         <Input
@@ -889,10 +890,10 @@ export default function Index({ members, batches, majors }: Props) {
                                             onChange={e => setBatchData('password', e.target.value)}
                                         />
                                     </div>
-                                </div>
+                                </>
                             )}
 
-                            <div className="pt-4 flex justify-end gap-2">
+                            <div className="flex justify-end gap-2">
                                 <Button
                                     type="button"
                                     variant="outline"
@@ -1000,7 +1001,7 @@ export default function Index({ members, batches, majors }: Props) {
                                     {memberErrors.major_id && <span className="text-xs text-red-500 mt-1 block">{memberErrors.major_id}</span>}
                                 </div>
                             </div>
-                            
+
                             {!(hasRole('User') && userBatch?.status === 'Deactive') && (
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Tipe Anggota</label>
@@ -1012,7 +1013,7 @@ export default function Index({ members, batches, majors }: Props) {
                                             setMemberData(data => {
                                                 const newBatches = batches.filter(b => newType === 'Demisioner' ? b.status === 'Deactive' : b.status === 'Active');
                                                 const isBatchValid = newBatches.some(b => b.id.toString() === data.batch_id);
-                                                
+
                                                 return {
                                                     ...data,
                                                     type: newType,
@@ -1033,7 +1034,7 @@ export default function Index({ members, batches, majors }: Props) {
                                     </Select>
                                 </div>
                             )}
-                            
+
                             <div>
                                 <label className="block text-sm font-medium mb-1">Angkatan</label>
                                 <Select
@@ -1150,7 +1151,7 @@ export default function Index({ members, batches, majors }: Props) {
                                     </>
                                 );
                             })()}
-                            
+
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-sm font-medium mb-1">No. WhatsApp (Opsional)</label>
@@ -1283,6 +1284,6 @@ export default function Index({ members, batches, majors }: Props) {
                     </SheetContent>
                 </Sheet>
             </div>
-        </AdminLayout>
+        </DashboardLayout>
     );
 }
