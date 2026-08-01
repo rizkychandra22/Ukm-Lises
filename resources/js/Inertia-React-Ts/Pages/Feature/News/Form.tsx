@@ -193,7 +193,7 @@ export default function FormNews({ news }: NewsProps) {
                             <Button type="button" variant="outline" size="sm" className="h-8 px-3.5 rounded-lg text-[13px] font-medium" onClick={() => router.visit(route('news.index'))}>
                                 Batal
                             </Button>
-                            <Button type="submit" className="w-full sm:w-auto shrink-0 inline-flex items-center justify-center h-8 px-3.5 rounded-lg text-[13px] font-medium shadow-sm bg-primary text-primary-foreground hover:bg-primary/90" disabled={processing}>
+                            <Button type="submit" size="sm" className="h-8 px-3.5 rounded-lg text-[13px] font-medium shadow-sm bg-primary text-primary-foreground hover:bg-primary/90" disabled={processing}>
                                 {processing ? (
                                     <><Loader2 className="w-4 h-4 animate-spin" /> Menyimpan...</>
                                 ) : (

@@ -2,5 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /dashboard/
 Disallow: /api/
+Disallow: /auth/
 
-Sitemap: /sitemap.xml
+Sitemap: http:localhost:8000/sitemap.xml

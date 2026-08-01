@@ -364,7 +364,7 @@ export default function IndexGallery({ galleries }: PageProps) {
                             </div>
                         </div>
 
-                        <div className="flex justify-end gap-3 pt-4 border-t mt-6">
+                        <div className="flex justify-end gap-3 pt-5 mb-2 border-t mt-2">
                             <Button type="button" variant="outline" size="sm" className="h-8 px-3.5 rounded-lg text-[13px] font-medium" onClick={() => setIsSheetOpen(false)}>Batal</Button>
                             <Button type="submit" size="sm" className="h-8 px-3.5 rounded-lg text-[13px] font-medium" disabled={processing}>{processing ? 'Menyimpan...' : 'Simpan'}</Button>
                         </div>

@@ -893,7 +893,7 @@ export default function Index({ members, batches, majors }: Props) {
                                 </>
                             )}
 
-                            <div className="flex justify-end gap-2">
+                            <div className="flex justify-end gap-2 pt-3 mb-2">
                                 <Button
                                     type="button"
                                     variant="outline"
@@ -1183,7 +1183,7 @@ export default function Index({ members, batches, majors }: Props) {
                                 {memberErrors.image && <span className="text-xs text-red-500">{memberErrors.image}</span>}
                             </div>
 
-                            <div className="flex justify-end gap-2 pt-4">
+                            <div className="flex justify-end gap-2 pt-3 mb-2">
                                 <Button type="button" variant="outline" size="sm" className="h-8 px-3.5 rounded-lg text-[13px] font-medium" onClick={handleCancelEditMember}>Batal</Button>
                                 <Button type="submit" size="sm" className="h-8 px-3.5 rounded-lg text-[13px] font-medium" disabled={processingMember}>Simpan</Button>
                             </div>
