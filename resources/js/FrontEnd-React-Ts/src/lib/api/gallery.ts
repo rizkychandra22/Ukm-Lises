@@ -1,4 +1,4 @@
-import axios from 'axios';
+import apiClient from '../api-client';
 
 export interface Gallery {
     id: number;
@@ -18,8 +18,8 @@ export interface Gallery {
 
 export const getGalleries = async (): Promise<Gallery[]> => {
     try {
-        const response = await axios.get('/galleries');
-        return response.data;
+        const response = await apiClient.get('/galleries');
+        return response.data?.data || response.data; // Handle both wrapped and unwrapped arrays
     } catch (error) {
         console.error('Error fetching galleries:', error);
         return [];

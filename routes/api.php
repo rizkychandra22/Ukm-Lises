@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ContentController;
 use App\Http\Controllers\Api\MemberApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,4 +22,4 @@ Route::get('/members', [MemberApiController::class, 'index']);
 Route::get('/batches', [MemberApiController::class, 'batches']);
 
 // Endpoint Content Public
-Route::get('/galleries', [\App\Http\Controllers\Api\ContentController::class, 'galleries']);
+Route::get('/galleries', [ContentController::class, 'galleries']);
