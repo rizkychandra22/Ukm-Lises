@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('pay_orders', function (Blueprint $table) {
             $table->id();
+            $table->string('order_code')->unique();
             $table->string('name');
             $table->string('email');
             $table->string('phone');
             $table->foreignId('event_id')->constrained()->onDelete('cascade');
-            $table->string('qty');
-            $table->decimal('price', 15, 2);
+            $table->integer('qty');
+            $table->decimal('total_price', 15, 2);
             $table->text('notes')->nullable();
             $table->string('payment_method')->nullable();
             $table->string('payment_proof')->nullable();

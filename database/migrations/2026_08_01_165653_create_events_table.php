@@ -14,15 +14,18 @@ return new class extends Migration
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->string('title_id');
-            $table->string('title_en');
+            $table->string('title_en')->nullable();
+            $table->string('slug')->unique();
+            $table->string('image')->nullable();
             $table->text('summary_id')->nullable();
             $table->text('summary_en')->nullable();
             $table->enum('type', ['Exclusive', 'Non-Exclusive']);
             $table->dateTime('date');
             $table->string('location_id');
-            $table->string('location_en');
+            $table->string('location_en')->nullable();
             $table->decimal('price', 15, 2)->nullable();
             $table->integer('ticket')->nullable();
+            $table->enum('status', ['draft', 'published', 'cancelled', 'completed'])->default('draft');
             $table->timestamps();
         });
     }

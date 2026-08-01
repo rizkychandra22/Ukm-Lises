@@ -24,4 +24,12 @@ class BatchMember extends Model
     {
         return $this->belongsTo(Major::class);
     }
+
+    /**
+     * Rekening pembayaran milik anggota (bendahara).
+     */
+    public function payAccounts()
+    {
+        return $this->hasMany(PayAccount::class);
+    }
 }
