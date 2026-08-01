@@ -263,11 +263,9 @@ export default function IndexGallery({ galleries }: PageProps) {
                                         </TableCell>
                                         <TableCell>
                                             <div className="font-medium text-sm">{item.title_id}</div>
-                                            <div className="text-xs text-muted-foreground">{item.title_en}</div>
                                         </TableCell>
                                         <TableCell>
                                             <div className="text-sm font-medium line-clamp-2">{item.desc_id || '-'}</div>
-                                            <div className="text-xs text-muted-foreground line-clamp-2">{item.desc_en || '-'}</div>
                                         </TableCell>
                                         <TableCell>
                                             <div className="flex flex-col gap-1 items-start">

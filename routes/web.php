@@ -6,6 +6,7 @@ use App\Http\Controllers\ListMemberController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\NewsController;
 use App\Http\Controllers\SitemapController;
 
 // -------------------------------------------------------------
@@ -46,13 +47,14 @@ Route::middleware(['access:Developer,Admin,User'])->prefix('dashboard')->group(f
         Route::put('/members/{batchMember}', [ListMemberController::class, 'updateMember'])->name('members.update');
         Route::delete('/members/{batchMember}', [ListMemberController::class, 'destroyMember'])->name('members.destroy');
     });
+});
 
-    // ---------------------------------------------------------
-    // MENU WEBSITE (GALLERY, NEWS, EVENT) - DEVELOPER & ADMIN ONLY
-    // ---------------------------------------------------------
-    Route::middleware(['access:Developer,Admin'])->group(function () {
-        Route::resource('gallery', GalleryController::class)->except(['create', 'show', 'edit']);
-    });
+// ---------------------------------------------------------
+// MENU WEBSITE (GALLERY, NEWS, EVENT) - DEVELOPER & ADMIN ONLY
+// ---------------------------------------------------------
+Route::middleware(['access:Developer,Admin'])->prefix('dashboard')->group(function () {
+    Route::resource('gallery', GalleryController::class)->except(['create', 'show', 'edit']);
+    Route::resource('news', NewsController::class)->except(['show']);
 });
 
 // -------------------------------------------------------------

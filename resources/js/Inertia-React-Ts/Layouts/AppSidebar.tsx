@@ -41,6 +41,7 @@ import {
     ImageIcon,
     Settings,
     LogOut,
+    Newspaper,
 } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import LogoDark from '@/assets/logo-bg-dark.png';
@@ -118,10 +119,7 @@ export function AppSidebar() {
             <SidebarContent className="px-2 py-2 no-scrollbar">
                 <SidebarGroup>
                     <SidebarGroupLabel className="px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">
-                        {hasRole(['Developer', 'Admin', 'User']) && auth.user?.roles?.[0]
-                            ? `Beranda ${auth.user.roles[0]}`
-                            : null
-                        }
+                        Beranda
                     </SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
@@ -137,25 +135,6 @@ export function AppSidebar() {
                                     </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
-                            <SidebarMenuItem>
-                                <SidebarMenuButton
-                                    className="rounded-xl transition-all"
-                                    onClick={() => window.open('/', '_blank')}
-                                >
-                                    <LucideLink className="w-[18px] h-[18px]" />
-                                    <span className="text-[13px]">Lihat Website</span>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-                        </SidebarMenu>
-                    </SidebarGroupContent>
-                </SidebarGroup>
-
-                <SidebarGroup>
-                    <SidebarGroupLabel className="px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70 mt-2">
-                        Menu Utama
-                    </SidebarGroupLabel>
-                    <SidebarGroupContent>
-                        <SidebarMenu>
 
                             {/* Main Menu Role User, Admin & Developer */}
                             {hasRole(['Developer']) && (
@@ -191,13 +170,25 @@ export function AppSidebar() {
                                 </SidebarMenuItem>
                             )}
 
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    className="rounded-xl transition-all"
+                                    onClick={() => window.open('/', '_blank')}
+                                >
+                                    <LucideLink className="w-[18px] h-[18px]" />
+                                    <span className="text-[13px]">Lihat Website</span>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
 
                 <SidebarGroup>
                     <SidebarGroupLabel className="px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70 mt-2">
-                        Menu Website
+                        {hasRole(['Developer', 'Admin', 'User']) && auth.user?.roles?.[0]
+                            ? `Menu ${auth.user.roles[0]}`
+                            : null
+                        }
                     </SidebarGroupLabel>
                     <SidebarGroupContent>
                         {/* Main Menu Role Admin & Developer */}
@@ -211,7 +202,7 @@ export function AppSidebar() {
                                         </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
-                                {/* <SidebarMenuItem>
+                                <SidebarMenuItem>
                                     <SidebarMenuButton asChild isActive={isActive(route('news.index'))} className="rounded-xl transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium">
                                         <Link href={route('news.index')}>
                                             <Newspaper className="w-[18px] h-[18px]" />
@@ -219,7 +210,7 @@ export function AppSidebar() {
                                         </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
-                                <SidebarMenuItem>
+                                {/* <SidebarMenuItem>
                                     <SidebarMenuButton asChild isActive={isActive(route('event.index'))} className="rounded-xl transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium">
                                         <Link href={route('event.index')}>
                                             <Calendar className="w-[18px] h-[18px]" />

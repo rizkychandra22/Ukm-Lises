@@ -48,7 +48,7 @@ export function GalleryPage() {
           ) : galleries.length === 0 ? (
             <div className="col-span-full flex flex-col items-center justify-center py-20 text-muted-foreground border border-dashed rounded-2xl">
                 <ImageIcon className="w-12 h-12 mb-4 opacity-20" />
-                <p>Belum ada galeri yang diunggah.</p>
+                <p>{t("no_upload")}</p>
             </div>
           ) : (
              galleries.map((item) => {
