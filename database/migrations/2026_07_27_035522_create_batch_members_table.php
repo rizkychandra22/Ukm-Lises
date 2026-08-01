@@ -22,8 +22,8 @@ return new class extends Migration
             $table->string('periode')->nullable();
             $table->string('position_id')->nullable();
             $table->string('position_en')->nullable();
-            $table->text('instagram')->nullable();
-            $table->text('whatsapp')->nullable();
+            $table->string('instagram')->nullable();
+            $table->string('whatsapp')->nullable();
             $table->timestamps();
         });
     }
