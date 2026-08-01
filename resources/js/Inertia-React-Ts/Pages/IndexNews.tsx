@@ -82,7 +82,7 @@ export default function IndexNews({ news }: PageProps) {
     };
 
     const filteredAndSortedNews = useMemo(() => {
-        let result = news.data.filter(n => {
+        const result = news.data.filter(n => {
             const matchesSearch = !searchQuery || 
                 (n.title_id || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
                 (n.summary_id || "").toLowerCase().includes(searchQuery.toLowerCase());
@@ -94,8 +94,8 @@ export default function IndexNews({ news }: PageProps) {
 
         if (sortConfig) {
             result.sort((a, b) => {
-                let aVal = String(a[sortConfig.key] || "");
-                let bVal = String(b[sortConfig.key] || "");
+                const aVal = String(a[sortConfig.key] || "");
+                const bVal = String(b[sortConfig.key] || "");
 
                 if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
                 if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;

@@ -89,7 +89,7 @@ export default function IndexGallery({ galleries }: PageProps) {
     };
 
     const filteredAndSortedGalleries = useMemo(() => {
-        let result = galleries.data.filter(g => {
+        const result = galleries.data.filter(g => {
             if (!searchQuery) return true;
             const q = searchQuery.toLowerCase();
             return (g.title_id || "").toLowerCase().includes(q) ||
@@ -100,18 +100,18 @@ export default function IndexGallery({ galleries }: PageProps) {
 
         if (sortConfig) {
             result.sort((a, b) => {
-                let aVal = "";
-                let bVal = "";
-                if (sortConfig.key === 'title_id') {
-                    aVal = a.title_id || "";
-                    bVal = b.title_id || "";
-                } else if (sortConfig.key === 'desc_id') {
-                    aVal = a.desc_id || "";
-                    bVal = b.desc_id || "";
-                } else if (sortConfig.key === 'status') {
-                    aVal = (a.is_active ? "1" : "0") + (a.is_index ? "1" : "0");
-                    bVal = (b.is_active ? "1" : "0") + (b.is_index ? "1" : "0");
-                }
+                const aVal = (() => {
+                    if (sortConfig.key === 'title_id') return a.title_id || "";
+                    if (sortConfig.key === 'desc_id') return a.desc_id || "";
+                    if (sortConfig.key === 'status') return (a.is_active ? "1" : "0") + (a.is_index ? "1" : "0");
+                    return "";
+                })();
+                const bVal = (() => {
+                    if (sortConfig.key === 'title_id') return b.title_id || "";
+                    if (sortConfig.key === 'desc_id') return b.desc_id || "";
+                    if (sortConfig.key === 'status') return (b.is_active ? "1" : "0") + (b.is_index ? "1" : "0");
+                    return "";
+                })();
 
                 if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
                 if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
