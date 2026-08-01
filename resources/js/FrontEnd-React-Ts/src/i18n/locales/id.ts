@@ -86,7 +86,8 @@ export default {
     title_t1: "Bingkai",
     title_y1: "Panggung",
     title_t2: "latihan kami.",
-    desc: "Kumpulan dokumentasi visual dari pementasan, workshop, dan momen kebersamaan Lises Asmarandana."
+    desc: "Kumpulan dokumentasi visual dari pementasan, workshop, dan momen kebersamaan Lises Asmarandana.",
+    no_upload: "Belum ada galeri yang diunggah."
   },
 
   NewsPage: {

@@ -86,7 +86,8 @@ export default {
     title_t1: "Frames of",
     title_y1: "Stage",
     title_t2: "practice moments.",
-    desc: "A visual documentation collection of performances, workshops, and togetherness moments of Lises Asmarandana."
+    desc: "A visual documentation collection of performances, workshops, and togetherness moments of Lises Asmarandana.",
+    no_upload: "No gallery has been uploaded yet."
   },
 
   NewsPage: {
