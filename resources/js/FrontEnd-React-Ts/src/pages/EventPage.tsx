@@ -1,10 +1,10 @@
-import { CalendarDays, MapPin, Sparkles, Ticket } from "lucide-react";
+import { CalendarDays, MapPin, Search, Sparkles, Ticket } from "lucide-react";
 import g1 from "@/assets/gallery-1.jpg";
 import g2 from "@/assets/gallery-2.jpg";
 import g3 from "@/assets/gallery-3.jpg";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -14,6 +14,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useTranslation } from "@/i18n";
 import { SEOHead } from "@/components/SEOHead";
 import { ScrollTop } from "@/components/scroll-top";
@@ -21,6 +22,7 @@ import { ScrollTop } from "@/components/scroll-top";
 export function EventPage() {
   const [selectedEvent, setSelectedEvent] = useState<number | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const { t } = useTranslation("EventPage");
 
   const events = [
@@ -59,6 +61,22 @@ export function EventPage() {
     },
   ];
 
+  const filteredEvents = useMemo(() => {
+    const normalized = searchQuery.trim().toLowerCase();
+
+    if (!normalized) {
+      return events;
+    }
+
+    return events.filter((event) => {
+      const searchable = [event.title, event.location, event.excerpt, event.type, event.date]
+        .join(" ")
+        .toLowerCase();
+
+      return searchable.includes(normalized);
+    });
+  }, [events, searchQuery]);
+
   const handleBuyTicket = (eventId: number) => {
     setSelectedEvent(eventId);
     setIsDialogOpen(true);
@@ -70,18 +88,33 @@ export function EventPage() {
     <>
       <SEOHead pageKey="events" />
       <section className="mx-auto max-w-7xl px-6 pb-12 pt-12 md:pb-16 md:pt-16">
-        <Badge
-          variant="outline"
-          className="w-fit gap-2 rounded-full border-primary/40 bg-background/40 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-primary backdrop-blur"
-        >
-          <Sparkles className="h-3.5 w-3.5" /> {t("heading")}
-        </Badge>
-        <h1 className="mt-4 max-w-3xl font-display text-3xl font-bold leading-[1.15] md:text-4xl">
-          {t("title_t1")} <span className="text-gradient-gold">{t("title_y1")}</span> {t("title_t2")}
-        </h1>
+        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <Badge
+              variant="outline"
+              className="w-fit gap-2 rounded-full border-primary/40 bg-background/40 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-primary backdrop-blur"
+            >
+              <Sparkles className="h-3.5 w-3.5" /> {t("heading")}
+            </Badge>
+            <h1 className="mt-4 max-w-3xl font-display text-3xl font-bold leading-[1.15] md:text-4xl">
+              {t("title_t1")} <span className="text-gradient-gold">{t("title_y1")}</span> {t("title_t2")}
+            </h1>
+          </div>
+
+          <div className="relative w-full md:w-80">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" />
+            <Input
+              placeholder={t("search_placeholder")}
+              className="pl-10"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+        </div>
 
         <div className="mt-14 grid gap-8 md:grid-cols-3">
-          {events.map((event) => (
+          {filteredEvents.length > 0 ? (
+            filteredEvents.map((event) => (
             <Card
               key={event.id}
               className="group flex flex-col overflow-hidden rounded-3xl border-border/60 bg-card transition-colors hover:border-primary/60"
@@ -134,7 +167,13 @@ export function EventPage() {
                 </div>
               </CardContent>
             </Card>
-          ))}
+            ))
+          ) : (
+            <div className="col-span-full flex flex-col items-center justify-center py-10 text-muted-foreground border-primary/50 border-2 border-dashed rounded-2xl">
+                <Ticket className="w-16 h-16 mb-4 opacity-20" />
+                <p className="text-lg font-medium">{t("search_empty")}</p>
+            </div>
+          )}
         </div>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

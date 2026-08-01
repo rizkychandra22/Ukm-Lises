@@ -123,6 +123,9 @@ export default {
     title_t2: "shows.",
     buy: "Buy Ticket",
     no_buy: "Tickets Unavailable",
+    search_placeholder: "Check your ticket order or available events.",
+    search_button: "Search",
+    search_empty: "No tickets or events match your search.",
     card1: {
       type: "Exclusive",
       date: "15 Aug 2026",
