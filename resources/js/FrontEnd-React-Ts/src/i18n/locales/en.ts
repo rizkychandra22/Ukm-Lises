@@ -50,12 +50,14 @@ export default {
       title: "Moments",
       subtitle: "Stage Highlights",
       link: "View Gallery",
+      no_upload: "No gallery has been uploaded yet."
     },
     section_news: {
       title: "Latest News",
       subtitle: "News Publications",
       desc: "Follow the latest developments, activities, and achievements from UKM Lises Asmarandana.",
       link: "View All News",
+      no_upload: "No news has been uploaded yet."
     },
     section_event: {
       tag: "Upcoming Event",
@@ -96,6 +98,7 @@ export default {
     title_y1: "stage",
     title_t2: "our me.",
     btn_readmore: "Read more",
+    no_upload: "No news has been uploaded yet."
   },
 
   NewsDetailPage: {

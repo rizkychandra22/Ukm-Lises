@@ -81,6 +81,6 @@ class NewsController extends Controller
     {
         $this->newsService->deleteNews($news);
 
-        return redirect()->back()->with('success', 'Berita berhasil dihapus');
+        return redirect()->route('news.index')->with('success', 'Berita berhasil dihapus');
     }
 }

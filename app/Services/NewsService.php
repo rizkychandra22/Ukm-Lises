@@ -17,8 +17,14 @@ class NewsService
 
     public function createNews(array $data): News
     {
-        // Generate Slug
-        $data['slug'] = Str::slug($data['title_id']) . '-' . uniqid();
+        // Generate Slug unik tanpa hash acak
+        $baseSlug = Str::slug($data['title_id']);
+        $slug = $baseSlug;
+        $counter = 1;
+        while (News::where('slug', $slug)->exists()) {
+            $slug = $baseSlug . '-' . $counter++;
+        }
+        $data['slug'] = $slug;
 
         // Upload image
         if (isset($data['image']) && $data['image'] instanceof UploadedFile) {
@@ -35,7 +41,13 @@ class NewsService
     public function updateNews(News $news, array $data): News
     {
         if (isset($data['title_id']) && $data['title_id'] !== $news->title_id) {
-            $data['slug'] = Str::slug($data['title_id']) . '-' . uniqid();
+            $baseSlug = Str::slug($data['title_id']);
+            $slug = $baseSlug;
+            $counter = 1;
+            while (News::where('slug', $slug)->where('id', '!=', $news->id)->exists()) {
+                $slug = $baseSlug . '-' . $counter++;
+            }
+            $data['slug'] = $slug;
         }
 
         if (isset($data['image']) && $data['image'] instanceof UploadedFile) {
