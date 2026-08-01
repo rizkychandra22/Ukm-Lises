@@ -197,7 +197,7 @@ export default function FormNews({ news }: NewsProps) {
                                 {processing ? (
                                     <><Loader2 className="w-4 h-4 animate-spin" /> Menyimpan...</>
                                 ) : (
-                                    <><Save className="w-4 h-4" /> {isEdit ? 'Simpan Perubahan' : 'Simpan Berita'}</>
+                                    <><Save className="w-4 h-4" /> {isEdit ? 'Simpan Perubahan' : 'Simpan'}</>
                                 )}
                             </Button>
                         </div>

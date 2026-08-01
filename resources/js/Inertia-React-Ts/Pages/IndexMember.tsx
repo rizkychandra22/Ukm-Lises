@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { Head, useForm, usePage } from '@inertiajs/react';
 import { route } from '../Lib/Route';
 import DashboardLayout from '../Layouts/AppLayout';
-import { Search, Plus, Edit, Trash2, ArrowUpDown, Eye, Info } from 'lucide-react';
+import { Search, Plus, Edit, Trash2, ArrowUpDown, Eye, Info, Loader2, Save } from 'lucide-react';
 import { toast } from 'sonner';
 
 import {
@@ -893,7 +893,7 @@ export default function Index({ members, batches, majors }: Props) {
                                 </>
                             )}
 
-                            <div className="flex justify-end gap-2 pt-3 mb-2">
+                            <div className="flex justify-end gap-3 pt-2 mb-2">
                                 <Button
                                     type="button"
                                     variant="outline"
@@ -909,7 +909,11 @@ export default function Index({ members, batches, majors }: Props) {
                                     className="h-8 px-3.5 rounded-lg text-[13px] font-medium"
                                     disabled={processingBatch}
                                 >
-                                    {editingBatch ? 'Simpan Perubahan' : 'Buat Angkatan'}
+                                    {processingBatch ? (
+                                        <><Loader2 className="w-4 h-4 animate-spin" /> Menyimpan...</>
+                                    ) : (
+                                        <><Save className="w-4 h-4" /> {editingBatch ? 'Simpan Perubahan' : 'Simpan'}</>
+                                    )}
                                 </Button>
                             </div>
                         </form>
@@ -1183,9 +1187,19 @@ export default function Index({ members, batches, majors }: Props) {
                                 {memberErrors.image && <span className="text-xs text-red-500">{memberErrors.image}</span>}
                             </div>
 
-                            <div className="flex justify-end gap-2 pt-3 mb-2">
+                            <div className="flex justify-end gap-3 pt-2 mb-2">
                                 <Button type="button" variant="outline" size="sm" className="h-8 px-3.5 rounded-lg text-[13px] font-medium" onClick={handleCancelEditMember}>Batal</Button>
-                                <Button type="submit" size="sm" className="h-8 px-3.5 rounded-lg text-[13px] font-medium" disabled={processingMember}>Simpan</Button>
+                                <Button type="submit" size="sm" className="h-8 px-3.5 rounded-lg text-[13px] font-medium" disabled={processingMember}>
+                                    {processingMember ? (
+                                        <>
+                                            <Loader2 className="w-4 h-4 animate-spin" /> Menyimpan...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Save className="w-4 h-4" /> {editingMember ? 'Simpan Perubahan' : 'Simpan'}
+                                        </>
+                                    )}
+                                </Button>
                             </div>
                         </form>
                     </DialogContent>

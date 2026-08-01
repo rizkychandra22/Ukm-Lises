@@ -32,7 +32,7 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
-import { Plus, Edit, Trash2, Search, ArrowUpDown } from "lucide-react";
+import { Plus, Edit, Trash2, Search, ArrowUpDown, Loader2, Save } from "lucide-react";
 import { toast } from "sonner";
 
 interface Gallery {
@@ -327,7 +327,7 @@ export default function IndexGallery({ galleries }: PageProps) {
                         <div className="space-y-4">
                             <div className="space-y-2">
                                 <Label>Judul Galeri</Label>
-                                <Input value={formData.title_id} onChange={e => setFormData({ ...formData, title_id: e.target.value })} required />
+                                <Input value={formData.title_id} onChange={e => setFormData({ ...formData, title_id: e.target.value })} />
                                 {errors.title_id && <span className="text-xs text-destructive">{errors.title_id}</span>}
                             </div>
                             <div className="space-y-2">
@@ -366,7 +366,13 @@ export default function IndexGallery({ galleries }: PageProps) {
 
                         <div className="flex justify-end gap-3 pt-5 mb-2 border-t mt-2">
                             <Button type="button" variant="outline" size="sm" className="h-8 px-3.5 rounded-lg text-[13px] font-medium" onClick={() => setIsSheetOpen(false)}>Batal</Button>
-                            <Button type="submit" size="sm" className="h-8 px-3.5 rounded-lg text-[13px] font-medium" disabled={processing}>{processing ? 'Menyimpan...' : 'Simpan'}</Button>
+                            <Button type="submit" size="sm" className="h-8 px-3.5 rounded-lg text-[13px] font-medium" disabled={processing}>
+                                {processing ? (
+                                    <><Loader2 className="w-4 h-4 animate-spin" /> Menyimpan...</>
+                                ) : (
+                                    <><Save className="w-4 h-4" /> {selectedGallery ? 'Simpan Perubahan' : 'Simpan'}</>
+                                )}
+                            </Button>
                         </div>
                     </form>
                 </DialogContent>
