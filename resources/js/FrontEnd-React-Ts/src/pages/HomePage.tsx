@@ -7,6 +7,8 @@ import {
   Users,
   ArrowUpRight,
   CalendarDays,
+  Newspaper,
+  Image,
 } from "lucide-react";
 import hero from "@/assets/hero-lises.jpg";
 import { Button } from "@/components/ui/button";
@@ -18,6 +20,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { ScrollTop } from "@/components/scroll-top";
 import { useState, useEffect, useRef } from "react";
 import { getGalleries, Gallery } from "@/lib/api/gallery";
+import { getNews, News } from "@/lib/api/news";
 import Autoplay from "embla-carousel-autoplay";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -25,24 +28,31 @@ import { Skeleton } from "@/components/ui/skeleton";
 export function HomePage() {
   const { t, i18n } = useTranslation("HomePage");
   const isEn = i18n.language === 'en';
-  const posts = usePosts();
   const plugin = useRef(Autoplay({ delay: 4000, stopOnInteraction: true }));
   
   const [sliderImages, setSliderImages] = useState<Gallery[]>([]);
   const [momentImages, setMomentImages] = useState<Gallery[]>([]);
+  const [latestNews, setLatestNews] = useState<News[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchGalleries = async () => {
+    const fetchData = async () => {
       setIsLoading(true);
-      const data = await getGalleries();
-      const activeData = data.filter(g => g.is_active).slice(0, 3);
-      const latestData = data.slice(0, 3);
+      
+      const [galleryData, newsData] = await Promise.all([
+        getGalleries(),
+        getNews()
+      ]);
+
+      const activeData = galleryData.filter(g => g.is_active).slice(0, 3);
+      const latestGalleryData = galleryData.slice(0, 3);
       setSliderImages(activeData);
-      setMomentImages(latestData);
+      setMomentImages(latestGalleryData);
+      
+      setLatestNews(newsData.slice(0, 3));
       setIsLoading(false);
     };
-    fetchGalleries();
+    fetchData();
   }, []);
 
   return (
@@ -183,8 +193,9 @@ export function HomePage() {
                {[1,2,3].map(i => <Skeleton key={i} className="aspect-[4/5] rounded-2xl w-full" />)}
             </div>
           ) : momentImages.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-20 text-muted-foreground border border-dashed rounded-2xl">
-               <p>Belum ada momen galeri.</p>
+            <div className="flex flex-col items-center justify-center py-20 text-muted-foreground border-primary/50 border-2 border-dashed rounded-2xl">
+              <Image className="w-10 h-10 mb-4 opacity-20" />
+              <p>{t("section_momen.no_upload")}</p>
             </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-3">
@@ -234,25 +245,40 @@ export function HomePage() {
             </Button>
           </div>
           <div className="flex flex-col gap-4 md:w-1/2">
-            {posts.slice(0, 3).map((post) => (
+            {isLoading ? (
+               Array(3).fill(0).map((_, i) => (
+                  <Skeleton key={i} className="h-28 w-full rounded-3xl" />
+               ))
+            ) : latestNews.length === 0 ? (
+               <div className="flex flex-col items-center justify-center py-10 text-muted-foreground border-primary/50 border-2 border-dashed rounded-3xl h-full">
+                <Newspaper className="w-10 h-10 mb-4 opacity-20" />
+                <p>{t("section_news.no_upload")}</p>
+               </div>
+            ) : latestNews.map((post) => {
+              const title = isEn ? post.title_en || post.title_id : post.title_id;
+              const date = new Date(post.date).toLocaleDateString(isEn ? 'en-US' : 'id-ID', {
+                year: 'numeric', month: 'short', day: 'numeric'
+              });
+
+              return (
               <Link
-                key={post.title}
+                key={post.id}
                 to={`/news/${post.slug}`}
                 className="group flex flex-col justify-between rounded-3xl border border-border/60 bg-card p-6 transition-colors hover:border-primary/60 sm:flex-row sm:items-center"
               >
                 <div>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <CalendarDays className="h-3.5 w-3.5" /> {post.date}
+                    <CalendarDays className="h-3.5 w-3.5" /> {date}
                   </div>
-                  <h3 className="mt-2 font-display text-lg font-bold group-hover:text-primary">
-                    {post.title}
+                  <h3 className="mt-2 font-display text-lg font-bold group-hover:text-primary line-clamp-2">
+                    {title}
                   </h3>
                 </div>
                 <div className="mt-4 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border/60 bg-background transition-colors group-hover:bg-primary group-hover:text-primary-foreground sm:mt-0">
                   <ArrowUpRight className="h-4 w-4" />
                 </div>
               </Link>
-            ))}
+            )})}
           </div>
         </div>
         <div className="mt-8 flex justify-center sm:hidden">

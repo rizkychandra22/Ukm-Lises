@@ -50,12 +50,14 @@ export default {
       title: "Momen",
       subtitle: "Cuplikan Panggung",
       link: "Lihat Galeri",
+      no_upload: "Belum ada galeri yang diunggah."
     },
     section_news: {
       title: "Kabar Terbaru",
       subtitle: "Publikasi Berita",
       desc: "Ikuti terus perkembangan, kegiatan, dan prestasi terbaru dari UKM Lises Asmarandana.",
       link: "Lihat Semua Berita",
+      no_upload: "Belum ada berita yang diunggah."
     },
     section_event: {
       tag: "Event Tersedia",
@@ -96,6 +98,7 @@ export default {
     title_y1: "panggung",
     title_t2: "kami.",
     btn_readmore: "Baca selengkapnya",
+    no_upload: "Belum ada berita yang diunggah."
   },
 
   NewsDetailPage: {

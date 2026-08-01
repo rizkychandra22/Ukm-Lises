@@ -16,19 +16,46 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { usePosts } from "@/constants/news";
+import { Skeleton } from "@/components/ui/skeleton";
+import { getNewsDetail, getNews, News } from "@/lib/api/news";
 import { useTranslation } from "@/i18n";
 import { SEOHead } from "@/components/SEOHead";
 import { ScrollTop } from "@/components/scroll-top";
 
 export function NewsDetailPage() {
   const { slug } = useParams<{ slug: string }>();
-  const { t } = useTranslation("NewsDetailPage");
-  const posts = usePosts();
-  const post = posts.find((p) => p.slug === slug);
-  const relatedPosts = posts.filter((p) => p.slug !== slug).slice(0, 4);
-
+  const { t, i18n } = useTranslation("NewsDetailPage");
+  const isEn = i18n.language === 'en';
+  
+  const [post, setPost] = useState<News | null>(null);
+  const [relatedPosts, setRelatedPosts] = useState<News[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      if (slug) {
+        const detail = await getNewsDetail(slug);
+        setPost(detail);
+
+        // Fetch related
+        const allNews = await getNews();
+        setRelatedPosts(allNews.filter(n => n.slug !== slug).slice(0, 4));
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+  }, [slug]);
+
+  if (isLoading) {
+    return (
+      <section className="mx-auto max-w-7xl px-6 py-16 md:py-24 text-center">
+        <Skeleton className="h-10 w-3/4 mx-auto mb-6" />
+        <Skeleton className="h-[400px] w-full rounded-3xl" />
+      </section>
+    );
+  }
 
   if (!post) {
     return (
@@ -61,7 +88,7 @@ export function NewsDetailPage() {
   const handleShare = async () => {
     if (navigator.share) {
       try {
-        await navigator.share({ title: post.title, text: post.excerpt, url: pageUrl });
+        await navigator.share({ title: isEn ? post.title_en || post.title_id : post.title_id, text: isEn ? post.summary_en || post.summary_id : post.summary_id, url: pageUrl });
       } catch { /* cancelled */ }
     } else {
       handleCopy();
@@ -70,7 +97,7 @@ export function NewsDetailPage() {
 
   const handleWhatsApp = () => {
     window.open(
-      `https://api.whatsapp.com/send?text=${encodeURIComponent(post.title + "\n" + pageUrl)}`,
+      `https://api.whatsapp.com/send?text=${encodeURIComponent((isEn ? post.title_en || post.title_id : post.title_id) + "\n" + pageUrl)}`,
       "_blank",
       "noopener,noreferrer"
     );
@@ -80,8 +107,8 @@ export function NewsDetailPage() {
     <>
       <SEOHead
         pageKey="news"
-        customTitle={`${post.title} - UKM Lises Asmarandana`}
-        customDescription={post.excerpt || post.title}
+        customTitle={`${isEn ? post.title_en || post.title_id : post.title_id} - UKM Lises Asmarandana`}
+        customDescription={isEn ? post.summary_en || post.summary_id : post.summary_id}
       />
 
       {/* ─────────── HEADER (mirroring AboutPage) ─────────── */}
@@ -92,7 +119,7 @@ export function NewsDetailPage() {
             variant="outline"
             className="w-fit gap-2 rounded-full border-primary/40 bg-background/40 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-primary backdrop-blur"
           >
-            <Sparkles className="h-3.5 w-3.5" /> {post.tag}
+            <Sparkles className="h-3.5 w-3.5" /> {post.type}
           </Badge>
 
           <Button
@@ -109,17 +136,17 @@ export function NewsDetailPage() {
 
         {/* Title */}
         <h1 className="mt-4 max-w-3xl font-display text-3xl font-bold leading-[1.15] md:text-4xl">
-          {post.title}
+          {isEn ? post.title_en || post.title_id : post.title_id}
         </h1>
 
         {/* Meta Row */}
         <div className="mt-5 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
           <span className="flex items-center gap-1.5">
-            <CalendarDays className="h-4 w-4 text-primary/70" /> {post.date}
+            <CalendarDays className="h-4 w-4 text-primary/70" /> {new Date(post.date).toLocaleDateString(isEn ? 'en-US' : 'id-ID', { year: 'numeric', month: 'short', day: 'numeric' })}
           </span>
           <span className="text-border">·</span>
           <span className="flex items-center gap-1.5">
-            <User className="h-4 w-4 text-primary/70" /> Admin Lises Asmarandana
+            <User className="h-4 w-4 text-primary/70" /> {post.uploaded_by}
           </span>
         </div>
       </section>
@@ -129,8 +156,8 @@ export function NewsDetailPage() {
         {/* Left Column — Image */}
         <div className="relative overflow-hidden rounded-3xl border border-border/60">
           <img
-            src={post.img}
-            alt={post.title}
+            src={post.image}
+            alt={isEn ? post.title_en || post.title_id : post.title_id}
             loading="lazy"
             className="h-full w-full object-cover"
           />
@@ -139,10 +166,10 @@ export function NewsDetailPage() {
         {/* Right Column — Excerpt + Content */}
         <div className="space-y-6">
           {/* Excerpt */}
-          {post.excerpt && (
+          {(post.summary_id || post.summary_en) && (
             <p className="text-base md:text-lg leading-relaxed text-muted-foreground">
-              <span className="font-semibold text-foreground">{post.tag}.</span>{" "}
-              {post.excerpt}
+              <span className="font-semibold text-foreground">{post.type}.</span>{" "}
+              {isEn ? post.summary_en || post.summary_id : post.summary_id}
             </p>
           )}
 
@@ -159,7 +186,7 @@ export function NewsDetailPage() {
               [&>img]:my-5 [&>img]:rounded-2xl [&>img]:border [&>img]:border-border/60
               [&>ul]:list-disc [&>ul]:my-2 [&>ul]:pl-6 [&>ol]:list-decimal [&>ol]:my-2 [&>ol]:pl-6
             "
-            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(isEn ? (post.description_en || post.description_id) : post.description_id) }}
           />
         </div>
       </section>
@@ -221,7 +248,12 @@ export function NewsDetailPage() {
 
           {/* List Items */}
           <div className="divide-y divide-border/40">
-            {relatedPosts.map((item) => (
+            {relatedPosts.map((item) => {
+              const itemTitle = isEn ? item.title_en || item.title_id : item.title_id;
+              const itemExcerpt = isEn ? item.summary_en || item.summary_id : item.summary_id;
+              const itemDate = new Date(item.date).toLocaleDateString(isEn ? 'en-US' : 'id-ID', { year: 'numeric', month: 'short', day: 'numeric' });
+
+              return (
               <Link
                 key={item.slug}
                 to={`/news/${item.slug}`}
@@ -230,8 +262,8 @@ export function NewsDetailPage() {
                 {/* Thumbnail */}
                 <div className="h-16 w-16 sm:h-20 sm:w-28 shrink-0 overflow-hidden rounded-xl border border-border/60">
                   <img
-                    src={item.img}
-                    alt={item.title}
+                    src={item.image}
+                    alt={itemTitle}
                     loading="lazy"
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
@@ -244,24 +276,24 @@ export function NewsDetailPage() {
                       variant="outline"
                       className="shrink-0 rounded-full border-primary/30 px-2.5 py-0.5 text-[10px] uppercase tracking-wider text-primary"
                     >
-                      {item.tag}
+                      {item.type}
                     </Badge>
                     <span className="text-xs text-muted-foreground flex items-center gap-1">
-                      <CalendarDays className="h-3 w-3" /> {item.date}
+                      <CalendarDays className="h-3 w-3" /> {itemDate}
                     </span>
                   </div>
                   <h3 className="font-display text-base font-bold leading-snug text-foreground group-hover:text-primary transition-colors truncate">
-                    {item.title}
+                    {itemTitle}
                   </h3>
                   <p className="text-sm text-muted-foreground line-clamp-1 hidden sm:block">
-                    {item.excerpt}
+                    {itemExcerpt}
                   </p>
                 </div>
 
                 {/* Arrow */}
                 <ArrowUpRight className="h-5 w-5 shrink-0 text-muted-foreground/40 group-hover:text-primary transition-colors" />
               </Link>
-            ))}
+            )})}
           </div>
 
           {/* Mobile CTA */}

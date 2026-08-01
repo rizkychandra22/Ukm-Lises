@@ -46,9 +46,9 @@ export function GalleryPage() {
               <Skeleton key={i} className={`h-full w-full rounded-2xl ${i === 0 ? "md:col-span-2 md:row-span-2" : ""}`} />
             ))
           ) : galleries.length === 0 ? (
-            <div className="col-span-full flex flex-col items-center justify-center py-20 text-muted-foreground border border-dashed rounded-2xl">
-                <ImageIcon className="w-12 h-12 mb-4 opacity-20" />
-                <p>Belum ada galeri yang diunggah.</p>
+            <div className="col-span-full flex flex-col items-center justify-center py-10 text-muted-foreground border-primary/50 border-2 border-dashed rounded-2xl">
+                <ImageIcon className="w-16 h-16 mb-4 opacity-20" />
+                <p className="text-lg font-medium">{t("no_upload")}</p>
             </div>
           ) : (
              galleries.map((item) => {

@@ -1,16 +1,31 @@
 import { Link } from "react-router-dom";
-import { ArrowUpRight, CalendarDays, Sparkles } from "lucide-react";
+import { ArrowUpRight, CalendarDays, Newspaper, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { usePosts } from "@/constants/news";
+import { useState, useEffect } from "react";
+import { getNews, News } from "@/lib/api/news";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useTranslation } from "@/i18n";
 import { SEOHead } from "@/components/SEOHead";
 import { ScrollTop } from "@/components/scroll-top";
 
 export function NewsPage() {
-  const { t } = useTranslation("NewsPage");
-  const posts = usePosts();
+  const { t, i18n } = useTranslation("NewsPage");
+  const isEn = i18n.language === 'en';
+  
+  const [posts, setPosts] = useState<News[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      setIsLoading(true);
+      const data = await getNews();
+      setPosts(data);
+      setIsLoading(false);
+    };
+    fetchNews();
+  }, []);
 
   return (
     <>
@@ -28,42 +43,69 @@ export function NewsPage() {
         </h1>
 
         <div className="mt-14 grid gap-8 md:grid-cols-3">
-          {posts.map((post) => (
-            <Card
-              key={post.title}
-              className="group flex flex-col overflow-hidden rounded-3xl border-border/60 bg-card transition-colors hover:border-primary/60"
-            >
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <img
-                  src={post.img}
-                  alt={post.title}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <Badge className="absolute left-4 top-4 rounded-full bg-gradient-gold px-3 py-1 text-xs font-semibold text-primary-foreground">
-                  {post.tag}
-                </Badge>
-              </div>
-              <CardContent className="flex flex-1 flex-col p-6">
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <CalendarDays className="h-3.5 w-3.5" /> {post.date}
-                </div>
-                <CardTitle className="mt-3 font-display text-xl font-bold leading-snug">
-                  {post.title}
-                </CardTitle>
-                <CardDescription className="mt-3 flex-1 text-sm">{post.excerpt}</CardDescription>
-                <Button
-                  asChild
-                  variant="link"
-                  className="mt-5 h-auto p-0 inline-flex items-center gap-1.5 justify-start text-sm font-semibold text-primary"
+          {isLoading ? (
+            Array(3).fill(0).map((_, i) => (
+              <Card key={i} className="flex flex-col rounded-3xl border-border/60 bg-card overflow-hidden">
+                <Skeleton className="aspect-[4/3] w-full" />
+                <CardContent className="flex flex-col p-6 space-y-3">
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-6 w-full" />
+                  <Skeleton className="h-16 w-full" />
+                  <Skeleton className="h-4 w-32" />
+                </CardContent>
+              </Card>
+            ))
+          ) : posts.length === 0 ? (
+            <div className="col-span-full flex flex-col items-center justify-center py-10 text-muted-foreground border-primary/50 border-2 border-dashed rounded-2xl">
+              <Newspaper className="w-16 h-16 mb-6 opacity-20" />
+              <p className="text-lg font-medium">{t("no_upload")}</p>
+            </div>
+          ) : (
+            posts.map((post) => {
+              const title = isEn ? post.title_en || post.title_id : post.title_id;
+              const excerpt = isEn ? post.summary_en || post.summary_id : post.summary_id;
+              const date = new Date(post.date).toLocaleDateString(isEn ? 'en-US' : 'id-ID', {
+                year: 'numeric', month: 'short', day: 'numeric'
+              });
+
+              return (
+                <Card
+                  key={post.id}
+                  className="group flex flex-col overflow-hidden rounded-3xl border-border/60 bg-card transition-colors hover:border-primary/60"
                 >
-                  <Link to={`/news/${post.slug}`}>
-                    {t("btn_readmore")} <ArrowUpRight className="h-4 w-4" />
-                  </Link>
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
+                  <div className="relative aspect-[4/3] overflow-hidden">
+                    <img
+                      src={post.image}
+                      alt={title}
+                      loading="lazy"
+                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <Badge className="absolute left-4 top-4 rounded-full bg-gradient-gold px-3 py-1 text-xs font-semibold text-primary-foreground">
+                      {post.type}
+                    </Badge>
+                  </div>
+                  <CardContent className="flex flex-1 flex-col p-6">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <CalendarDays className="h-3.5 w-3.5" /> {date}
+                    </div>
+                    <CardTitle className="mt-3 font-display text-xl font-bold leading-snug line-clamp-2">
+                      {title}
+                    </CardTitle>
+                    <CardDescription className="mt-3 flex-1 text-sm line-clamp-3">{excerpt}</CardDescription>
+                    <Button
+                      asChild
+                      variant="link"
+                      className="mt-5 h-auto p-0 inline-flex items-center gap-1.5 justify-start text-sm font-semibold text-primary"
+                    >
+                      <Link to={`/news/${post.slug}`}>
+                        {t("btn_readmore")} <ArrowUpRight className="h-4 w-4" />
+                      </Link>
+                    </Button>
+                  </CardContent>
+                </Card>
+              );
+            })
+          )}
         </div>
       </section>
 
