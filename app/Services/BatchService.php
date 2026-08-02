@@ -26,7 +26,7 @@ class BatchService
 
             // 1. Buat User Otomatis untuk Angkatan Ini
             $user = User::create([
-                'name'     => 'Angkatan ' . $data['name_id'],
+                'name'     => $data['name_id'],
                 'username' => 'lises' . $data['year'], 
                 'password' => Hash::make('password'),
             ]);
@@ -65,7 +65,7 @@ class BatchService
 
                     // SINKRONISASI: Update nama user jika nama angkatan diubah
                     if (!empty($data['name_id'])) {
-                        $userData['name'] = 'Angkatan ' . $data['name_id'];
+                        $userData['name'] = $data['name_id'];
                     }
 
                     // Update username jika diisi oleh Admin/Developer
