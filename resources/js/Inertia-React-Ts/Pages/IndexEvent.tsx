@@ -586,30 +586,30 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                 <Tabs value={activeTab} className="w-full">
                     {/* TAB CONTENT: EVENT */}
                     <TabsContent value="event" className="mt-0">
-                        <div className="rounded-md border bg-card">
+                        <div className="rounded-xl border bg-card overflow-hidden shadow-sm">
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>Banner</TableHead>
-                                        <TableHead>Judul</TableHead>
-                                        <TableHead>Tipe</TableHead>
-                                        <TableHead>Tanggal</TableHead>
-                                        <TableHead>Harga</TableHead>
-                                        <TableHead>Tiket</TableHead>
-                                        <TableHead>Status</TableHead>
-                                        <TableHead className="text-right">Aksi</TableHead>
+                                        <TableHead className="text-sm">Banner</TableHead>
+                                        <TableHead className="text-sm">Judul</TableHead>
+                                        <TableHead className="text-sm">Tipe</TableHead>
+                                        <TableHead className="text-sm">Tanggal</TableHead>
+                                        <TableHead className="text-sm">Harga</TableHead>
+                                        <TableHead className="text-sm">Tiket</TableHead>
+                                        <TableHead className="text-sm">Status</TableHead>
+                                        <TableHead className="text-right text-sm">Aksi</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {filteredEvents.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={8} className="text-center h-24 text-muted-foreground">
+                                            <TableCell colSpan={8} className="text-center h-24 text-sm text-muted-foreground">
                                                 Belum ada data event.
                                             </TableCell>
                                         </TableRow>
                                     ) : (
                                         filteredEvents.map((item) => (
-                                            <TableRow key={item.id} className="transition-colors hover:bg-muted/50">
+                                            <TableRow key={item.id} className="transition-colors">
                                                 <TableCell>
                                                     <img
                                                         src={item.image ? item.image : '/placeholder-event.webp'}
@@ -617,27 +617,25 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                                                         className="h-10 w-16 shrink-0 rounded object-cover border"
                                                     />
                                                 </TableCell>
-                                                <TableCell className="font-medium">{item.title_id}</TableCell>
+                                                <TableCell className="text-sm font-medium">{item.title_id}</TableCell>
                                                 <TableCell>
-                                                    <Badge
-                                                        className={item.type === 'Exclusive'
-                                                            ? 'border-violet-500/30 bg-violet-500/10 text-violet-700'
-                                                            : 'border-sky-500/30 bg-sky-500/10 text-sky-700'}
-                                                    >
+                                                    <span className={item.type === 'Exclusive'
+                                                        ? 'inline-flex items-center px-2.5 py-1 rounded-[8px] text-[10px] font-semibold bg-violet-500/10 text-violet-700'
+                                                        : 'inline-flex items-center px-2.5 py-1 rounded-[8px] text-[10px] font-semibold bg-sky-500/10 text-sky-700'}>
                                                         {item.type}
-                                                    </Badge>
+                                                    </span>
                                                 </TableCell>
-                                                <TableCell className="text-xs">{new Date(item.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</TableCell>
-                                                <TableCell className="font-medium">{formatIDR(item.price)}</TableCell>
-                                                <TableCell className="text-xs font-mono">
+                                                <TableCell className="text-sm">{new Date(item.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</TableCell>
+                                                <TableCell className="text-sm font-medium">{formatIDR(item.price)}</TableCell>
+                                                <TableCell className="text-sm font-medium">
                                                     {item.ticket ? `${item.remaining_tickets ?? item.ticket} / ${item.ticket}` : 'Unlimited'}
                                                 </TableCell>
                                                 <TableCell>
-                                                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                                                        item.status === 'completed' ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20' :
-                                                        item.status === 'published' ? 'bg-sky-500/10 text-sky-600 border border-sky-500/20' :
-                                                        item.status === 'draft' ? 'bg-amber-500/10 text-amber-600 border border-amber-500/20' :
-                                                        'bg-rose-500/10 text-rose-600 border border-rose-500/20'
+                                                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold ${
+                                                        item.status === 'completed' ? 'bg-emerald-500/10 text-emerald-700' :
+                                                        item.status === 'published' ? 'bg-sky-500/10 text-sky-700' :
+                                                        item.status === 'draft' ? 'bg-amber-500/10 text-amber-700' :
+                                                        'bg-rose-500/10 text-rose-700'
                                                     }`}>
                                                         {item.status === 'completed' ? 'Completed' :
                                                          item.status === 'published' ? 'Published' :
@@ -672,43 +670,43 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
 
                     {/* TAB CONTENT: PESANAN TIKET (ORDER) */}
                     <TabsContent value="order" className="mt-0">
-                        <div className="rounded-md border bg-card">
+                        <div className="rounded-xl border bg-card overflow-hidden shadow-sm">
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>Kode Order</TableHead>
-                                        <TableHead>Pemesan</TableHead>
-                                        <TableHead>Event</TableHead>
-                                        <TableHead>Qty</TableHead>
-                                        <TableHead>Total Harga</TableHead>
-                                        <TableHead>Status Tiket</TableHead>
-                                        <TableHead className="text-right">Aksi</TableHead>
+                                        <TableHead className="text-sm">Kode Order</TableHead>
+                                        <TableHead className="text-sm">Pemesan</TableHead>
+                                        <TableHead className="text-sm">Event</TableHead>
+                                        <TableHead className="text-sm">Qty</TableHead>
+                                        <TableHead className="text-sm">Total Harga</TableHead>
+                                        <TableHead className="text-sm">Status Tiket</TableHead>
+                                        <TableHead className="text-right text-sm">Aksi</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {filteredOrders.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={7} className="text-center h-24 text-muted-foreground">
+                                            <TableCell colSpan={7} className="text-center h-24 text-sm text-muted-foreground">
                                                 Belum ada transaksi pemesanan tiket.
                                             </TableCell>
                                         </TableRow>
                                     ) : (
                                         filteredOrders.map((ord) => (
-                                            <TableRow key={ord.id} className="transition-colors hover:bg-muted/50">
-                                                <TableCell className="font-mono font-semibold text-xs">{ord.order_code}</TableCell>
+                                            <TableRow key={ord.id} className="transition-colors">
+                                                <TableCell className="font-mono font-semibold text-sm">{ord.order_code}</TableCell>
                                                 <TableCell>
                                                     <div className="flex flex-col">
-                                                        <span className="font-medium text-xs">{ord.name}</span>
-                                                        <span className="text-[11px] text-muted-foreground">{ord.phone}</span>
+                                                        <span className="font-medium text-sm">{ord.name}</span>
+                                                        <span className="text-xs text-muted-foreground">{ord.phone}</span>
                                                     </div>
                                                 </TableCell>
-                                                <TableCell className="text-xs">{ord.event?.title_id || '-'}</TableCell>
-                                                <TableCell className="font-mono text-xs">{ord.qty} Tiket</TableCell>
-                                                <TableCell className="font-medium text-xs">{formatIDR(ord.total_price)}</TableCell>
+                                                <TableCell className="text-sm">{ord.event?.title_id || '-'}</TableCell>
+                                                <TableCell className="text-sm font-medium">{ord.qty} Tiket</TableCell>
+                                                <TableCell className="font-medium text-sm">{formatIDR(ord.total_price)}</TableCell>
                                                 <TableCell>
-                                                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                                                        ord.status === 'success' ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20' :
-                                                        ord.status === 'pending' ? 'bg-amber-500/10 text-amber-600 border border-amber-500/20' : 'bg-red-500/10 text-red-600 border border-red-500/20'
+                                                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold ${
+                                                        ord.status === 'success' ? 'bg-emerald-500/10 text-emerald-700' :
+                                                        ord.status === 'pending' ? 'bg-amber-500/10 text-amber-700' : 'bg-rose-500/10 text-rose-700'
                                                     }`}>
                                                         {ord.status}
                                                     </span>
@@ -740,35 +738,35 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
 
                     {/* TAB CONTENT: REKENING BANK */}
                     <TabsContent value="bank" className="mt-0">
-                        <div className="rounded-md border bg-card">
+                        <div className="rounded-xl border bg-card overflow-hidden shadow-sm">
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>Tipe</TableHead>
-                                        <TableHead>Nama Bank / Platform</TableHead>
-                                        <TableHead>Nomor Rekening</TableHead>
-                                        <TableHead>Atas Nama / Bendahara</TableHead>
-                                        <TableHead className="text-right">Aksi</TableHead>
+                                        <TableHead className="text-sm">Tipe</TableHead>
+                                        <TableHead className="text-sm">Nama Bank / Platform</TableHead>
+                                        <TableHead className="text-sm">Nomor Rekening</TableHead>
+                                        <TableHead className="text-sm">Atas Nama / Bendahara</TableHead>
+                                        <TableHead className="text-right text-sm">Aksi</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {filteredAccounts.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={5} className="text-center h-24 text-muted-foreground">
+                                            <TableCell colSpan={5} className="text-center h-24 text-sm text-muted-foreground">
                                                 Belum ada data rekening pembayaran.
                                             </TableCell>
                                         </TableRow>
                                     ) : (
                                         filteredAccounts.map((acc) => (
-                                            <TableRow key={acc.id} className="transition-colors hover:bg-muted/50">
+                                            <TableRow key={acc.id} className="transition-colors">
                                                 <TableCell>
-                                                    <span className={`text-xs px-2 py-0.5 rounded font-medium uppercase ${acc.type === 'bank' ? 'bg-blue-500/10 text-blue-600' : 'bg-emerald-500/10 text-emerald-600'}`}>
+                                                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold ${acc.type === 'bank' ? 'bg-blue-500/10 text-blue-700' : 'bg-emerald-500/10 text-emerald-700'}`}>
                                                         {acc.type}
                                                     </span>
                                                 </TableCell>
-                                                <TableCell className="font-semibold text-xs">{acc.name_account}</TableCell>
-                                                <TableCell className="font-mono text-xs font-medium">{acc.no_account}</TableCell>
-                                                <TableCell className="text-xs">{acc.batch_member?.name || '-'}</TableCell>
+                                                <TableCell className="font-semibold text-sm">{acc.name_account}</TableCell>
+                                                <TableCell className="text-sm font-medium">{acc.no_account}</TableCell>
+                                                <TableCell className="text-sm">{acc.batch_member?.name || '-'}</TableCell>
                                                 <TableCell className="text-right">
                                                     <div className="flex justify-end gap-2 items-center">
                                                         {hasRole(['Developer', 'Admin']) && (
