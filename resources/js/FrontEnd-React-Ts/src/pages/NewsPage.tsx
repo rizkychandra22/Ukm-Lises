@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowUpRight, CalendarDays, Newspaper, Sparkles } from "lucide-react";
+import { ArrowUpRight, CalendarDays, Newspaper, Sparkles, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -85,8 +85,13 @@ export function NewsPage() {
                     </Badge>
                   </div>
                   <CardContent className="flex flex-1 flex-col p-6">
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <CalendarDays className="h-3.5 w-3.5" /> {date}
+                    <div className=" flex flex-wrap items-center gap-4">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <CalendarDays className="h-3.5 w-3.5" /> {date}
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <User className="h-4 w-4 text-primary/70" /> {post.uploaded_by}
+                      </div>
                     </div>
                     <CardTitle className="mt-3 font-display text-xl font-bold leading-snug line-clamp-2">
                       {title}

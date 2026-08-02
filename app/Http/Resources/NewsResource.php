@@ -14,8 +14,12 @@ class NewsResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $role = $this->user?->role ?? 'admin';
-        $uploadedBy = $role === 'admin' ? 'Admin Lises Asmarandana' : 'Developer Lises Asmarandana';
+        $role = $this->user?->getRoleNames()->first();
+        $uploadedBy = match ($role) {
+            'Developer' => 'Developer Lises Asmarandana',
+            'Admin' => 'Admin Lises Asmarandana',
+            default => 'Admin Lises Asmarandana',
+        };
 
         return [
             'id' => $this->id,

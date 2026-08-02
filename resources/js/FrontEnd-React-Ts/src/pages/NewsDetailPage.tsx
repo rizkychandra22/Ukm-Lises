@@ -5,7 +5,6 @@ import {
   ArrowLeft,
   ArrowUpRight,
   CalendarDays,
-  ChevronUp,
   Check,
   Copy,
   MessageCircle,
@@ -50,10 +49,91 @@ export function NewsDetailPage() {
 
   if (isLoading) {
     return (
-      <section className="mx-auto max-w-7xl px-6 py-16 md:py-24 text-center">
-        <Skeleton className="h-10 w-3/4 mx-auto mb-6" />
-        <Skeleton className="h-[400px] w-full rounded-3xl" />
-      </section>
+      <div className="mx-auto max-w-7xl px-6 py-12 md:py-16 space-y-12 animate-pulse">
+        {/* 1. Header Section Skeleton */}
+        <div className="space-y-4">
+          {/* Top Row: Badge + Back Button */}
+          <div className="flex items-center justify-between">
+            <Skeleton className="h-7 w-28 rounded-full" />
+            <Skeleton className="h-8 w-24 rounded-full" />
+          </div>
+
+          {/* Title */}
+          <div className="space-y-2 max-w-3xl pt-2">
+            <Skeleton className="h-9 w-full rounded-lg" />
+            <Skeleton className="h-9 w-3/4 rounded-lg" />
+          </div>
+
+          {/* Meta Row (Date & Author) */}
+          <div className="flex items-center gap-4 pt-1">
+            <Skeleton className="h-4 w-32 rounded" />
+            <Skeleton className="h-4 w-28 rounded" />
+          </div>
+        </div>
+
+        {/* 2. Two-Column Layout Skeleton */}
+        <div className="grid gap-12 md:grid-cols-2 md:items-start">
+          {/* Left Column - Image Placeholder */}
+          <Skeleton className="h-[320px] sm:h-[420px] w-full rounded-3xl" />
+
+          {/* Right Column - Article Excerpt & Content */}
+          <div className="space-y-6">
+            {/* Excerpt */}
+            <div className="space-y-2">
+              <Skeleton className="h-5 w-full rounded" />
+              <Skeleton className="h-5 w-4/5 rounded" />
+            </div>
+
+            {/* Article Paragraphs */}
+            <div className="space-y-3 pt-2">
+              <Skeleton className="h-4 w-full rounded" />
+              <Skeleton className="h-4 w-full rounded" />
+              <Skeleton className="h-4 w-11/12 rounded" />
+              <Skeleton className="h-4 w-4/5 rounded" />
+            </div>
+
+            <div className="space-y-3 pt-2">
+              <Skeleton className="h-4 w-full rounded" />
+              <Skeleton className="h-4 w-full rounded" />
+              <Skeleton className="h-4 w-9/12 rounded" />
+            </div>
+          </div>
+        </div>
+
+        {/* 3. Share Section Skeleton */}
+        <div className="pt-4 space-y-4 text-center">
+          <Skeleton className="h-4 w-36 mx-auto rounded" />
+          <div className="flex justify-center gap-3">
+            <Skeleton className="h-9 w-28 rounded-full" />
+            <Skeleton className="h-9 w-32 rounded-full" />
+            <Skeleton className="h-9 w-28 rounded-full" />
+          </div>
+        </div>
+
+        {/* 4. Related News List Skeleton || Belum di implementasikan */}
+        {/* <div className="pt-8 space-y-6">
+          <div className="flex justify-between items-end">
+            <Skeleton className="h-8 w-44 rounded-lg" />
+            <Skeleton className="h-9 w-32 rounded-full hidden sm:block" />
+          </div>
+
+          <div className="space-y-4 divide-y divide-border/40">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="flex items-center gap-4 pt-4">
+                <Skeleton className="h-16 w-16 sm:h-20 sm:w-28 shrink-0 rounded-xl" />
+                <div className="flex-1 space-y-2">
+                  <div className="flex gap-2">
+                    <Skeleton className="h-4 w-16 rounded-full" />
+                    <Skeleton className="h-4 w-24 rounded" />
+                  </div>
+                  <Skeleton className="h-5 w-3/4 rounded" />
+                  <Skeleton className="h-4 w-1/2 rounded hidden sm:block" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div> */}
+      </div>
     );
   }
 
