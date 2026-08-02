@@ -137,7 +137,7 @@ export function AppSidebar() {
                             </SidebarMenuItem>
 
                             {/* Main Menu Role User, Admin & Developer */}
-                            {hasRole(['Developer']) && (
+                            {hasRole(['Developer', 'Admin', 'User']) && (
                                 <SidebarMenuItem>
                                     <SidebarMenuButton asChild isActive={isActive(route('list-member.index'))} className="rounded-xl transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium">
                                         <Link href={route('list-member.index')}>
@@ -147,29 +147,6 @@ export function AppSidebar() {
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
                             )}
-
-                            {hasRole(['Admin']) && (
-                                <SidebarMenuItem>
-                                    <SidebarMenuButton asChild isActive={isActive(route('list-member.index'))} className="rounded-xl transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium">
-                                        <Link href={route('list-member.index')}>
-                                            <Users className="w-[18px] h-[18px]" />
-                                            <span className="text-[13px]">Data Anggota</span>
-                                        </Link>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            )}
-                            
-                            {hasRole(['User']) && (
-                                <SidebarMenuItem>
-                                    <SidebarMenuButton asChild isActive={isActive(route('list-member.index'))} className="rounded-xl transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium">
-                                        <Link href={route('list-member.index')}>
-                                            <Users className="w-[18px] h-[18px]" />
-                                            <span className="text-[13px]">Data Anggota</span>
-                                        </Link>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            )}
-
                             <SidebarMenuItem>
                                 <SidebarMenuButton
                                     className="rounded-xl transition-all"
