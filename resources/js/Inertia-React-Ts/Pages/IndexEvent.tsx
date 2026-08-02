@@ -170,7 +170,6 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
     const {
         data: eventData,
         setData: setEventData,
-        post: postEvent,
         delete: deleteEventReq,
         reset: resetEvent,
         processing: processingEvent,
