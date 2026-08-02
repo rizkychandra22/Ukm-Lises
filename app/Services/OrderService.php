@@ -40,8 +40,9 @@ class OrderService
                 $proofUrl = $uploadResult['url'];
             }
 
-            // 4. Create Order (order_code di-generate otomatis via Model Boot)
+            // 4. Create Order (order_code di-generate otomatis via Model Boot jika kosong)
             return PayOrder::create([
+                'order_code'     => $data['order_code'] ?? null,
                 'name'           => $data['name'],
                 'email'          => $data['email'] ?? null,
                 'phone'          => $data['phone'],

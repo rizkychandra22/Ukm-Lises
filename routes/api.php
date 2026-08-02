@@ -26,3 +26,9 @@ Route::get('/galleries', [ContentController::class, 'galleries']);
 Route::get('/news', [ContentController::class, 'news']);
 Route::get('/news/{slug}', [ContentController::class, 'newsDetail']);
 Route::get('/events', [ContentController::class, 'events']);
+
+// Endpoint Tiket & Pembayaran
+Route::get('/payment-accounts', [ContentController::class, 'paymentAccounts']);
+Route::get('/generate-order-code', [ContentController::class, 'generateOrderCode']);
+Route::post('/orders', [ContentController::class, 'storeOrder']);
+Route::get('/orders/track/{order_code}', [ContentController::class, 'trackOrder']);

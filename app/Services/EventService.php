@@ -36,6 +36,11 @@ class EventService
      */
     public function updateEvent(Event $event, array $data): Event
     {
+        // Deteksi perubahan harga
+        $oldPrice = (float) $event->price;
+        $newPrice = isset($data['price']) ? (float) $data['price'] : 0;
+        $priceChanged = $oldPrice !== $newPrice;
+
         // 1. Handle jika user mengunggah foto banner baru
         if (isset($data['image']) && $data['image'] instanceof UploadedFile) {
             
@@ -80,6 +85,15 @@ class EventService
 
         // 4. Update Database
         $event->update($data);
+
+        // 5. Sinkronisasi harga pesanan jika harga event berubah
+        if ($priceChanged) {
+            foreach ($event->orders as $order) {
+                $order->update([
+                    'total_price' => $order->qty * $newPrice
+                ]);
+            }
+        }
 
         return $event;
     }

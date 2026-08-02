@@ -139,6 +139,7 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
     // --- State Status Filter ---
     const [eventStatusFilter, setEventStatusFilter] = useState<string>('all');
     const [orderStatusFilter, setOrderStatusFilter] = useState<string>('all');
+    const [orderMethodFilter, setOrderMethodFilter] = useState<string>('all');
 
     // --- State Sorting ---
     const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(null);
@@ -525,6 +526,9 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
         if (orderStatusFilter !== 'all') {
             result = result.filter(o => o.status === orderStatusFilter);
         }
+        if (orderMethodFilter !== 'all') {
+            result = result.filter(o => o.order_method === orderMethodFilter);
+        }
         if (searchQuery) {
             const q = searchQuery.toLowerCase();
             result = result.filter(o =>
@@ -538,7 +542,7 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
             result = sortData(result, sortConfig.key, sortConfig.direction);
         }
         return result;
-    }, [orders, searchQuery, orderStatusFilter, sortConfig]);
+    }, [orders, searchQuery, orderStatusFilter, orderMethodFilter, sortConfig]);
 
     const filteredAccounts = useMemo(() => {
         let result = accounts;
@@ -640,9 +644,19 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                             </div>
                         )}
                         {activeTab === 'order' && (
-                            <div className="flex-1 sm:flex-none">
+                            <div className="flex-1 sm:flex-none flex flex-row gap-2">
+                                <Select value={orderMethodFilter} onValueChange={setOrderMethodFilter}>
+                                    <SelectTrigger className="w-full sm:w-[150px] h-8 text-[13px]">
+                                        <SelectValue placeholder="Tipe Pembelian" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="all">Semua Pembelian</SelectItem>
+                                        <SelectItem value="online">Online</SelectItem>
+                                        <SelectItem value="offline">Offline</SelectItem>
+                                    </SelectContent>
+                                </Select>
                                 <Select value={orderStatusFilter} onValueChange={setOrderStatusFilter}>
-                                    <SelectTrigger className="w-full sm:w-[180px] h-8 text-[13px]">
+                                    <SelectTrigger className="w-full sm:w-[150px] h-8 text-[13px]">
                                         <SelectValue placeholder="Filter Status" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -805,14 +819,15 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                                                 Total Harga <ArrowUpDown className="ml-2 h-4 w-4" />
                                             </Button>
                                         </TableHead>
-                                        <TableHead className="text-sm">Status Tiket</TableHead>
+                                        <TableHead className="text-sm">Pembelian</TableHead>
+                                        <TableHead className="text-sm">Status</TableHead>
                                         <TableHead className="text-right text-sm">Aksi</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {filteredOrders.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={8} className="text-center h-24 text-sm text-muted-foreground">
+                                            <TableCell colSpan={9} className="text-center h-24 text-sm text-muted-foreground">
                                                 Belum ada transaksi pemesanan tiket.
                                             </TableCell>
                                         </TableRow>
@@ -832,6 +847,13 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                                                 <TableCell className="text-sm font-medium">{ord.qty} Tiket</TableCell>
                                                 <TableCell className="font-medium text-sm">{formatIDR(ord.total_price)}</TableCell>
                                                 <TableCell>
+                                                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold capitalize ${
+                                                        ord.order_method === 'online' ? 'bg-blue-500/10 text-blue-700' : 'bg-purple-500/10 text-purple-700'
+                                                    }`}>
+                                                        {ord.order_method}
+                                                    </span>
+                                                </TableCell>
+                                                <TableCell>
                                                     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold ${
                                                         ord.status === 'success' ? 'bg-emerald-500/10 text-emerald-700' :
                                                         ord.status === 'pending' ? 'bg-amber-500/10 text-amber-700' : 'bg-rose-500/10 text-rose-700'
@@ -846,9 +868,11 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                                                         </Button>
                                                         {hasRole(['Developer', 'Admin']) && (
                                                             <>
-                                                                <Button className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg h-8 w-8 p-0" size="sm" onClick={() => handleEditOrderStatus(ord)} title="Ubah Status Tiket">
-                                                                    <CheckCircle className="h-4 w-4" />
-                                                                </Button>
+                                                                {ord.order_method !== 'offline' && (
+                                                                    <Button className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg h-8 w-8 p-0" size="sm" onClick={() => handleEditOrderStatus(ord)} title="Ubah Status Tiket">
+                                                                        <CheckCircle className="h-4 w-4" />
+                                                                    </Button>
+                                                                )}
                                                                 <Button variant="destructive" size="sm" className="rounded-lg h-8 w-8 p-0" onClick={() => handleDeleteOrder(ord.id)} title="Hapus Order">
                                                                     <Trash2 className="h-4 w-4" />
                                                                 </Button>
@@ -904,7 +928,7 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                                         filteredAccounts.map((acc) => (
                                             <TableRow key={acc.id} className="transition-colors">
                                                 <TableCell>
-                                                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold ${acc.type === 'bank' ? 'bg-blue-500/10 text-blue-700' : 'bg-emerald-500/10 text-emerald-700'}`}>
+                                                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold capitalize ${acc.type === 'bank' ? 'bg-blue-500/10 text-blue-700' : 'bg-emerald-500/10 text-emerald-700'}`}>
                                                         {acc.type}
                                                     </span>
                                                 </TableCell>

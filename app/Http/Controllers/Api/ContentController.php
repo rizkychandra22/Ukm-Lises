@@ -5,7 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\Gallery;
+use App\Models\PayAccount;
+use App\Models\PayOrder;
+use App\Services\OrderService;
 use App\Http\Resources\GalleryResource;
+use Illuminate\Http\Request;
 
 class ContentController extends Controller
 {
@@ -54,5 +58,59 @@ class ContentController extends Controller
     {
         $news = \App\Models\News::with('user')->where('slug', $slug)->firstOrFail();
         return response()->json(new \App\Http\Resources\NewsResource($news));
+    }
+
+    public function paymentAccounts()
+    {
+        $accounts = \App\Models\PayAccount::with('batchMember')->get()->map(function ($account) {
+            $account->makeHidden(['created_at', 'updated_at']);
+            if ($account->batchMember) {
+                $account->batchMember->makeHidden(['created_at', 'updated_at']);
+            }
+            return $account;
+        });
+        return response()->json($accounts);
+    }
+
+    public function generateOrderCode()
+    {
+        return response()->json(['order_code' => \App\Models\PayOrder::generateOrderCode()]);
+    }
+
+    public function storeOrder(Request $request, \App\Services\OrderService $orderService)
+    {
+        $validated = $request->validate([
+            'order_code'     => ['required', 'string', 'max:50'],
+            'event_id'       => ['required', 'exists:events,id'],
+            'name'           => ['required', 'string', 'max:255'],
+            'email'          => ['required', 'email', 'max:255'],
+            'phone'          => ['required', 'string', 'max:30'],
+            'qty'            => ['required', 'integer', 'min:1'],
+            'notes'          => ['nullable', 'string', 'max:500'],
+            'payment_method' => ['nullable', 'string', 'max:100'],
+            'payment_proof'  => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+        ]);
+
+        $validated['order_method'] = 'online';
+        $validated['status'] = 'pending';
+
+        try {
+            $order = $orderService->createOrder($validated);
+            return response()->json([
+                'message' => 'Pesanan tiket berhasil dibuat. Silakan tunggu konfirmasi.',
+                'order'   => $order
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
+    }
+
+    public function trackOrder($order_code)
+    {
+        $order = \App\Models\PayOrder::with('event')->where('order_code', $order_code)->first();
+        if (!$order) {
+            return response()->json(['message' => 'Pesanan tiket tidak ditemukan.'], 404);
+        }
+        return response()->json($order);
     }
 }
