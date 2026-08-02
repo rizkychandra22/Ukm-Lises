@@ -1,10 +1,7 @@
 import { CalendarDays, MapPin, Search, Sparkles, Ticket } from "lucide-react";
-import g1 from "@/assets/gallery-1.jpg";
-import g2 from "@/assets/gallery-2.jpg";
-import g3 from "@/assets/gallery-3.jpg";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -15,74 +12,64 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useTranslation } from "@/i18n";
 import { SEOHead } from "@/components/SEOHead";
 import { ScrollTop } from "@/components/scroll-top";
+import { getEvents, EventItem } from "@/lib/api/event";
 
 export function EventPage() {
-  const [selectedEvent, setSelectedEvent] = useState<number | null>(null);
+  const { t, i18n } = useTranslation("EventPage");
+  const isEn = i18n.language === 'en';
+
+  const [events, setEvents] = useState<EventItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedEvent, setSelectedEvent] = useState<EventItem | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const { t } = useTranslation("EventPage");
 
-  const events = [
-    {
-      id: 1,
-      type: t("card1.type"),
-      date: t("card1.date"),
-      title: t("card1.title"),
-      location: t("card1.location"),
-      price: t("card1.price"),
-      excerpt: t("card1.summary"),
-      img: g3,
-      available: true,
-    },
-    {
-      id: 2,
-      type: t("card2.type"),
-      date: t("card2.date"),
-      title: t("card2.title"),
-      location: t("card2.location"),
-      price: t("card2.price"),
-      excerpt: t("card2.summary"),
-      img: g2,
-      available: false,
-    },
-    {
-      id: 3,
-      type: t("card3.type"),
-      date: t("card3.date"),
-      title: t("card3.title"),
-      location: t("card3.location"),
-      price: t("card3.price"),
-      excerpt: t("card3.summary"),
-      img: g1,
-      available: true,
-    },
-  ];
+  useEffect(() => {
+    const fetchEvents = async () => {
+      setIsLoading(true);
+      const data = await getEvents();
+      setEvents(data);
+      setIsLoading(false);
+    };
+    fetchEvents();
+  }, []);
 
   const filteredEvents = useMemo(() => {
-    const normalized = searchQuery.trim().toLowerCase();
-
-    if (!normalized) {
-      return events;
-    }
-
+    if (!searchQuery.trim()) return events;
+    const q = searchQuery.trim().toLowerCase();
     return events.filter((event) => {
-      const searchable = [event.title, event.location, event.excerpt, event.type, event.date]
-        .join(" ")
-        .toLowerCase();
-
-      return searchable.includes(normalized);
+      const title = isEn ? (event.title_en || event.title_id) : event.title_id;
+      const location = isEn ? (event.location_en || event.location_id) : event.location_id;
+      const summary = isEn ? (event.summary_en || event.summary_id || '') : (event.summary_id || '');
+      return [title, location, summary, event.type].join(' ').toLowerCase().includes(q);
     });
-  }, [events, searchQuery]);
+  }, [events, searchQuery, isEn]);
 
-  const handleBuyTicket = (eventId: number) => {
-    setSelectedEvent(eventId);
+  const handleBuyTicket = (event: EventItem) => {
+    setSelectedEvent(event);
     setIsDialogOpen(true);
   };
 
-  const activeEvent = events.find((e) => e.id === selectedEvent);
+  const formatPrice = (price: number | null): string => {
+    if (!price || price === 0) return isEn ? 'Free' : 'Gratis';
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      maximumFractionDigits: 0,
+    }).format(price);
+  };
+
+  const isTicketAvailable = (event: EventItem): boolean => {
+    if (event.status !== 'published') return false;
+    // If ticket is null = unlimited
+    if (event.ticket === null) return true;
+    // Check remaining tickets
+    return (event.remaining_tickets ?? 0) > 0;
+  };
 
   return (
     <>
@@ -113,80 +100,124 @@ export function EventPage() {
         </div>
 
         <div className="mt-14 grid gap-8 md:grid-cols-3">
-          {filteredEvents.length > 0 ? (
-            filteredEvents.map((event) => (
-            <Card
-              key={event.id}
-              className="group flex flex-col overflow-hidden rounded-3xl border-border/60 bg-card transition-colors hover:border-primary/60"
-            >
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <img
-                  src={event.img}
-                  alt={event.title}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <Badge
-                  className={`absolute left-4 top-4 rounded-full px-3 py-1 text-xs font-semibold ${
-                    event.type === t("card1.type") || event.type === t("card3.type")
-                      ? "bg-gradient-gold text-primary-foreground shadow-gold"
-                      : "bg-muted text-muted-foreground border border-border hover:bg-muted"
-                  }`}
-                >
-                  {event.type}
-                </Badge>
-              </div>
-              <CardContent className="flex flex-1 flex-col p-6">
-                <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                  <span className="flex items-center gap-1.5">
-                    <CalendarDays className="h-3.5 w-3.5" /> {event.date}
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <MapPin className="h-3.5 w-3.5" /> {event.location}
-                  </span>
-                </div>
-                <CardTitle className="mt-4 font-display text-xl font-bold leading-snug">
-                  {event.title}
-                </CardTitle>
-                <CardDescription className="mt-3 flex-1 text-sm">{event.excerpt}</CardDescription>
-
-                <div className="mt-6 flex items-center justify-between border-t border-border/60 pt-4">
-                  <span className="font-semibold text-primary">{event.price}</span>
-                  {event.available ? (
-                    <Button
-                      onClick={() => handleBuyTicket(event.id)}
-                      className="rounded-full bg-gradient-gold px-4 py-2 text-sm font-semibold text-primary-foreground shadow-gold transition-transform hover:scale-[1.03]"
-                    >
-                      <Ticket className="h-4 w-4 mr-2" /> {t("buy")}
-                    </Button>
-                  ) : (
-                    <span className="text-sm font-medium text-muted-foreground">
-                      {t("no_buy")}
-                    </span>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+          {/* LOADING STATE */}
+          {isLoading ? (
+            Array(3).fill(0).map((_, i) => (
+              <Card key={i} className="flex flex-col overflow-hidden rounded-3xl border-border/60">
+                <Skeleton className="aspect-[4/3] w-full" />
+                <CardContent className="flex flex-1 flex-col p-6 space-y-3">
+                  <Skeleton className="h-3 w-1/2" />
+                  <Skeleton className="h-5 w-3/4" />
+                  <Skeleton className="h-3 w-full" />
+                  <Skeleton className="h-3 w-2/3" />
+                  <div className="mt-4 flex items-center justify-between pt-4 border-t border-border/60">
+                    <Skeleton className="h-4 w-20" />
+                    <Skeleton className="h-8 w-28 rounded-full" />
+                  </div>
+                </CardContent>
+              </Card>
             ))
-          ) : (
-            <div className="col-span-full flex flex-col items-center justify-center py-10 text-muted-foreground border-primary/50 border-2 border-dashed rounded-2xl">
-                <Ticket className="w-16 h-16 mb-4 opacity-20" />
-                <p className="text-lg font-medium">{t("search_empty")}</p>
+          ) : filteredEvents.length === 0 ? (
+            /* EMPTY STATE */
+            <div className="col-span-full flex flex-col items-center justify-center py-20 md:py-20 px-3 text-center text-muted-foreground border-primary/50 border-2 border-dashed rounded-2xl">
+              <Ticket className="w-16 h-16 mb-4 opacity-20" />
+              <p className="text-lg font-medium">
+                {events.length === 0 ? t("no_event") : t("search_empty")}
+              </p>
             </div>
+          ) : (
+            /* EVENT CARDS */
+            filteredEvents.map((event) => {
+              const title = isEn ? (event.title_en || event.title_id) : event.title_id;
+              const location = isEn ? (event.location_en || event.location_id) : event.location_id;
+              const summary = isEn ? (event.summary_en || event.summary_id || '') : (event.summary_id || '');
+              const available = isTicketAvailable(event);
+              const isExclusive = event.type === 'Exclusive';
+
+              return (
+                <Card
+                  key={event.id}
+                  className="group flex flex-col overflow-hidden rounded-3xl border-border/60 bg-card transition-colors hover:border-primary/60"
+                >
+                  <div className="relative aspect-[4/3] overflow-hidden">
+                    {event.image ? (
+                      <img
+                        src={event.image}
+                        alt={title}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="h-full w-full bg-muted/60 flex items-center justify-center">
+                        <Ticket className="w-12 h-12 text-muted-foreground/30" />
+                      </div>
+                    )}
+                    <Badge
+                      className={`absolute left-4 top-4 rounded-full px-3 py-1 text-xs font-semibold ${
+                        isExclusive
+                          ? "bg-gradient-gold text-primary-foreground shadow-gold"
+                          : "bg-muted text-muted-foreground border border-border hover:bg-muted"
+                      }`}
+                    >
+                      {isExclusive ? (isEn ? 'Exclusive' : 'Eksklusif') : (isEn ? 'Non-Exclusive' : 'Non-Eksklusif')}
+                    </Badge>
+                  </div>
+
+                  <CardContent className="flex flex-1 flex-col p-6">
+                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                      <span className="flex items-center gap-1.5">
+                        <CalendarDays className="h-3.5 w-3.5" />
+                        {new Date(event.date).toLocaleDateString(isEn ? 'en-US' : 'id-ID', {
+                          day: 'numeric', month: 'short', year: 'numeric'
+                        })}
+                      </span>
+                      <span className="flex items-center gap-1.5 truncate">
+                        <MapPin className="h-3.5 w-3.5 shrink-0" /> {location}
+                      </span>
+                    </div>
+
+                    <CardTitle className="mt-4 font-display text-xl font-bold leading-snug line-clamp-2">
+                      {title}
+                    </CardTitle>
+                    <CardDescription className="mt-3 flex-1 text-sm line-clamp-3">
+                      {summary || (isEn ? 'No description available.' : 'Tidak ada deskripsi.')}
+                    </CardDescription>
+
+                    <div className="mt-6 flex items-center justify-between border-t border-border/60 pt-4">
+                      <span className="font-semibold text-primary">{formatPrice(event.price)}</span>
+                      {available ? (
+                        <Button
+                          onClick={() => handleBuyTicket(event)}
+                          className="rounded-full bg-gradient-gold px-4 py-2 text-sm font-semibold text-primary-foreground shadow-gold transition-transform hover:scale-[1.03]"
+                        >
+                          <Ticket className="h-4 w-4 mr-2" /> {t("buy")}
+                        </Button>
+                      ) : (
+                        <span className="text-sm font-medium text-muted-foreground">
+                          {t("no_buy")}
+                        </span>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })
           )}
         </div>
 
+        {/* DIALOG BELI TIKET */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="w-[90vw] max-w-[400px] sm:max-w-[425px] rounded-xl">
             <DialogHeader>
-              <DialogTitle>{t("dialog.title")}: {activeEvent?.title}</DialogTitle>
+              <DialogTitle>
+                {t("dialog.title")}: {isEn ? (selectedEvent?.title_en || selectedEvent?.title_id) : selectedEvent?.title_id}
+              </DialogTitle>
               <DialogDescription>
                 {t("dialog.desc")}
-                <br />
-                <br />
-                <strong>{t("dialog.price")}:</strong> {activeEvent?.price} <br />
-                <strong>{t("dialog.location")}:</strong> {activeEvent?.location} <br />
-                <strong>{t("dialog.date")}:</strong> {activeEvent?.date}
+                <br /><br />
+                <strong>{t("dialog.price")}:</strong> {formatPrice(selectedEvent?.price ?? null)} <br />
+                <strong>{t("dialog.location")}:</strong> {isEn ? (selectedEvent?.location_en || selectedEvent?.location_id) : selectedEvent?.location_id} <br />
+                <strong>{t("dialog.date")}:</strong> {selectedEvent ? new Date(selectedEvent.date).toLocaleDateString(isEn ? 'en-US' : 'id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : ''}
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>

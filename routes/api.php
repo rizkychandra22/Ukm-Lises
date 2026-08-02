@@ -25,3 +25,4 @@ Route::get('/batches', [MemberApiController::class, 'batches']);
 Route::get('/galleries', [ContentController::class, 'galleries']);
 Route::get('/news', [ContentController::class, 'news']);
 Route::get('/news/{slug}', [ContentController::class, 'newsDetail']);
+Route::get('/events', [ContentController::class, 'events']);
