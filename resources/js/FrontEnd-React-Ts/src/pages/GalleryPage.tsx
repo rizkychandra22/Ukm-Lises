@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "@/i18n";
 import { SEOHead } from "@/components/SEOHead";
 import { ScrollTop } from "@/components/scroll-top";
-import { Sparkles, Image as ImageIcon } from "lucide-react";
+import { Sparkles, Camera } from "lucide-react";
 import { getGalleries, Gallery } from "@/lib/api/gallery";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -40,15 +40,15 @@ export function GalleryPage() {
           {t("title_t1")} <span className="text-gradient-gold">{t("title_y1")}</span> & {t("title_t2")}
         </h1>
 
-        <div className="mt-12 grid auto-rows-[220px] gap-4 md:grid-cols-3">
+        <div className={`mt-12 grid gap-4 md:grid-cols-3 ${galleries.length > 0 || isLoading ? 'auto-rows-[220px]' : ''}`}>
           {isLoading ? (
             Array(6).fill(0).map((_, i) => (
               <Skeleton key={i} className={`h-full w-full rounded-2xl ${i === 0 ? "md:col-span-2 md:row-span-2" : ""}`} />
             ))
           ) : galleries.length === 0 ? (
-            <div className="col-span-full flex flex-col items-center justify-center py-10 text-muted-foreground border-primary/50 border-2 border-dashed rounded-2xl">
-                <ImageIcon className="w-16 h-16 mb-4 opacity-20" />
-                <p className="text-lg font-medium">{t("no_upload")}</p>
+            <div className="col-span-full flex flex-col items-center justify-center py-20 md:py-20 px-3 text-center text-muted-foreground border-primary/50 border-2 border-dashed rounded-2xl">
+              <Camera className="w-16 h-16 mb-4 opacity-20" />
+              <p className="text-lg font-medium">{t("no_upload")}</p>
             </div>
           ) : (
              galleries.map((item) => {

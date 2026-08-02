@@ -15,11 +15,6 @@ class BatchMember extends Model
         'instagram', 'whatsapp'
     ];
 
-    protected $casts = [
-        'whatsapp'  => 'encrypted',
-        'instagram' => 'encrypted',
-    ];
-
     public function batch()
     {
         return $this->belongsTo(Batch::class);
@@ -28,5 +23,13 @@ class BatchMember extends Model
     public function major()
     {
         return $this->belongsTo(Major::class);
+    }
+
+    /**
+     * Rekening pembayaran milik anggota (bendahara).
+     */
+    public function payAccounts()
+    {
+        return $this->hasMany(PayAccount::class);
     }
 }

@@ -124,6 +124,11 @@ export default {
     title_t2: "kami.",
     buy: "Beli Tiket",
     no_buy: "Tiket Tidak Tersedia",
+    search_placeholder: "Cek pesanan tiket mu atau event tersedia.",
+    search_button: "Cari",
+    search_empty: "Tidak ada event yang cocok dengan pencarian Anda.",
+    no_event: "Belum ada event yang akan datang. Pantau terus halaman ini!",
+    loading: "Memuat data event...",
     card1: {
       type: "Eksklusif",
       date: "15 Agu 2026",

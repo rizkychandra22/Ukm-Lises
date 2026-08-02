@@ -27,7 +27,7 @@ class ListMemberController extends Controller
     public function index()
     {
         return Inertia::render('IndexMember', [
-            'majors' => Major::select('id', 'faculty_id', 'faculty_en', 'name_id', 'name_en', 'degree')->get(),
+            'majors'  => Major::select('id', 'faculty_id', 'faculty_en', 'name_id', 'name_en', 'degree')->get(),
             'members' => BatchMember::with(['batch', 'major'])->latest()->get(),
             'batches' => Batch::select('id', 'user_id', 'year', 'name_id', 'name_en', 'status')->orderBy('year', 'desc')->get(),
         ]);
@@ -44,9 +44,14 @@ class ListMemberController extends Controller
         }
 
         $validated = $request->validate([
-            'year'    => 'required|string|max:10',
+            'year'    => 'required|string|max:10|unique:batches,year',
             'name_id' => 'required|string|max:255',
             'status'  => 'required|in:Active,Deactive',
+        ], [
+            'year.required'    => 'Tahun angkatan wajib diisi.',
+            'year.unique'      => 'Tahun angkatan tersebut sudah terdaftar.',
+            'name_id.required' => 'Nama angkatan wajib diisi.',
+            'status.required'  => 'Status angkatan wajib dipilih.',
         ]);
 
         $this->batchService->createBatch($validated);
@@ -61,11 +66,17 @@ class ListMemberController extends Controller
         }
 
         $validated = $request->validate([
-            'year'     => 'required|string|max:10',
+            'year'     => 'required|string|max:10|unique:batches,year,' . $batch->id,
             'name_id'  => 'required|string|max:255',
             'status'   => 'required|in:Active,Deactive',
-            'username' => 'nullable|string|max:255',
+            'username' => 'nullable|string|max:255|unique:users,username,' . $batch->user_id,
             'password' => 'nullable|string|min:6',
+        ], [
+            'year.required'    => 'Tahun angkatan wajib diisi.',
+            'year.unique'      => 'Tahun angkatan tersebut sudah digunakan.',
+            'name_id.required' => 'Nama angkatan wajib diisi.',
+            'username.unique'  => 'Username ini sudah digunakan oleh akun lain.',
+            'password.min'     => 'Password minimal harus 6 karakter.',
         ]);
 
         $this->batchService->updateBatch($batch, $validated);
@@ -101,9 +112,17 @@ class ListMemberController extends Controller
             'position_id' => 'nullable|string|max:255',
             'whatsapp'    => 'nullable|string|max:255',
             'instagram'   => 'nullable|string|max:255',
+        ], [
+            'batch_id.required' => 'PILIHAN angkatan wajib dipilih.',
+            'major_id.required' => 'Program studi wajib dipilih.',
+            'name.required'     => 'Nama anggota wajib diisi.',
+            'type.required'     => 'Kategori anggota wajib dipilih.',
+            'image.max'         => 'Ukuran foto maksimal adalah 2MB.',
         ]);
 
         $user = auth()->user();
+
+        // Otorisasi Khusus User Angkatan
         if ($user->hasRole('User')) {
             $userBatch = Batch::where('user_id', $user->id)->first();
             if (!$userBatch || $validated['batch_id'] != $userBatch->id) {
@@ -129,14 +148,24 @@ class ListMemberController extends Controller
             'position_id' => 'nullable|string|max:255',
             'whatsapp'    => 'nullable|string|max:255',
             'instagram'   => 'nullable|string|max:255',
+        ], [
+            'batch_id.required' => 'Angkatan wajib dipilih.',
+            'major_id.required' => 'Program studi wajib dipilih.',
+            'name.required'     => 'Nama anggota wajib diisi.',
+            'type.required'     => 'Kategori anggota wajib dipilih.',
+            'image.max'         => 'Ukuran foto maksimal adalah 2MB.',
         ]);
 
         $user = auth()->user();
+
+        // Otorisasi Admin
         if ($user->hasRole('Admin')) {
             if (!($batchMember->type === 'Pengurus' && $batchMember->status === 'Active')) {
                 abort(403, 'Admin hanya dapat mengedit anggota yang sedang menjabat dalam kepengurusan.');
             }
         }
+
+        // Otorisasi User Angkatan
         if ($user->hasRole('User')) {
             $userBatch = Batch::where('user_id', $user->id)->first();
             if (!$userBatch || $batchMember->batch_id != $userBatch->id || $validated['batch_id'] != $userBatch->id) {
@@ -155,11 +184,15 @@ class ListMemberController extends Controller
     public function destroyMember(BatchMember $batchMember)
     {
         $user = auth()->user();
+
+        // Otorisasi Admin
         if ($user->hasRole('Admin')) {
             if (!($batchMember->type === 'Pengurus' && $batchMember->status === 'Active')) {
                 abort(403, 'Admin hanya dapat menghapus anggota yang sedang menjabat dalam kepengurusan.');
             }
         }
+
+        // Otorisasi User Angkatan
         if ($user->hasRole('User')) {
             $userBatch = Batch::where('user_id', $user->id)->first();
             if (!$userBatch || $batchMember->batch_id != $userBatch->id) {

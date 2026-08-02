@@ -56,8 +56,8 @@ export function NewsPage() {
               </Card>
             ))
           ) : posts.length === 0 ? (
-            <div className="col-span-full flex flex-col items-center justify-center py-10 text-muted-foreground border-primary/50 border-2 border-dashed rounded-2xl">
-              <Newspaper className="w-16 h-16 mb-6 opacity-20" />
+            <div className="col-span-full flex flex-col items-center justify-center py-20 md:py-20 px-3 text-center text-muted-foreground border-primary/50 border-2 border-dashed rounded-2xl">
+              <Newspaper className="w-16 h-16 mb-4 opacity-20" />
               <p className="text-lg font-medium">{t("no_upload")}</p>
             </div>
           ) : (

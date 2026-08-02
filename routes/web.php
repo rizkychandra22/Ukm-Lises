@@ -5,6 +5,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ListMemberController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\SitemapController;
@@ -50,11 +51,27 @@ Route::middleware(['access:Developer,Admin,User'])->prefix('dashboard')->group(f
 });
 
 // ---------------------------------------------------------
-// MENU WEBSITE (GALLERY, NEWS, EVENT) - DEVELOPER & ADMIN ONLY
+// MENU WEBSITE (GALLERY, NEWS, EVENT, ORDER, BANK) - DEVELOPER & ADMIN ONLY
 // ---------------------------------------------------------
 Route::middleware(['access:Developer,Admin'])->prefix('dashboard')->group(function () {
     Route::resource('gallery', GalleryController::class)->except(['create', 'show', 'edit']);
     Route::resource('news', NewsController::class)->except(['show']);
+    Route::get('/events', [EventController::class, 'index'])->name('events.index');
+
+    // CRUD Event
+    Route::post('/events', [EventController::class, 'storeEvent'])->name('events.store');
+    Route::put('/events/{event}', [EventController::class, 'updateEvent'])->name('events.update');
+    Route::delete('/events/{event}', [EventController::class, 'destroyEvent'])->name('events.destroy');
+
+    // Manajemen Pesanan Tiket (Order)
+    Route::post('/orders', [EventController::class, 'storeOrder'])->name('orders.store');
+    Route::put('/orders/{order}/status', [EventController::class, 'updateOrderStatus'])->name('orders.update-status');
+    Route::delete('/orders/{order}', [EventController::class, 'destroyOrder'])->name('orders.destroy');
+
+    // Manajemen Rekening Bank / Pembayaran
+    Route::post('/accounts', [EventController::class, 'storeAccount'])->name('accounts.store');
+    Route::put('/accounts/{account}', [EventController::class, 'updateAccount'])->name('accounts.update');
+    Route::delete('/accounts/{account}', [EventController::class, 'destroyAccount'])->name('accounts.destroy');
 });
 
 // -------------------------------------------------------------

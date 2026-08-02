@@ -9,13 +9,13 @@ import {
   CalendarDays,
   Newspaper,
   Image,
+  Camera,
 } from "lucide-react";
 import hero from "@/assets/hero-lises.jpg";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { useTranslation } from "@/i18n";
-import { usePosts } from "@/constants/news";
 import { SEOHead } from "@/components/SEOHead";
 import { ScrollTop } from "@/components/scroll-top";
 import { useState, useEffect, useRef } from "react";
@@ -193,9 +193,9 @@ export function HomePage() {
                {[1,2,3].map(i => <Skeleton key={i} className="aspect-[4/5] rounded-2xl w-full" />)}
             </div>
           ) : momentImages.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-20 text-muted-foreground border-primary/50 border-2 border-dashed rounded-2xl">
-              <Image className="w-10 h-10 mb-4 opacity-20" />
-              <p>{t("section_momen.no_upload")}</p>
+            <div className="flex flex-col items-center justify-center py-20 md:py-12 px-3 text-center text-muted-foreground border-primary/50 border-2 border-dashed rounded-2xl">
+              <Camera className="w-16 h-16 mb-4 opacity-20" />
+              <p className="text-lg font-medium">{t("section_momen.no_upload")}</p>
             </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-3">
@@ -250,9 +250,9 @@ export function HomePage() {
                   <Skeleton key={i} className="h-28 w-full rounded-3xl" />
                ))
             ) : latestNews.length === 0 ? (
-               <div className="flex flex-col items-center justify-center py-10 text-muted-foreground border-primary/50 border-2 border-dashed rounded-3xl h-full">
-                <Newspaper className="w-10 h-10 mb-4 opacity-20" />
-                <p>{t("section_news.no_upload")}</p>
+               <div className="flex flex-col items-center justify-center py-20 md:py-12 px-3 text-center text-muted-foreground border-primary/50 border-2 border-dashed rounded-2xl h-full">
+                <Newspaper className="w-16 h-16 mb-4 opacity-20" />
+                <p className="text-lg font-medium">{t("section_news.no_upload")}</p>
                </div>
             ) : latestNews.map((post) => {
               const title = isEn ? post.title_en || post.title_id : post.title_id;
