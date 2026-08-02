@@ -185,7 +185,7 @@ export function AppSidebar() {
 
                 <SidebarGroup>
                     <SidebarGroupLabel className="px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70 mt-2">
-                        {hasRole(['Developer', 'Admin', 'User']) && auth.user?.roles?.[0]
+                        {hasRole(['Developer', 'Admin']) && auth.user?.roles?.[0]
                             ? `Menu ${auth.user.roles[0]}`
                             : null
                         }

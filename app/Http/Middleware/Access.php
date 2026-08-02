@@ -30,11 +30,18 @@ class Access
             return $next($request);
         }
 
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
         // Jika tidak punya akses Redirect tanpa Logout
         if ($request->wantsJson()) {
-            return redirect()->back()->with('error', 'Anda tidak memiliki hak akses untuk membuka halaman tersebut.');
+            return response()->json([
+                'message' => 'Anda tidak memiliki hak akses untuk melakukan tindakan ini.'
+            ], 403);
         }
-
-        return redirect()->back()->with('error', 'Anda tidak memiliki hak akses untuk membuka halaman tersebut.');
+        
+        // Redirect balik ke Login dengan pesan error
+        return redirect()->route('login')->with('error', 'Akun Anda tidak memiliki hak akses ke area Dashboard.');
     }
 }

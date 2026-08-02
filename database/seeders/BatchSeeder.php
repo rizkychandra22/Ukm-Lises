@@ -39,6 +39,8 @@ class BatchSeeder extends Seeder
                     'password' => Hash::make('password'),
                 ]);
 
+                $user->assignRole('User');
+
                 // Create the batch
                 Batch::create([
                     'user_id' => $user->id,
