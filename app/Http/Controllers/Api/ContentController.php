@@ -12,6 +12,7 @@ class ContentController extends Controller
     public function events()
     {
         $events = Event::published()
+            ->orderByRaw("CASE WHEN status = 'published' THEN 0 WHEN status = 'completed' THEN 1 ELSE 2 END ASC")
             ->orderBy('date', 'asc')
             ->get()
             ->map(function ($event) {

@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Head, useForm, usePage } from '@inertiajs/react';
 import DashboardLayout from "@admin/Layouts/AppLayout";
+import { route } from "../Lib/Route";
 import {
     Search,
     Plus,
@@ -22,6 +23,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
     Table,
     TableBody,
@@ -146,6 +148,8 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
     const [editingEvent, setEditingEvent] = useState<EventItem | null>(null);
     const [isDeleteEventDialogOpen, setIsDeleteEventDialogOpen] = useState(false);
     const [eventToDelete, setEventToDelete] = useState<number | null>(null);
+    const [eventDateInput, setEventDateInput] = useState('');
+    const [eventTimeInput, setEventTimeInput] = useState('');
 
     const {
         data: eventData,
@@ -171,12 +175,36 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
         _method: 'post'
     });
 
+    const isExclusiveEvent = eventData.type === 'Exclusive';
+
+    const formatDateInput = (value?: string | null) => {
+        if (!value) return '';
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return '';
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    };
+
+    const formatTimeInput = (value?: string | null) => {
+        if (!value) return '';
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return '';
+        return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+    };
+
+    const normalizeDateTime = (dateValue: string, timeValue: string) => {
+        if (!dateValue || !timeValue) return dateValue || '';
+        return `${dateValue} ${timeValue}:00`;
+    };
+
     const handleAddEvent = () => {
         setEditingEvent(null);
         resetEvent();
+        setEventDateInput('');
+        setEventTimeInput('');
         setEventData(data => ({
             ...data,
             type: 'Non-Exclusive',
+            date: '',
             status: 'published',
             _method: 'post'
         }));
@@ -185,6 +213,8 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
 
     const handleEditEvent = (event: EventItem) => {
         setEditingEvent(event);
+        setEventDateInput(formatDateInput(event.date));
+        setEventTimeInput(formatTimeInput(event.date));
         setEventData({
             title_id: event.title_id || '',
             title_en: event.title_en || '',
@@ -192,7 +222,7 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
             summary_id: event.summary_id || '',
             summary_en: event.summary_en || '',
             type: event.type || 'Non-Exclusive',
-            date: event.date ? new Date(event.date).toISOString().slice(0, 16) : '',
+            date: formatDateInput(event.date),
             location_id: event.location_id || '',
             location_en: event.location_en || '',
             price: event.price !== null && event.price !== undefined ? event.price.toString() : '',
@@ -205,20 +235,43 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
 
     const handleCancelEditEvent = () => {
         setEditingEvent(null);
+        setEventDateInput('');
+        setEventTimeInput('');
         resetEvent();
         setIsEventModalOpen(false);
     };
 
     const handleSubmitEvent = (e: React.FormEvent) => {
         e.preventDefault();
-        const endpoint = editingEvent
-            ? (window as any).route('events.update', editingEvent.id)
-            : (window as any).route('events.store');
 
+        const endpoint = editingEvent
+            ? route('events.update', editingEvent.id)
+            : route('events.store');
+
+        if (eventData.type === 'Non-Exclusive') {
+            setEventData('price', '');
+            setEventData('ticket', '');
+        }
+
+        const fullDate = normalizeDateTime(eventDateInput, eventTimeInput);
+        setEventData('date', fullDate);
+
+        if (editingEvent) {
+            setEventData('_method', 'put');
+            postEvent(endpoint, {
+                onSuccess: () => {
+                    handleCancelEditEvent();
+                    toast.success('Berhasil memperbarui data event.');
+                }
+            });
+            return;
+        }
+
+        setEventData('_method', 'post');
         postEvent(endpoint, {
             onSuccess: () => {
                 handleCancelEditEvent();
-                toast.success(`Berhasil ${editingEvent ? 'memperbarui' : 'menambahkan'} data event.`);
+                toast.success('Berhasil menambahkan data event.');
             }
         });
     };
@@ -230,7 +283,7 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
 
     const confirmDeleteEvent = () => {
         if (eventToDelete) {
-            deleteEventReq((window as any).route('events.destroy', eventToDelete), {
+            deleteEventReq(route('events.destroy', eventToDelete), {
                 onSuccess: () => {
                     setIsDeleteEventDialogOpen(false);
                     setEventToDelete(null);
@@ -268,7 +321,7 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
         e.preventDefault();
         if (!editingOrder) return;
 
-        putOrder((window as any).route('orders.update-status', editingOrder.id), {
+        putOrder(route('orders.update-status', editingOrder.id), {
             onSuccess: () => {
                 setIsOrderStatusModalOpen(false);
                 setEditingOrder(null);
@@ -284,7 +337,7 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
 
     const confirmDeleteOrder = () => {
         if (orderToDelete) {
-            deleteOrderReq((window as any).route('orders.destroy', orderToDelete), {
+            deleteOrderReq(route('orders.destroy', orderToDelete), {
                 onSuccess: () => {
                     setIsDeleteOrderDialogOpen(false);
                     setOrderToDelete(null);
@@ -323,7 +376,7 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
 
     const handleSubmitOfflineOrder = (e: React.FormEvent) => {
         e.preventDefault();
-        postOfflineOrder((window as any).route('orders.store'), {
+        postOfflineOrder(route('orders.store'), {
             onSuccess: () => {
                 setIsOfflineOrderModalOpen(false);
                 resetOfflineOrder();
@@ -382,14 +435,14 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
     const handleSubmitAccount = (e: React.FormEvent) => {
         e.preventDefault();
         if (editingAccount) {
-            putAccount((window as any).route('accounts.update', editingAccount.id), {
+            putAccount(route('accounts.update', editingAccount.id), {
                 onSuccess: () => {
                     handleCancelEditAccount();
                     toast.success('Berhasil memperbarui data rekening.');
                 }
             });
         } else {
-            postAccount((window as any).route('accounts.store'), {
+            postAccount(route('accounts.store'), {
                 onSuccess: () => {
                     handleCancelEditAccount();
                     toast.success('Berhasil menambahkan rekening baru.');
@@ -405,7 +458,7 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
 
     const confirmDeleteAccount = () => {
         if (accountToDelete) {
-            deleteAccountReq((window as any).route('accounts.destroy', accountToDelete), {
+            deleteAccountReq(route('accounts.destroy', accountToDelete), {
                 onSuccess: () => {
                     setIsDeleteBankDialogOpen(false);
                     setAccountToDelete(null);
@@ -538,11 +591,11 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead>Banner</TableHead>
-                                        <TableHead>Judul Event</TableHead>
+                                        <TableHead>Judul</TableHead>
                                         <TableHead>Tipe</TableHead>
                                         <TableHead>Tanggal</TableHead>
-                                        <TableHead>Harga Tiket</TableHead>
-                                        <TableHead>Sisa / Total Tiket</TableHead>
+                                        <TableHead>Harga</TableHead>
+                                        <TableHead>Tiket</TableHead>
                                         <TableHead>Status</TableHead>
                                         <TableHead className="text-right">Aksi</TableHead>
                                     </TableRow>
@@ -566,9 +619,13 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                                                 </TableCell>
                                                 <TableCell className="font-medium">{item.title_id}</TableCell>
                                                 <TableCell>
-                                                    <span className={`text-xs px-2 py-0.5 rounded font-medium ${item.type === 'Exclusive' ? 'bg-purple-500/10 text-purple-600 border border-purple-500/20' : 'bg-blue-500/10 text-blue-600 border border-blue-500/20'}`}>
+                                                    <Badge
+                                                        className={item.type === 'Exclusive'
+                                                            ? 'border-violet-500/30 bg-violet-500/10 text-violet-700'
+                                                            : 'border-sky-500/30 bg-sky-500/10 text-sky-700'}
+                                                    >
                                                         {item.type}
-                                                    </span>
+                                                    </Badge>
                                                 </TableCell>
                                                 <TableCell className="text-xs">{new Date(item.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</TableCell>
                                                 <TableCell className="font-medium">{formatIDR(item.price)}</TableCell>
@@ -577,10 +634,15 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                                                 </TableCell>
                                                 <TableCell>
                                                     <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                                                        item.status === 'published' ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20' :
-                                                        item.status === 'draft' ? 'bg-amber-500/10 text-amber-600 border border-amber-500/20' : 'bg-red-500/10 text-red-600 border border-red-500/20'
+                                                        item.status === 'completed' ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20' :
+                                                        item.status === 'published' ? 'bg-sky-500/10 text-sky-600 border border-sky-500/20' :
+                                                        item.status === 'draft' ? 'bg-amber-500/10 text-amber-600 border border-amber-500/20' :
+                                                        'bg-rose-500/10 text-rose-600 border border-rose-500/20'
                                                     }`}>
-                                                        {item.status}
+                                                        {item.status === 'completed' ? 'Completed' :
+                                                         item.status === 'published' ? 'Published' :
+                                                         item.status === 'draft' ? 'Draft' :
+                                                         'Cancelled'}
                                                     </span>
                                                 </TableCell>
                                                 <TableCell className="text-right">
@@ -741,7 +803,7 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
 
                         <form onSubmit={handleSubmitEvent} className="space-y-4 pt-2 max-h-[75vh] overflow-y-auto no-scrollbar px-1">
                             <div>
-                                <label className="block text-sm font-medium mb-1">Judul Event (Bahasa Indonesia)</label>
+                                <label className="block text-sm font-medium mb-1">Judul Event</label>
                                 <Input
                                     className="h-8 text-[13px]"
                                     placeholder="Contoh: Pagelaran Seni Budaya 2026"
@@ -752,16 +814,63 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                                 {eventErrors.title_id && <span className="text-xs text-red-500">{eventErrors.title_id}</span>}
                             </div>
 
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Lokasi Event</label>
+                                <Input
+                                    className="h-8 text-[13px]"
+                                    placeholder="Contoh: Gedung Aula Utama UKM"
+                                    value={eventData.location_id}
+                                    onChange={e => setEventData('location_id', e.target.value)}
+                                    required
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Tanggal Pelaksanaan</label>
+                                    <div className="relative">
+                                        <Input
+                                            type="date"
+                                            className="h-8 text-[13px] pr-10"
+                                            value={eventDateInput}
+                                            onChange={e => setEventDateInput(e.target.value)}
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Jam Pelaksanaan</label>
+                                    <div className="relative">
+                                        <Input
+                                            type="time"
+                                            className="h-8 text-[13px] pr-10"
+                                            value={eventTimeInput}
+                                            onChange={e => setEventTimeInput(e.target.value)}
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Tipe Event</label>
-                                    <Select value={eventData.type} onValueChange={(val: any) => setEventData('type', val)}>
+                                    <Select
+                                        value={eventData.type}
+                                        onValueChange={(val: any) => {
+                                            setEventData('type', val);
+                                            if (val === 'Non-Exclusive') {
+                                                setEventData('price', '');
+                                                setEventData('ticket', '');
+                                            }
+                                        }}
+                                    >
                                         <SelectTrigger className="h-8 text-[13px]">
                                             <SelectValue placeholder="Pilih Tipe" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="Non-Exclusive">Non-Exclusive (Publik)</SelectItem>
-                                            <SelectItem value="Exclusive">Exclusive (Internal)</SelectItem>
+                                            <SelectItem value="Non-Exclusive">Non-Exclusive</SelectItem>
+                                            <SelectItem value="Exclusive">Exclusive</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -781,53 +890,34 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-medium mb-1">Tanggal & Waktu Pelaksanaan</label>
-                                    <Input
-                                        type="datetime-local"
-                                        className="h-8 text-[13px]"
-                                        value={eventData.date}
-                                        onChange={e => setEventData('date', e.target.value)}
-                                        required
-                                    />
+                            {isExclusiveEvent && (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium mb-1">Harga Tiket</label>
+                                        <Input
+                                            type="number"
+                                            min="0"
+                                            className="h-8 text-[13px]"
+                                            placeholder="Cth: 50000"
+                                            value={eventData.price}
+                                            onChange={e => setEventData('price', e.target.value)}
+                                            required={isExclusiveEvent}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium mb-1">Kuota Tiket</label>
+                                        <Input
+                                            type="number"
+                                            min="0"
+                                            className="h-8 text-[13px]"
+                                            placeholder="Cth: 100"
+                                            value={eventData.ticket}
+                                            onChange={e => setEventData('ticket', e.target.value)}
+                                            required={isExclusiveEvent}
+                                        />
+                                    </div>
                                 </div>
-                                <div>
-                                    <label className="block text-sm font-medium mb-1">Lokasi Tempat Event</label>
-                                    <Input
-                                        className="h-8 text-[13px]"
-                                        placeholder="Contoh: Gedung Aula Utama UKM"
-                                        value={eventData.location_id}
-                                        onChange={e => setEventData('location_id', e.target.value)}
-                                        required
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-medium mb-1">Harga Tiket (Kosongkan jika Gratis)</label>
-                                    <Input
-                                        type="number"
-                                        min="0"
-                                        className="h-8 text-[13px]"
-                                        placeholder="Cth: 50000"
-                                        value={eventData.price}
-                                        onChange={e => setEventData('price', e.target.value)}
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium mb-1">Kuota Tiket (Kosongkan jika Unlimited)</label>
-                                    <Input
-                                        type="number"
-                                        min="0"
-                                        className="h-8 text-[13px]"
-                                        placeholder="Cth: 100"
-                                        value={eventData.ticket}
-                                        onChange={e => setEventData('ticket', e.target.value)}
-                                    />
-                                </div>
-                            </div>
+                            )}
 
                             <div>
                                 <label className="block text-sm font-medium mb-1">Ringkasan / Deskripsi Event</label>
@@ -904,13 +994,13 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                             <DialogTitle>Catat Pesanan Tiket Offline</DialogTitle>
                         </DialogHeader>
                         <p className="text-[12px] text-muted-foreground -mt-2 pb-1">
-                            Pesanan ini dicatat manual oleh admin. Status otomatis <strong>Success</strong> karena pembayaran diterima langsung.
+                            Pesanan ini dicatat manual oleh admin. Status otomatis berhasil karena pembayaran diterima langsung.
                         </p>
 
                         <form onSubmit={handleSubmitOfflineOrder} className="space-y-4 pt-1 max-h-[72vh] overflow-y-auto no-scrollbar px-1">
                             {/* Pilih Event */}
                             <div>
-                                <label className="block text-sm font-medium mb-1">Event <span className="text-destructive">*</span></label>
+                                <label className="block text-sm font-medium mb-1">Event</label>
                                 <Select
                                     value={offlineOrderData.event_id}
                                     onValueChange={val => setOfflineOrderData('event_id', val)}
@@ -935,7 +1025,7 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                             {/* Info Pemesan */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium mb-1">Nama Pemesan <span className="text-destructive">*</span></label>
+                                    <label className="block text-sm font-medium mb-1">Nama Pemesan</label>
                                     <Input
                                         className="h-8 text-[13px]"
                                         placeholder="Nama lengkap"
@@ -946,7 +1036,7 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                                     {offlineOrderErrors.name && <span className="text-xs text-destructive">{offlineOrderErrors.name}</span>}
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium mb-1">No. Telepon <span className="text-destructive">*</span></label>
+                                    <label className="block text-sm font-medium mb-1">No. Telepon</label>
                                     <Input
                                         className="h-8 text-[13px] font-mono"
                                         placeholder="Cth: 081234567890"
@@ -960,7 +1050,7 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium mb-1">Email <span className="text-muted-foreground text-xs">(Opsional)</span></label>
+                                    <label className="block text-sm font-medium mb-1">Email</label>
                                     <Input
                                         type="email"
                                         className="h-8 text-[13px]"
@@ -971,7 +1061,7 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                                     {offlineOrderErrors.email && <span className="text-xs text-destructive">{offlineOrderErrors.email}</span>}
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium mb-1">Jumlah Tiket <span className="text-destructive">*</span></label>
+                                    <label className="block text-sm font-medium mb-1">Jumlah Tiket</label>
                                     <Input
                                         type="number"
                                         min="1"
@@ -985,7 +1075,7 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium mb-1">Metode Pembayaran <span className="text-muted-foreground text-xs">(Opsional)</span></label>
+                                <label className="block text-sm font-medium mb-1">Metode Pembayaran</label>
                                 <Input
                                     className="h-8 text-[13px]"
                                     placeholder="Cth: Cash, Transfer BCA, QRIS"
@@ -995,7 +1085,7 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium mb-1">Catatan <span className="text-muted-foreground text-xs">(Opsional)</span></label>
+                                <label className="block text-sm font-medium mb-1">Catatan</label>
                                 <Textarea
                                     rows={2}
                                     className="text-[13px] resize-none"

@@ -49,8 +49,8 @@ class EventController extends Controller
             'date'        => ['required', 'date'],
             'location_id' => ['required', 'string', 'max:255'],
             'location_en' => ['nullable', 'string', 'max:255'],
-            'price'       => ['nullable', 'numeric', 'min:0'],
-            'ticket'      => ['nullable', 'integer', 'min:0'],
+            'price'       => ['nullable', 'numeric', 'min:0', 'required_if:type,Exclusive'],
+            'ticket'      => ['nullable', 'integer', 'min:0', 'required_if:type,Exclusive'],
             'status'      => ['required', 'in:draft,published,cancelled,completed'],
         ], [
             'title_id.required'    => 'Judul event wajib diisi.',
@@ -58,6 +58,8 @@ class EventController extends Controller
             'date.required'        => 'Tanggal & waktu event wajib diisi.',
             'location_id.required' => 'Lokasi event wajib diisi.',
             'status.required'      => 'Status event wajib dipilih.',
+            'price.required_if'    => 'Harga tiket wajib diisi untuk event Exclusive.',
+            'ticket.required_if'   => 'Kuota tiket wajib diisi untuk event Exclusive.',
             'image.max'            => 'Ukuran banner maksimal 2MB.',
         ]);
 
@@ -78,8 +80,8 @@ class EventController extends Controller
             'date'        => ['required', 'date'],
             'location_id' => ['required', 'string', 'max:255'],
             'location_en' => ['nullable', 'string', 'max:255'],
-            'price'       => ['nullable', 'numeric', 'min:0'],
-            'ticket'      => ['nullable', 'integer', 'min:0'],
+            'price'       => ['nullable', 'numeric', 'min:0', 'required_if:type,Exclusive'],
+            'ticket'      => ['nullable', 'integer', 'min:0', 'required_if:type,Exclusive'],
             'status'      => ['required', 'in:draft,published,cancelled,completed'],
         ], [
             'title_id.required'    => 'Judul event wajib diisi.',
@@ -87,6 +89,8 @@ class EventController extends Controller
             'date.required'        => 'Tanggal & waktu event wajib diisi.',
             'location_id.required' => 'Lokasi event wajib diisi.',
             'status.required'      => 'Status event wajib dipilih.',
+            'price.required_if'    => 'Harga tiket wajib diisi untuk event Exclusive.',
+            'ticket.required_if'   => 'Kuota tiket wajib diisi untuk event Exclusive.',
             'image.max'            => 'Ukuran banner maksimal 2MB.',
         ]);
 

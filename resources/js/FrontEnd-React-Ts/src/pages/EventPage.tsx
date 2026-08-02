@@ -38,16 +38,31 @@ export function EventPage() {
     fetchEvents();
   }, []);
 
+  const visibleEvents = useMemo(() => {
+    return [...events]
+      .filter((event) => ['published', 'completed'].includes(event.status))
+      .sort((a, b) => {
+        const priority: Record<string, number> = {
+          published: 0,
+          completed: 1,
+        };
+
+        return (priority[a.status] ?? 99) - (priority[b.status] ?? 99);
+      });
+  }, [events]);
+
   const filteredEvents = useMemo(() => {
-    if (!searchQuery.trim()) return events;
+    const baseEvents = visibleEvents;
+    if (!searchQuery.trim()) return baseEvents;
+
     const q = searchQuery.trim().toLowerCase();
-    return events.filter((event) => {
+    return baseEvents.filter((event) => {
       const title = isEn ? (event.title_en || event.title_id) : event.title_id;
       const location = isEn ? (event.location_en || event.location_id) : event.location_id;
       const summary = isEn ? (event.summary_en || event.summary_id || '') : (event.summary_id || '');
       return [title, location, summary, event.type].join(' ').toLowerCase().includes(q);
     });
-  }, [events, searchQuery, isEn]);
+  }, [visibleEvents, searchQuery, isEn]);
 
   const handleBuyTicket = (event: EventItem) => {
     setSelectedEvent(event);
@@ -65,10 +80,13 @@ export function EventPage() {
 
   const isTicketAvailable = (event: EventItem): boolean => {
     if (event.status !== 'published') return false;
-    // If ticket is null = unlimited
     if (event.ticket === null) return true;
-    // Check remaining tickets
     return (event.remaining_tickets ?? 0) > 0;
+  };
+
+  const canBuyTicket = (event: EventItem): boolean => {
+    if (!event.price || event.price === 0) return false;
+    return isTicketAvailable(event);
   };
 
   return (
@@ -133,6 +151,8 @@ export function EventPage() {
               const summary = isEn ? (event.summary_en || event.summary_id || '') : (event.summary_id || '');
               const available = isTicketAvailable(event);
               const isExclusive = event.type === 'Exclusive';
+              const canShowBuyButton = canBuyTicket(event);
+              const statusLabel = event.status === 'published' ? 'Published' : 'Completed';
 
               return (
                 <Card
@@ -152,15 +172,26 @@ export function EventPage() {
                         <Ticket className="w-12 h-12 text-muted-foreground/30" />
                       </div>
                     )}
-                    <Badge
-                      className={`absolute left-4 top-4 rounded-full px-3 py-1 text-xs font-semibold ${
-                        isExclusive
-                          ? "bg-gradient-gold text-primary-foreground shadow-gold"
-                          : "bg-muted text-muted-foreground border border-border hover:bg-muted"
-                      }`}
-                    >
-                      {isExclusive ? (isEn ? 'Exclusive' : 'Eksklusif') : (isEn ? 'Non-Exclusive' : 'Non-Eksklusif')}
-                    </Badge>
+                    <div className="absolute inset-x-4 top-4 flex items-center justify-between gap-2">
+                      <Badge
+                        className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                          isExclusive
+                            ? "bg-gradient-gold text-primary-foreground shadow-gold"
+                            : "bg-muted text-foreground border border-border hover:bg-muted"
+                        }`}
+                      >
+                        {isExclusive ? (isEn ? 'Exclusive' : 'Eksklusif') : (isEn ? 'Non-Exclusive' : 'Non-Eksklusif')}
+                      </Badge>
+
+                      <Badge
+                        className={event.status === 'published'
+                            ? "bg-gradient-gold text-primary-foreground shadow-gold"
+                            : "bg-destructive text-destructive-foreground border border-border hover:bg-destructive"
+                          }
+                      >
+                        {statusLabel}
+                      </Badge>
+                    </div>
                   </div>
 
                   <CardContent className="flex flex-1 flex-col p-6">
@@ -185,7 +216,7 @@ export function EventPage() {
 
                     <div className="mt-6 flex items-center justify-between border-t border-border/60 pt-4">
                       <span className="font-semibold text-primary">{formatPrice(event.price)}</span>
-                      {available ? (
+                      {canShowBuyButton ? (
                         <Button
                           onClick={() => handleBuyTicket(event)}
                           className="rounded-full bg-gradient-gold px-4 py-2 text-sm font-semibold text-primary-foreground shadow-gold transition-transform hover:scale-[1.03]"
@@ -193,8 +224,8 @@ export function EventPage() {
                           <Ticket className="h-4 w-4 mr-2" /> {t("buy")}
                         </Button>
                       ) : (
-                        <span className="text-sm font-medium text-muted-foreground">
-                          {t("no_buy")}
+                        <span className="text-sm font-medium text-foreground">
+                         {t("no_buy")}
                         </span>
                       )}
                     </div>

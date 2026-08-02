@@ -56,11 +56,11 @@ class Event extends Model
     }
 
     /**
-     * Scope: hanya event yang sudah dipublish.
+     * Scope: hanya event yang statusnya bisa tampil di landing page publik.
      */
     public function scopePublished($query)
     {
-        return $query->where('status', 'published');
+        return $query->whereIn('status', ['published', 'completed']);
     }
 
     /**
