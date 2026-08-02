@@ -34,7 +34,7 @@ class BatchSeeder extends Seeder
             if (!Batch::where('year', $year)->exists()) {
                 // Create a user for this batch (matching the app's auto-creation behavior)
                 $user = User::create([
-                    'name' => 'Angkatan ' . $nameId,
+                    'name' => $nameId,
                     'username' => 'lises' . $year,
                     'password' => Hash::make('password'),
                 ]);
