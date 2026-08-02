@@ -87,7 +87,7 @@ export function NewsPage() {
                   <CardContent className="flex flex-1 flex-col p-6">
                     <div className=" flex flex-wrap items-center gap-4">
                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <CalendarDays className="h-3.5 w-3.5" /> {date}
+                        <CalendarDays className="h-3.5 w-3.5 text-primary/70" /> {date}
                       </div>
                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
                         <User className="h-4 w-4 text-primary/70" /> {post.uploaded_by}

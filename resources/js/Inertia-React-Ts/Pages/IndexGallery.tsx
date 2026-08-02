@@ -42,7 +42,7 @@ interface Gallery {
     desc_id: string | null;
     desc_en: string | null;
     image: string;
-    is_active: boolean;
+    // is_active: boolean;
     is_index: boolean;
     user: {
         id: number;
@@ -71,7 +71,7 @@ export default function IndexGallery({ galleries }: PageProps) {
         title_id: "",
         desc_id: "",
         image: null as File | null,
-        is_active: false,
+        // is_active: false,
         is_index: false,
     });
     const [errors, setErrors] = useState<Record<string, string>>({});
@@ -103,13 +103,13 @@ export default function IndexGallery({ galleries }: PageProps) {
                 const aVal = (() => {
                     if (sortConfig.key === 'title_id') return a.title_id || "";
                     if (sortConfig.key === 'desc_id') return a.desc_id || "";
-                    if (sortConfig.key === 'status') return (a.is_active ? "1" : "0") + (a.is_index ? "1" : "0");
+                    // if (sortConfig.key === 'status') return (a.is_active ? "1" : "0") + (a.is_index ? "1" : "0");
                     return "";
                 })();
                 const bVal = (() => {
                     if (sortConfig.key === 'title_id') return b.title_id || "";
                     if (sortConfig.key === 'desc_id') return b.desc_id || "";
-                    if (sortConfig.key === 'status') return (b.is_active ? "1" : "0") + (b.is_index ? "1" : "0");
+                    // if (sortConfig.key === 'status') return (b.is_active ? "1" : "0") + (b.is_index ? "1" : "0");
                     return "";
                 })();
 
@@ -122,7 +122,7 @@ export default function IndexGallery({ galleries }: PageProps) {
     }, [galleries.data, searchQuery, sortConfig]);
 
     const handleAdd = () => {
-        setFormData({ title_id: "", desc_id: "", image: null, is_active: false, is_index: false });
+        setFormData({ title_id: "", desc_id: "", image: null, is_index: false });
         setErrors({});
         setSelectedGallery(null);
         setIsSheetOpen(true);
@@ -134,7 +134,7 @@ export default function IndexGallery({ galleries }: PageProps) {
             title_id: gallery.title_id,
             desc_id: gallery.desc_id || "",
             image: null,
-            is_active: gallery.is_active,
+            // is_active: gallery.is_active,
             is_index: gallery.is_index,
         });
         setErrors({});
@@ -156,7 +156,7 @@ export default function IndexGallery({ galleries }: PageProps) {
         data.append('title_id', formData.title_id);
         if (formData.desc_id) data.append('desc_id', formData.desc_id);
         if (formData.image) data.append('image', formData.image);
-        data.append('is_active', formData.is_active ? '1' : '0');
+        // data.append('is_active', formData.is_active ? '1' : '0');
         data.append('is_index', formData.is_index ? '1' : '0');
 
         const endpoint = selectedGallery ? route('gallery.update', selectedGallery.id) : route('gallery.store');
@@ -167,11 +167,11 @@ export default function IndexGallery({ galleries }: PageProps) {
                 setProcessing(false);
                 toast.success(`Berhasil ${selectedGallery ? 'memperbarui' : 'menambahkan'} data galeri.`);
             },
-            onError: (err) => {
-                setErrors(err);
-                setProcessing(false);
-                if (err.is_active) toast.error(err.is_active);
-            }
+            // onError: (err) => {
+            //     setErrors(err);
+            //     setProcessing(false);
+            //     if (err.is_active) toast.error(err.is_active);
+            // }
         });
     };
 
@@ -269,7 +269,7 @@ export default function IndexGallery({ galleries }: PageProps) {
                                         </TableCell>
                                         <TableCell>
                                             <div className="flex flex-col gap-1 items-start">
-                                                {item.is_active && <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-green-100 text-green-700 border border-green-200">Active (Slider)</span>}
+                                                {/* {item.is_active && <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-green-100 text-green-700 border border-green-200">Active (Slider)</span>} */}
                                                 {item.is_index && <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-100 text-blue-700 border border-blue-200">Index (Hero)</span>}
                                             </div>
                                         </TableCell>
@@ -347,13 +347,13 @@ export default function IndexGallery({ galleries }: PageProps) {
                             </div>
                             
                             <div className="space-y-4 pt-4 border-t">
-                                <div className="flex items-center justify-between">
+                                {/* <div className="flex items-center justify-between">
                                     <div className="space-y-0.5">
                                         <Label className="text-base">Jadikan Slider (Active)</Label>
                                         <p className="text-xs text-muted-foreground">Tampil di slider HomePage (Maksimal 3 gambar).</p>
                                     </div>
                                     <Switch checked={formData.is_active} onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })} />
-                                </div>
+                                </div> */}
                                 <div className="flex items-center justify-between">
                                     <div className="space-y-0.5">
                                         <Label className="text-base">Jadikan Hero (Index)</Label>

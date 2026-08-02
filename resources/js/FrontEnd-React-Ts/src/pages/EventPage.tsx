@@ -197,13 +197,13 @@ export function EventPage() {
                   <CardContent className="flex flex-1 flex-col p-6">
                     <div className="flex items-center gap-4 text-xs text-muted-foreground">
                       <span className="flex items-center gap-1.5">
-                        <CalendarDays className="h-3.5 w-3.5" />
+                        <CalendarDays className="h-3.5 w-3.5 text-primary/70" />
                         {new Date(event.date).toLocaleDateString(isEn ? 'en-US' : 'id-ID', {
                           day: 'numeric', month: 'short', year: 'numeric'
                         })}
                       </span>
                       <span className="flex items-center gap-1.5 truncate">
-                        <MapPin className="h-3.5 w-3.5 shrink-0" /> {location}
+                        <MapPin className="h-3.5 w-3.5 shrink-0 text-primary/70" /> {location}
                       </span>
                     </div>
 
