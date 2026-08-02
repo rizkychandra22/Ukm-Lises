@@ -34,8 +34,6 @@ class NewsResource extends JsonResource
             'description_en' => $this->description_en,
             'image' => $this->image,
             'uploaded_by' => $uploadedBy,
-            'created_at' => $this->created_at->toISOString(),
-            'updated_at' => $this->updated_at->toISOString(),
         ];
     }
 }

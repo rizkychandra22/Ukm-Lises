@@ -55,10 +55,30 @@ class EventService
             unset($data['image']);
         }
 
-        // 2. Auto-translate ke Bahasa Inggris
+        // 2. Jika field bahasa Indonesia berubah, kosongkan field bahasa Inggris agar di-translate ulang
+        if (isset($data['title_id']) && $data['title_id'] !== $event->title_id) {
+            $data['title_en'] = null;
+            
+            // Regenerate slug jika judul berubah
+            $baseSlug = \Illuminate\Support\Str::slug($data['title_id']);
+            $slug = $baseSlug;
+            $counter = 1;
+            while (\App\Models\Event::where('slug', $slug)->where('id', '!=', $event->id)->exists()) {
+                $slug = $baseSlug . '-' . $counter++;
+            }
+            $data['slug'] = $slug;
+        }
+        if (isset($data['summary_id']) && $data['summary_id'] !== $event->summary_id) {
+            $data['summary_en'] = null;
+        }
+        if (isset($data['location_id']) && $data['location_id'] !== $event->location_id) {
+            $data['location_en'] = null;
+        }
+
+        // 3. Auto-translate ke Bahasa Inggris
         $data = $this->processEventTranslations($data);
 
-        // 3. Update Database
+        // 4. Update Database
         $event->update($data);
 
         return $event;

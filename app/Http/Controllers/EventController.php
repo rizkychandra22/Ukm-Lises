@@ -25,11 +25,19 @@ class EventController extends Controller
      */
     public function index(): Response
     {
+        $events = Event::latest()->get();
+        $events->each->append('remaining_tickets');
+
         return Inertia::render('IndexEvent', [
-            'events'   => Event::latest()->get(),
+            'events'   => $events,
             'orders'   => PayOrder::with('event')->latest()->get(),
             'accounts' => PayAccount::with('batchMember')->get(),
-            'members'  => BatchMember::select('id', 'name')->get(),
+            'members'  => BatchMember::select('id', 'name')
+                ->where('type', 'Pengurus')
+                ->where('status', 'Active')
+                ->whereHas('batch', fn ($q) => $q->where('status', 'Active'))
+                ->whereNotNull('position_id')
+                ->get(),
         ]);
     }
 

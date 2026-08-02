@@ -38,25 +38,34 @@ class PayOrder extends Model
     }
 
     /**
-     * Generate kode order unik: ORD-YYYYMMDD-XXX
+     * Generate kode order unik: EVT + dd + mm + 4 random digits + 2-digit start year + 2-digit end year
+     * Contoh: EVT180454712526  (tanggal 18, bulan 04, random 5471, periode 2025-2026)
      */
     public static function generateOrderCode(): string
     {
-        $date = now()->format('Ymd');
-        $prefix = "ORD-{$date}-";
+        $now = now();
+        $day   = $now->format('d');    // 2-digit day
+        $month = $now->format('m');    // 2-digit month
 
-        $lastOrder = static::where('order_code', 'like', "{$prefix}%")
-            ->orderByDesc('order_code')
-            ->first();
-
-        if ($lastOrder) {
-            $lastNumber = (int) str_replace($prefix, '', $lastOrder->order_code);
-            $nextNumber = $lastNumber + 1;
+        // Tentukan periode akademik: Juli–Desember = tahun ini - tahun depan, Januari–Juni = tahun lalu - tahun ini
+        $year = (int) $now->format('Y');
+        if ($now->month >= 7) {
+            $startYear = $year;
+            $endYear   = $year + 1;
         } else {
-            $nextNumber = 1;
+            $startYear = $year - 1;
+            $endYear   = $year;
         }
 
-        return $prefix . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+        $suffix = substr((string) $startYear, -2) . substr((string) $endYear, -2);
+
+        // Generate kode unik dengan 4 digit random, pastikan tidak duplikat
+        do {
+            $random = str_pad((string) random_int(0, 9999), 4, '0', STR_PAD_LEFT);
+            $code = "EVT{$day}{$month}{$random}{$suffix}";
+        } while (static::where('order_code', $code)->exists());
+
+        return $code;
     }
 
     /**

@@ -43,7 +43,7 @@ class OrderService
             // 4. Create Order (order_code di-generate otomatis via Model Boot)
             return PayOrder::create([
                 'name'           => $data['name'],
-                'email'          => $data['email'],
+                'email'          => $data['email'] ?? null,
                 'phone'          => $data['phone'],
                 'event_id'       => $event->id,
                 'qty'            => $data['qty'],
@@ -52,7 +52,7 @@ class OrderService
                 'payment_method' => $data['payment_method'] ?? null,
                 'payment_proof'  => $proofUrl,
                 'order_method'   => $data['order_method'] ?? 'online',
-                'status'         => 'pending',
+                'status'         => $data['status'] ?? 'pending',
             ]);
         });
     }

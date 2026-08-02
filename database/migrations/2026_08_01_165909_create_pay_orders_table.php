@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('order_code')->unique();
             $table->string('name');
-            $table->string('email');
-            $table->string('phone');
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
             $table->foreignId('event_id')->constrained()->onDelete('cascade');
             $table->integer('qty');
             $table->decimal('total_price', 15, 2);

@@ -51,7 +51,7 @@ class NewsController extends Controller
 
         $this->newsService->createNews($data);
 
-        return redirect()->route('news.index')->with('success', 'Berita berhasil ditambahkan');
+        return redirect()->route('news.index');
     }
 
     public function edit(\App\Models\News $news)
@@ -74,13 +74,13 @@ class NewsController extends Controller
 
         $this->newsService->updateNews($news, $data);
 
-        return redirect()->route('news.index')->with('success', 'Berita berhasil diperbarui');
+        return redirect()->route('news.index');
     }
 
     public function destroy(\App\Models\News $news)
     {
         $this->newsService->deleteNews($news);
 
-        return redirect()->route('news.index')->with('success', 'Berita berhasil dihapus');
+        return redirect()->route('news.index');
     }
 }

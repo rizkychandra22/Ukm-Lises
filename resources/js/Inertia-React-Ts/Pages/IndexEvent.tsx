@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Head, useForm, usePage } from '@inertiajs/react';
+import { Head, useForm, usePage, router } from '@inertiajs/react';
 import DashboardLayout from "@admin/Layouts/AppLayout";
 import { route } from "../Lib/Route";
 import {
@@ -11,6 +11,7 @@ import {
     Loader2,
     Save,
     CheckCircle,
+    ArrowUpDown,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
@@ -83,8 +84,8 @@ type PayOrder = {
     id: number;
     order_code: string;
     name: string;
-    email: string;
-    phone: string;
+    email?: string | null;
+    phone?: string | null;
     event_id: number;
     qty: number;
     total_price: number;
@@ -134,6 +135,21 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
 
     // --- State Search ---
     const [searchQuery, setSearchQuery] = useState("");
+
+    // --- State Status Filter ---
+    const [eventStatusFilter, setEventStatusFilter] = useState<string>('all');
+    const [orderStatusFilter, setOrderStatusFilter] = useState<string>('all');
+
+    // --- State Sorting ---
+    const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(null);
+
+    const handleSort = (key: string) => {
+        let direction: 'asc' | 'desc' = 'asc';
+        if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
+            direction = 'desc';
+        }
+        setSortConfig({ key, direction });
+    };
 
     // --- State View Detail Sheet ---
     const [viewingEvent, setViewingEvent] = useState<EventItem | null>(null);
@@ -247,30 +263,34 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
             ? route('events.update', editingEvent.id)
             : route('events.store');
 
-        if (eventData.type === 'Non-Exclusive') {
-            setEventData('price', '');
-            setEventData('ticket', '');
-        }
-
         const fullDate = normalizeDateTime(eventDateInput, eventTimeInput);
-        setEventData('date', fullDate);
+
+        // Build FormData manually to avoid React state race condition
+        const formData = new FormData();
+        formData.append('title_id', eventData.title_id);
+        if (eventData.title_en) formData.append('title_en', eventData.title_en);
+        if (eventData.image) formData.append('image', eventData.image);
+        formData.append('summary_id', eventData.summary_id);
+        if (eventData.summary_en) formData.append('summary_en', eventData.summary_en);
+        formData.append('type', eventData.type);
+        formData.append('date', fullDate);
+        formData.append('location_id', eventData.location_id);
+        if (eventData.location_en) formData.append('location_en', eventData.location_en);
+        formData.append('status', eventData.status);
+
+        if (eventData.type === 'Exclusive') {
+            formData.append('price', eventData.price);
+            formData.append('ticket', eventData.ticket);
+        }
 
         if (editingEvent) {
-            setEventData('_method', 'put');
-            postEvent(endpoint, {
-                onSuccess: () => {
-                    handleCancelEditEvent();
-                    toast.success('Berhasil memperbarui data event.');
-                }
-            });
-            return;
+            formData.append('_method', 'put');
         }
 
-        setEventData('_method', 'post');
-        postEvent(endpoint, {
+        router.post(endpoint, formData as any, {
             onSuccess: () => {
                 handleCancelEditEvent();
-                toast.success('Berhasil menambahkan data event.');
+                toast.success(editingEvent ? 'Berhasil memperbarui data event.' : 'Berhasil menambahkan data event.');
             }
         });
     };
@@ -364,7 +384,7 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
         phone: '',
         email: '',
         qty: '1',
-        payment_method: 'Cash',
+        payment_method: 'cash' as 'transfer' | 'cash',
         notes: '',
     });
 
@@ -468,38 +488,73 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
     };
 
     // =========================================================================
-    //  FILTERED DATA MEMOIZATION
+    //  FILTERED DATA MEMOIZATION (with status filter + sorting)
     // =========================================================================
+    const sortData = <T,>(data: T[], key: string, direction: 'asc' | 'desc'): T[] => {
+        return [...data].sort((a, b) => {
+            const getVal = (obj: any, path: string) => path.split('.').reduce((o, i) => o ? o[i] : undefined, obj);
+            const aVal = String(getVal(a, key) ?? '').toLowerCase();
+            const bVal = String(getVal(b, key) ?? '').toLowerCase();
+            if (aVal < bVal) return direction === 'asc' ? -1 : 1;
+            if (aVal > bVal) return direction === 'asc' ? 1 : -1;
+            return 0;
+        });
+    };
+
     const filteredEvents = useMemo(() => {
-        if (!searchQuery) return events;
-        const q = searchQuery.toLowerCase();
-        return events.filter(e =>
-            e.title_id.toLowerCase().includes(q) ||
-            e.location_id.toLowerCase().includes(q) ||
-            e.type.toLowerCase().includes(q)
-        );
-    }, [events, searchQuery]);
+        let result = events;
+        if (eventStatusFilter !== 'all') {
+            result = result.filter(e => e.status === eventStatusFilter);
+        }
+        if (searchQuery) {
+            const q = searchQuery.toLowerCase();
+            result = result.filter(e =>
+                e.title_id.toLowerCase().includes(q) ||
+                e.location_id.toLowerCase().includes(q) ||
+                e.type.toLowerCase().includes(q)
+            );
+        }
+        if (sortConfig) {
+            result = sortData(result, sortConfig.key, sortConfig.direction);
+        }
+        return result;
+    }, [events, searchQuery, eventStatusFilter, sortConfig]);
 
     const filteredOrders = useMemo(() => {
-        if (!searchQuery) return orders;
-        const q = searchQuery.toLowerCase();
-        return orders.filter(o =>
-            o.order_code.toLowerCase().includes(q) ||
-            o.name.toLowerCase().includes(q) ||
-            o.email.toLowerCase().includes(q) ||
-            (o.event?.title_id || '').toLowerCase().includes(q)
-        );
-    }, [orders, searchQuery]);
+        let result = orders;
+        if (orderStatusFilter !== 'all') {
+            result = result.filter(o => o.status === orderStatusFilter);
+        }
+        if (searchQuery) {
+            const q = searchQuery.toLowerCase();
+            result = result.filter(o =>
+                o.order_code.toLowerCase().includes(q) ||
+                o.name.toLowerCase().includes(q) ||
+                (o.email || '').toLowerCase().includes(q) ||
+                (o.event?.title_id || '').toLowerCase().includes(q)
+            );
+        }
+        if (sortConfig) {
+            result = sortData(result, sortConfig.key, sortConfig.direction);
+        }
+        return result;
+    }, [orders, searchQuery, orderStatusFilter, sortConfig]);
 
     const filteredAccounts = useMemo(() => {
-        if (!searchQuery) return accounts;
-        const q = searchQuery.toLowerCase();
-        return accounts.filter(a =>
-            a.name_account.toLowerCase().includes(q) ||
-            a.no_account.toLowerCase().includes(q) ||
-            (a.batch_member?.name || '').toLowerCase().includes(q)
-        );
-    }, [accounts, searchQuery]);
+        let result = accounts;
+        if (searchQuery) {
+            const q = searchQuery.toLowerCase();
+            result = result.filter(a =>
+                a.name_account.toLowerCase().includes(q) ||
+                a.no_account.toLowerCase().includes(q) ||
+                (a.batch_member?.name || '').toLowerCase().includes(q)
+            );
+        }
+        if (sortConfig) {
+            result = sortData(result, sortConfig.key, sortConfig.direction);
+        }
+        return result;
+    }, [accounts, searchQuery, sortConfig]);
 
     // Format IDR Helper
     const formatIDR = (amount?: number | null) => {
@@ -524,25 +579,25 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                 <div className="w-full border-b border-border">
                     <div className="flex flex-col sm:flex-row gap-4 w-full items-start sm:items-center">
                         {!hasRole(['User']) && (
-                            <Tabs value={activeTab} onValueChange={(val) => { setActiveTab(val); setSearchQuery(''); }}>
-                                <TabsList className="flex h-auto p-0 bg-transparent gap-4 justify-start rounded-none border-none">
+                            <Tabs value={activeTab} onValueChange={(val) => { setActiveTab(val); setSearchQuery(''); }} className="w-full sm:w-auto relative">
+                                <TabsList className="grid grid-cols-3 w-full sm:flex sm:w-auto h-auto p-0 bg-transparent sm:gap-6 justify-start rounded-none border-none">
                                     <TabsTrigger
                                         value="event"
                                         className="rounded-none border-b-2 border-transparent px-1 pb-2.5 pt-1.5 font-medium text-muted-foreground shadow-none data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:text-foreground"
                                     >
-                                        Event
+                                        Event / Acara
                                     </TabsTrigger>
                                     <TabsTrigger
                                         value="order"
                                         className="rounded-none border-b-2 border-transparent px-1 pb-2.5 pt-1.5 font-medium text-muted-foreground shadow-none data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:text-foreground"
                                     >
-                                        Pesanan Tiket
+                                        Order Tiket
                                     </TabsTrigger>
                                     <TabsTrigger
                                         value="bank"
                                         className="rounded-none border-b-2 border-transparent px-1 pb-2.5 pt-1.5 font-medium text-muted-foreground shadow-none data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:text-foreground"
                                     >
-                                        Rekening Bank
+                                        Metode Bayar
                                     </TabsTrigger>
                                 </TabsList>
                             </Tabs>
@@ -550,9 +605,10 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                     </div>
                 </div>
 
-                {/* Controls Row (Search Box & Add Button) */}
-                <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3">
-                    <div className="relative w-full sm:w-80">
+                {/* Controls Row */}
+                <div className="flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-3">
+                    {/* Search Input */}
+                    <div className="relative w-full lg:w-80">
                         <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
                         <Input
                             placeholder={
@@ -565,20 +621,54 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                         />
                     </div>
 
-                    {hasRole(['Developer', 'Admin']) && (
-                        <Button
-                            size="sm"
-                            className="h-8 px-3.5 rounded-lg text-[13px] font-medium w-full sm:w-auto shrink-0 shadow-sm"
-                            onClick={
-                                activeTab === 'event' ? handleAddEvent :
-                                activeTab === 'order' ? handleAddOfflineOrder :
-                                handleAddAccount
-                            }
-                        >
-                            <Plus className="h-3.5 w-3.5 mr-1" />
-                            {activeTab === 'event' ? 'Tambah Event' : activeTab === 'order' ? 'Pesanan Offline' : 'Tambah Rekening'}
-                        </Button>
-                    )}
+                    {/* Filter + Add Button */}
+                    <div className="flex flex-row items-center gap-2 w-full lg:w-auto">
+                        {activeTab === 'event' && (
+                            <div className="flex-1 sm:flex-none">
+                                <Select value={eventStatusFilter} onValueChange={setEventStatusFilter}>
+                                    <SelectTrigger className="w-full sm:w-[180px] h-8 text-[13px]">
+                                        <SelectValue placeholder="Filter Status" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="all">Semua Status</SelectItem>
+                                        <SelectItem value="published">Published</SelectItem>
+                                        <SelectItem value="draft">Draft</SelectItem>
+                                        <SelectItem value="completed">Completed</SelectItem>
+                                        <SelectItem value="cancelled">Cancelled</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        )}
+                        {activeTab === 'order' && (
+                            <div className="flex-1 sm:flex-none">
+                                <Select value={orderStatusFilter} onValueChange={setOrderStatusFilter}>
+                                    <SelectTrigger className="w-full sm:w-[180px] h-8 text-[13px]">
+                                        <SelectValue placeholder="Filter Status" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="all">Semua Status</SelectItem>
+                                        <SelectItem value="pending">Pending</SelectItem>
+                                        <SelectItem value="success">Success</SelectItem>
+                                        <SelectItem value="cancelled">Cancelled</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        )}
+                        {hasRole(['Developer', 'Admin']) && (
+                            <Button
+                                size="sm"
+                                className="h-8 px-3.5 rounded-lg text-[13px] font-medium flex-1 sm:flex-none sm:w-auto shrink-0 shadow-sm"
+                                onClick={
+                                    activeTab === 'event' ? handleAddEvent :
+                                    activeTab === 'order' ? handleAddOfflineOrder :
+                                    handleAddAccount
+                                }
+                            >
+                                <Plus className="h-3.5 w-3.5 mr-1" />
+                                {activeTab === 'event' ? 'Tambah Event' : activeTab === 'order' ? 'Pesan Tiket' : 'Tambah Rekening'}
+                            </Button>
+                        )}
+                    </div>
                 </div>
 
                 {/* Tab Content Wrapper */}
@@ -590,10 +680,26 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead className="text-sm">Banner</TableHead>
-                                        <TableHead className="text-sm">Judul</TableHead>
-                                        <TableHead className="text-sm">Tipe</TableHead>
-                                        <TableHead className="text-sm">Tanggal</TableHead>
-                                        <TableHead className="text-sm">Harga</TableHead>
+                                        <TableHead>
+                                            <Button variant="ghost" className="-ml-4 hover:bg-transparent" onClick={() => handleSort('title_id')}>
+                                                Judul <ArrowUpDown className="ml-2 h-4 w-4" />
+                                            </Button>
+                                        </TableHead>
+                                        <TableHead>
+                                            <Button variant="ghost" className="-ml-4 hover:bg-transparent" onClick={() => handleSort('type')}>
+                                                Tipe <ArrowUpDown className="ml-2 h-4 w-4" />
+                                            </Button>
+                                        </TableHead>
+                                        <TableHead>
+                                            <Button variant="ghost" className="-ml-4 hover:bg-transparent" onClick={() => handleSort('date')}>
+                                                Tanggal <ArrowUpDown className="ml-2 h-4 w-4" />
+                                            </Button>
+                                        </TableHead>
+                                        <TableHead>
+                                            <Button variant="ghost" className="-ml-4 hover:bg-transparent" onClick={() => handleSort('price')}>
+                                                Harga <ArrowUpDown className="ml-2 h-4 w-4" />
+                                            </Button>
+                                        </TableHead>
                                         <TableHead className="text-sm">Tiket</TableHead>
                                         <TableHead className="text-sm">Status</TableHead>
                                         <TableHead className="text-right text-sm">Aksi</TableHead>
@@ -673,11 +779,32 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead className="text-sm">Kode Order</TableHead>
-                                        <TableHead className="text-sm">Pemesan</TableHead>
-                                        <TableHead className="text-sm">Event</TableHead>
-                                        <TableHead className="text-sm">Qty</TableHead>
-                                        <TableHead className="text-sm">Total Harga</TableHead>
+                                        <TableHead>
+                                            <Button variant="ghost" className="-ml-4 hover:bg-transparent" onClick={() => handleSort('order_code')}>
+                                                Kode Order <ArrowUpDown className="ml-2 h-4 w-4" />
+                                            </Button>
+                                        </TableHead>
+                                        <TableHead>
+                                            <Button variant="ghost" className="-ml-4 hover:bg-transparent" onClick={() => handleSort('name')}>
+                                                Pemesan <ArrowUpDown className="ml-2 h-4 w-4" />
+                                            </Button>
+                                        </TableHead>
+                                        <TableHead className="text-sm">Informasi</TableHead>
+                                        <TableHead>
+                                            <Button variant="ghost" className="-ml-4 hover:bg-transparent" onClick={() => handleSort('event.title_id')}>
+                                                Event <ArrowUpDown className="ml-2 h-4 w-4" />
+                                            </Button>
+                                        </TableHead>
+                                        <TableHead>
+                                            <Button variant="ghost" className="-ml-4 hover:bg-transparent" onClick={() => handleSort('qty')}>
+                                                Qty <ArrowUpDown className="ml-2 h-4 w-4" />
+                                            </Button>
+                                        </TableHead>
+                                        <TableHead>
+                                            <Button variant="ghost" className="-ml-4 hover:bg-transparent" onClick={() => handleSort('total_price')}>
+                                                Total Harga <ArrowUpDown className="ml-2 h-4 w-4" />
+                                            </Button>
+                                        </TableHead>
                                         <TableHead className="text-sm">Status Tiket</TableHead>
                                         <TableHead className="text-right text-sm">Aksi</TableHead>
                                     </TableRow>
@@ -685,7 +812,7 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                                 <TableBody>
                                     {filteredOrders.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={7} className="text-center h-24 text-sm text-muted-foreground">
+                                            <TableCell colSpan={8} className="text-center h-24 text-sm text-muted-foreground">
                                                 Belum ada transaksi pemesanan tiket.
                                             </TableCell>
                                         </TableRow>
@@ -693,10 +820,12 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                                         filteredOrders.map((ord) => (
                                             <TableRow key={ord.id} className="transition-colors">
                                                 <TableCell className="font-mono font-semibold text-sm">{ord.order_code}</TableCell>
+                                                <TableCell className="font-medium text-sm">{ord.name}</TableCell>
                                                 <TableCell>
-                                                    <div className="flex flex-col">
-                                                        <span className="font-medium text-sm">{ord.name}</span>
-                                                        <span className="text-xs text-muted-foreground">{ord.phone}</span>
+                                                    <div className="flex flex-col text-xs text-muted-foreground">
+                                                        {ord.email && <span>{ord.email}</span>}
+                                                        {ord.phone && <span>{ord.phone}</span>}
+                                                        {!ord.email && !ord.phone && <span>-</span>}
                                                     </div>
                                                 </TableCell>
                                                 <TableCell className="text-sm">{ord.event?.title_id || '-'}</TableCell>
@@ -741,10 +870,26 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead className="text-sm">Tipe</TableHead>
-                                        <TableHead className="text-sm">Nama Bank / Platform</TableHead>
-                                        <TableHead className="text-sm">Nomor Rekening</TableHead>
-                                        <TableHead className="text-sm">Atas Nama / Bendahara</TableHead>
+                                        <TableHead>
+                                            <Button variant="ghost" className="-ml-4 hover:bg-transparent" onClick={() => handleSort('type')}>
+                                                Tipe <ArrowUpDown className="ml-2 h-4 w-4" />
+                                            </Button>
+                                        </TableHead>
+                                        <TableHead>
+                                            <Button variant="ghost" className="-ml-4 hover:bg-transparent" onClick={() => handleSort('name_account')}>
+                                                Nama Bank <ArrowUpDown className="ml-2 h-4 w-4" />
+                                            </Button>
+                                        </TableHead>
+                                        <TableHead>
+                                            <Button variant="ghost" className="-ml-4 hover:bg-transparent" onClick={() => handleSort('no_account')}>
+                                                Nomor Rekening <ArrowUpDown className="ml-2 h-4 w-4" />
+                                            </Button>
+                                        </TableHead>
+                                        <TableHead>
+                                            <Button variant="ghost" className="-ml-4 hover:bg-transparent" onClick={() => handleSort('batch_member.name')}>
+                                                Pemilik <ArrowUpDown className="ml-2 h-4 w-4" />
+                                            </Button>
+                                        </TableHead>
                                         <TableHead className="text-right text-sm">Aksi</TableHead>
                                     </TableRow>
                                 </TableHeader>
@@ -938,10 +1083,14 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                                 {eventErrors.image && <span className="text-xs text-red-500">{eventErrors.image}</span>}
                             </div>
 
-                            <div className="flex justify-end gap-3 pt-2">
-                                <Button type="button" variant="outline" size="sm" onClick={handleCancelEditEvent}>Batal</Button>
-                                <Button type="submit" size="sm" disabled={processingEvent}>
-                                    {processingEvent ? <><Loader2 className="w-4 h-4 animate-spin mr-1" /> Menyimpan...</> : <><Save className="w-4 h-4 mr-1" /> Simpan</>}
+                            <div className="flex justify-end gap-3 pt-2 mb-2">
+                                <Button type="button" variant="outline" size="sm" className="h-8 px-3.5 rounded-lg text-[13px] font-medium" onClick={handleCancelEditEvent}>Batal</Button>
+                                <Button type="submit" size="sm" className="h-8 px-3.5 rounded-lg text-[13px] font-medium" disabled={processingEvent}>
+                                    {processingEvent ? (
+                                        <><Loader2 className="w-4 h-4 animate-spin" /> Menyimpan...</>
+                                    ) : (
+                                        <><Save className="w-4 h-4" /> {editingEvent ? 'Simpan Perubahan' : 'Simpan'}</>
+                                    )}
                                 </Button>
                             </div>
                         </form>
@@ -972,10 +1121,14 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                                 </Select>
                             </div>
 
-                            <div className="flex justify-end gap-3 pt-2">
-                                <Button type="button" variant="outline" size="sm" onClick={() => setIsOrderStatusModalOpen(false)}>Batal</Button>
-                                <Button type="submit" size="sm" disabled={processingOrder}>
-                                    {processingOrder ? <><Loader2 className="w-4 h-4 animate-spin mr-1" /> Updating...</> : <><Save className="w-4 h-4 mr-1" /> Update Status</>}
+                            <div className="flex justify-end gap-3 pt-2 mb-2">
+                                <Button type="button" variant="outline" size="sm" className="h-8 px-3.5 rounded-lg text-[13px] font-medium" onClick={() => setIsOrderStatusModalOpen(false)}>Batal</Button>
+                                <Button type="submit" size="sm" className="h-8 px-3.5 rounded-lg text-[13px] font-medium" disabled={processingOrder}>
+                                    {processingOrder ? (
+                                        <><Loader2 className="w-4 h-4 animate-spin" /> Menyimpan...</>
+                                    ) : (
+                                        <><Save className="w-4 h-4" /> Simpan Perubahan</>
+                                    )}
                                 </Button>
                             </div>
                         </form>
@@ -1073,12 +1226,15 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
 
                             <div>
                                 <label className="block text-sm font-medium mb-1">Metode Pembayaran</label>
-                                <Input
-                                    className="h-8 text-[13px]"
-                                    placeholder="Cth: Cash, Transfer BCA, QRIS"
-                                    value={offlineOrderData.payment_method}
-                                    onChange={e => setOfflineOrderData('payment_method', e.target.value)}
-                                />
+                                <Select value={offlineOrderData.payment_method} onValueChange={(val: any) => setOfflineOrderData('payment_method', val)}>
+                                    <SelectTrigger className="h-8 text-[13px]">
+                                        <SelectValue placeholder="Pilih Metode" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="cash">Cash</SelectItem>
+                                        <SelectItem value="transfer">Transfer</SelectItem>
+                                    </SelectContent>
+                                </Select>
                             </div>
 
                             <div>
@@ -1092,10 +1248,14 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                                 />
                             </div>
 
-                            <div className="flex justify-end gap-3 pt-1">
-                                <Button type="button" variant="outline" size="sm" onClick={() => { setIsOfflineOrderModalOpen(false); resetOfflineOrder(); }}>Batal</Button>
-                                <Button type="submit" size="sm" disabled={processingOfflineOrder}>
-                                    {processingOfflineOrder ? <><Loader2 className="w-4 h-4 animate-spin mr-1" /> Menyimpan...</> : <><CheckCircle className="w-4 h-4 mr-1" /> Catat Pesanan</>}
+                            <div className="flex justify-end gap-3 pt-2 mb-2">
+                                <Button type="button" variant="outline" size="sm" className="h-8 px-3.5 rounded-lg text-[13px] font-medium" onClick={() => { setIsOfflineOrderModalOpen(false); resetOfflineOrder(); }}>Batal</Button>
+                                <Button type="submit" size="sm" className="h-8 px-3.5 rounded-lg text-[13px] font-medium" disabled={processingOfflineOrder}>
+                                    {processingOfflineOrder ? (
+                                        <><Loader2 className="w-4 h-4 animate-spin" /> Menyimpan...</>
+                                    ) : (
+                                        <><Save className="w-4 h-4" /> Simpan</>
+                                    )}
                                 </Button>
                             </div>
                         </form>
@@ -1113,7 +1273,7 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
 
                         <form onSubmit={handleSubmitAccount} className="space-y-4 pt-2">
                             <div>
-                                <label className="block text-sm font-medium mb-1">Atas Nama / Bendahara</label>
+                                <label className="block text-sm font-medium mb-1">Nama Pemilik</label>
                                 <Select value={accountData.batch_member_id} onValueChange={val => setAccountData('batch_member_id', val)}>
                                     <SelectTrigger className="h-8 text-[13px]">
                                         <SelectValue placeholder="Pilih Anggota / Bendahara" />
@@ -1135,7 +1295,7 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                                             <SelectValue placeholder="Tipe" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="bank">Bank Transfer</SelectItem>
+                                            <SelectItem value="bank">Rekening Bank</SelectItem>
                                             <SelectItem value="e-wallet">E-Wallet</SelectItem>
                                         </SelectContent>
                                     </Select>
@@ -1153,9 +1313,9 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium mb-1">Nomor Rekening / Akun</label>
+                                <label className="block text-sm font-medium mb-1">Nomor Rekening</label>
                                 <Input
-                                    className="h-8 text-[13px] font-mono"
+                                    className="h-8 text-[13px]"
                                     placeholder="Cth: 1234567890"
                                     value={accountData.no_account}
                                     onChange={e => setAccountData('no_account', e.target.value)}
@@ -1163,10 +1323,14 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                                 />
                             </div>
 
-                            <div className="flex justify-end gap-3 pt-2">
-                                <Button type="button" variant="outline" size="sm" onClick={handleCancelEditAccount}>Batal</Button>
-                                <Button type="submit" size="sm" disabled={processingAccount}>
-                                    {processingAccount ? <><Loader2 className="w-4 h-4 animate-spin mr-1" /> Menyimpan...</> : <><Save className="w-4 h-4 mr-1" /> Simpan</>}
+                            <div className="flex justify-end gap-3 pt-2 mb-2">
+                                <Button type="button" variant="outline" size="sm" className="h-8 px-3.5 rounded-lg text-[13px] font-medium" onClick={handleCancelEditAccount}>Batal</Button>
+                                <Button type="submit" size="sm" className="h-8 px-3.5 rounded-lg text-[13px] font-medium" disabled={processingAccount}>
+                                    {processingAccount ? (
+                                        <><Loader2 className="w-4 h-4 animate-spin" /> Menyimpan...</>
+                                    ) : (
+                                        <><Save className="w-4 h-4" /> {editingAccount ? 'Simpan Perubahan' : 'Simpan'}</>
+                                    )}
                                 </Button>
                             </div>
                         </form>
