@@ -1236,11 +1236,18 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Jumlah Tiket</label>
                                     <Input
-                                        type="number"
-                                        min="1"
+                                        type="text"
                                         className="h-8 text-[13px]"
                                         value={offlineOrderData.qty}
-                                        onChange={e => setOfflineOrderData('qty', e.target.value)}
+                                        onChange={e => {
+                                            const val = e.target.value;
+                                            if (val === '') {
+                                                setOfflineOrderData('qty', '');
+                                            } else {
+                                                const parsed = parseInt(val.replace(/\D/g, ''));
+                                                if (!isNaN(parsed)) setOfflineOrderData('qty', parsed.toString());
+                                            }
+                                        }}
                                         required
                                     />
                                     {offlineOrderErrors.qty && <span className="text-xs text-destructive">{offlineOrderErrors.qty}</span>}

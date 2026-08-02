@@ -40,7 +40,7 @@ export function EventPage() {
     name: "",
     email: "",
     phone: "",
-    qty: 1,
+    qty: 1 as number | string,
     notes: "",
     payment_method: "",
   });
@@ -452,13 +452,23 @@ export function EventPage() {
                       <div className="relative flex items-center">
                         <Input 
                           id="qty" 
-                          type="number" 
+                          type="text" 
                           min="1" 
                           max={selectedEvent?.remaining_tickets ?? undefined} 
                           required 
                           value={formData.qty} 
-                          onChange={(e) => setFormData({...formData, qty: parseInt(e.target.value) || 1})} 
-                          className={selectedEvent?.remaining_tickets !== null ? "pr-24" : ""}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            if (val === '') {
+                              setFormData({...formData, qty: ''});
+                            } else {
+                              const parsed = parseInt(val.replace(/\D/g, ''));
+                              if (!isNaN(parsed)) {
+                                setFormData({...formData, qty: parsed});
+                              }
+                            }
+                          }} 
+                          className={selectedEvent?.remaining_tickets !== null ? "pr-30" : ""}
                         />
                         {selectedEvent?.remaining_tickets !== null && (
                           <span className="absolute right-3 text-xs text-muted-foreground">
@@ -470,7 +480,7 @@ export function EventPage() {
                     <div className="grid gap-2">
                       <Label>{isEn ? "Total Price" : "Total Harga"}</Label>
                       <div className="h-9 px-3 py-1 flex items-center border rounded-md bg-muted/30 font-semibold text-primary">
-                        {formatPrice((selectedEvent?.price || 0) * formData.qty)}
+                        {formatPrice((selectedEvent?.price || 0) * (typeof formData.qty === 'number' ? formData.qty : 0))}
                       </div>
                     </div>
                   </div>
