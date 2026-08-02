@@ -110,8 +110,8 @@ export function NewsDetailPage() {
           </div>
         </div>
 
-        {/* 4. Related News List Skeleton || Belum di implementasikan */}
-        {/* <div className="pt-8 space-y-6">
+        {/* 4. Related News List Skeleton */}
+        <div className="pt-8 space-y-6">
           <div className="flex justify-between items-end">
             <Skeleton className="h-8 w-44 rounded-lg" />
             <Skeleton className="h-9 w-32 rounded-full hidden sm:block" />
@@ -132,7 +132,7 @@ export function NewsDetailPage() {
               </div>
             ))}
           </div>
-        </div> */}
+        </div>
       </div>
     );
   }
