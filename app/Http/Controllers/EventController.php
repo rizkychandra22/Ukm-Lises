@@ -26,7 +26,7 @@ class EventController extends Controller
     public function index(): Response
     {
         return Inertia::render('IndexEvent', [
-            // 'events'   => Event::withSoldTickets()->latest()->get(),
+            'events'   => Event::latest()->get(),
             'orders'   => PayOrder::with('event')->latest()->get(),
             'accounts' => PayAccount::with('batchMember')->get(),
             'members'  => BatchMember::select('id', 'name')->get(),
@@ -105,6 +105,38 @@ class EventController extends Controller
     /* =========================================================================
      *  TICKET ORDER ACTIONS
      * ========================================================================= */
+
+    /**
+     * Membuat pesanan tiket baru secara OFFLINE oleh Admin.
+     * Status otomatis 'success' karena pembayaran langsung di tempat.
+     */
+    public function storeOrder(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'event_id'       => ['required', 'exists:events,id'],
+            'name'           => ['required', 'string', 'max:255'],
+            'phone'          => ['required', 'string', 'max:30'],
+            'email'          => ['nullable', 'email', 'max:255'],
+            'qty'            => ['required', 'integer', 'min:1'],
+            'notes'          => ['nullable', 'string', 'max:500'],
+            'payment_method' => ['nullable', 'string', 'max:100'],
+        ], [
+            'event_id.required'  => 'Event wajib dipilih.',
+            'event_id.exists'    => 'Event yang dipilih tidak ditemukan.',
+            'name.required'      => 'Nama pemesan wajib diisi.',
+            'phone.required'     => 'Nomor telepon wajib diisi.',
+            'qty.required'       => 'Jumlah tiket wajib diisi.',
+            'qty.min'            => 'Jumlah tiket minimal 1.',
+        ]);
+
+        // Tandai sebagai offline & langsung success (bayar di tempat)
+        $validated['order_method'] = 'offline';
+        $validated['status']       = 'success';
+
+        $this->orderService->createOrder($validated);
+
+        return redirect()->back()->with('success', 'Pesanan tiket offline berhasil dicatat!');
+    }
 
     public function updateOrderStatus(Request $request, PayOrder $order): RedirectResponse
     {

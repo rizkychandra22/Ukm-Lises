@@ -64,6 +64,7 @@ Route::middleware(['access:Developer,Admin'])->prefix('dashboard')->group(functi
     Route::delete('/events/{event}', [EventController::class, 'destroyEvent'])->name('events.destroy');
 
     // Manajemen Pesanan Tiket (Order)
+    Route::post('/orders', [EventController::class, 'storeOrder'])->name('orders.store');
     Route::put('/orders/{order}/status', [EventController::class, 'updateOrderStatus'])->name('orders.update-status');
     Route::delete('/orders/{order}', [EventController::class, 'destroyOrder'])->name('orders.destroy');
 

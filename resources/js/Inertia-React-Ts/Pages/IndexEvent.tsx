@@ -295,6 +295,44 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
     };
 
     // =========================================================================
+    //  2b. OFFLINE ORDER CREATION STATES & HANDLERS
+    // =========================================================================
+    const [isOfflineOrderModalOpen, setIsOfflineOrderModalOpen] = useState(false);
+
+    const {
+        data: offlineOrderData,
+        setData: setOfflineOrderData,
+        post: postOfflineOrder,
+        reset: resetOfflineOrder,
+        processing: processingOfflineOrder,
+        errors: offlineOrderErrors,
+    } = useForm({
+        event_id: '' as string,
+        name: '',
+        phone: '',
+        email: '',
+        qty: '1',
+        payment_method: 'Cash',
+        notes: '',
+    });
+
+    const handleAddOfflineOrder = () => {
+        resetOfflineOrder();
+        setIsOfflineOrderModalOpen(true);
+    };
+
+    const handleSubmitOfflineOrder = (e: React.FormEvent) => {
+        e.preventDefault();
+        postOfflineOrder((window as any).route('orders.store'), {
+            onSuccess: () => {
+                setIsOfflineOrderModalOpen(false);
+                resetOfflineOrder();
+                toast.success('Pesanan tiket offline berhasil dicatat!');
+            }
+        });
+    };
+
+    // =========================================================================
     //  3. BANK ACCOUNT STATES & HANDLERS
     // =========================================================================
     const [isBankModalOpen, setIsBankModalOpen] = useState(false);
@@ -475,13 +513,18 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                         />
                     </div>
 
-                    {hasRole(['Developer', 'Admin']) && activeTab !== 'order' && (
+                    {hasRole(['Developer', 'Admin']) && (
                         <Button
                             size="sm"
                             className="h-8 px-3.5 rounded-lg text-[13px] font-medium w-full sm:w-auto shrink-0 shadow-sm"
-                            onClick={activeTab === 'event' ? handleAddEvent : handleAddAccount}
+                            onClick={
+                                activeTab === 'event' ? handleAddEvent :
+                                activeTab === 'order' ? handleAddOfflineOrder :
+                                handleAddAccount
+                            }
                         >
-                            <Plus className="h-3.5 w-3.5 mr-1" /> Tambah {activeTab === 'event' ? 'Event' : 'Rekening'}
+                            <Plus className="h-3.5 w-3.5 mr-1" />
+                            {activeTab === 'event' ? 'Tambah Event' : activeTab === 'order' ? 'Pesanan Offline' : 'Tambah Rekening'}
                         </Button>
                     )}
                 </div>
@@ -846,6 +889,126 @@ export default function IndexEvent({ events = [], orders = [], accounts = [], me
                                 <Button type="button" variant="outline" size="sm" onClick={() => setIsOrderStatusModalOpen(false)}>Batal</Button>
                                 <Button type="submit" size="sm" disabled={processingOrder}>
                                     {processingOrder ? <><Loader2 className="w-4 h-4 animate-spin mr-1" /> Updating...</> : <><Save className="w-4 h-4 mr-1" /> Update Status</>}
+                                </Button>
+                            </div>
+                        </form>
+                    </DialogContent>
+                </Dialog>
+
+                {/* =========================================================
+                    MODAL TAMBAH PESANAN OFFLINE
+                   ========================================================= */}
+                <Dialog open={isOfflineOrderModalOpen} onOpenChange={(open) => { if (!open) { setIsOfflineOrderModalOpen(false); resetOfflineOrder(); } }}>
+                    <DialogContent className="w-[90%] max-w-[500px] rounded-md">
+                        <DialogHeader>
+                            <DialogTitle>Catat Pesanan Tiket Offline</DialogTitle>
+                        </DialogHeader>
+                        <p className="text-[12px] text-muted-foreground -mt-2 pb-1">
+                            Pesanan ini dicatat manual oleh admin. Status otomatis <strong>Success</strong> karena pembayaran diterima langsung.
+                        </p>
+
+                        <form onSubmit={handleSubmitOfflineOrder} className="space-y-4 pt-1 max-h-[72vh] overflow-y-auto no-scrollbar px-1">
+                            {/* Pilih Event */}
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Event <span className="text-destructive">*</span></label>
+                                <Select
+                                    value={offlineOrderData.event_id}
+                                    onValueChange={val => setOfflineOrderData('event_id', val)}
+                                >
+                                    <SelectTrigger className="h-8 text-[13px]">
+                                        <SelectValue placeholder="Pilih event yang akan dipesan" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {events
+                                            .filter(ev => ev.status === 'published')
+                                            .map(ev => (
+                                                <SelectItem key={ev.id} value={ev.id.toString()}>
+                                                    {ev.title_id} — {new Date(ev.date).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                                </SelectItem>
+                                            ))
+                                        }
+                                    </SelectContent>
+                                </Select>
+                                {offlineOrderErrors.event_id && <span className="text-xs text-destructive">{offlineOrderErrors.event_id}</span>}
+                            </div>
+
+                            {/* Info Pemesan */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Nama Pemesan <span className="text-destructive">*</span></label>
+                                    <Input
+                                        className="h-8 text-[13px]"
+                                        placeholder="Nama lengkap"
+                                        value={offlineOrderData.name}
+                                        onChange={e => setOfflineOrderData('name', e.target.value)}
+                                        required
+                                    />
+                                    {offlineOrderErrors.name && <span className="text-xs text-destructive">{offlineOrderErrors.name}</span>}
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">No. Telepon <span className="text-destructive">*</span></label>
+                                    <Input
+                                        className="h-8 text-[13px] font-mono"
+                                        placeholder="Cth: 081234567890"
+                                        value={offlineOrderData.phone}
+                                        onChange={e => setOfflineOrderData('phone', e.target.value)}
+                                        required
+                                    />
+                                    {offlineOrderErrors.phone && <span className="text-xs text-destructive">{offlineOrderErrors.phone}</span>}
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Email <span className="text-muted-foreground text-xs">(Opsional)</span></label>
+                                    <Input
+                                        type="email"
+                                        className="h-8 text-[13px]"
+                                        placeholder="email@example.com"
+                                        value={offlineOrderData.email}
+                                        onChange={e => setOfflineOrderData('email', e.target.value)}
+                                    />
+                                    {offlineOrderErrors.email && <span className="text-xs text-destructive">{offlineOrderErrors.email}</span>}
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Jumlah Tiket <span className="text-destructive">*</span></label>
+                                    <Input
+                                        type="number"
+                                        min="1"
+                                        className="h-8 text-[13px]"
+                                        value={offlineOrderData.qty}
+                                        onChange={e => setOfflineOrderData('qty', e.target.value)}
+                                        required
+                                    />
+                                    {offlineOrderErrors.qty && <span className="text-xs text-destructive">{offlineOrderErrors.qty}</span>}
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Metode Pembayaran <span className="text-muted-foreground text-xs">(Opsional)</span></label>
+                                <Input
+                                    className="h-8 text-[13px]"
+                                    placeholder="Cth: Cash, Transfer BCA, QRIS"
+                                    value={offlineOrderData.payment_method}
+                                    onChange={e => setOfflineOrderData('payment_method', e.target.value)}
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Catatan <span className="text-muted-foreground text-xs">(Opsional)</span></label>
+                                <Textarea
+                                    rows={2}
+                                    className="text-[13px] resize-none"
+                                    placeholder="Catatan tambahan..."
+                                    value={offlineOrderData.notes}
+                                    onChange={e => setOfflineOrderData('notes', e.target.value)}
+                                />
+                            </div>
+
+                            <div className="flex justify-end gap-3 pt-1">
+                                <Button type="button" variant="outline" size="sm" onClick={() => { setIsOfflineOrderModalOpen(false); resetOfflineOrder(); }}>Batal</Button>
+                                <Button type="submit" size="sm" disabled={processingOfflineOrder}>
+                                    {processingOfflineOrder ? <><Loader2 className="w-4 h-4 animate-spin mr-1" /> Menyimpan...</> : <><CheckCircle className="w-4 h-4 mr-1" /> Catat Pesanan</>}
                                 </Button>
                             </div>
                         </form>
