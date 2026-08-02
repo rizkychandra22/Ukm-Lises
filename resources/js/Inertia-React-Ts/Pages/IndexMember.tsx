@@ -4,7 +4,6 @@ import { route } from '../Lib/Route';
 import DashboardLayout from '../Layouts/AppLayout';
 import { Search, Plus, Edit, Trash2, ArrowUpDown, Eye, Info, Loader2, Save } from 'lucide-react';
 import { toast } from 'sonner';
-
 import {
     Sheet,
     SheetContent,
@@ -12,7 +11,6 @@ import {
     SheetHeader,
     SheetTitle,
 } from "@/components/ui/sheet";
-
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -94,7 +92,7 @@ type Props = {
     majors: Major[];
 };
 
-export default function Index({ members, batches, majors }: Props) {
+export default function IndexMember({ members, batches, majors }: Props) {
     const { auth } = usePage<any>().props;
     const user = auth.user;
 
@@ -612,7 +610,7 @@ export default function Index({ members, batches, majors }: Props) {
                 {/* Main Tabs Content Container */}
                 <Tabs value={activeTab} className="w-full">
                     {/* TAB ANGGOTA */}
-                    <TabsContent value="anggota">
+                    <TabsContent value="anggota" className="mt-0">
                         <div className="rounded-md border bg-card">
                             <Table>
                                 <TableHeader>
@@ -737,7 +735,7 @@ export default function Index({ members, batches, majors }: Props) {
 
 
                     {/* TAB ANGKATAN */}
-                    <TabsContent value="angkatan">
+                    <TabsContent value="angkatan" className="mt-0">
                         <div className="rounded-md border bg-card">
                             <Table>
                                 <TableHeader>

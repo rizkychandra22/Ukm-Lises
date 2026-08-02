@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('batch_member_id')->constrained('batch_members')->onDelete('cascade');
             $table->enum('type', ['bank', 'e-wallet']);
             $table->string('name_account');
-            $table->string('no_account', 30);
+            $table->text('no_account');
             $table->timestamps();
         });
     }
