@@ -42,7 +42,7 @@ class EventController extends Controller
         $validated = $request->validate([
             'title_id'    => ['required', 'string', 'max:255'],
             'title_en'    => ['nullable', 'string', 'max:255'],
-            'image'       => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'image'       => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10048'],
             'summary_id'  => ['nullable', 'string'],
             'summary_en'  => ['nullable', 'string'],
             'type'        => ['required', 'in:Exclusive,Non-Exclusive'],
@@ -71,7 +71,7 @@ class EventController extends Controller
         $validated = $request->validate([
             'title_id'    => ['required', 'string', 'max:255'],
             'title_en'    => ['nullable', 'string', 'max:255'],
-            'image'       => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'image'       => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10048'],
             'summary_id'  => ['nullable', 'string'],
             'summary_en'  => ['nullable', 'string'],
             'type'        => ['required', 'in:Exclusive,Non-Exclusive'],
