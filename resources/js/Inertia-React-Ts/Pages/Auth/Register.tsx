@@ -239,6 +239,12 @@ export default function Register({ majors }: { majors: any[] }) {
                                 "Daftar Sekarang"
                             )}
                         </Button>
+
+                        <div className="text-center pt-4">
+                            <p className="text-xs text-muted-foreground">
+                                Sistem Manajemen Internal Ukm Lises Realese v1.7.0
+                            </p>
+                        </div>
                     </form>
                 </div>
             </div>
