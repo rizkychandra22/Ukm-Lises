@@ -11,7 +11,8 @@ class BatchMember extends Model
         'batch_id', 'image', 'name',
         'major_id',
         'type', 'status', 'periode',
-        'position_id', 'position_en'
+        'position_id', 'position_en',
+        'instagram', 'whatsapp'
     ];
 
     public function batch()
@@ -22,5 +23,13 @@ class BatchMember extends Model
     public function major()
     {
         return $this->belongsTo(Major::class);
+    }
+
+    /**
+     * Rekening pembayaran milik anggota (bendahara).
+     */
+    public function payAccounts()
+    {
+        return $this->hasMany(PayAccount::class);
     }
 }

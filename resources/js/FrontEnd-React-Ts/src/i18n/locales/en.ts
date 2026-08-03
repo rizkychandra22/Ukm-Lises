@@ -50,12 +50,14 @@ export default {
       title: "Moments",
       subtitle: "Stage Highlights",
       link: "View Gallery",
+      no_upload: "No gallery has been uploaded yet."
     },
     section_news: {
       title: "Latest News",
       subtitle: "News Publications",
       desc: "Follow the latest developments, activities, and achievements from UKM Lises Asmarandana.",
       link: "View All News",
+      no_upload: "No news has been uploaded yet."
     },
     section_event: {
       tag: "Upcoming Event",
@@ -86,7 +88,8 @@ export default {
     title_t1: "Frames of",
     title_y1: "Stage",
     title_t2: "practice moments.",
-    desc: "A visual documentation collection of performances, workshops, and togetherness moments of Lises Asmarandana."
+    desc: "A visual documentation collection of performances, workshops, and togetherness moments of Lises Asmarandana.",
+    no_upload: "No gallery has been uploaded yet."
   },
 
   NewsPage: {
@@ -95,6 +98,7 @@ export default {
     title_y1: "stage",
     title_t2: "our me.",
     btn_readmore: "Read more",
+    no_upload: "No news has been uploaded yet."
   },
 
   NewsDetailPage: {
@@ -119,6 +123,11 @@ export default {
     title_t2: "shows.",
     buy: "Buy Ticket",
     no_buy: "Tickets Unavailable",
+    search_placeholder: "Check your ticket order or available events.",
+    search_button: "Search",
+    search_empty: "No events match your search.",
+    no_event: "No upcoming events yet. Stay tuned!",
+    loading: "Loading events...",
     card1: {
       type: "Exclusive",
       date: "15 Aug 2026",

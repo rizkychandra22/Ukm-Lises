@@ -41,7 +41,7 @@ export function AboutPage() {
         </div>
         <div className="space-y-5 text-muted-foreground">
           <p>
-            <span className="font-semibold text-foreground">UKM Lises Asmarandana</span> 
+            <span className="font-semibold text-foreground">UKM Lises Asmarandana </span> 
             {t("desc_1a")} <em>Asmarandana</em> {t("desc_1b")}
           </p>
           <p>

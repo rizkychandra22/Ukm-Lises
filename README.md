@@ -9,12 +9,12 @@
   *Universitas Muhammadiyah Sukabumi (UMMI)*
 
   <p align="center">
-    <img src="https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" alt="Laravel" />
     <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
     <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
     <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind" />
     <img src="https://img.shields.io/badge/Inertia.js-9553E9?style=for-the-badge&logo=inertia&logoColor=white" alt="Inertia" />
     <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
+    <img src="https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white" alt="Cloudinary" />
   </p>
 </div>
 
@@ -37,6 +37,9 @@ Aplikasi ini dibagi menjadi dua bagian *frontend* yang berjalan pada satu aplika
 - 🎨 **Modern & Responsive UI** - Dibangun dengan **Tailwind CSS** dan komponen UI dari **Shadcn UI**.
 - 👥 **Manajemen Anggota Pengurus** - Sistem pengelolaan data anggota, mencakup status Kepengurusan (Aktif) dan Demisioner (Alumni).
 - 🏛️ **Manajemen Angkatan (Batch)** - Pengelompokan anggota berdasarkan tahun dan nama angkatan.
+- 🎟️ **Sistem Event & Ticketing** - Manajemen acara beserta penjualan tiket secara online maupun offline lengkap dengan pemantauan *status order*.
+- 📰 **Portal Berita & Artikel** - Sistem manajemen publikasi berita dan artikel informatif.
+- ☁️ **Cloudinary Integration** - Penyimpanan dan optimasi *image assets* secara cloud melalui integrasi Cloudinary.
 - ⚡ **Fast Navigation** - Transisi instan antar halaman berkat implementasi SPA (*Single Page Application*).
 - 🔒 **Secure Authentication** - Sistem login dan peran (Role) yang aman menggunakan Spatie Role Permission Laravel.
 
@@ -45,6 +48,7 @@ Aplikasi ini dibagi menjadi dua bagian *frontend* yang berjalan pada satu aplika
 ### Backend
 * [**Laravel 13**](https://laravel.com/) - PHP Framework
 * **PostgreSQL** - Database Relasional
+* **Cloudinary API** - Cloud Image Storage Driver
 * **REST API** - Endpoints untuk Landing Page SPA
 
 ### Frontend

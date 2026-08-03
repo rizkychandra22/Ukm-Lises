@@ -11,12 +11,12 @@ class AccountSeeder extends Seeder
     public function run(): void
     {
         // Buat Role
-        $developerRole = Role::create(['name' => 'Developer']);
-        $adminRole     = Role::create(['name' => 'Admin']);
-        $userRole      = Role::create(['name' => 'User']);
+        $developerRole = Role::firstOrCreate(['name' => 'Developer']);
+        $adminRole     = Role::firstOrCreate(['name' => 'Admin']);
+        Role::firstOrCreate(['name' => 'User']);
 
         // Buat User Developer Awal
-        $developerUser = User::create([
+        $developerUser = User::firstOrCreate([
             'name'     => 'Developer',
             'username' => 'dev',
             'password' => bcrypt('password'),
@@ -24,7 +24,7 @@ class AccountSeeder extends Seeder
         $developerUser->assignRole($developerRole);
 
         // Buat User Admin Awal
-        $adminUser = User::create([
+        $adminUser = User::firstOrCreate([
             'name'     => 'Admin Lises',
             'username' => 'admincore',
             'password' => bcrypt('password'),

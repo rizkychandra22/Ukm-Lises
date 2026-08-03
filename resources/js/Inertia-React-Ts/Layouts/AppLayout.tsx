@@ -4,7 +4,7 @@ import { AppSidebar } from './AppSidebar';
 import { Header } from './Header';
 import { ThemeProvider } from '@admin/Components/ThemeProvider';
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     return (
         <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
             <SidebarProvider>

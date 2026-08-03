@@ -7,87 +7,121 @@ import {
   Users,
   ArrowUpRight,
   CalendarDays,
+  Newspaper,
+  Image,
+  Camera,
 } from "lucide-react";
 import hero from "@/assets/hero-lises.jpg";
-import g1 from "@/assets/gallery-1.jpg";
-import g2 from "@/assets/gallery-2.jpg";
-import g3 from "@/assets/gallery-3.jpg";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { useTranslation } from "@/i18n";
-import { usePosts } from "@/constants/news";
 import { SEOHead } from "@/components/SEOHead";
 import { ScrollTop } from "@/components/scroll-top";
+import { useState, useEffect, useRef } from "react";
+import { getGalleries, Gallery } from "@/lib/api/gallery";
+import { getNews, News } from "@/lib/api/news";
+import Autoplay from "embla-carousel-autoplay";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function HomePage() {
-  const { t } = useTranslation("HomePage");
-  const posts = usePosts();
+  const { t, i18n } = useTranslation("HomePage");
+  const isEn = i18n.language === 'en';
+  const plugin = useRef(Autoplay({ delay: 4000, stopOnInteraction: true }));
+  
+  const [sliderImages, setSliderImages] = useState<Gallery[]>([]);
+  const [momentImages, setMomentImages] = useState<Gallery[]>([]);
+  const [latestNews, setLatestNews] = useState<News[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      
+      const [galleryData, newsData] = await Promise.all([
+        getGalleries(),
+        getNews()
+      ]);
+
+      const activeData = galleryData.filter(g => g.is_active).slice(0, 3);
+      const latestGalleryData = galleryData.slice(0, 3);
+      setSliderImages(activeData);
+      setMomentImages(latestGalleryData);
+      
+      setLatestNews(newsData.slice(0, 3));
+      setIsLoading(false);
+    };
+    fetchData();
+  }, []);
 
   return (
     <>
       <SEOHead pageKey="home" />
-      <section className="relative overflow-hidden">
-        <img
-          src={hero}
-          alt="Pertunjukan tari Lises Asmarandana"
-          width={1600}
-          height={1008}
-          loading="eager"
-          fetchPriority="high"
-          decoding="async"
-          sizes="100vw"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <div className="absolute inset-0" style={{ background: "var(--gradient-hero)" }} />
-        <div className="relative mx-auto flex min-h-[50vh] md:min-h-[60vh] max-w-7xl flex-col justify-center px-6 pt-12 pb-12 md:pt-18 md:pb-18">
-          <Badge
-            variant="outline"
-            className="w-fit gap-2 rounded-full border-primary/40 bg-background/40 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-primary backdrop-blur"
-          >
-            <Sparkles className="h-3.5 w-3.5" /> UKM Lises - UMMI
-          </Badge>
-          <h1 className="mt-6 max-w-4xl font-display text-5xl font-black leading-[1.05] md:text-7xl">
-            <span className="text-gradient-gold">{t("banner.title_y1")}{" "}</span>
-            {t("banner.title_t1")}.
-            {/* <br />
-            {t("banner.title_t2")}{" "}
-            <span className="text-gradient-gold">{t("banner.title_y2")}</span>. */}
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg text-muted-foreground">{t("banner.description")}</p>
-          <div className="mt-10 flex flex-wrap gap-4">
-            <Button
-              asChild
-              className="rounded-full bg-gradient-gold px-7 py-6 text-sm font-semibold text-primary-foreground shadow-gold transition-transform hover:scale-[1.03]"
-            >
-              <Link to="/about">
-                {t("banner.btn_about")} <ArrowRight className="h-4 w-4 ml-2" />
-              </Link>
-            </Button>
-            <Button
-              asChild
+      <section className="relative overflow-hidden group">
+        <div className="absolute inset-0 h-full w-full">
+          <img
+            src={hero}
+            alt="Pertunjukan tari Lises Asmarandana"
+            width={1600}
+            height={1008}
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
+            sizes="100vw"
+            className="absolute inset-0 h-full w-full object-cover object-center"
+          />
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "var(--gradient-hero)" }} />
+        </div>
+        
+        {/* We need pointer-events-none here so clicks pass through to the carousel buttons underneath, but pointer-events-auto on buttons so they can be clicked */}
+        <div className="relative mx-auto flex min-h-[50vh] md:min-h-[60vh] max-w-7xl flex-col justify-center px-6 pt-12 pb-12 md:pt-18 md:pb-18 pointer-events-none">
+          <div className="pointer-events-auto">
+            <Badge
               variant="outline"
-              className="rounded-full border-primary/40 px-7 py-6 text-sm font-semibold text-primary transition-colors hover:bg-primary/10 hover:text-white"
+              className="w-fit gap-2 rounded-full border-primary/40 bg-background/40 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-primary backdrop-blur"
             >
-              <Link to="/contact">
-                {t("banner.btn_contact")} <ArrowRight className="h-4 w-4 ml-2" />
-              </Link>
-            </Button>
-          </div>
-
-          <div className="mt-16 grid max-w-3xl gap-6 sm:grid-cols-3">
-            {[
-              { n: "120+", l: t("banner.card_1") },
-              { n: "45", l: t("banner.card_2") },
-              { n: "12", l: t("banner.card_3") },
-            ].map((item) => (
-              <Card key={item.l} className="rounded-2xl border-border/60 bg-card/40 backdrop-blur">
-                <CardContent className="p-5">
-                  <div className="font-display text-3xl font-bold text-gradient-gold">{item.n}</div>
-                  <div className="mt-1 text-sm text-muted-foreground">{item.l}</div>
-                </CardContent>
-              </Card>
-            ))}
+              <Sparkles className="h-3.5 w-3.5" /> UKM Lises - UMMI
+            </Badge>
+            <h1 className="mt-6 max-w-4xl font-display text-5xl font-black leading-[1.05] md:text-7xl">
+              <span className="text-gradient-gold">{t("banner.title_y1")}{" "}</span>
+              {t("banner.title_t1")}.
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg text-muted-foreground">{t("banner.description")}</p>
+            <div className="mt-10 flex flex-wrap gap-4">
+              <Button
+                asChild
+                className="rounded-full bg-gradient-gold px-7 py-6 text-sm font-semibold text-primary-foreground shadow-gold transition-transform hover:scale-[1.03]"
+              >
+                <Link to="/about">
+                  {t("banner.btn_about")} <ArrowRight className="h-4 w-4 ml-2" />
+                </Link>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                className="rounded-full border-primary/40 px-7 py-6 text-sm font-semibold text-primary transition-colors hover:bg-primary/10 hover:text-white"
+              >
+                <Link to="/contact">
+                  {t("banner.btn_contact")} <ArrowRight className="h-4 w-4 ml-2" />
+                </Link>
+              </Button>
+            </div>
+            
+            <div className="mt-16 grid max-w-3xl gap-6 sm:grid-cols-3">
+              {[
+                { n: "120+", l: t("banner.card_1") },
+                { n: "45", l: t("banner.card_2") },
+                { n: "12", l: t("banner.card_3") },
+              ].map((item) => (
+                <Card key={item.l} className="rounded-2xl border-border/60 bg-card/40 backdrop-blur">
+                  <CardContent className="p-5">
+                    <div className="font-display text-3xl font-bold text-gradient-gold">{item.n}</div>
+                    <div className="mt-1 text-sm text-muted-foreground">{item.l}</div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -153,23 +187,40 @@ export function HomePage() {
             {t("section_momen.link")} <ArrowRight className="ml-1 h-4 w-4" />
           </Link>
         </div>
-        <div className="mt-10 grid gap-4 md:grid-cols-3">
-          {[g1, g2, g3].map((src, index) => (
-            <div
-              key={index}
-              className="group relative aspect-[4/5] overflow-hidden rounded-2xl border border-border/60"
-            >
-              <img
-                src={src}
-                alt={`Momen ${index + 1}`}
-                width={800}
-                height={800}
-                loading="lazy"
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+        <div className="mt-10">
+          {isLoading ? (
+            <div className="grid gap-4 md:grid-cols-3">
+               {[1,2,3].map(i => <Skeleton key={i} className="aspect-[4/5] rounded-2xl w-full" />)}
             </div>
-          ))}
+          ) : momentImages.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 md:py-12 px-3 text-center text-muted-foreground border-primary/50 border-2 border-dashed rounded-2xl">
+              <Camera className="w-16 h-16 mb-4 opacity-20" />
+              <p className="text-lg font-medium">{t("section_momen.no_upload")}</p>
+            </div>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-3">
+              {momentImages.map((item) => {
+                const title = isEn ? item.title_en : item.title_id;
+                const desc = isEn ? item.desc_en : item.desc_id;
+                
+                return (
+                  <div key={item.id} className="group relative aspect-[4/5] overflow-hidden rounded-2xl border border-border/60">
+                    <img
+                      src={item.image}
+                      alt={title}
+                      loading="lazy"
+                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+                    <div className="absolute bottom-4 left-4 right-4 translate-y-3 opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">
+                      <div className="font-medium text-primary text-sm md:text-base">{title}</div>
+                      {desc && <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{desc}</p>}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 
@@ -194,25 +245,40 @@ export function HomePage() {
             </Button>
           </div>
           <div className="flex flex-col gap-4 md:w-1/2">
-            {posts.slice(0, 3).map((post) => (
+            {isLoading ? (
+               Array(3).fill(0).map((_, i) => (
+                  <Skeleton key={i} className="h-28 w-full rounded-3xl" />
+               ))
+            ) : latestNews.length === 0 ? (
+               <div className="flex flex-col items-center justify-center py-20 md:py-12 px-3 text-center text-muted-foreground border-primary/50 border-2 border-dashed rounded-2xl h-full">
+                <Newspaper className="w-16 h-16 mb-4 opacity-20" />
+                <p className="text-lg font-medium">{t("section_news.no_upload")}</p>
+               </div>
+            ) : latestNews.map((post) => {
+              const title = isEn ? post.title_en || post.title_id : post.title_id;
+              const date = new Date(post.date).toLocaleDateString(isEn ? 'en-US' : 'id-ID', {
+                year: 'numeric', month: 'short', day: 'numeric'
+              });
+
+              return (
               <Link
-                key={post.title}
+                key={post.id}
                 to={`/news/${post.slug}`}
                 className="group flex flex-col justify-between rounded-3xl border border-border/60 bg-card p-6 transition-colors hover:border-primary/60 sm:flex-row sm:items-center"
               >
                 <div>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <CalendarDays className="h-3.5 w-3.5" /> {post.date}
+                    <CalendarDays className="h-3.5 w-3.5" /> {date}
                   </div>
-                  <h3 className="mt-2 font-display text-lg font-bold group-hover:text-primary">
-                    {post.title}
+                  <h3 className="mt-2 font-display text-lg font-bold group-hover:text-primary line-clamp-2">
+                    {title}
                   </h3>
                 </div>
                 <div className="mt-4 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border/60 bg-background transition-colors group-hover:bg-primary group-hover:text-primary-foreground sm:mt-0">
                   <ArrowUpRight className="h-4 w-4" />
                 </div>
               </Link>
-            ))}
+            )})}
           </div>
         </div>
         <div className="mt-8 flex justify-center sm:hidden">

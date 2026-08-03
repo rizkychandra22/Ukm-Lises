@@ -12,11 +12,21 @@ const appName = import.meta.env.VITE_APP_NAME || 'Laravel Admin';
 router.on('navigate', (event) => {
     const props = (event.detail?.page as any)?.props;
     const flash = props?.flash;
+    
     if (flash?.success) {
-        toast.success('Berhasil', { description: flash.success });
+        if (typeof flash.success === 'object' && flash.success !== null) {
+            toast.success(flash.success.title || 'Berhasil', { description: flash.success.message });
+        } else {
+            toast.success('Berhasil', { description: String(flash.success) });
+        }
     }
+    
     if (flash?.error) {
-        toast.error('Perhatian', { description: flash.error });
+        if (typeof flash.error === 'object' && flash.error !== null) {
+            toast.error(flash.error.title || 'Perhatian', { description: flash.error.message });
+        } else {
+            toast.error('Perhatian', { description: String(flash.error) });
+        }
     }
 });
 

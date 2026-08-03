@@ -68,6 +68,10 @@
     {{-- Vite Scripts --}}
     @viteReactRefresh
     @vite('resources/js/FrontEnd-React-Ts/src/main.tsx')
+
+    <script>
+        window.flashMessage = @json(session('success'));
+    </script>
 </head>
 <body class="bg-background text-foreground antialiased">
     <div id="root"></div>

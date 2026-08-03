@@ -50,12 +50,14 @@ export default {
       title: "Momen",
       subtitle: "Cuplikan Panggung",
       link: "Lihat Galeri",
+      no_upload: "Belum ada galeri yang diunggah."
     },
     section_news: {
       title: "Kabar Terbaru",
       subtitle: "Publikasi Berita",
       desc: "Ikuti terus perkembangan, kegiatan, dan prestasi terbaru dari UKM Lises Asmarandana.",
       link: "Lihat Semua Berita",
+      no_upload: "Belum ada berita yang diunggah."
     },
     section_event: {
       tag: "Event Tersedia",
@@ -86,7 +88,8 @@ export default {
     title_t1: "Bingkai",
     title_y1: "Panggung",
     title_t2: "latihan kami.",
-    desc: "Kumpulan dokumentasi visual dari pementasan, workshop, dan momen kebersamaan Lises Asmarandana."
+    desc: "Kumpulan dokumentasi visual dari pementasan, workshop, dan momen kebersamaan Lises Asmarandana.",
+    no_upload: "Belum ada galeri yang diunggah."
   },
 
   NewsPage: {
@@ -95,6 +98,7 @@ export default {
     title_y1: "panggung",
     title_t2: "kami.",
     btn_readmore: "Baca selengkapnya",
+    no_upload: "Belum ada berita yang diunggah."
   },
 
   NewsDetailPage: {
@@ -120,6 +124,11 @@ export default {
     title_t2: "kami.",
     buy: "Beli Tiket",
     no_buy: "Tiket Tidak Tersedia",
+    search_placeholder: "Cek pesanan tiket mu atau event tersedia.",
+    search_button: "Cari",
+    search_empty: "Tidak ada event yang cocok dengan pencarian Anda.",
+    no_event: "Belum ada event yang akan datang. Pantau terus halaman ini!",
+    loading: "Memuat data event...",
     card1: {
       type: "Eksklusif",
       date: "15 Agu 2026",
