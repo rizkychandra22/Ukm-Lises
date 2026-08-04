@@ -1,30 +1,20 @@
 import axios, { type AxiosError } from 'axios';
 import axiosRetry from 'axios-retry';
 
-/**
- * Dynamic Base URL Resolver
- */
 function resolveApiBaseUrl(): string {
   if (typeof window !== 'undefined') {
     const host = window.location.hostname;
-
     if (host === 'lises.laravel.cloud') {
       return import.meta.env.VITE_API_BASE_URL_PRD;
     }
-
     if (host === 'lises-dev.laravel.cloud') {
       return import.meta.env.VITE_API_BASE_URL_DEV;
     }
-
     return `${window.location.origin}/api`;
   }
-
   return 'http://localhost:8000/api';
 }
 
-/**
- * Axios Instance Public Pure SPA Landing Page
- */
 export const apiClient = axios.create({
   baseURL: resolveApiBaseUrl(),
   timeout: 10000,
@@ -34,7 +24,6 @@ export const apiClient = axios.create({
   },
 });
 
-// Plugin axios-retry
 axiosRetry(apiClient, {
   retries: 3, 
   retryDelay: axiosRetry.exponentialDelay,
@@ -47,9 +36,6 @@ axiosRetry(apiClient, {
   },
 });
 
-/**
- * Response Interceptor
- */
 apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
