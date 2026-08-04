@@ -80,11 +80,12 @@ type PayOrder = {
   qty: number;
   total_price: number;
   notes?: string | null;
-  payment_method?: string | null;
+  pay_account_id?: number | null;
   payment_proof?: string | null;
   order_method: "online" | "offline";
   status: "pending" | "success" | "cancelled";
   event?: EventItem;
+  pay_account?: PayAccount;
 };
 
 type BatchMemberSelect = {
@@ -380,9 +381,9 @@ export default function IndexEvent({
     name: "",
     phone: "",
     email: "",
-    qty: "1",
-    payment_method: "cash" as "transfer" | "cash",
+    qty: "",
     notes: "",
+    pay_account_id: "",
   });
 
   const handleAddOfflineOrder = () => {
@@ -711,7 +712,7 @@ export default function IndexEvent({
         <Tabs value={activeTab} className="w-full">
           {/* TAB CONTENT: EVENT */}
           <TabsContent value="event" className="mt-0">
-            <div className="rounded-xl border bg-card overflow-hidden shadow-sm">
+            <div className="rounded-xl border bg-card overflow-x-auto shadow-sm">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -874,7 +875,7 @@ export default function IndexEvent({
 
           {/* TAB CONTENT: PESANAN TIKET (ORDER) */}
           <TabsContent value="order" className="mt-0">
-            <div className="rounded-xl border bg-card overflow-hidden shadow-sm">
+            <div className="rounded-xl border bg-card overflow-x-auto shadow-sm">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -1031,7 +1032,7 @@ export default function IndexEvent({
 
           {/* TAB CONTENT: REKENING BANK */}
           <TabsContent value="bank" className="mt-0">
-            <div className="rounded-xl border bg-card overflow-hidden shadow-sm">
+            <div className="rounded-xl border bg-card overflow-x-auto shadow-sm">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -1507,17 +1508,21 @@ export default function IndexEvent({
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Metode Pembayaran</label>
+                <label className="block text-sm font-medium mb-1">Rekening Pembayaran (Pilih jika Transfer)</label>
                 <Select
-                  value={offlineOrderData.payment_method}
-                  onValueChange={(val: any) => setOfflineOrderData("payment_method", val)}
+                  value={offlineOrderData.pay_account_id || "cash"}
+                  onValueChange={(val: any) => setOfflineOrderData("pay_account_id", val === "cash" ? "" : val)}
                 >
                   <SelectTrigger className="h-8 text-[13px]">
-                    <SelectValue placeholder="Pilih Metode" />
+                    <SelectValue placeholder="Pilih Rekening (Atau Cash)" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="cash">Cash</SelectItem>
-                    <SelectItem value="transfer">Transfer</SelectItem>
+                    <SelectItem value="cash">Cash / Tunai</SelectItem>
+                    {accounts.map((acc) => (
+                      <SelectItem key={acc.id} value={acc.id.toString()}>
+                        {acc.name_account} - {acc.no_account}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -1752,6 +1757,17 @@ export default function IndexEvent({
                     <h4 className="text-xs text-muted-foreground">Total Transfer</h4>
                     <p className="text-sm font-semibold text-emerald-600">
                       {formatIDR(viewingOrder.total_price)}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <h4 className="text-xs text-muted-foreground">Pembayaran Melalui</h4>
+                    <p className="text-sm font-medium capitalize">
+                      {viewingOrder.pay_account
+                        ? `${viewingOrder.pay_account.name_account} - ${viewingOrder.pay_account.no_account}`
+                        : "Cash / Tunai"}
                     </p>
                   </div>
                 </div>

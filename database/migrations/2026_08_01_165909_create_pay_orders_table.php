@@ -22,7 +22,7 @@ return new class extends Migration
             $table->decimal('total_price', 15, 2);
             $table->text('notes')->nullable();
             $table->string('payment_proof')->nullable();
-            $table->enum('payment_method', ['transfer', 'cash'])->default('transfer');
+            $table->foreignId('pay_account_id')->nullable()->constrained('pay_accounts')->onDelete('set null');
             $table->enum('order_method', ['online', 'offline'])->default('online');
             $table->enum('status', ['pending', 'success', 'cancelled'])->default('pending');
             $table->timestamps();

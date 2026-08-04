@@ -49,7 +49,7 @@ export function EventPage() {
     phone: "",
     qty: 1 as number | string,
     notes: "",
-    payment_method: "",
+    pay_account_id: "",
   });
   const [paymentProof, setPaymentProof] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -106,7 +106,7 @@ export function EventPage() {
       phone: "",
       qty: 1,
       notes: "",
-      payment_method: "",
+      pay_account_id: "",
     });
     setPaymentProof(null);
     setIsDialogOpen(true);
@@ -144,7 +144,7 @@ export function EventPage() {
     payload.append("qty", formData.qty.toString());
 
     if (formData.notes) payload.append("notes", formData.notes);
-    if (formData.payment_method) payload.append("payment_method", formData.payment_method);
+    if (formData.pay_account_id) payload.append("pay_account_id", formData.pay_account_id);
     if (paymentProof) payload.append("payment_proof", paymentProof);
 
     try {
@@ -599,8 +599,8 @@ export function EventPage() {
                         </Label>
                         <Select
                           required
-                          value={formData.payment_method}
-                          onValueChange={(val) => setFormData({ ...formData, payment_method: val })}
+                          value={formData.pay_account_id}
+                          onValueChange={(val) => setFormData({ ...formData, pay_account_id: val })}
                         >
                           <SelectTrigger>
                             <SelectValue
@@ -613,7 +613,7 @@ export function EventPage() {
                             {accounts.map((acc) => (
                               <SelectItem
                                 key={acc.id}
-                                value={`${acc.name_account} - ${acc.no_account} - ${acc.batch_member?.name || "Unknown"}`}
+                                value={acc.id.toString()}
                               >
                                 {acc.name_account} - {acc.no_account} -{" "}
                                 {acc.batch_member?.name || "Unknown"}

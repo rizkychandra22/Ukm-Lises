@@ -87,7 +87,7 @@ class ContentController extends Controller
             'phone'          => ['required', 'string', 'max:30'],
             'qty'            => ['required', 'integer', 'min:1'],
             'notes'          => ['nullable', 'string', 'max:500'],
-            'payment_method' => ['nullable', 'string', 'max:100'],
+            'pay_account_id' => ['nullable', 'exists:pay_accounts,id'],
             'payment_proof'  => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ]);
 

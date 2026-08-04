@@ -15,7 +15,7 @@ class PayOrder extends Model
         'qty',
         'total_price',
         'notes',
-        'payment_method',
+        'pay_account_id',
         'payment_proof',
         'order_method',
         'status',
@@ -35,6 +35,14 @@ class PayOrder extends Model
     public function event()
     {
         return $this->belongsTo(Event::class);
+    }
+
+    /**
+     * Pesanan memiliki akun pembayaran.
+     */
+    public function payAccount()
+    {
+        return $this->belongsTo(PayAccount::class);
     }
 
     /**
