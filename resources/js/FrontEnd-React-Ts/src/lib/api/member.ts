@@ -1,8 +1,5 @@
 import apiClient from '../api-client';
 
-// ---------------------------------------------------------------------------
-// TYPES
-// ---------------------------------------------------------------------------
 export type MemberType = 'Pengurus' | 'Demisioner';
 export type MemberStatus = 'Active' | 'Deactive';
 
