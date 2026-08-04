@@ -50,14 +50,14 @@ export default {
       title: "Moments",
       subtitle: "Stage Highlights",
       link: "View Gallery",
-      no_upload: "No gallery has been uploaded yet."
+      no_upload: "No gallery has been uploaded yet.",
     },
     section_news: {
       title: "Latest News",
       subtitle: "News Publications",
       desc: "Follow the latest developments, activities, and achievements from UKM Lises Asmarandana.",
       link: "View All News",
-      no_upload: "No news has been uploaded yet."
+      no_upload: "No news has been uploaded yet.",
     },
     section_event: {
       tag: "Upcoming Event",
@@ -71,16 +71,22 @@ export default {
     heading: "About Us",
     title_t1: "Igniting tradition through",
     title_y1: "student art collective",
-    desc_1a: "is a Student Activity Unit in the fields of music and dance arts at Universitas Muhammadiyah Sukabumi. The name",
+    desc_1a:
+      "is a Student Activity Unit in the fields of music and dance arts at Universitas Muhammadiyah Sukabumi. The name",
     desc_1b: "is derived from a Sundanese song rich in meaning, love for culture, and beauty.",
-    desc_2: "Since its inception, this organization has been a growth space for students looking to learn gamelan, kacapi suling, jaipong, traditional dance creation, and various forms of traditional and contemporary performances.",
-    desc_3: "Every year, Lises Asmarandana performs at campus events, cultural festivals, and collaborative performances with other art communities.",
+    desc_2:
+      "Since its inception, this organization has been a growth space for students looking to learn gamelan, kacapi suling, jaipong, traditional dance creation, and various forms of traditional and contemporary performances.",
+    desc_3:
+      "Every year, Lises Asmarandana performs at campus events, cultural festivals, and collaborative performances with other art communities.",
     card_name_1: "Vision",
     card_name_2: "Mission",
     card_name_3: "Values",
-    card_desc_1: "To become the primary hub for preserving music and dance arts within UMMI and the Sukabumi area.",
-    card_desc_2: "Developing student talents through regular practice, workshops, and high-quality performances.",
-    card_desc_3: "Collectivity, practice discipline, and love for cultural roots while remaining open to innovation."
+    card_desc_1:
+      "To become the primary hub for preserving music and dance arts within UMMI and the Sukabumi area.",
+    card_desc_2:
+      "Developing student talents through regular practice, workshops, and high-quality performances.",
+    card_desc_3:
+      "Collectivity, practice discipline, and love for cultural roots while remaining open to innovation.",
   },
 
   GalleryPage: {
@@ -89,7 +95,7 @@ export default {
     title_y1: "Stage",
     title_t2: "practice moments.",
     desc: "A visual documentation collection of performances, workshops, and togetherness moments of Lises Asmarandana.",
-    no_upload: "No gallery has been uploaded yet."
+    no_upload: "No gallery has been uploaded yet.",
   },
 
   NewsPage: {
@@ -98,7 +104,7 @@ export default {
     title_y1: "stage",
     title_t2: "our me.",
     btn_readmore: "Read more",
-    no_upload: "No news has been uploaded yet."
+    no_upload: "No news has been uploaded yet.",
   },
 
   NewsDetailPage: {
@@ -106,14 +112,14 @@ export default {
     not_found_desc: "Sorry, the article you are looking for is not available or has been deleted.",
     btn_back_news: "Back to News",
     btn_back: "Back",
-    share_news: 'Share News',
-    share_wa: 'WhatsApp',
-    share_link: 'Copy Link',
-    salin_link_true: 'Link Copied',
-    share: 'Share',
-    news: 'Other News',
-    cta_dekstop: 'Show All',
-    cta_mobile: 'Show All News',
+    share_news: "Share News",
+    share_wa: "WhatsApp",
+    share_link: "Copy Link",
+    salin_link_true: "Link Copied",
+    share: "Share",
+    news: "Other News",
+    cta_dekstop: "Show All",
+    cta_mobile: "Show All News",
   },
 
   EventPage: {
@@ -134,7 +140,8 @@ export default {
       title: "Charity Concert: Nada Asmarandana",
       location: "Sukabumi Cultural Center",
       price: "Rp 50,000",
-      summary: "A charity music and dance performance for humanitarian fundraising, featuring a special collaboration."
+      summary:
+        "A charity music and dance performance for humanitarian fundraising, featuring a special collaboration.",
     },
     card2: {
       type: "Non-Exclusive",
@@ -142,7 +149,8 @@ export default {
       title: "UMMI Cultural Performance",
       location: "Main Field UMMI Campus",
       price: "Free",
-      summary: "An open art performance for all students and the general public to celebrate the campus cultural month."
+      summary:
+        "An open art performance for all students and the general public to celebrate the campus cultural month.",
     },
     card3: {
       type: "Exclusive",
@@ -150,7 +158,8 @@ export default {
       title: "Gala Night: Harmony of Tatar Sunda",
       location: "Ballroom Hotel Santika Sukabumi",
       price: "Rp 100,000",
-      summary: "A spectacular performance featuring stunning lighting and a guest maestro appearance."
+      summary:
+        "A spectacular performance featuring stunning lighting and a guest maestro appearance.",
     },
     dialog: {
       title: "Buy Ticket",
@@ -159,8 +168,8 @@ export default {
       location: "Location",
       date: "Date",
       btn_close: "Close",
-      btn_confirm: "Confirm"
-    }
+      btn_confirm: "Confirm",
+    },
   },
 
   MemberPage: {
@@ -168,32 +177,32 @@ export default {
     title_t1: "List of members ukm",
     title_y1: "Lises",
     tabs: {
-      administration: 'Administration',
-      demisioner: 'Demicioner',
-      all_batch: 'All Batch Year',
-      all_member: 'All Member',
-      admin_member: 'Administration Member',
-      reguler_member: 'Regular Member',
-      new_member: 'New Member',
+      administration: "Administration",
+      demisioner: "Demicioner",
+      all_batch: "All Batch Year",
+      all_member: "All Member",
+      admin_member: "Administration Member",
+      reguler_member: "Regular Member",
+      new_member: "New Member",
     },
     card: {
-      detail: 'Detail Member',
-      batch: 'Batch',
-      period: 'Period',
-      position: 'Position',
-      status: 'Status',
+      detail: "Detail Member",
+      batch: "Batch",
+      period: "Period",
+      position: "Position",
+      status: "Status",
     },
-    search: 'Search by name or major...',
+    search: "Search by name or major...",
     table: {
-      img: 'Image',
-      name: 'Name Member',
-      major: 'Major',
-      year: 'Year',
-      batch_name: 'Batch Name',
-      period: 'Period',
-      position: 'Position',
-      show: 'Show',
-      not_found: 'Not found data'
+      img: "Image",
+      name: "Name Member",
+      major: "Major",
+      year: "Year",
+      batch_name: "Batch Name",
+      period: "Period",
+      position: "Position",
+      show: "Show",
+      not_found: "Not found data",
     },
   },
 
@@ -214,8 +223,8 @@ export default {
       placeholder4: "Write the message you want to send",
       message_success: "Thank you! Your message has been sent.",
       message_error: "Please fill out all fields before sending the message.",
-      btn_submit: "Send Message"
-    }
+      btn_submit: "Send Message",
+    },
   },
 
   NotFoundPage: {
@@ -272,42 +281,51 @@ export default {
   seo: {
     home: {
       title: "Lises Asmarandana | Music & Dance Art UMMI Sukabumi",
-      description: "Official website of UKM Music and Dance Art Lises Asmarandana, Universitas Muhammadiyah Sukabumi. Preserving Sundanese and Indonesian cultural arts.",
-      keywords: "UKM Lises Asmarandana, UMMI Art Club, Sukabumi Dance Art, Sundanese Traditional Music, UMMI Sukabumi",
+      description:
+        "Official website of UKM Music and Dance Art Lises Asmarandana, Universitas Muhammadiyah Sukabumi. Preserving Sundanese and Indonesian cultural arts.",
+      keywords:
+        "UKM Lises Asmarandana, UMMI Art Club, Sukabumi Dance Art, Sundanese Traditional Music, UMMI Sukabumi",
     },
     about: {
       title: "About Us — Lises Asmarandana",
-      description: "Profile, history, vision mission, and organizational structure of UKM Music and Dance Art Lises Asmarandana UMMI.",
+      description:
+        "Profile, history, vision mission, and organizational structure of UKM Music and Dance Art Lises Asmarandana UMMI.",
       keywords: "UKM Lises Profile, History of Lises Asmarandana, Vision Mission UMMI Art Club",
     },
     members: {
       title: "Members & Management — Lises Asmarandana",
-      description: "List of active members, management structure, and alumni of UKM Lises Asmarandana UMMI Sukabumi.",
+      description:
+        "List of active members, management structure, and alumni of UKM Lises Asmarandana UMMI Sukabumi.",
       keywords: "UKM Lises Management, Lises UMMI Members, Lises Asmarandana Alumni",
     },
     events: {
       title: "Events & Agenda — UKM Lises Asmarandana",
-      description: "Schedule of performances, cultural festivals, and art activities of UKM Lises Asmarandana UMMI.",
+      description:
+        "Schedule of performances, cultural festivals, and art activities of UKM Lises Asmarandana UMMI.",
       keywords: "UKM Lises Events, UMMI Art Performances, Sukabumi Dance Festival",
     },
     news: {
       title: "News & Articles — Lises Asmarandana",
-      description: "Latest news, event coverage, and cultural art articles from UKM Lises Asmarandana UMMI.",
+      description:
+        "Latest news, event coverage, and cultural art articles from UKM Lises Asmarandana UMMI.",
       keywords: "UKM Lises News, UMMI Art Articles, Lises Asmarandana Achievements",
     },
     newsDetail: {
       title: "News Detail — Lises Asmarandana",
-      description: "Read more about news, articles, and latest updates from Lises Asmarandana Universitas Muhammadiyah Sukabumi.",
+      description:
+        "Read more about news, articles, and latest updates from Lises Asmarandana Universitas Muhammadiyah Sukabumi.",
       keywords: "Lises News Detail, Lises Asmarandana Updates, UMMI Coverage",
     },
     gallery: {
       title: "Documentation Gallery — UKM Lises Asmarandana",
-      description: "Photo and video documentation of performances, practice sessions, and shows of UKM Lises Asmarandana.",
+      description:
+        "Photo and video documentation of performances, practice sessions, and shows of UKM Lises Asmarandana.",
       keywords: "Lises Gallery, UMMI Performance Photos, Lises Dance Videos",
     },
     contact: {
       title: "Contact Us — UKM Lises Asmarandana",
-      description: "Official contact, Secretariat location, and social media of UKM Lises Asmarandana UMMI Sukabumi.",
+      description:
+        "Official contact, Secretariat location, and social media of UKM Lises Asmarandana UMMI Sukabumi.",
       keywords: "UKM Lises Contact, UMMI Sukabumi Address, Lises Social Media",
     },
   },

@@ -1,4 +1,4 @@
-import apiClient from '../api-client';
+import apiClient from "../api-client";
 
 export interface News {
   id: number;
@@ -17,10 +17,10 @@ export interface News {
 
 export const getNews = async (): Promise<News[]> => {
   try {
-    const response = await apiClient.get('/news');
+    const response = await apiClient.get("/news");
     return response.data;
   } catch (error) {
-    console.error('Error fetching news:', error);
+    console.error("Error fetching news:", error);
     return [];
   }
 };

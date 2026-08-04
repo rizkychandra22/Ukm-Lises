@@ -48,11 +48,10 @@ export function ContactPage() {
           <Sparkles className="h-3.5 w-3.5" /> {t("heading")}
         </Badge>
         <h1 className="mt-4 max-w-3xl font-display text-3xl font-bold leading-[1.15] md:text-4xl">
-          {t("title_t1")} <span className="text-gradient-gold">{t("title_y1")}</span> {t("title_t2")}
+          {t("title_t1")} <span className="text-gradient-gold">{t("title_y1")}</span>{" "}
+          {t("title_t2")}
         </h1>
-        <p className="mt-5 max-w-3xl text-muted-foreground">
-          {t("desc")}
-        </p>
+        <p className="mt-5 max-w-3xl text-muted-foreground">{t("desc")}</p>
 
         <div className="mt-14 flex flex-col gap-10">
           {/* Top Section: Form and Map */}
@@ -114,8 +113,17 @@ export function ContactPage() {
                 >
                   <div className="space-y-5">
                     <div className="grid gap-5 sm:grid-cols-2">
-                      <Field label={t("form.label1")} name="name" placeholder={t("form.placeholder1")} />
-                      <Field label={t("form.label2")} name="email" type="email" placeholder={t("form.placeholder2")} />
+                      <Field
+                        label={t("form.label1")}
+                        name="name"
+                        placeholder={t("form.placeholder1")}
+                      />
+                      <Field
+                        label={t("form.label2")}
+                        name="email"
+                        type="email"
+                        placeholder={t("form.placeholder2")}
+                      />
                     </div>
                     <Field
                       label={t("form.label3")}
