@@ -19,11 +19,6 @@ export interface EventItem {
 }
 
 export const getEvents = async (): Promise<EventItem[]> => {
-  try {
-    const response = await apiClient.get("/events");
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching events:", error);
-    return [];
-  }
+  const response = await apiClient.get("/events");
+  return response.data;
 };

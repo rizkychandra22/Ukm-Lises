@@ -16,21 +16,11 @@ export interface News {
 }
 
 export const getNews = async (): Promise<News[]> => {
-  try {
-    const response = await apiClient.get("/news");
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching news:", error);
-    return [];
-  }
+  const response = await apiClient.get("/news");
+  return response.data;
 };
 
 export const getNewsDetail = async (slug: string): Promise<News | null> => {
-  try {
-    const response = await apiClient.get(`/news/${slug}`);
-    return response.data;
-  } catch (error) {
-    console.error(`Error fetching news ${slug}:`, error);
-    return null;
-  }
+  const response = await apiClient.get(`/news/${slug}`);
+  return response.data;
 };

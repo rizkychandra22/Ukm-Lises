@@ -118,7 +118,7 @@ export function normalizeMember(raw: unknown): Member {
 }
 
 // ---------------------------------------------------------------------------
-// API METHODS
+// API METHODS (Bebas try-catch agar error diteruskan ke TanStack Query)
 // ---------------------------------------------------------------------------
 export async function getMembers(params?: QueryMemberParams): Promise<Member[]> {
   const queryParams: Record<string, string> = {};
@@ -144,7 +144,7 @@ export async function getBatches(): Promise<Batch[]> {
 }
 
 /**
- * Helper khusus memisahkan Pengurus (Administration) dan Demisioner secara paralel
+ * Helper memisahkan Pengurus dan Demisioner secara otomatis
  */
 export async function getCategorizedMembers(): Promise<{
   administration: Member[];
