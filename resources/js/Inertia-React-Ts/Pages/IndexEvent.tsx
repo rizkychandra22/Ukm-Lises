@@ -645,7 +645,7 @@ export default function IndexEvent({
           {/* Filter + Add Button */}
           <div className="flex flex-row flex-wrap sm:flex-nowrap items-center gap-2 w-full lg:w-auto">
             {activeTab === "event" && (
-              <div className="w-full sm:w-auto flex-1 sm:flex-none">
+              <div className="flex-1 sm:flex-none">
                 <Select value={eventStatusFilter} onValueChange={setEventStatusFilter}>
                   <SelectTrigger className="w-full sm:w-[180px] h-8 text-[13px]">
                     <SelectValue placeholder="Filter Status" />
@@ -661,10 +661,9 @@ export default function IndexEvent({
               </div>
             )}
             {activeTab === "order" && (
-              <div className="w-full sm:w-auto flex flex-row flex-wrap sm:flex-nowrap gap-2 flex-1 sm:flex-none">
-                <div className="flex-1 min-w-[130px]">
-                  <Select value={orderMethodFilter} onValueChange={setOrderMethodFilter}>
-                    <SelectTrigger className="w-full h-8 text-[13px]">
+              <div className="w-full sm:w-auto flex flex-row gap-2">
+                <Select value={orderMethodFilter} onValueChange={setOrderMethodFilter}>
+                  <SelectTrigger className="flex-1 sm:w-[150px] h-8 text-[13px]">
                     <SelectValue placeholder="Tipe Pembelian" />
                   </SelectTrigger>
                   <SelectContent>
@@ -673,10 +672,8 @@ export default function IndexEvent({
                     <SelectItem value="offline">Offline</SelectItem>
                   </SelectContent>
                 </Select>
-                </div>
-                <div className="flex-1 min-w-[130px]">
                 <Select value={orderStatusFilter} onValueChange={setOrderStatusFilter}>
-                  <SelectTrigger className="w-full h-8 text-[13px]">
+                  <SelectTrigger className="flex-1 sm:w-[150px] h-8 text-[13px]">
                     <SelectValue placeholder="Filter Status" />
                   </SelectTrigger>
                   <SelectContent>
@@ -686,13 +683,16 @@ export default function IndexEvent({
                     <SelectItem value="cancelled">Cancelled</SelectItem>
                   </SelectContent>
                 </Select>
-                </div>
               </div>
             )}
             {hasRole(["Developer", "Admin"]) && (
               <Button
                 size="sm"
-                className="h-8 px-3.5 rounded-lg text-[13px] font-medium w-full sm:w-auto shrink-0 shadow-sm"
+                className={`h-8 px-3.5 rounded-lg text-[13px] font-medium shrink-0 shadow-sm ${
+                  activeTab === "order"
+                    ? "w-full sm:w-auto flex-none"
+                    : "flex-1 sm:flex-none sm:w-auto"
+                }`}
                 onClick={
                   activeTab === "event"
                     ? handleAddEvent
