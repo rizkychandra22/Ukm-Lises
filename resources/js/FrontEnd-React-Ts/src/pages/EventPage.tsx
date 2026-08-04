@@ -58,7 +58,7 @@ export function EventPage() {
   const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
 
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
-  const { orderData: trackedOrder } = useTrackOrder(debouncedSearchQuery);
+  const { orderData: trackedOrder, isFetching: isTrackingOrder } = useTrackOrder(debouncedSearchQuery);
   const { refetch: refetchAccounts } = usePaymentAccounts();
   const { refetch: refetchOrderCode } = useGenerateOrderCode();
   const { submitOrderAsync } = useSubmitOrder();
@@ -240,7 +240,7 @@ export function EventPage() {
                   </CardContent>
                 </Card>
               ))
-          ) : filteredEvents.length === 0 && !trackedOrder ? (
+          ) : filteredEvents.length === 0 && !trackedOrder && !isTrackingOrder ? (
             <div className="col-span-full flex flex-col items-center justify-center py-20 md:py-20 px-3 text-center text-muted-foreground border-primary/50 border-2 border-dashed rounded-2xl">
               <Ticket className="w-16 h-16 mb-4 opacity-20" />
               <p className="text-lg font-medium">
@@ -249,7 +249,30 @@ export function EventPage() {
             </div>
           ) : (
             <>
-              {trackedOrder && (
+              {isTrackingOrder ? (
+                <Card className="flex flex-col overflow-hidden rounded-3xl border-border/60 bg-card col-span-full md:col-span-1 shadow-lg ring-2 ring-primary/20 relative">
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-gold opacity-50"></div>
+                  <CardContent className="p-6 space-y-4 pt-8">
+                    <div>
+                      <Skeleton className="h-3 w-24 mb-2" />
+                      <Skeleton className="h-8 w-40" />
+                    </div>
+                    <div>
+                      <Skeleton className="h-4 w-3/4" />
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <Skeleton className="h-6 w-20 rounded-md" />
+                      <Skeleton className="h-4 w-16" />
+                    </div>
+                    <div className="pt-3 border-t border-dashed">
+                      <Skeleton className="h-6 w-28 ml-auto" />
+                    </div>
+                    <div className="mt-2">
+                      <Skeleton className="h-8 w-full rounded-lg" />
+                    </div>
+                  </CardContent>
+                </Card>
+              ) : trackedOrder ? (
                 <Card
                   className="group flex flex-col overflow-hidden rounded-3xl border-border/60 bg-card transition-colors hover:border-primary/60 cursor-pointer col-span-full md:col-span-1 shadow-lg ring-2 ring-primary/50 relative"
                   onClick={() => setIsTicketModalOpen(true)}
@@ -296,7 +319,7 @@ export function EventPage() {
                     </div>
                   </CardContent>
                 </Card>
-              )}
+              ) : null}
               {filteredEvents.map((event) => {
                 const title = isEn ? event.title_en || event.title_id : event.title_id;
                 const location = isEn ? event.location_en || event.location_id : event.location_id;

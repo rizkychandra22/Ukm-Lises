@@ -132,7 +132,7 @@ export default {
     no_buy: "Tiket Tidak Tersedia",
     search_placeholder: "Cek pesanan tiket mu atau event tersedia.",
     search_button: "Cari",
-    search_empty: "Tidak ada event yang cocok dengan pencarian Anda.",
+    search_empty: "Tidak ada event atau tiket yang cocok dengan pencarian Anda.",
     no_event: "Belum ada event yang akan datang. Pantau terus halaman ini!",
     loading: "Memuat data event...",
     card1: {
