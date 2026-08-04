@@ -643,9 +643,9 @@ export default function IndexEvent({
           </div>
 
           {/* Filter + Add Button */}
-          <div className="flex flex-row items-center gap-2 w-full lg:w-auto">
+          <div className="flex flex-row flex-wrap sm:flex-nowrap items-center gap-2 w-full lg:w-auto">
             {activeTab === "event" && (
-              <div className="flex-1 sm:flex-none">
+              <div className="w-full sm:w-auto flex-1 sm:flex-none">
                 <Select value={eventStatusFilter} onValueChange={setEventStatusFilter}>
                   <SelectTrigger className="w-full sm:w-[180px] h-8 text-[13px]">
                     <SelectValue placeholder="Filter Status" />
@@ -661,9 +661,10 @@ export default function IndexEvent({
               </div>
             )}
             {activeTab === "order" && (
-              <div className="flex-1 sm:flex-none flex flex-row gap-2">
-                <Select value={orderMethodFilter} onValueChange={setOrderMethodFilter}>
-                  <SelectTrigger className="w-full sm:w-[150px] h-8 text-[13px]">
+              <div className="w-full sm:w-auto flex flex-row flex-wrap sm:flex-nowrap gap-2 flex-1 sm:flex-none">
+                <div className="flex-1 min-w-[130px]">
+                  <Select value={orderMethodFilter} onValueChange={setOrderMethodFilter}>
+                    <SelectTrigger className="w-full h-8 text-[13px]">
                     <SelectValue placeholder="Tipe Pembelian" />
                   </SelectTrigger>
                   <SelectContent>
@@ -672,8 +673,10 @@ export default function IndexEvent({
                     <SelectItem value="offline">Offline</SelectItem>
                   </SelectContent>
                 </Select>
+                </div>
+                <div className="flex-1 min-w-[130px]">
                 <Select value={orderStatusFilter} onValueChange={setOrderStatusFilter}>
-                  <SelectTrigger className="w-full sm:w-[150px] h-8 text-[13px]">
+                  <SelectTrigger className="w-full h-8 text-[13px]">
                     <SelectValue placeholder="Filter Status" />
                   </SelectTrigger>
                   <SelectContent>
@@ -683,12 +686,13 @@ export default function IndexEvent({
                     <SelectItem value="cancelled">Cancelled</SelectItem>
                   </SelectContent>
                 </Select>
+                </div>
               </div>
             )}
             {hasRole(["Developer", "Admin"]) && (
               <Button
                 size="sm"
-                className="h-8 px-3.5 rounded-lg text-[13px] font-medium flex-1 sm:flex-none sm:w-auto shrink-0 shadow-sm"
+                className="h-8 px-3.5 rounded-lg text-[13px] font-medium w-full sm:w-auto shrink-0 shadow-sm"
                 onClick={
                   activeTab === "event"
                     ? handleAddEvent
@@ -712,7 +716,7 @@ export default function IndexEvent({
         <Tabs value={activeTab} className="w-full">
           {/* TAB CONTENT: EVENT */}
           <TabsContent value="event" className="mt-0">
-            <div className="rounded-xl border bg-card overflow-x-auto shadow-sm">
+            <div className="rounded-xl border bg-card overflow-hidden shadow-sm">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -875,7 +879,7 @@ export default function IndexEvent({
 
           {/* TAB CONTENT: PESANAN TIKET (ORDER) */}
           <TabsContent value="order" className="mt-0">
-            <div className="rounded-xl border bg-card overflow-x-auto shadow-sm">
+            <div className="rounded-xl border bg-card overflow-hidden shadow-sm">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -1032,7 +1036,7 @@ export default function IndexEvent({
 
           {/* TAB CONTENT: REKENING BANK */}
           <TabsContent value="bank" className="mt-0">
-            <div className="rounded-xl border bg-card overflow-x-auto shadow-sm">
+            <div className="rounded-xl border bg-card overflow-hidden shadow-sm">
               <Table>
                 <TableHeader>
                   <TableRow>
