@@ -12,8 +12,8 @@ import { ScrollTop } from "@/components/scroll-top";
 
 export function NewsPage() {
   const { t, i18n } = useTranslation("NewsPage");
-  const isEn = i18n.language === 'en';
-  
+  const isEn = i18n.language === "en";
+
   const [posts, setPosts] = useState<News[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -39,22 +39,28 @@ export function NewsPage() {
           <Sparkles className="h-3.5 w-3.5" /> {t("badge")}
         </Badge>
         <h1 className="mt-4 max-w-3xl font-display text-3xl font-bold leading-[1.15] md:text-4xl">
-          {t("title_t1")} <span className="text-gradient-gold">{t("title_y1")}</span> {t("title_t2")}
+          {t("title_t1")} <span className="text-gradient-gold">{t("title_y1")}</span>{" "}
+          {t("title_t2")}
         </h1>
 
         <div className="mt-14 grid gap-8 md:grid-cols-3">
           {isLoading ? (
-            Array(3).fill(0).map((_, i) => (
-              <Card key={i} className="flex flex-col rounded-3xl border-border/60 bg-card overflow-hidden">
-                <Skeleton className="aspect-[4/3] w-full" />
-                <CardContent className="flex flex-col p-6 space-y-3">
-                  <Skeleton className="h-4 w-24" />
-                  <Skeleton className="h-6 w-full" />
-                  <Skeleton className="h-16 w-full" />
-                  <Skeleton className="h-4 w-32" />
-                </CardContent>
-              </Card>
-            ))
+            Array(3)
+              .fill(0)
+              .map((_, i) => (
+                <Card
+                  key={i}
+                  className="flex flex-col rounded-3xl border-border/60 bg-card overflow-hidden"
+                >
+                  <Skeleton className="aspect-[4/3] w-full" />
+                  <CardContent className="flex flex-col p-6 space-y-3">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-6 w-full" />
+                    <Skeleton className="h-16 w-full" />
+                    <Skeleton className="h-4 w-32" />
+                  </CardContent>
+                </Card>
+              ))
           ) : posts.length === 0 ? (
             <div className="col-span-full flex flex-col items-center justify-center py-20 md:py-20 px-3 text-center text-muted-foreground border-primary/50 border-2 border-dashed rounded-2xl">
               <Newspaper className="w-16 h-16 mb-4 opacity-20" />
@@ -64,8 +70,10 @@ export function NewsPage() {
             posts.map((post) => {
               const title = isEn ? post.title_en || post.title_id : post.title_id;
               const excerpt = isEn ? post.summary_en || post.summary_id : post.summary_id;
-              const date = new Date(post.date).toLocaleDateString(isEn ? 'en-US' : 'id-ID', {
-                year: 'numeric', month: 'short', day: 'numeric'
+              const date = new Date(post.date).toLocaleDateString(isEn ? "en-US" : "id-ID", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
               });
 
               return (
@@ -96,7 +104,9 @@ export function NewsPage() {
                     <CardTitle className="mt-3 font-display text-xl font-bold leading-snug line-clamp-2">
                       {title}
                     </CardTitle>
-                    <CardDescription className="mt-3 flex-1 text-sm line-clamp-3">{excerpt}</CardDescription>
+                    <CardDescription className="mt-3 flex-1 text-sm line-clamp-3">
+                      {excerpt}
+                    </CardDescription>
                     <Button
                       asChild
                       variant="link"

@@ -1,44 +1,41 @@
-import axios, { type AxiosError } from 'axios';
+import axios, { type AxiosError } from "axios";
+import axiosRetry from "axios-retry";
 
-/**
- * Dynamic Base URL Resolver
- */
 function resolveApiBaseUrl(): string {
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     const host = window.location.hostname;
-
-    if (host === 'lises-asmarandana.laravel.cloud') {
+    if (host === "lises.laravel.cloud") {
       return import.meta.env.VITE_API_BASE_URL_PRD;
     }
-
-    if (host === 'lises-asmarandana-dev.laravel.cloud') {
+    if (host === "lises-dev.laravel.cloud") {
       return import.meta.env.VITE_API_BASE_URL_DEV;
     }
-
     return `${window.location.origin}/api`;
   }
-
-  // Fallback otomatis localhost
-  return 'http://localhost:8000/api';
+  return "http://localhost:8000/api";
 }
 
-const API_BASE_URL = resolveApiBaseUrl();
-
-/**
- * Axios Instance Public Pure SPA Landing Page
- */
 export const apiClient = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: 15000,
+  baseURL: resolveApiBaseUrl(),
+  timeout: 10000,
   headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
+    "Content-Type": "application/json",
+    Accept: "application/json",
   },
 });
 
-/**
- * Response Interceptor
- */
+axiosRetry(apiClient, {
+  retries: 3,
+  retryDelay: axiosRetry.exponentialDelay,
+  retryCondition: (error) => {
+    return (
+      axiosRetry.isNetworkOrIdempotentRequestError(error) ||
+      error.code === "ECONNABORTED" ||
+      (error.response?.status ? error.response.status >= 500 : false)
+    );
+  },
+});
+
 apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
@@ -53,16 +50,16 @@ apiClient.interceptors.response.use(
     const classified = error as AxiosError & { _classified?: string };
     const status = error.response?.status;
 
-    if (!error.response && error.message === 'Network Error') {
-      classified._classified = 'network';
-    } else if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
-      classified._classified = 'timeout';
+    if (!error.response && error.message === "Network Error") {
+      classified._classified = "network";
+    } else if (error.code === "ECONNABORTED" || error.message.includes("timeout")) {
+      classified._classified = "timeout";
     } else if (status && status >= 500) {
-      classified._classified = 'server_error';
+      classified._classified = "server_error";
     }
 
     return Promise.reject(classified);
-  }
+  },
 );
 
 export default apiClient;

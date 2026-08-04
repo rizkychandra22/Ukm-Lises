@@ -22,14 +22,20 @@ import { useState, useEffect, useRef } from "react";
 import { getGalleries, Gallery } from "@/lib/api/gallery";
 import { getNews, News } from "@/lib/api/news";
 import Autoplay from "embla-carousel-autoplay";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function HomePage() {
   const { t, i18n } = useTranslation("HomePage");
-  const isEn = i18n.language === 'en';
+  const isEn = i18n.language === "en";
   const plugin = useRef(Autoplay({ delay: 4000, stopOnInteraction: true }));
-  
+
   const [sliderImages, setSliderImages] = useState<Gallery[]>([]);
   const [momentImages, setMomentImages] = useState<Gallery[]>([]);
   const [latestNews, setLatestNews] = useState<News[]>([]);
@@ -38,17 +44,14 @@ export function HomePage() {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      
-      const [galleryData, newsData] = await Promise.all([
-        getGalleries(),
-        getNews()
-      ]);
 
-      const activeData = galleryData.filter(g => g.is_active).slice(0, 3);
+      const [galleryData, newsData] = await Promise.all([getGalleries(), getNews()]);
+
+      const activeData = galleryData.filter((g) => g.is_active).slice(0, 3);
       const latestGalleryData = galleryData.slice(0, 3);
       setSliderImages(activeData);
       setMomentImages(latestGalleryData);
-      
+
       setLatestNews(newsData.slice(0, 3));
       setIsLoading(false);
     };
@@ -71,9 +74,12 @@ export function HomePage() {
             sizes="100vw"
             className="absolute inset-0 h-full w-full object-cover object-center"
           />
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "var(--gradient-hero)" }} />
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{ background: "var(--gradient-hero)" }}
+          />
         </div>
-        
+
         {/* We need pointer-events-none here so clicks pass through to the carousel buttons underneath, but pointer-events-auto on buttons so they can be clicked */}
         <div className="relative mx-auto flex min-h-[50vh] md:min-h-[60vh] max-w-7xl flex-col justify-center px-6 pt-12 pb-12 md:pt-18 md:pb-18 pointer-events-none">
           <div className="pointer-events-auto">
@@ -84,10 +90,12 @@ export function HomePage() {
               <Sparkles className="h-3.5 w-3.5" /> UKM Lises - UMMI
             </Badge>
             <h1 className="mt-6 max-w-4xl font-display text-5xl font-black leading-[1.05] md:text-7xl">
-              <span className="text-gradient-gold">{t("banner.title_y1")}{" "}</span>
+              <span className="text-gradient-gold">{t("banner.title_y1")} </span>
               {t("banner.title_t1")}.
             </h1>
-            <p className="mt-6 max-w-2xl text-lg text-muted-foreground">{t("banner.description")}</p>
+            <p className="mt-6 max-w-2xl text-lg text-muted-foreground">
+              {t("banner.description")}
+            </p>
             <div className="mt-10 flex flex-wrap gap-4">
               <Button
                 asChild
@@ -107,16 +115,21 @@ export function HomePage() {
                 </Link>
               </Button>
             </div>
-            
+
             <div className="mt-16 grid max-w-3xl gap-6 sm:grid-cols-3">
               {[
                 { n: "120+", l: t("banner.card_1") },
                 { n: "45", l: t("banner.card_2") },
                 { n: "12", l: t("banner.card_3") },
               ].map((item) => (
-                <Card key={item.l} className="rounded-2xl border-border/60 bg-card/40 backdrop-blur">
+                <Card
+                  key={item.l}
+                  className="rounded-2xl border-border/60 bg-card/40 backdrop-blur"
+                >
                   <CardContent className="p-5">
-                    <div className="font-display text-3xl font-bold text-gradient-gold">{item.n}</div>
+                    <div className="font-display text-3xl font-bold text-gradient-gold">
+                      {item.n}
+                    </div>
                     <div className="mt-1 text-sm text-muted-foreground">{item.l}</div>
                   </CardContent>
                 </Card>
@@ -190,7 +203,9 @@ export function HomePage() {
         <div className="mt-10">
           {isLoading ? (
             <div className="grid gap-4 md:grid-cols-3">
-               {[1,2,3].map(i => <Skeleton key={i} className="aspect-[4/5] rounded-2xl w-full" />)}
+              {[1, 2, 3].map((i) => (
+                <Skeleton key={i} className="aspect-[4/5] rounded-2xl w-full" />
+              ))}
             </div>
           ) : momentImages.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 md:py-12 px-3 text-center text-muted-foreground border-primary/50 border-2 border-dashed rounded-2xl">
@@ -202,9 +217,12 @@ export function HomePage() {
               {momentImages.map((item) => {
                 const title = isEn ? item.title_en : item.title_id;
                 const desc = isEn ? item.desc_en : item.desc_id;
-                
+
                 return (
-                  <div key={item.id} className="group relative aspect-[4/5] overflow-hidden rounded-2xl border border-border/60">
+                  <div
+                    key={item.id}
+                    className="group relative aspect-[4/5] overflow-hidden rounded-2xl border border-border/60"
+                  >
                     <img
                       src={item.image}
                       alt={title}
@@ -214,7 +232,9 @@ export function HomePage() {
                     <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
                     <div className="absolute bottom-4 left-4 right-4 translate-y-3 opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">
                       <div className="font-medium text-primary text-sm md:text-base">{title}</div>
-                      {desc && <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{desc}</p>}
+                      {desc && (
+                        <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{desc}</p>
+                      )}
                     </div>
                   </div>
                 );
@@ -246,39 +266,44 @@ export function HomePage() {
           </div>
           <div className="flex flex-col gap-4 md:w-1/2">
             {isLoading ? (
-               Array(3).fill(0).map((_, i) => (
-                  <Skeleton key={i} className="h-28 w-full rounded-3xl" />
-               ))
+              Array(3)
+                .fill(0)
+                .map((_, i) => <Skeleton key={i} className="h-28 w-full rounded-3xl" />)
             ) : latestNews.length === 0 ? (
-               <div className="flex flex-col items-center justify-center py-20 md:py-12 px-3 text-center text-muted-foreground border-primary/50 border-2 border-dashed rounded-2xl h-full">
+              <div className="flex flex-col items-center justify-center py-20 md:py-12 px-3 text-center text-muted-foreground border-primary/50 border-2 border-dashed rounded-2xl h-full">
                 <Newspaper className="w-16 h-16 mb-4 opacity-20" />
                 <p className="text-lg font-medium">{t("section_news.no_upload")}</p>
-               </div>
-            ) : latestNews.map((post) => {
-              const title = isEn ? post.title_en || post.title_id : post.title_id;
-              const date = new Date(post.date).toLocaleDateString(isEn ? 'en-US' : 'id-ID', {
-                year: 'numeric', month: 'short', day: 'numeric'
-              });
+              </div>
+            ) : (
+              latestNews.map((post) => {
+                const title = isEn ? post.title_en || post.title_id : post.title_id;
+                const date = new Date(post.date).toLocaleDateString(isEn ? "en-US" : "id-ID", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                });
 
-              return (
-              <Link
-                key={post.id}
-                to={`/news/${post.slug}`}
-                className="group flex flex-col justify-between rounded-3xl border border-border/60 bg-card p-6 transition-colors hover:border-primary/60 sm:flex-row sm:items-center"
-              >
-                <div>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <CalendarDays className="h-3.5 w-3.5" /> {date}
-                  </div>
-                  <h3 className="mt-2 font-display text-lg font-bold group-hover:text-primary line-clamp-2">
-                    {title}
-                  </h3>
-                </div>
-                <div className="mt-4 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border/60 bg-background transition-colors group-hover:bg-primary group-hover:text-primary-foreground sm:mt-0">
-                  <ArrowUpRight className="h-4 w-4" />
-                </div>
-              </Link>
-            )})}
+                return (
+                  <Link
+                    key={post.id}
+                    to={`/news/${post.slug}`}
+                    className="group flex flex-col justify-between rounded-3xl border border-border/60 bg-card p-6 transition-colors hover:border-primary/60 sm:flex-row sm:items-center"
+                  >
+                    <div>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <CalendarDays className="h-3.5 w-3.5" /> {date}
+                      </div>
+                      <h3 className="mt-2 font-display text-lg font-bold group-hover:text-primary line-clamp-2">
+                        {title}
+                      </h3>
+                    </div>
+                    <div className="mt-4 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border/60 bg-background transition-colors group-hover:bg-primary group-hover:text-primary-foreground sm:mt-0">
+                      <ArrowUpRight className="h-4 w-4" />
+                    </div>
+                  </Link>
+                );
+              })
+            )}
           </div>
         </div>
         <div className="mt-8 flex justify-center sm:hidden">

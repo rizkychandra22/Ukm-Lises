@@ -24,8 +24,8 @@ import { ScrollTop } from "@/components/scroll-top";
 export function NewsDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const { t, i18n } = useTranslation("NewsDetailPage");
-  const isEn = i18n.language === 'en';
-  
+  const isEn = i18n.language === "en";
+
   const [post, setPost] = useState<News | null>(null);
   const [relatedPosts, setRelatedPosts] = useState<News[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -40,7 +40,7 @@ export function NewsDetailPage() {
 
         // Fetch related
         const allNews = await getNews();
-        setRelatedPosts(allNews.filter(n => n.slug !== slug).slice(0, 4));
+        setRelatedPosts(allNews.filter((n) => n.slug !== slug).slice(0, 4));
       }
       setIsLoading(false);
     };
@@ -168,8 +168,14 @@ export function NewsDetailPage() {
   const handleShare = async () => {
     if (navigator.share) {
       try {
-        await navigator.share({ title: isEn ? post.title_en || post.title_id : post.title_id, text: isEn ? post.summary_en || post.summary_id : post.summary_id, url: pageUrl });
-      } catch { /* cancelled */ }
+        await navigator.share({
+          title: isEn ? post.title_en || post.title_id : post.title_id,
+          text: isEn ? post.summary_en || post.summary_id : post.summary_id,
+          url: pageUrl,
+        });
+      } catch {
+        /* cancelled */
+      }
     } else {
       handleCopy();
     }
@@ -179,7 +185,7 @@ export function NewsDetailPage() {
     window.open(
       `https://api.whatsapp.com/send?text=${encodeURIComponent((isEn ? post.title_en || post.title_id : post.title_id) + "\n" + pageUrl)}`,
       "_blank",
-      "noopener,noreferrer"
+      "noopener,noreferrer",
     );
   };
 
@@ -222,7 +228,12 @@ export function NewsDetailPage() {
         {/* Meta Row */}
         <div className="mt-5 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
           <span className="flex items-center gap-1.5">
-            <CalendarDays className="h-4 w-4 text-primary/70" /> {new Date(post.date).toLocaleDateString(isEn ? 'en-US' : 'id-ID', { year: 'numeric', month: 'short', day: 'numeric' })}
+            <CalendarDays className="h-4 w-4 text-primary/70" />{" "}
+            {new Date(post.date).toLocaleDateString(isEn ? "en-US" : "id-ID", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })}
           </span>
           <span className="text-border">·</span>
           <span className="flex items-center gap-1.5">
@@ -266,7 +277,11 @@ export function NewsDetailPage() {
               [&>img]:my-5 [&>img]:rounded-2xl [&>img]:border [&>img]:border-border/60
               [&>ul]:list-disc [&>ul]:my-2 [&>ul]:pl-6 [&>ol]:list-decimal [&>ol]:my-2 [&>ol]:pl-6
             "
-            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(isEn ? (post.description_en || post.description_id) : post.description_id) }}
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(
+                isEn ? post.description_en || post.description_id : post.description_id,
+              ),
+            }}
           />
         </div>
       </section>
@@ -291,7 +306,11 @@ export function NewsDetailPage() {
               variant="outline"
               className="rounded-full border-border/60 bg-card gap-2 text-sm hover:border-primary/40 hover:bg-primary/10 hover:text-primary transition-all"
             >
-              {copied ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4" />}
+              {copied ? (
+                <Check className="h-4 w-4 text-emerald-400" />
+              ) : (
+                <Copy className="h-4 w-4" />
+              )}
               {copied ? t("salin_link_true") : t("share_link")}
             </Button>
             <Button
@@ -311,9 +330,7 @@ export function NewsDetailPage() {
 
           <div className="mb-8 flex items-end justify-between gap-4">
             <div>
-              <h2 className="font-display text-3xl font-bold text-primary">
-                {t("news")}
-              </h2>
+              <h2 className="font-display text-3xl font-bold text-primary">{t("news")}</h2>
             </div>
             <Button
               asChild
@@ -331,49 +348,54 @@ export function NewsDetailPage() {
             {relatedPosts.map((item) => {
               const itemTitle = isEn ? item.title_en || item.title_id : item.title_id;
               const itemExcerpt = isEn ? item.summary_en || item.summary_id : item.summary_id;
-              const itemDate = new Date(item.date).toLocaleDateString(isEn ? 'en-US' : 'id-ID', { year: 'numeric', month: 'short', day: 'numeric' });
+              const itemDate = new Date(item.date).toLocaleDateString(isEn ? "en-US" : "id-ID", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              });
 
               return (
-              <Link
-                key={item.slug}
-                to={`/news/${item.slug}`}
-                className="group flex items-center gap-4 py-5 transition-colors hover:bg-card/40 -mx-4 px-4 rounded-2xl"
-              >
-                {/* Thumbnail */}
-                <div className="h-16 w-16 sm:h-20 sm:w-28 shrink-0 overflow-hidden rounded-xl border border-border/60">
-                  <img
-                    src={item.image}
-                    alt={itemTitle}
-                    loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                </div>
-
-                {/* Text */}
-                <div className="flex-1 min-w-0 space-y-1.5">
-                  <div className="flex items-center gap-2.5">
-                    <Badge
-                      variant="outline"
-                      className="shrink-0 rounded-full border-primary/30 px-2.5 py-0.5 text-[10px] uppercase tracking-wider text-primary"
-                    >
-                      {item.type}
-                    </Badge>
-                    <span className="text-xs text-muted-foreground flex items-center gap-1">
-                      <CalendarDays className="h-3 w-3" /> {itemDate}
-                    </span>
+                <Link
+                  key={item.slug}
+                  to={`/news/${item.slug}`}
+                  className="group flex items-center gap-4 py-5 transition-colors hover:bg-card/40 -mx-4 px-4 rounded-2xl"
+                >
+                  {/* Thumbnail */}
+                  <div className="h-16 w-16 sm:h-20 sm:w-28 shrink-0 overflow-hidden rounded-xl border border-border/60">
+                    <img
+                      src={item.image}
+                      alt={itemTitle}
+                      loading="lazy"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
                   </div>
-                  <h3 className="font-display text-base font-bold leading-snug text-foreground group-hover:text-primary transition-colors truncate">
-                    {itemTitle}
-                  </h3>
-                  <p className="text-sm text-muted-foreground line-clamp-1 hidden sm:block">
-                    {itemExcerpt}
-                  </p>
-                </div>
 
-                {/* Arrow */}
-                <ArrowUpRight className="h-5 w-5 shrink-0 text-muted-foreground/40 group-hover:text-primary transition-colors" />
-              </Link>
-            )})}
+                  {/* Text */}
+                  <div className="flex-1 min-w-0 space-y-1.5">
+                    <div className="flex items-center gap-2.5">
+                      <Badge
+                        variant="outline"
+                        className="shrink-0 rounded-full border-primary/30 px-2.5 py-0.5 text-[10px] uppercase tracking-wider text-primary"
+                      >
+                        {item.type}
+                      </Badge>
+                      <span className="text-xs text-muted-foreground flex items-center gap-1">
+                        <CalendarDays className="h-3 w-3" /> {itemDate}
+                      </span>
+                    </div>
+                    <h3 className="font-display text-base font-bold leading-snug text-foreground group-hover:text-primary transition-colors truncate">
+                      {itemTitle}
+                    </h3>
+                    <p className="text-sm text-muted-foreground line-clamp-1 hidden sm:block">
+                      {itemExcerpt}
+                    </p>
+                  </div>
+
+                  {/* Arrow */}
+                  <ArrowUpRight className="h-5 w-5 shrink-0 text-muted-foreground/40 group-hover:text-primary transition-colors" />
+                </Link>
+              );
+            })}
           </div>
 
           {/* Mobile CTA */}

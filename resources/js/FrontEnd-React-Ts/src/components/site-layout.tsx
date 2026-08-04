@@ -214,9 +214,7 @@ export function SiteLayout() {
                     end={item.to === "/"}
                     className={({ isActive }) =>
                       `transition-colors hover:text-primary ${
-                        isActive
-                          ? "font-semibold text-primary"
-                          : "text-muted-foreground"
+                        isActive ? "font-semibold text-primary" : "text-muted-foreground"
                       }`
                     }
                   >
@@ -268,7 +266,9 @@ export function SiteLayout() {
             <a
               href="https://portofolio-rizky-chandra.laravel.cloud/"
               className="text-primary hover:underline"
-            > Rizky Chandra
+            >
+              {" "}
+              Rizky Chandra
             </a>
           </p>
         </div>

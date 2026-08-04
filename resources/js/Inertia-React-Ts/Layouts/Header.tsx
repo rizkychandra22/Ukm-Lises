@@ -1,7 +1,7 @@
-import { Link, usePage } from '@inertiajs/react';
-import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Link, usePage } from "@inertiajs/react";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,35 +9,37 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { Bell, Search, Sun, Moon } from 'lucide-react';
-import { useTheme } from '@admin/Components/ThemeProvider';
-import { toast } from 'sonner';
+} from "@/components/ui/breadcrumb";
+import { Bell, Search, Sun, Moon } from "lucide-react";
+import { useTheme } from "@admin/Components/ThemeProvider";
+import { toast } from "sonner";
 
 // Custom Label Dictionary (Opsional untuk nama khusus)
 const customLabels: Record<string, string> = {
-  'list-member': 'Data Anggota',
-  'news': 'News',
-  'create': 'Create',
-  'edit': 'Edit',
+  "list-member": "Data Anggota",
+  news: "News",
+  create: "Create",
+  edit: "Edit",
 };
 
 export function Header() {
   const { url } = usePage();
   const { theme, setTheme } = useTheme();
 
-  const isDark = theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  const isDark =
+    theme === "dark" ||
+    (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
 
   const toggleTheme = () => {
     setTheme(isDark ? "light" : "dark");
   };
 
   // 1. Ekstrak path URL & pisahkan query string (jika ada)
-  const pathWithoutQuery = url.split('?')[0];
-  const allSegments = pathWithoutQuery.split('/').filter(Boolean);
+  const pathWithoutQuery = url.split("?")[0];
+  const allSegments = pathWithoutQuery.split("/").filter(Boolean);
 
   // 2. Hilangkan 'dashboard' dari array jika sudah di segment awal (agar tidak double)
-  const routeSegments = allSegments[0] === 'dashboard' ? allSegments.slice(1) : allSegments;
+  const routeSegments = allSegments[0] === "dashboard" ? allSegments.slice(1) : allSegments;
 
   // Helper Formatter Nama Halaman
   const formatSegment = (segment: string) => {
@@ -48,7 +50,7 @@ export function Header() {
     if (!isNaN(Number(segment))) {
       return `#${segment}`;
     }
-    return segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' ');
+    return segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, " ");
   };
 
   return (
@@ -66,7 +68,9 @@ export function Header() {
                   <BreadcrumbPage className="text-[13px] font-medium">Dashboard</BreadcrumbPage>
                 ) : (
                   <BreadcrumbLink asChild>
-                    <Link href="/dashboard" className="text-[13px]">Dashboard</Link>
+                    <Link href="/dashboard" className="text-[13px]">
+                      Dashboard
+                    </Link>
                   </BreadcrumbLink>
                 )}
               </BreadcrumbItem>
@@ -74,9 +78,9 @@ export function Header() {
               {/* Looping Segments Bertingkat */}
               {routeSegments.map((segment, index) => {
                 const isLast = index === routeSegments.length - 1;
-                
+
                 // Susun href URL secara bertingkat: /dashboard/news, /dashboard/news/create, dll.
-                const href = `/dashboard/${routeSegments.slice(0, index + 1).join('/')}`;
+                const href = `/dashboard/${routeSegments.slice(0, index + 1).join("/")}`;
 
                 return (
                   <div key={href} className="inline-flex items-center gap-1.5">
@@ -106,33 +110,37 @@ export function Header() {
       <div className="ml-auto flex items-center gap-1">
         <div className="relative hidden md:flex items-center w-64 mr-2">
           <Search className="absolute left-3 w-4 h-4 text-muted-foreground" />
-          <Input 
-            type="text" 
-            placeholder="Cari data..." 
-            className="pl-9 h-8 bg-muted/50 border-none rounded-lg text-[13px] cursor-pointer" 
-            onClick={() => toast.info('Search feature still in development process.')}
+          <Input
+            type="text"
+            placeholder="Cari data..."
+            className="pl-9 h-8 bg-muted/50 border-none rounded-lg text-[13px] cursor-pointer"
+            onClick={() => toast.info("Search feature still in development process.")}
             readOnly
           />
         </div>
 
-        <Button 
-          variant="ghost" 
-          size="icon" 
+        <Button
+          variant="ghost"
+          size="icon"
           className="relative rounded-xl w-8 h-8"
-          onClick={() => toast.info('Notification feature still in development process.')}
+          onClick={() => toast.info("Notification feature still in development process.")}
         >
           <Bell className="w-[18px] h-[18px] text-muted-foreground" />
           <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-red-500 rounded-full border border-card"></span>
         </Button>
 
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          onClick={toggleTheme} 
-          className="rounded-xl w-8 h-8" 
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={toggleTheme}
+          className="rounded-xl w-8 h-8"
           aria-label="Toggle Theme"
         >
-          {isDark ? <Sun className="w-[18px] h-[18px] text-muted-foreground" /> : <Moon className="w-[18px] h-[18px] text-muted-foreground" />}
+          {isDark ? (
+            <Sun className="w-[18px] h-[18px] text-muted-foreground" />
+          ) : (
+            <Moon className="w-[18px] h-[18px] text-muted-foreground" />
+          )}
         </Button>
       </div>
     </header>
