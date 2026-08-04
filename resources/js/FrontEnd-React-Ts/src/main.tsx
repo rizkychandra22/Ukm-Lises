@@ -47,7 +47,11 @@ function GlobalErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   );
 }
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+const container = document.getElementById("root")!;
+const root = (container as any).__reactRoot || ReactDOM.createRoot(container);
+(container as any).__reactRoot = root;
+
+root.render(
   <React.StrictMode>
     <ErrorBoundary
       FallbackComponent={GlobalErrorFallback}

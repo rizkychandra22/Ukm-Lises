@@ -18,45 +18,20 @@ import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/c
 import { useTranslation } from "@/i18n";
 import { SEOHead } from "@/components/SEOHead";
 import { ScrollTop } from "@/components/scroll-top";
-import { useState, useEffect, useRef } from "react";
-import { getGalleries, Gallery } from "@/lib/api/gallery";
-import { getNews, News } from "@/lib/api/news";
-import Autoplay from "embla-carousel-autoplay";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+import { useGallery } from "@/hooks/useGallery";
+import { useNews } from "@/hooks/useNews";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function HomePage() {
   const { t, i18n } = useTranslation("HomePage");
   const isEn = i18n.language === "en";
-  const plugin = useRef(Autoplay({ delay: 4000, stopOnInteraction: true }));
 
-  const [sliderImages, setSliderImages] = useState<Gallery[]>([]);
-  const [momentImages, setMomentImages] = useState<Gallery[]>([]);
-  const [latestNews, setLatestNews] = useState<News[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { galleries, isLoading: isGalleryLoading } = useGallery();
+  const { news, isLoading: isNewsLoading } = useNews();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-
-      const [galleryData, newsData] = await Promise.all([getGalleries(), getNews()]);
-
-      const activeData = galleryData.filter((g) => g.is_active).slice(0, 3);
-      const latestGalleryData = galleryData.slice(0, 3);
-      setSliderImages(activeData);
-      setMomentImages(latestGalleryData);
-
-      setLatestNews(newsData.slice(0, 3));
-      setIsLoading(false);
-    };
-    fetchData();
-  }, []);
+  const isLoading = isGalleryLoading || isNewsLoading;
+  const momentImages = galleries.slice(0, 3);
+  const latestNews = news.slice(0, 3);
 
   return (
     <>

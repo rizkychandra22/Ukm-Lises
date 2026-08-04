@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
-import { getNews, News } from "@/lib/api/news";
+import { useNews } from "@/hooks/useNews";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTranslation } from "@/i18n";
 import { SEOHead } from "@/components/SEOHead";
@@ -14,18 +14,7 @@ export function NewsPage() {
   const { t, i18n } = useTranslation("NewsPage");
   const isEn = i18n.language === "en";
 
-  const [posts, setPosts] = useState<News[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchNews = async () => {
-      setIsLoading(true);
-      const data = await getNews();
-      setPosts(data);
-      setIsLoading(false);
-    };
-    fetchNews();
-  }, []);
+  const { news: posts, isLoading } = useNews();
 
   return (
     <>

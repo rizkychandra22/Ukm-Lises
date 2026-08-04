@@ -27,21 +27,16 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import {
-  PayAccount,
-  getPaymentAccounts,
-  generateOrderCode,
-  submitOrder,
-  trackOrder,
-} from "@/lib/api/order";
-import { getEvents, EventItem } from "@/lib/api/event";
+import { type PayAccount } from "@/lib/api/order";
+import { type EventItem } from "@/lib/api/event";
+import { useEvents } from "@/hooks/useEvent";
+import { usePaymentAccounts, useGenerateOrderCode, useTrackOrder, useSubmitOrder } from "@/hooks/useOrder";
 
 export function EventPage() {
   const { t, i18n } = useTranslation("EventPage");
   const isEn = i18n.language === "en";
 
-  const [events, setEvents] = useState<EventItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { events, isLoading } = useEvents();
   const [selectedEvent, setSelectedEvent] = useState<EventItem | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -60,18 +55,13 @@ export function EventPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const [trackedOrder, setTrackedOrder] = useState<any | null>(null);
   const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      setIsLoading(true);
-      const data = await getEvents();
-      setEvents(data);
-      setIsLoading(false);
-    };
-    fetchEvents();
-  }, []);
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
+  const { orderData: trackedOrder } = useTrackOrder(debouncedSearchQuery);
+  const { refetch: refetchAccounts } = usePaymentAccounts();
+  const { refetch: refetchOrderCode } = useGenerateOrderCode();
+  const { submitOrderAsync } = useSubmitOrder();
 
   const visibleEvents = useMemo(() => {
     return [...events]
@@ -100,21 +90,10 @@ export function EventPage() {
   }, [visibleEvents, searchQuery, isEn]);
 
   useEffect(() => {
-    const checkOrder = async () => {
+    const timeoutId = setTimeout(() => {
       const q = searchQuery.trim().toUpperCase();
-      if (q.startsWith("EVT") && q.length > 5) {
-        const order = await trackOrder(q);
-        if (order) {
-          setTrackedOrder(order);
-        } else {
-          setTrackedOrder(null);
-        }
-      } else {
-        setTrackedOrder(null);
-      }
-    };
-
-    const timeoutId = setTimeout(checkOrder, 500);
+      setDebouncedSearchQuery(q.startsWith("EVT") && q.length > 5 ? q : "");
+    }, 500);
     return () => clearTimeout(timeoutId);
   }, [searchQuery]);
 
@@ -133,12 +112,12 @@ export function EventPage() {
     setIsDialogOpen(true);
 
     try {
-      const [fetchedAccounts, code] = await Promise.all([
-        getPaymentAccounts(),
-        generateOrderCode(),
+      const [accountsRes, codeRes] = await Promise.all([
+        refetchAccounts(),
+        refetchOrderCode(),
       ]);
-      setAccounts(fetchedAccounts);
-      setOrderCode(code);
+      setAccounts(accountsRes.data ?? []);
+      setOrderCode(codeRes.data ?? null);
     } catch (e) {
       console.error(e);
       toast.error(isEn ? "Failed to load order info." : "Gagal memuat info pesanan.");
@@ -168,15 +147,18 @@ export function EventPage() {
     if (formData.payment_method) payload.append("payment_method", formData.payment_method);
     if (paymentProof) payload.append("payment_proof", paymentProof);
 
-    const result = await submitOrder(payload);
-
-    setIsSubmitting(false);
-
-    if (result.success) {
-      setIsSuccess(true);
-      toast.success(result.message);
-    } else {
-      toast.error(result.message);
+    try {
+      const result = await submitOrderAsync(payload);
+      if (result.success) {
+        setIsSuccess(true);
+        toast.success(result.message);
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Terjadi kesalahan saat memproses pesanan.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 

@@ -3,31 +3,18 @@ import { useTranslation } from "@/i18n";
 import { SEOHead } from "@/components/SEOHead";
 import { ScrollTop } from "@/components/scroll-top";
 import { Sparkles, Camera } from "lucide-react";
-import { getGalleries, Gallery } from "@/lib/api/gallery";
+import { useGallery } from "@/hooks/useGallery";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function GalleryPage() {
   const { t, i18n } = useTranslation("GalleryPage");
   const isEn = i18n.language === "en";
 
-  const [galleries, setGalleries] = useState<Gallery[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { galleries: data, isLoading } = useGallery();
 
-  useEffect(() => {
-    const fetchGalleries = async () => {
-      setIsLoading(true);
-      const data = await getGalleries();
-
-      // Susun agar is_index berada di paling awal
-      const indexItem = data.find((g) => g.is_index);
-      const otherItems = data.filter((g) => !g.is_index);
-      const sortedData = indexItem ? [indexItem, ...otherItems] : data;
-
-      setGalleries(sortedData);
-      setIsLoading(false);
-    };
-    fetchGalleries();
-  }, []);
+  const indexItem = data.find((g) => g.is_index);
+  const otherItems = data.filter((g) => !g.is_index);
+  const galleries = indexItem ? [indexItem, ...otherItems] : data;
 
   return (
     <>

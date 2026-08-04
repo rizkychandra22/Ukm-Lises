@@ -16,7 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getNewsDetail, getNews, News } from "@/lib/api/news";
+import { useNews, useNewsDetail } from "@/hooks/useNews";
 import { useTranslation } from "@/i18n";
 import { SEOHead } from "@/components/SEOHead";
 import { ScrollTop } from "@/components/scroll-top";
@@ -26,26 +26,12 @@ export function NewsDetailPage() {
   const { t, i18n } = useTranslation("NewsDetailPage");
   const isEn = i18n.language === "en";
 
-  const [post, setPost] = useState<News | null>(null);
-  const [relatedPosts, setRelatedPosts] = useState<News[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { newsDetail: post, isLoading: isDetailLoading } = useNewsDetail(slug || "");
+  const { news: allNews, isLoading: isAllNewsLoading } = useNews();
+
+  const isLoading = isDetailLoading || isAllNewsLoading;
+  const relatedPosts = allNews.filter((n) => n.slug !== slug).slice(0, 4);
   const [copied, setCopied] = useState(false);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      if (slug) {
-        const detail = await getNewsDetail(slug);
-        setPost(detail);
-
-        // Fetch related
-        const allNews = await getNews();
-        setRelatedPosts(allNews.filter((n) => n.slug !== slug).slice(0, 4));
-      }
-      setIsLoading(false);
-    };
-    fetchData();
-  }, [slug]);
 
   if (isLoading) {
     return (
