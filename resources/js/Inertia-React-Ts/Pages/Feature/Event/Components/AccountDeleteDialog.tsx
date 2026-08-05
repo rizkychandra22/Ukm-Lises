@@ -8,26 +8,26 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-interface DeleteDialogProps {
+interface AccountDeleteDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
 }
 
-export function DeleteDialog({
+export function AccountDeleteDialog({
   isOpen,
   onOpenChange,
   onConfirm,
-}: DeleteDialogProps) {
+}: AccountDeleteDialogProps) {
   return (
     <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
       <AlertDialogContent className="w-[90%] max-w-[360px] rounded-md p-6">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-center text-lg font-semibold">
-            Hapus Event
+            Hapus Rekening
           </AlertDialogTitle>
           <AlertDialogDescription className="text-center text-[14px] mt-2 mb-4 text-foreground/80">
-            Yakin ingin menghapus event ini? Tindakan ini tidak dapat dibatalkan.
+            Yakin ingin menghapus rekening pembayaran ini?
           </AlertDialogDescription>
         </AlertDialogHeader>
         <div className="flex flex-row items-center justify-center gap-3">
@@ -45,5 +45,3 @@ export function DeleteDialog({
     </AlertDialog>
   );
 }
-
-export { DeleteDialog as EventDeleteDialog };

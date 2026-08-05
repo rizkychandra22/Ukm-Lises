@@ -10,12 +10,14 @@ import {
 
 interface DeleteDialogProps {
   isOpen: boolean;
+  processing: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
 }
 
 export function DeleteDialog({
   isOpen,
+  processing,
   onOpenChange,
   onConfirm,
 }: DeleteDialogProps) {
@@ -24,26 +26,25 @@ export function DeleteDialog({
       <AlertDialogContent className="w-[90%] max-w-[360px] rounded-md p-6">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-center text-lg font-semibold">
-            Hapus Event
+            Hapus Galeri?
           </AlertDialogTitle>
           <AlertDialogDescription className="text-center text-[14px] mt-2 mb-4 text-foreground/80">
-            Yakin ingin menghapus event ini? Tindakan ini tidak dapat dibatalkan.
+            Tindakan ini tidak dapat dibatalkan. Gambar dan data akan dihapus permanen.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <div className="flex flex-row items-center justify-center gap-3">
-          <AlertDialogCancel className="w-24 border h-8 text-[13px] !mt-0">
+          <AlertDialogCancel className="w-24 border h-8 text-[13px] !mt-0" disabled={processing}>
             Batal
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={onConfirm}
             className="w-24 h-8 text-[13px] bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            disabled={processing}
           >
-            Hapus
+            {processing ? "Menghapus..." : "Ya, Hapus"}
           </AlertDialogAction>
         </div>
       </AlertDialogContent>
     </AlertDialog>
   );
 }
-
-export { DeleteDialog as EventDeleteDialog };
