@@ -9,6 +9,8 @@ use App\Models\PayAccount;
 use App\Models\PayOrder;
 use App\Services\OrderService;
 use App\Http\Resources\GalleryResource;
+use App\Http\Resources\NewsResource;
+use App\Models\News;
 use Illuminate\Http\Request;
 
 class ContentController extends Controller
@@ -59,19 +61,19 @@ class ContentController extends Controller
 
     public function news()
     {
-        $news = \App\Models\News::with('user')->orderBy('date', 'desc')->get();
-        return response()->json(\App\Http\Resources\NewsResource::collection($news));
+        $news = News::with('user')->orderBy('date', 'desc')->get();
+        return response()->json(NewsResource::collection($news));
     }
 
     public function newsDetail($slug)
     {
-        $news = \App\Models\News::with('user')->where('slug', $slug)->firstOrFail();
-        return response()->json(new \App\Http\Resources\NewsResource($news));
+        $news = News::with('user')->where('slug', $slug)->firstOrFail();
+        return response()->json(new NewsResource($news));
     }
 
     public function paymentAccounts()
     {
-        $accounts = \App\Models\PayAccount::with('batchMember')->get()->map(function ($account) {
+        $accounts = PayAccount::with('batchMember')->get()->map(function ($account) {
             $account->makeHidden(['created_at', 'updated_at']);
             if ($account->batchMember) {
                 $account->batchMember->makeHidden(['created_at', 'updated_at']);
@@ -83,10 +85,10 @@ class ContentController extends Controller
 
     public function generateOrderCode()
     {
-        return response()->json(['order_code' => \App\Models\PayOrder::generateOrderCode()]);
+        return response()->json(['order_code' => PayOrder::generateOrderCode()]);
     }
 
-    public function storeOrder(Request $request, \App\Services\OrderService $orderService)
+    public function storeOrder(Request $request, OrderService $orderService)
     {
         $validated = $request->validate([
             'order_code'     => ['required', 'string', 'max:50'],
@@ -116,7 +118,7 @@ class ContentController extends Controller
 
     public function trackOrder($order_code)
     {
-        $order = \App\Models\PayOrder::with('event')->where('order_code', $order_code)->first();
+        $order = PayOrder::with('event')->where('order_code', $order_code)->first();
         if (!$order) {
             return response()->json(['message' => 'Pesanan tiket tidak ditemukan.'], 404);
         }
