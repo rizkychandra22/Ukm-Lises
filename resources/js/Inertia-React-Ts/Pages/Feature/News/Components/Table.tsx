@@ -77,7 +77,7 @@ export function Table({
           </Button>
         ),
         cell: ({ row }: { row: { original: NewsItem } }) => (
-          <div className="text-xs text-muted-foreground line-clamp-2">
+          <div className="text-sm text-muted-foreground line-clamp-2">
             {row.original.summary_id || "-"}
           </div>
         ),

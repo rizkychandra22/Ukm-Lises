@@ -11,7 +11,7 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\SitemapController;
 
 // -------------------------------------------------------------
-// 1. AUTHENTICATION ROUTES (GUEST ONLY)
+// AUTHENTICATION ROUTES (GUEST ONLY)
 // -------------------------------------------------------------
 Route::middleware('guest')->group(function () {
     Route::get('/auth/login', [AuthController::class, 'index'])->name('login');
@@ -22,7 +22,7 @@ Route::middleware('guest')->group(function () {
 });
 
 // -------------------------------------------------------------
-// 2. DASHBOARD / ADMIN PANEL (AUTHENTICATED & ACCESSIBLE BY ROLES)
+// DASHBOARD / ADMIN PANEL (AUTHENTICATED & ACCESSIBLE BY ROLES)
 // -------------------------------------------------------------
 Route::middleware(['access:Developer,Admin,User'])->prefix('dashboard')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -75,7 +75,16 @@ Route::middleware(['access:Developer,Admin'])->prefix('dashboard')->group(functi
 });
 
 // -------------------------------------------------------------
-// 3. SITEMAP XML & LANDING PAGE PUBLIK (PURE REACT SPA)
+// DASHBOARD FALLBACK ROUTE (Mencegah 404 & 405 di Dashboard)
+// -------------------------------------------------------------
+Route::middleware(['access:Developer,Admin,User'])->prefix('dashboard')->group(function () {
+    Route::any('{any}', function () {
+        return inertia('NotFound');
+    })->where('any', '.*');
+});
+
+// -------------------------------------------------------------
+// SITEMAP XML & LANDING PAGE PUBLIK (PURE REACT SPA)
 // -------------------------------------------------------------
 Route::get('/sitemap.xml', [SitemapController::class, 'index']);
 
