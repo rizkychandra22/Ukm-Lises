@@ -33,7 +33,7 @@ export function FormModal({
     <Dialog open={isOpen} onOpenChange={(open) => !open && onCancel()}>
       <DialogContent className="w-[90%] max-w-[500px] rounded-md">
         <DialogHeader>
-          <DialogTitle>{selectedGallery ? "Edit Galeri" : "Tambah Galeri"}</DialogTitle>
+          <DialogTitle>{selectedGallery ? "Edit Data Galeri" : "Tambah Galeri Baru"}</DialogTitle>
         </DialogHeader>
 
         <form
@@ -41,9 +41,11 @@ export function FormModal({
           className="space-y-4 pt-4 max-h-[75vh] overflow-y-auto no-scrollbar px-1"
         >
           <div className="space-y-4">
-            <div className="space-y-2">
-              <Label>Judul Galeri</Label>
+            <div>
+              <label className="block text-sm font-medium mb-1">Judul Galeri</label>
               <Input
+                className="h-8 text-[13px]"
+                placeholder="Contoh: Pentas Seni Seni Sunda 2026"
                 value={formData.title_id}
                 onChange={(e) => setFormData((prev) => ({ ...prev, title_id: e.target.value }))}
                 required
@@ -53,27 +55,28 @@ export function FormModal({
               )}
             </div>
 
-            <div className="space-y-2">
-              <Label>Deskripsi Galeri</Label>
+            <div>
+              <label className="block text-sm font-medium mb-1">Deskripsi Galeri</label>
               <Textarea
+                className="text-[13px] h-24"
+                placeholder="Jelaskan secara singkat mengenai galeri ini..."
                 value={formData.desc_id}
                 onChange={(e) => setFormData((prev) => ({ ...prev, desc_id: e.target.value }))}
-                className="h-24"
               />
               {errors.desc_id && (
                 <span className="text-xs text-destructive">{errors.desc_id}</span>
               )}
             </div>
 
-            <div className="space-y-2">
-              <Label>
+            <div>
+              <label className="block text-sm font-medium mb-1">
                 Gambar Galeri{" "}
                 {selectedGallery && (
-                  <span className="bg-background text-sm file:text-foreground file:bg-muted file:border-0 file:rounded-md file:px-2 file:py-1 file:mr-2">
+                  <span className="text-xs text-muted-foreground font-normal">
                     (Kosongkan jika tidak diubah)
                   </span>
                 )}
-              </Label>
+              </label>
               <Input
                 type="file"
                 className="bg-background text-sm file:text-foreground file:bg-muted file:border-0 file:rounded-md file:px-2 file:py-1 file:mr-2"
@@ -92,9 +95,9 @@ export function FormModal({
             <div className="space-y-4 pt-4 border-t">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label className="text-base">Jadikan Hero (Index)</Label>
+                  <Label className="text-sm font-medium">Jadikan Hero (Index)</Label>
                   <p className="text-xs text-muted-foreground">
-                    Tampil paling awal & besar di Halaman Galeri.
+                    Tampil paling awal & besar di Halaman Utama Galeri.
                   </p>
                 </div>
                 <Switch
@@ -107,7 +110,7 @@ export function FormModal({
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 pt-5 mb-2 border-t mt-2">
+          <div className="flex justify-end gap-3 pt-4 mb-2 border-t">
             <Button
               type="button"
               variant="outline"

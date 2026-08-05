@@ -79,7 +79,7 @@ export function Table({
         cell: ({ row }: { row: { original: GalleryItem } }) => (
           <div className="flex flex-col gap-1 items-start">
             {row.original.is_index && (
-              <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-100 text-blue-700 border border-blue-200">
+              <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-blue-500/10 text-blue-700">
                 Index (Hero)
               </span>
             )}
