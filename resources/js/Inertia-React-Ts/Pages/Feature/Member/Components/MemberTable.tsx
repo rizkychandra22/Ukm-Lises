@@ -29,16 +29,6 @@ interface MemberTableProps {
   onAdd: () => void;
 }
 
-const getInitials = (name: string) => {
-  if (!name) return "";
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return "";
-  if (parts.length === 1) {
-    return parts[0].slice(0, 2).toUpperCase();
-  }
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-};
-
 export function MemberTable({
   members,
   batches,
@@ -104,13 +94,15 @@ export function MemberTable({
         cell: ({ row }: { row: { original: BatchMember } }) => {
           const img = row.original.image;
           return (
-            <div className="w-10 h-10 rounded-full overflow-hidden bg-muted border shrink-0 flex items-center justify-center text-xs font-bold text-muted-foreground uppercase">
-              {img ? (
-                <img src={img} alt={row.original.name} className="w-full h-full object-cover" />
-              ) : (
-                getInitials(row.original.name)
-              )}
-            </div>
+            <img
+              src={
+                img
+                  ? img
+                  : `https://ui-avatars.com/api/?name=${encodeURIComponent(row.original.name)}&background=random`
+              }
+              alt={row.original.name}
+              className="h-10 w-10 min-w-10 min-h-10 shrink-0 rounded-full object-cover border"
+            />
           );
         },
       },

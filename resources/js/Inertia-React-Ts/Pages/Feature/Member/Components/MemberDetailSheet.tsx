@@ -13,16 +13,6 @@ interface MemberDetailSheetProps {
   onClose: () => void;
 }
 
-const getInitials = (name: string) => {
-  if (!name) return "";
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return "";
-  if (parts.length === 1) {
-    return parts[0].slice(0, 2).toUpperCase();
-  }
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-};
-
 export function MemberDetailSheet({
   isOpen,
   member,
@@ -40,17 +30,15 @@ export function MemberDetailSheet({
 
         <div className="space-y-4">
           <div className="flex justify-center">
-            {member.image ? (
-              <img
-                src={member.image}
-                alt={member.name}
-                className="w-24 h-24 min-w-24 min-h-24 shrink-0 rounded-full object-cover border-4 border-muted shadow-sm"
-              />
-            ) : (
-              <div className="w-24 h-24 min-w-24 min-h-24 shrink-0 rounded-full bg-muted border-4 border-muted shadow-sm flex items-center justify-center text-2xl font-bold text-muted-foreground uppercase">
-                {getInitials(member.name)}
-              </div>
-            )}
+            <img
+              src={
+                member.image
+                  ? member.image
+                  : `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random`
+              }
+              alt={member.name}
+              className="w-24 h-24 min-w-24 min-h-24 shrink-0 rounded-full object-cover border-4 border-muted shadow-sm"
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-y-3 gap-x-4">
