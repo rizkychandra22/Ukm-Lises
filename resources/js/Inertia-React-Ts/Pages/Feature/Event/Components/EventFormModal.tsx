@@ -13,7 +13,7 @@ import {
 import { Loader2, Save } from "lucide-react";
 import { EventItem } from "../Types";
 
-interface FormModalProps {
+interface EventFormModalProps {
   isOpen: boolean;
   editingEvent: EventItem | null;
   eventData: {
@@ -41,7 +41,7 @@ interface FormModalProps {
   onCancel: () => void;
 }
 
-export function FormModal({
+export function EventFormModal({
   isOpen,
   editingEvent,
   eventData,
@@ -54,7 +54,7 @@ export function FormModal({
   setEventTimeInput,
   onSubmit,
   onCancel,
-}: FormModalProps) {
+}: EventFormModalProps) {
   const isExclusiveEvent = eventData.type === "Exclusive";
 
   return (
@@ -248,5 +248,3 @@ export function FormModal({
     </Dialog>
   );
 }
-
-export { FormModal as EventFormModal };

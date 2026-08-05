@@ -8,17 +8,17 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-interface DeleteDialogProps {
+interface EventDeleteDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
 }
 
-export function DeleteDialog({
+export function EventDeleteDialog({
   isOpen,
   onOpenChange,
   onConfirm,
-}: DeleteDialogProps) {
+}: EventDeleteDialogProps) {
   return (
     <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
       <AlertDialogContent className="w-[90%] max-w-[360px] rounded-md p-6">
@@ -45,5 +45,3 @@ export function DeleteDialog({
     </AlertDialog>
   );
 }
-
-export { DeleteDialog as EventDeleteDialog };

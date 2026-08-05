@@ -7,19 +7,19 @@ import {
 } from "@/components/ui/sheet";
 import { EventItem } from "../Types";
 
-interface DetailSheetProps {
+interface EventDetailSheetProps {
   isOpen: boolean;
   event: EventItem | null;
   onClose: () => void;
   formatIDR: (amount?: number | null) => string;
 }
 
-export function DetailSheet({
+export function EventDetailSheet({
   isOpen,
   event,
   onClose,
   formatIDR,
-}: DetailSheetProps) {
+}: EventDetailSheetProps) {
   if (!event) return null;
 
   return (
@@ -69,5 +69,3 @@ export function DetailSheet({
     </Sheet>
   );
 }
-
-export { DetailSheet as EventDetailSheet };

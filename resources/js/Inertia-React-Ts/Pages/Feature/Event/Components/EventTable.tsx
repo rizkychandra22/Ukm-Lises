@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 import { Eye, Edit, Trash2, ArrowUpDown, Plus } from "lucide-react";
 
-interface TableProps {
+interface EventTableProps {
   events: EventItem[];
   statusFilter: string;
   onStatusFilterChange: (status: string) => void;
@@ -34,7 +34,7 @@ export function EventTable({
   onAdd,
   hasRole,
   formatIDR,
-}: TableProps) {
+}: EventTableProps) {
   // Filter events by status if not "all"
   const filteredData = useMemo(() => {
     if (statusFilter === "all") return events;
@@ -256,5 +256,3 @@ export function EventTable({
     />
   );
 }
-
-export { EventTable as Table };
