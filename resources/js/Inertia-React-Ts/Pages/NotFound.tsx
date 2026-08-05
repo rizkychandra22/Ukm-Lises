@@ -1,15 +1,15 @@
-import { Component, ErrorInfo, ReactNode } from "react";
+import { Component, JSX, type ReactNode } from "react";
 import { Head, Link } from "@inertiajs/react";
-import DashboardLayout from "../Layouts/AppLayout";
 import { ArrowLeft, Frown } from "lucide-react";
+import DashboardLayout from "../Layouts/AppLayout";
 import { Button } from "@/components/ui/button";
 import { route } from "@admin/Lib/Route";
 
-interface Props {
-  status?: number;
+interface NotFoundProps {
+  readonly status?: number;
 }
 
-export default function NotFound({}: Props) {
+export default function NotFound(_: NotFoundProps): JSX.Element {
   return (
     <DashboardLayout>
       <Head title="Halaman Tidak Ditemukan" />
@@ -35,32 +35,39 @@ export default function NotFound({}: Props) {
   );
 }
 
-// Komponen Error Boundary untuk menangkap error React (client-side)
 interface ErrorBoundaryProps {
-  children: ReactNode;
+  readonly children: ReactNode;
 }
 
 interface ErrorBoundaryState {
-  hasError: boolean;
+  readonly hasError: boolean;
 }
 
-export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  constructor(props: ErrorBoundaryProps) {
+export class ErrorBoundary extends Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
+  public constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { hasError: false };
+
+    this.state = {
+      hasError: false,
+    };
   }
 
-  static getDerivedStateFromError(): ErrorBoundaryState {
-    return { hasError: true };
+  public static getDerivedStateFromError(): ErrorBoundaryState {
+    return {
+      hasError: true,
+    };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error("Terjadi kesalahan pada komponen:", error, errorInfo);
-  }
+  // public componentDidCatch(): void {
+  //   // Integrasikan logger seperti Sentry/Bugsnag bila diperlukan.
+  // }
 
-  render() {
+  public render(): ReactNode {
     if (this.state.hasError) {
-      return <NotFound status={500} />;
+      return <NotFound />;
     }
 
     return this.props.children;
