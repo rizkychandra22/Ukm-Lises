@@ -15,6 +15,15 @@ class ContentController extends Controller
 {
     public function events()
     {
+        // Auto-update Event status jika melebihi 3 jam dari jadwal agar landing page sinkron
+        Event::where('status', 'published')
+            ->where('date', '<=', now()->subHours(3))
+            ->update(['status' => 'completed']);
+
+        Event::where('status', 'draft')
+            ->where('date', '<=', now()->subHours(3))
+            ->update(['status' => 'cancelled']);
+
         $events = Event::published()
             ->orderByRaw("CASE WHEN status = 'published' THEN 0 WHEN status = 'completed' THEN 1 ELSE 2 END ASC")
             ->orderBy('date', 'asc')
