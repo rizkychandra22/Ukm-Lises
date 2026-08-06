@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Head, useForm, router } from "@inertiajs/react";
-import DashboardLayout from "../../../Layouts/AppLayout";
-import { route } from "../../../Lib/Route";
+import DashboardLayout from "../../../../Layouts/AppLayout";
+import { route } from "../../../../Lib/Route";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

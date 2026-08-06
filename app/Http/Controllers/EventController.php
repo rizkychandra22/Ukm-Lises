@@ -25,6 +25,15 @@ class EventController extends Controller
      */
     public function index(): Response
     {
+        // Auto-update Event status jika melebihi 3 jam dari jadwal
+        Event::where('status', 'published')
+            ->where('date', '<=', now()->subHours(3))
+            ->update(['status' => 'completed']);
+
+        Event::where('status', 'draft')
+            ->where('date', '<=', now()->subHours(3))
+            ->update(['status' => 'cancelled']);
+
         $events = Event::latest()->get();
         $events->each->append('remaining_tickets');
 
