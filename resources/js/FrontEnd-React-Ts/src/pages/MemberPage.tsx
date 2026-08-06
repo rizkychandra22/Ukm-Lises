@@ -3,7 +3,8 @@ import { Badge } from "@/components/ui/badge";
 import { Sparkles, Search, ArrowUpDown, Eye } from "lucide-react";
 import { useTranslation } from "@/i18n";
 import { SEOHead } from "@/components/SEOHead";
-import { getMembers, getBatches, type Member, type Batch, type MemberType } from "@/lib/api/member";
+import { type Member, type Batch } from "@/lib/api/member";
+import { useMembers, useBatches } from "@/hooks/useMember";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -43,29 +44,10 @@ type SortConfig = {
 export function MemberPage() {
   const { t, i18n } = useTranslation("MemberPage");
   const isEn = i18n.language === "en";
-  const [members, setMembers] = useState<Member[]>([]);
-  const [batches, setBatches] = useState<Batch[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { members, isLoading: isMembersLoading } = useMembers();
+  const { batches, isLoading: isBatchesLoading } = useBatches();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const [membersData, batchesData] = await Promise.all([getMembers(), getBatches()]);
-        if (membersData && Array.isArray(membersData)) {
-          setMembers(membersData);
-        }
-        if (batchesData && Array.isArray(batchesData)) {
-          setBatches(batchesData);
-        }
-      } catch (error) {
-        console.error("Failed to fetch member/batch data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+  const isLoading = isMembersLoading || isBatchesLoading;
 
   const [activeTab, setActiveTab] = useState("Kepengurusan");
   const [searchQuery, setSearchQuery] = useState("");

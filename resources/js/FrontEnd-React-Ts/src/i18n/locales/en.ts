@@ -131,7 +131,7 @@ export default {
     no_buy: "Tickets Unavailable",
     search_placeholder: "Check your ticket order or available events.",
     search_button: "Search",
-    search_empty: "No events match your search.",
+    search_empty: "No events or tickets match your search.",
     no_event: "No upcoming events yet. Stay tuned!",
     loading: "Loading events...",
     card1: {

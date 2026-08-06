@@ -25,13 +25,12 @@ export const apiClient = axios.create({
 });
 
 axiosRetry(apiClient, {
-  retries: 3,
+  retries: 2,
   retryDelay: axiosRetry.exponentialDelay,
   retryCondition: (error) => {
     return (
       axiosRetry.isNetworkOrIdempotentRequestError(error) ||
-      error.code === "ECONNABORTED" ||
-      (error.response?.status ? error.response.status >= 500 : false)
+      error.code === "ECONNABORTED"
     );
   },
 });

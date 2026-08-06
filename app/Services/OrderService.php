@@ -50,7 +50,7 @@ class OrderService
                 'qty'            => $data['qty'],
                 'total_price'    => $totalPrice,
                 'notes'          => $data['notes'] ?? null,
-                'payment_method' => $data['payment_method'] ?? null,
+                'pay_account_id' => $data['pay_account_id'] ?? null,
                 'payment_proof'  => $proofUrl,
                 'order_method'   => $data['order_method'] ?? 'online',
                 'status'         => $data['status'] ?? 'pending',

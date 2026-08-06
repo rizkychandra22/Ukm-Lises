@@ -33,7 +33,7 @@ class NewsController extends Controller
 
     public function create()
     {
-        return \Inertia\Inertia::render('Feature/News/Form');
+        return \Inertia\Inertia::render('Feature/News/Components/Form');
     }
 
     public function store(Request $request)
@@ -56,7 +56,7 @@ class NewsController extends Controller
 
     public function edit(\App\Models\News $news)
     {
-        return \Inertia\Inertia::render('Feature/News/Form', [
+        return \Inertia\Inertia::render('Feature/News/Components/Form', [
             'news' => (new \App\Http\Resources\NewsResource($news))->resolve()
         ]);
     }

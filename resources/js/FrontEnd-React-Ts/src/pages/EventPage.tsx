@@ -27,21 +27,16 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import {
-  PayAccount,
-  getPaymentAccounts,
-  generateOrderCode,
-  submitOrder,
-  trackOrder,
-} from "@/lib/api/order";
-import { getEvents, EventItem } from "@/lib/api/event";
+import { type PayAccount } from "@/lib/api/order";
+import { type EventItem } from "@/lib/api/event";
+import { useEvents } from "@/hooks/useEvent";
+import { usePaymentAccounts, useGenerateOrderCode, useTrackOrder, useSubmitOrder } from "@/hooks/useOrder";
 
 export function EventPage() {
   const { t, i18n } = useTranslation("EventPage");
   const isEn = i18n.language === "en";
 
-  const [events, setEvents] = useState<EventItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { events, isLoading } = useEvents();
   const [selectedEvent, setSelectedEvent] = useState<EventItem | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -54,24 +49,19 @@ export function EventPage() {
     phone: "",
     qty: 1 as number | string,
     notes: "",
-    payment_method: "",
+    pay_account_id: "",
   });
   const [paymentProof, setPaymentProof] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const [trackedOrder, setTrackedOrder] = useState<any | null>(null);
   const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      setIsLoading(true);
-      const data = await getEvents();
-      setEvents(data);
-      setIsLoading(false);
-    };
-    fetchEvents();
-  }, []);
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
+  const { orderData: trackedOrder, isFetching: isTrackingOrder } = useTrackOrder(debouncedSearchQuery);
+  const { refetch: refetchAccounts } = usePaymentAccounts();
+  const { refetch: refetchOrderCode } = useGenerateOrderCode();
+  const { submitOrderAsync } = useSubmitOrder();
 
   const visibleEvents = useMemo(() => {
     return [...events]
@@ -100,21 +90,10 @@ export function EventPage() {
   }, [visibleEvents, searchQuery, isEn]);
 
   useEffect(() => {
-    const checkOrder = async () => {
+    const timeoutId = setTimeout(() => {
       const q = searchQuery.trim().toUpperCase();
-      if (q.startsWith("EVT") && q.length > 5) {
-        const order = await trackOrder(q);
-        if (order) {
-          setTrackedOrder(order);
-        } else {
-          setTrackedOrder(null);
-        }
-      } else {
-        setTrackedOrder(null);
-      }
-    };
-
-    const timeoutId = setTimeout(checkOrder, 500);
+      setDebouncedSearchQuery(q.startsWith("EVT") && q.length > 5 ? q : "");
+    }, 500);
     return () => clearTimeout(timeoutId);
   }, [searchQuery]);
 
@@ -127,18 +106,18 @@ export function EventPage() {
       phone: "",
       qty: 1,
       notes: "",
-      payment_method: "",
+      pay_account_id: "",
     });
     setPaymentProof(null);
     setIsDialogOpen(true);
 
     try {
-      const [fetchedAccounts, code] = await Promise.all([
-        getPaymentAccounts(),
-        generateOrderCode(),
+      const [accountsRes, codeRes] = await Promise.all([
+        refetchAccounts(),
+        refetchOrderCode(),
       ]);
-      setAccounts(fetchedAccounts);
-      setOrderCode(code);
+      setAccounts(accountsRes.data ?? []);
+      setOrderCode(codeRes.data ?? null);
     } catch (e) {
       console.error(e);
       toast.error(isEn ? "Failed to load order info." : "Gagal memuat info pesanan.");
@@ -165,18 +144,21 @@ export function EventPage() {
     payload.append("qty", formData.qty.toString());
 
     if (formData.notes) payload.append("notes", formData.notes);
-    if (formData.payment_method) payload.append("payment_method", formData.payment_method);
+    if (formData.pay_account_id) payload.append("pay_account_id", formData.pay_account_id);
     if (paymentProof) payload.append("payment_proof", paymentProof);
 
-    const result = await submitOrder(payload);
-
-    setIsSubmitting(false);
-
-    if (result.success) {
-      setIsSuccess(true);
-      toast.success(result.message);
-    } else {
-      toast.error(result.message);
+    try {
+      const result = await submitOrderAsync(payload);
+      if (result.success) {
+        setIsSuccess(true);
+        toast.success(result.message);
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Terjadi kesalahan saat memproses pesanan.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -258,7 +240,7 @@ export function EventPage() {
                   </CardContent>
                 </Card>
               ))
-          ) : filteredEvents.length === 0 && !trackedOrder ? (
+          ) : filteredEvents.length === 0 && !trackedOrder && !isTrackingOrder ? (
             <div className="col-span-full flex flex-col items-center justify-center py-20 md:py-20 px-3 text-center text-muted-foreground border-primary/50 border-2 border-dashed rounded-2xl">
               <Ticket className="w-16 h-16 mb-4 opacity-20" />
               <p className="text-lg font-medium">
@@ -267,7 +249,30 @@ export function EventPage() {
             </div>
           ) : (
             <>
-              {trackedOrder && (
+              {isTrackingOrder ? (
+                <Card className="flex flex-col overflow-hidden rounded-3xl border-border/60 bg-card col-span-full md:col-span-1 shadow-lg ring-2 ring-primary/20 relative">
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-gold opacity-50"></div>
+                  <CardContent className="p-6 space-y-4 pt-8">
+                    <div>
+                      <Skeleton className="h-3 w-24 mb-2" />
+                      <Skeleton className="h-8 w-40" />
+                    </div>
+                    <div>
+                      <Skeleton className="h-4 w-3/4" />
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <Skeleton className="h-6 w-20 rounded-md" />
+                      <Skeleton className="h-4 w-16" />
+                    </div>
+                    <div className="pt-3 border-t border-dashed">
+                      <Skeleton className="h-6 w-28 ml-auto" />
+                    </div>
+                    <div className="mt-2">
+                      <Skeleton className="h-8 w-full rounded-lg" />
+                    </div>
+                  </CardContent>
+                </Card>
+              ) : trackedOrder ? (
                 <Card
                   className="group flex flex-col overflow-hidden rounded-3xl border-border/60 bg-card transition-colors hover:border-primary/60 cursor-pointer col-span-full md:col-span-1 shadow-lg ring-2 ring-primary/50 relative"
                   onClick={() => setIsTicketModalOpen(true)}
@@ -314,7 +319,7 @@ export function EventPage() {
                     </div>
                   </CardContent>
                 </Card>
-              )}
+              ) : null}
               {filteredEvents.map((event) => {
                 const title = isEn ? event.title_en || event.title_id : event.title_id;
                 const location = isEn ? event.location_en || event.location_id : event.location_id;
@@ -594,8 +599,8 @@ export function EventPage() {
                         </Label>
                         <Select
                           required
-                          value={formData.payment_method}
-                          onValueChange={(val) => setFormData({ ...formData, payment_method: val })}
+                          value={formData.pay_account_id}
+                          onValueChange={(val) => setFormData({ ...formData, pay_account_id: val })}
                         >
                           <SelectTrigger>
                             <SelectValue
@@ -608,7 +613,7 @@ export function EventPage() {
                             {accounts.map((acc) => (
                               <SelectItem
                                 key={acc.id}
-                                value={`${acc.name_account} - ${acc.no_account} - ${acc.batch_member?.name || "Unknown"}`}
+                                value={acc.id.toString()}
                               >
                                 {acc.name_account} - {acc.no_account} -{" "}
                                 {acc.batch_member?.name || "Unknown"}

@@ -17,11 +17,6 @@ export interface Gallery {
 }
 
 export const getGalleries = async (): Promise<Gallery[]> => {
-  try {
-    const response = await apiClient.get("/galleries");
-    return response.data?.data || response.data; // Handle both wrapped and unwrapped arrays
-  } catch (error) {
-    console.error("Error fetching galleries:", error);
-    return [];
-  }
+  const response = await apiClient.get("/galleries");
+  return response.data?.data || response.data;
 };

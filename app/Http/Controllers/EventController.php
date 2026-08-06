@@ -25,12 +25,21 @@ class EventController extends Controller
      */
     public function index(): Response
     {
+        // Auto-update Event status jika melebihi 3 jam dari jadwal
+        Event::where('status', 'published')
+            ->where('date', '<=', now()->subHours(3))
+            ->update(['status' => 'completed']);
+
+        Event::where('status', 'draft')
+            ->where('date', '<=', now()->subHours(3))
+            ->update(['status' => 'cancelled']);
+
         $events = Event::latest()->get();
         $events->each->append('remaining_tickets');
 
         return Inertia::render('IndexEvent', [
             'events'   => $events,
-            'orders'   => PayOrder::with('event')->latest()->get(),
+            'orders'   => PayOrder::with(['event', 'payAccount'])->latest()->get(),
             'accounts' => PayAccount::with('batchMember')->get(),
             'members'  => BatchMember::select('id', 'name')
                 ->where('type', 'Pengurus')
@@ -131,7 +140,7 @@ class EventController extends Controller
             'email'          => ['nullable', 'email', 'max:255'],
             'qty'            => ['required', 'integer', 'min:1'],
             'notes'          => ['nullable', 'string', 'max:500'],
-            'payment_method' => ['nullable', 'string', 'max:100'],
+            'pay_account_id' => ['nullable', 'exists:pay_accounts,id'],
         ], [
             'event_id.required'  => 'Event wajib dipilih.',
             'event_id.exists'    => 'Event yang dipilih tidak ditemukan.',
