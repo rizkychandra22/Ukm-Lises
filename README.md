@@ -46,20 +46,31 @@ Aplikasi ini dibagi menjadi dua bagian *frontend* yang berjalan pada satu aplika
 ## 🛠️ Teknologi yang Digunakan
 
 ### Backend
-* [**Laravel 13**](https://laravel.com/) - PHP Framework
+* [**Laravel 13**](https://laravel.com/) - PHP Framework (PHP >= 8.3)
 * **PostgreSQL** - Database Relasional
 * **Cloudinary API** - Cloud Image Storage Driver
+* **Spatie Permission** - Manajemen Roles & Permissions
 * **REST API** - Endpoints untuk Landing Page SPA
 
-### Frontend
-* [**React 18**](https://reactjs.org/) - UI Library
-* [**TypeScript**](https://www.typescriptlang.org/) - Static Type Checker
-* [**Inertia.js**](https://inertiajs.com/) - Menghubungkan Laravel & React (Untuk Admin Dashboard)
-* [**React Router DOM**](https://reactrouter.com/) - Routing untuk Landing Page SPA
-* [**Axios**](https://axios-http.com/) - HTTP Client untuk pemanggilan API
-* [**Tailwind CSS**](https://tailwindcss.com/) - Utility-first CSS framework
-* [**Shadcn UI**](https://ui.shadcn.com/) - Reusable UI Components
-* [**i18next**](https://www.i18next.com/) - Internationalization (Multi-bahasa)
+### Sistem Admin Dashboard (Backend Terintegrasi via Inertia)
+* [**Inertia.js**](https://inertiajs.com/) - Menghubungkan routing Laravel dengan React secara langsung tanpa membuat REST API terpisah
+* [**React 19**](https://react.dev/) & [**TypeScript 5**](https://www.typescriptlang.org/) - Basis framework UI
+* [**TanStack Table v9**](https://tanstack.com/table/latest) - Headless UI untuk pengolahan Data Table kompleks di Dashboard
+* [**Shadcn UI (Radix UI)**](https://ui.shadcn.com/) - Reusable UI Components untuk antarmuka dashboard
+* [**Tailwind CSS 4**](https://tailwindcss.com/) - Utility-first CSS framework
+
+### Sistem Public Landing Page (Pure SPA React)
+* [**React Router DOM 7**](https://reactrouter.com/) - Client-side Routing untuk SPA murni
+* [**TanStack Query v5**](https://tanstack.com/query/latest/) - Data Fetching, Server State Caching, & Sinkronisasi API
+* [**Axios & Axios Retry**](https://axios-http.com/) - HTTP Client dengan fitur eksponensial Auto-Retry
+* [**React Error Boundary**](https://github.com/bvaughn/react-error-boundary) - Penanganan error UI untuk mencegah aplikasi *crash* (Blank Screen)
+* [**i18next**](https://www.i18next.com/) - Fitur Internationalization (Multi-bahasa ID/EN)
+* [**Day.js**](https://day.js.org/) - Manipulasi & Formatting Waktu yang ringan
+* [**React 19**](https://react.dev/) & [**TypeScript 5**](https://www.typescriptlang.org/) - Basis framework UI
+* [**Tailwind CSS 4**](https://tailwindcss.com/) - Styling & desain UI
+
+### Build Tools & Tooling
+* [**Vite 8**](https://vitejs.dev/) - Blazing fast frontend build tool
 
 ---
 
@@ -69,9 +80,9 @@ Ikuti langkah-langkah berikut untuk menjalankan *project* ini di komputer Anda:
 
 ### 1. Kebutuhan Sistem
 Pastikan Anda telah menginstal:
-- **PHP** >= 8.2
+- **PHP** >= 8.3
 - **Composer**
-- **Node.js** (Disarankan versi LTS terbaru) & **NPM**
+- **Node.js** (Disarankan versi 20+ / LTS terbaru) & **NPM**
 - **PostgreSQL**
 
 ### 2. Instalasi Backend (Laravel)
