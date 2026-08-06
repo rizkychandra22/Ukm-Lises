@@ -9,6 +9,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\SystemController;
 
 // -------------------------------------------------------------
 // AUTHENTICATION ROUTES (GUEST ONLY)
@@ -72,6 +73,14 @@ Route::middleware(['access:Developer,Admin'])->prefix('dashboard')->group(functi
     Route::post('/accounts', [EventController::class, 'storeAccount'])->name('accounts.store');
     Route::put('/accounts/{account}', [EventController::class, 'updateAccount'])->name('accounts.update');
     Route::delete('/accounts/{account}', [EventController::class, 'destroyAccount'])->name('accounts.destroy');
+});
+
+// ---------------------------------------------------------
+// SYSTEM DASHBOARD (IT SYSTEM) - DEVELOPER ONLY
+// ---------------------------------------------------------
+Route::middleware(['access:Developer'])->prefix('dashboard/system')->name('system.')->group(function () {
+    Route::get('/', [SystemController::class, 'index'])->name('index');
+    Route::post('/clear-cache', [SystemController::class, 'clearCache'])->name('clear-cache');
 });
 
 // -------------------------------------------------------------
