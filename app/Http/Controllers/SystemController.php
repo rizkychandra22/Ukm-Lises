@@ -35,8 +35,29 @@ class SystemController extends Controller
                         $appVersion = $matches[0];
                     }
                 }
+            } else {
+                // Fallback for detached HEAD (CI/CD Deployments like Laravel Cloud)
+                $gitLogs = shell_exec('git log -n 30 --format="%s" 2>nul');
+                if ($gitLogs) {
+                    $logs = explode("\n", trim($gitLogs));
+                    foreach ($logs as $log) {
+                        if (preg_match('/Release\s+(v\d+\.\d+\.\d+)/i', $log, $matches)) {
+                            $appVersion = $matches[1];
+                            break;
+                        }
+                        if (preg_match('/Dev\s+(v\d+\.\d+\.\d+)/i', $log, $matches)) {
+                            $appVersion = $matches[1];
+                            break;
+                        }
+                    }
+                }
             }
         } catch (\Exception $e) {}
+
+        if (empty($appVersion)) {
+            $appVersion = env('APP_VERSION', '');
+        }
+
         $nodeVersion = 'Unknown';
         try {
             $nodeVersion = trim(shell_exec('node -v 2>nul')) ?: 'Unknown';
