@@ -5,6 +5,7 @@ export interface SystemProps {
     environment: string;
     debug_mode: boolean;
     php_version: string;
+    node_version: string;
     laravel_version: string;
     os: string;
     server: string;

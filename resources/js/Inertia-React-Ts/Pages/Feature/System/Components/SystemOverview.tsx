@@ -83,9 +83,9 @@ export function SystemOverview({ sysInfo, dbInfo, diskInfo, envInfo, processing,
         </Card>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+      <div className="grid gap-4 lg:grid-cols-7">
         {/* Resource Utilization Details */}
-        <Card className="col-span-4">
+        <Card className="lg:col-span-4">
           <CardHeader>
             <CardTitle>System Information</CardTitle>
             <CardDescription>
@@ -93,27 +93,36 @@ export function SystemOverview({ sysInfo, dbInfo, diskInfo, envInfo, processing,
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Left Column */}
+              <div className="space-y-4">
                 <div className="space-y-1">
                   <p className="text-sm font-medium leading-none">Operating System</p>
                   <p className="text-sm text-muted-foreground">{envInfo.os}</p>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-sm font-medium leading-none">Web Server</p>
-                  <p className="text-sm text-muted-foreground">{envInfo.server}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-sm font-medium leading-none">PHP Version</p>
                   <p className="text-sm text-muted-foreground">{envInfo.php_version}</p>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-sm font-medium leading-none">Timezone</p>
-                  <p className="text-sm text-muted-foreground">{envInfo.timezone}</p>
+                  <p className="text-sm font-medium leading-none">Node Version</p>
+                  <p className="text-sm text-muted-foreground">{envInfo.node_version}</p>
+                </div>
+              </div>
+              
+              {/* Right Column */}
+              <div className="space-y-4">
+                <div className="space-y-1">
+                  <p className="text-sm font-medium leading-none">Web Server</p>
+                  <p className="text-sm text-muted-foreground truncate">{envInfo.server}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-sm font-medium leading-none">Database Name</p>
                   <p className="text-sm text-muted-foreground">{dbInfo.database_name}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm font-medium leading-none">Timezone</p>
+                  <p className="text-sm text-muted-foreground">{envInfo.timezone}</p>
                 </div>
               </div>
             </div>
@@ -121,7 +130,7 @@ export function SystemOverview({ sysInfo, dbInfo, diskInfo, envInfo, processing,
         </Card>
 
         {/* Quick Actions */}
-        <Card className="col-span-3">
+        <Card className="lg:col-span-3">
           <CardHeader>
             <CardTitle>Quick Actions</CardTitle>
             <CardDescription>Jalan pintas untuk optimasi sistem.</CardDescription>

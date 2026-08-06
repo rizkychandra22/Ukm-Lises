@@ -37,6 +37,10 @@ class SystemController extends Controller
                 }
             }
         } catch (\Exception $e) {}
+        $nodeVersion = 'Unknown';
+        try {
+            $nodeVersion = trim(shell_exec('node -v 2>nul')) ?: 'Unknown';
+        } catch (\Exception $e) {}
 
         // 1. Get Environment Info
         $envInfo = [
@@ -45,6 +49,7 @@ class SystemController extends Controller
             'environment' => config('app.env'),
             'debug_mode' => config('app.debug'),
             'php_version' => phpversion(),
+            'node_version' => $nodeVersion,
             'laravel_version' => app()->version(),
             'os' => php_uname('s') . ' ' . php_uname('r'),
             'server' => $_SERVER['SERVER_SOFTWARE'] ?? 'Unknown',
