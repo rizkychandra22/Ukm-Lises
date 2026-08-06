@@ -1,6 +1,7 @@
 export interface SystemProps {
   envInfo: {
     app_name: string;
+    app_version: string;
     environment: string;
     debug_mode: boolean;
     php_version: string;

@@ -16,7 +16,7 @@ interface Props {
 export function SystemOverview({ sysInfo, dbInfo, diskInfo, envInfo, processing, onClearCache }: Props) {
   return (
     <div className="space-y-4">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
         {/* CPU / MEMORY Card */}
         <Card className="border-l-4 border-l-emerald-500 shadow-sm rounded-xl">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 sm:p-5">

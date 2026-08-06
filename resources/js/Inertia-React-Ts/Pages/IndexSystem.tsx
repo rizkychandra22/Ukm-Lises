@@ -35,10 +35,12 @@ export default function IndexSystem({
     });
   };
 
+  const isHealthy = dbInfo.status === "Connected" && diskInfo.usage_percent < 90;
+
   return (
     <AppLayout>
       <Head title="IT System Dashboard" />
-      <div className="flex flex-col gap-6 max-w-7xl mx-auto pb-12 relative">
+      <div className="flex flex-col gap-4 max-w-7xl mx-auto pb-12 relative">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
@@ -50,12 +52,12 @@ export default function IndexSystem({
             </p>
           </div>
           <div className="flex items-center space-x-2">
-            <Badge variant={dbInfo.status === "Connected" ? "default" : "destructive"} className="text-xs">
+            <Badge variant={isHealthy ? "default" : "destructive"} className="text-xs">
               <Activity className="mr-1 w-3 h-3" />
-              {dbInfo.status === "Connected" ? "Healthy" : "Issues Detected"}
+              {isHealthy ? "Healthy" : "Issues Detected"}
             </Badge>
-            <Badge variant="outline" className="text-xs font-mono">
-              v{envInfo.laravel_version}
+            <Badge variant="outline" className="text-xs font-mono bg-primary/10 border-primary/20">
+              {envInfo.app_version}
             </Badge>
           </div>
         </div>
@@ -95,7 +97,7 @@ export default function IndexSystem({
         {/* Tab Content Wrapper */}
         <Tabs value={activeTab} className="w-full">
 
-          <TabsContent value="overview" className="space-y-4">
+          <TabsContent value="overview" className="mt-0 space-y-4">
             <SystemOverview 
               sysInfo={sysInfo}
               dbInfo={dbInfo}
@@ -106,14 +108,14 @@ export default function IndexSystem({
             />
           </TabsContent>
 
-          <TabsContent value="cache" className="space-y-4">
+          <TabsContent value="cache" className="mt-0 space-y-4">
             <CacheManagement 
               processing={processing}
               onClearCache={handleClearCache}
             />
           </TabsContent>
 
-          <TabsContent value="logs" className="space-y-4">
+          <TabsContent value="logs" className="mt-0 space-y-4">
             <SystemLogs logs={logs} />
           </TabsContent>
         </Tabs>

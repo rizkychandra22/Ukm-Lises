@@ -15,9 +15,24 @@ class SystemController extends Controller
      */
     public function index()
     {
+        // Fetch App Version from Git (Release vX.X.X or Dev vX.X.X)
+        $appVersion = 'v1.0.0';
+        try {
+            $gitLog = shell_exec("git log --grep='Release v' -n 1 --format='%s' 2>nul");
+            if ($gitLog && preg_match('/v\d+\.\d+\.\d+/', $gitLog, $matches)) {
+                $appVersion = $matches[0];
+            } else {
+                $gitLogDev = shell_exec("git log --grep='Dev v' -n 1 --format='%s' 2>nul");
+                if ($gitLogDev && preg_match('/v\d+\.\d+\.\d+/', $gitLogDev, $matches)) {
+                    $appVersion = $matches[0] . '-dev';
+                }
+            }
+        } catch (\Exception $e) {}
+
         // 1. Get Environment Info
         $envInfo = [
             'app_name' => config('app.name'),
+            'app_version' => $appVersion,
             'environment' => config('app.env'),
             'debug_mode' => config('app.debug'),
             'php_version' => phpversion(),
