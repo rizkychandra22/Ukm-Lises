@@ -71,6 +71,9 @@ Aplikasi ini dibagi menjadi dua bagian *frontend* yang berjalan pada satu aplika
 
 ### Build Tools & Tooling
 * [**Vite 8**](https://vitejs.dev/) - Blazing fast frontend build tool
+* [**ESLint**](https://eslint.org/) - Linter untuk menjaga standar kualitas & konsistensi kode
+* [**Prettier**](https://prettier.io/) - Code formatter otomatis
+* [**Vitest**](https://vitest.dev/) - Framework testing yang cepat (Vite-native)
 
 ---
 
@@ -159,5 +162,5 @@ resources/
 ---
 
 <p align="center">
-  Dibuat ❤️ oleh <b>Rizky Chandra</b> untuk <b>UKM Lises Asmarandana UMMI</b>
+  Dibuat dengan ❤️ oleh <b>Rizky Chandra</b> untuk <b>UKM Lises Asmarandana UMMI</b>
 </p>
