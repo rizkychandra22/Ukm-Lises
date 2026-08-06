@@ -56,9 +56,11 @@ export default function IndexSystem({
               <Activity className="mr-1 w-3 h-3" />
               {isHealthy ? "Healthy" : "Issues Detected"}
             </Badge>
-            <Badge variant="outline" className="text-xs font-mono bg-primary/10 border-primary/20">
-              {envInfo.app_version}
-            </Badge>
+            {envInfo.app_version && (
+              <Badge variant="outline" className="text-xs font-mono bg-primary/10 border-primary/20">
+                {envInfo.app_version}
+              </Badge>
+            )}
           </div>
         </div>
 

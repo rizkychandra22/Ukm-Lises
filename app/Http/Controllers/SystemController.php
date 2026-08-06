@@ -15,16 +15,25 @@ class SystemController extends Controller
      */
     public function index()
     {
-        // Fetch App Version from Git (Release vX.X.X or Dev vX.X.X)
-        $appVersion = 'v1.0.0';
+        // Fetch App Version from Git
+        $appVersion = '';
         try {
-            $gitLog = shell_exec("git log --grep='Release v' -n 1 --format='%s' 2>nul");
-            if ($gitLog && preg_match('/v\d+\.\d+\.\d+/', $gitLog, $matches)) {
-                $appVersion = $matches[0];
-            } else {
-                $gitLogDev = shell_exec("git log --grep='Dev v' -n 1 --format='%s' 2>nul");
-                if ($gitLogDev && preg_match('/v\d+\.\d+\.\d+/', $gitLogDev, $matches)) {
-                    $appVersion = $matches[0] . '-dev';
+            $branch = trim(shell_exec('git branch --show-current 2>nul'));
+            
+            if ($branch === 'main') {
+                $gitLog = shell_exec('git log --grep="Release v" -n 1 --format="%s" 2>nul');
+                if ($gitLog && preg_match('/v\d+\.\d+\.\d+/', $gitLog, $matches)) {
+                    $appVersion = $matches[0];
+                }
+            } elseif ($branch === 'development') {
+                $gitLog = shell_exec('git log --grep="Dev v" -n 1 --format="%s" 2>nul');
+                if ($gitLog && preg_match('/v\d+\.\d+\.\d+/', $gitLog, $matches)) {
+                    $appVersion = $matches[0];
+                } else {
+                    $gitLog = shell_exec('git log --grep="Release v" -n 1 --format="%s" 2>nul');
+                    if ($gitLog && preg_match('/v\d+\.\d+\.\d+/', $gitLog, $matches)) {
+                        $appVersion = $matches[0];
+                    }
                 }
             }
         } catch (\Exception $e) {}
