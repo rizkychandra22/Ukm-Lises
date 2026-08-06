@@ -27,8 +27,8 @@ jobs:
           echo "🚀 Starting Enterprise Deployment to Production..."
           
           # 1. Tarik kode terbaru
-          git fetch origin main
-          git reset --hard origin/main
+          git fetch origin ${{ github.event.workflow_run.head_branch }}
+          git reset --hard origin/${{ github.event.workflow_run.head_branch }}
           
           # 2. Masuk mode maintenance (Kecualikan IP Developer/Admin jika perlu)
           php artisan down --render="errors::503" --secret="bypass-token-123"
@@ -57,6 +57,12 @@ jobs:
           
           echo "✅ Deployment Successful!"
 
-      # OPSI B: Jika menggunakan Webhook Laravel Cloud
-      - name: 🌐 Trigger Deploy Webhook
+      # OPSI B: Jika menggunakan Webhook Laravel Cloud (Branch Main)
+      - name: 🌐 Trigger Deploy Webhook (Production - Main)
+        if: ${{ github.event.workflow_run.head_branch == 'main' }}
         run: curl -X POST "${{ secrets.LARAVEL_CLOUD_DEPLOY_WEBHOOK }}"
+
+      # OPSI B: Jika menggunakan Webhook Laravel Cloud (Branch Development)
+      - name: 🌐 Trigger Deploy Webhook (Staging - Development)
+        if: ${{ github.event.workflow_run.head_branch == 'development' }}
+        run: curl -X POST "${{ secrets.LARAVEL_CLOUD_DEPLOY_WEBHOOK_DEV }}"
