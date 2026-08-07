@@ -94,7 +94,7 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex w-full">
-      <Head title="Login Admin" />
+      <Head title="Login Sistem" />
 
       {/* Left Panel - Hidden on mobile */}
       <div className="hidden lg:flex w-[50%] bg-gradient-gold p-8 flex-col justify-between relative overflow-hidden">
@@ -308,7 +308,7 @@ export default function Login() {
 
             <div className="text-center pt-4">
               <p className="text-xs text-muted-foreground">
-                Sistem Manajemen Internal Ukm Lises Realese v1.7.1
+                Sistem Manajemen Internal Ukm Lises Realese v1.9.0
               </p>
             </div>
           </form>

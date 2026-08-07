@@ -37,7 +37,7 @@ export default function Dashboard() {
 
   return (
     <AdminLayout>
-      <Head title="Dashboard Admin" />
+      <Head title="Dashboard" />
 
       <div className="flex flex-col gap-6 max-w-7xl mx-auto pb-12 relative">
         {/* Header Section */}
