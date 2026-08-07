@@ -3,7 +3,6 @@ import { ArrowUpRight, CalendarDays, Newspaper, Sparkles, User } from "lucide-re
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
 import { useNews } from "@/hooks/useNews";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTranslation } from "@/i18n";
@@ -74,11 +73,7 @@ export function NewsPage() {
                     <img
                       src={post.image}
                       alt={title}
-                      loading={index < 3 ? "eager" : "lazy"}
-                      fetchPriority={index === 0 ? "high" : "auto"}
-                      width={400}
-                      height={300}
-                      decoding="async"
+                      loading="lazy"
                       className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     <Badge className="absolute left-4 top-4 rounded-full bg-gradient-gold px-3 py-1 text-xs font-semibold text-primary-foreground">

@@ -1,6 +1,6 @@
 import DOMPurify from "dompurify";
 import { useParams, Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -235,12 +235,8 @@ export function NewsDetailPage() {
           <img
             src={post.image}
             alt={isEn ? post.title_en || post.title_id : post.title_id}
-            loading="eager"
-            fetchPriority="high"
-            width={800}
-            height={420}
-            decoding="async"
-            className="w-full h-[320px] sm:h-[420px] object-cover rounded-3xl"
+            loading="lazy"
+            className="h-full w-full object-cover"
           />
         </div>
 
