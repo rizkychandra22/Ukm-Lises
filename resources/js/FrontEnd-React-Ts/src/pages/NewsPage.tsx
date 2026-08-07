@@ -56,7 +56,7 @@ export function NewsPage() {
               <p className="text-lg font-medium">{t("no_upload")}</p>
             </div>
           ) : (
-            posts.map((post) => {
+            posts.map((post, index) => {
               const title = isEn ? post.title_en || post.title_id : post.title_id;
               const excerpt = isEn ? post.summary_en || post.summary_id : post.summary_id;
               const date = new Date(post.date).toLocaleDateString(isEn ? "en-US" : "id-ID", {
@@ -74,7 +74,11 @@ export function NewsPage() {
                     <img
                       src={post.image}
                       alt={title}
-                      loading="lazy"
+                      loading={index < 3 ? "eager" : "lazy"}
+                      fetchPriority={index === 0 ? "high" : "auto"}
+                      width={400}
+                      height={300}
+                      decoding="async"
                       className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     <Badge className="absolute left-4 top-4 rounded-full bg-gradient-gold px-3 py-1 text-xs font-semibold text-primary-foreground">
