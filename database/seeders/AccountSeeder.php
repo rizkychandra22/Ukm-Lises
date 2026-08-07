@@ -11,24 +11,24 @@ class AccountSeeder extends Seeder
     public function run(): void
     {
         // Buat Role
-        $developerRole = Role::firstOrCreate(['name' => 'Developer']);
-        $adminRole     = Role::firstOrCreate(['name' => 'Admin']);
+        Role::firstOrCreate(['name' => 'Developer']);
+        Role::firstOrCreate(['name' => 'Admin']);
         Role::firstOrCreate(['name' => 'User']);
 
         // Buat User Developer Awal
         $developerUser = User::firstOrCreate([
             'name'     => 'Developer',
             'username' => 'dev',
-            'password' => bcrypt('password'),
+            'password' => bcrypt(env('SEEDER_PASSWORD', 'RahasiaLises')),
         ]);
-        $developerUser->assignRole($developerRole);
+        $developerUser->assignRole('Developer');
 
         // Buat User Admin Awal
         $adminUser = User::firstOrCreate([
             'name'     => 'Admin Lises',
             'username' => 'admincore',
-            'password' => bcrypt('password'),
+            'password' => bcrypt(env('SEEDER_PASSWORD', 'RahasiaLises')),
         ]);
-        $adminUser->assignRole($adminRole);
+        $adminUser->assignRole('Admin');
     }
 }
