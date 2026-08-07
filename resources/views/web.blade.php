@@ -40,6 +40,8 @@
     {{-- Preconnect Font Google --}}
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,600&family=Inter:wght@400;500;600&display=swap"></noscript>
 
     {{-- JSON-LD Schema.org Structured Data for Google --}}
     <script type="application/ld+json">
@@ -69,9 +71,12 @@
     @viteReactRefresh
     @vite('resources/js/FrontEnd-React-Ts/src/main.tsx')
 
-    <script>
-        window.flashMessage = @json(session('success'));
-    </script>
+    @if(session('success'))
+      <meta id="flash-message" data-message="{{ json_encode(session('success')) }}">
+      <script>
+        window.flashMessage = JSON.parse(document.getElementById('flash-message').dataset.message);
+      </script>
+    @endif
 </head>
 <body class="bg-background text-foreground antialiased">
     <div id="root"></div>
