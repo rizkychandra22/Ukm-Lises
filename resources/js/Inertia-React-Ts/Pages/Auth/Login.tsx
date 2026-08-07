@@ -63,22 +63,16 @@ export default function Login() {
     e.preventDefault();
     setLoginError(false);
 
-    // Hanya blokir jika captcha sudah diisi tapi salah
-    if (captchaInput && captchaInput !== captchaCode) {
-      setCaptchaError("Captcha tidak sesuai!");
-      generateCaptcha();
+    // Jika captcha kosong
+    if (!captchaInput) {
+      setCaptchaError("Captcha wajib diisi!");
       return;
     }
 
-    // Jika captcha kosong, biarkan backend validasi form
-    if (!captchaInput) {
-      post("/auth/login", {
-        onError: () => {
-          setLoginError(true);
-          generateCaptcha();
-        },
-        onSuccess: () => setLoginError(false),
-      });
+    // Jika captcha salah
+    if (captchaInput !== captchaCode) {
+      generateCaptcha();
+      setCaptchaError("Captcha tidak sesuai!");
       return;
     }
 
