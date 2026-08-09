@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { LegacyColumnDef as ColumnDef } from "@tanstack/react-table/legacy";
-import { DataTable } from "./DataTable";
+import { DataTable } from "../../../../Components/DataTable";
 import { EventItem } from "../Types";
 import { Button } from "@/components/ui/button";
 import {

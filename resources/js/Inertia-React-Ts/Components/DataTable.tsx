@@ -16,7 +16,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -25,7 +24,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
+import { SearchFilter } from "./SearchFilter";
 
 interface DataTableProps<TData extends Record<string, any>> {
   columns: ColumnDef<TData, any>[];
@@ -69,15 +69,11 @@ export function DataTable<TData extends Record<string, any>>({
       {/* Controls Row */}
       <div className="flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-3">
         {/* Search Input */}
-        <div className="relative w-full lg:w-80">
-          <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder={searchPlaceholder}
-            value={globalFilter ?? ""}
-            onChange={(e) => setGlobalFilter(e.target.value)}
-            className="pl-9 h-8 bg-muted/50 border border-border/60 rounded-lg text-[13px] shadow-none focus:bg-background transition-colors"
-          />
-        </div>
+        <SearchFilter
+          value={globalFilter ?? ""}
+          onChange={setGlobalFilter}
+          placeholder={searchPlaceholder}
+        />
 
         {/* Filter / Extra Buttons Wrapper */}
         {toolbarExtra && (

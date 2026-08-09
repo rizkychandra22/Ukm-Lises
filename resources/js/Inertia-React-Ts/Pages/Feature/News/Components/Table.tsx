@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Link } from "@inertiajs/react";
 import { LegacyColumnDef as ColumnDef } from "@tanstack/react-table/legacy";
-import { DataTable } from "../../Event/Components/DataTable";
+import { DataTable } from "../../../../Components/DataTable";
 import { NewsItem } from "../Types";
 import { route } from "@admin/Lib/Route";
 import { Button } from "@/components/ui/button";
