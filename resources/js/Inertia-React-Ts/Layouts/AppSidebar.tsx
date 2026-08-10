@@ -259,7 +259,7 @@ export function AppSidebar() {
               {auth.user?.roles?.join(", ") + " - " + user?.username || "@username"}
             </span>
           </div>
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-3">
             <Dialog open={isProfileModalOpen} onOpenChange={setIsProfileModalOpen}>
               <DialogTrigger asChild>
                 <button
@@ -267,7 +267,7 @@ export function AppSidebar() {
                   aria-label="Pengaturan"
                   title="Pengaturan"
                 >
-                  <Settings className="w-[18px] h-[18px]" />
+                  <Settings className="w-[15px] h-[15px]" />
                 </button>
               </DialogTrigger>
               <DialogContent className="rounded-md w-[90%] sm:max-w-[425px]">
@@ -336,7 +336,7 @@ export function AppSidebar() {
                   aria-label="Keluar"
                   title="Keluar"
                 >
-                  <LogOut className="w-[18px] h-[18px]" />
+                  <LogOut className="w-[15px] h-[15px]" />
                 </button>
               </AlertDialogTrigger>
               <AlertDialogContent className="w-[90%] max-w-[360px] rounded-md p-6">
