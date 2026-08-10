@@ -23,6 +23,7 @@ interface SessionFormModalProps {
     ticket_allocation: string;
   };
   events: EventItem[];
+  sessions: EventSession[];
   processingSession: boolean;
   setSessionData: (key: string, value: any) => void;
   onSubmit: (e: React.FormEvent) => void;
@@ -34,6 +35,7 @@ export function SessionFormModal({
   editingSession,
   sessionData,
   events,
+  sessions,
   processingSession,
   setSessionData,
   onSubmit,
@@ -46,8 +48,22 @@ export function SessionFormModal({
 
   // Calculate remaining tickets for selected event
   const selectedEvent = exclusiveEvents.find((e) => e.id.toString() === sessionData.event_id);
-  const eventTicketMax = selectedEvent ? selectedEvent.ticket || 0 : 0;
   
+  let eventTicketMax = 0;
+  let isUnlimited = false;
+
+  if (selectedEvent) {
+    if (selectedEvent.ticket) {
+      const totalAllocated = sessions
+        .filter((s) => s.event_id === selectedEvent.id && s.id !== editingSession?.id)
+        .reduce((sum, s) => sum + s.ticket_allocation, 0);
+      
+      eventTicketMax = Math.max(0, selectedEvent.ticket - totalAllocated);
+    } else {
+      isUnlimited = true;
+    }
+  }
+
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onCancel()}>
       <DialogContent className="w-[90%] max-w-[420px] rounded-md">
@@ -68,7 +84,13 @@ export function SessionFormModal({
               <SelectContent>
                 {exclusiveEvents.map((evt) => (
                   <SelectItem key={evt.id} value={evt.id.toString()}>
-                    {evt.title_id} ({evt.status.charAt(0).toUpperCase() + evt.status.slice(1)})
+                    {evt.title_id} —{" "} {
+                      new Date(evt.date).toLocaleDateString("id-ID", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    {/* {evt.title_id} ({evt.status.charAt(0).toUpperCase() + evt.status.slice(1)}) */}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -109,26 +131,30 @@ export function SessionFormModal({
               />
             </div>
           </div>
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-1">Tiket Sesi</label>
               <Input
-              type="number"
-              min="1"
-              className="h-8 text-[13px]"
-              value={sessionData.ticket_allocation}
-              onChange={(e) => setSessionData("ticket_allocation", e.target.value)}
-              placeholder="Contoh : 100"
-              required
-            />
+                type="number"
+                min="1"
+                className="h-8 text-[13px]"
+                value={sessionData.ticket_allocation}
+                onChange={(e) => setSessionData("ticket_allocation", e.target.value)}
+                placeholder="Contoh : 100"
+                required
+              />
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">Total Tiket</label>
               <Input
                 type="text"
                 className="h-8 text-[13px]"
-                value={selectedEvent ? eventTicketMax + " Tiket Tersedia" : "Silahkan Pilih Event"}  
+                value={
+                  selectedEvent 
+                    ? (isUnlimited ? "Unlimited" : eventTicketMax + " Tiket Tersedia") 
+                    : "Silahkan Pilih Event"
+                }
                 required readOnly
               />
             </div>

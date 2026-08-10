@@ -575,6 +575,7 @@ export default function IndexEvent({
         editingSession={editingSession}
         sessionData={sessionData}
         events={events}
+        sessions={sessions}
         processingSession={processingSession}
         setSessionData={setSessionData}
         onSubmit={handleSubmitSession}

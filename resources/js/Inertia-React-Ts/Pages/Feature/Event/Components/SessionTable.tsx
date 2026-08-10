@@ -2,13 +2,7 @@ import { useMemo } from "react";
 import { DataTable } from "@admin/Components/DataTable";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { MoreVertical, Edit, Trash2, ArrowUpDown } from "lucide-react";
+import { Edit, Trash2, ArrowUpDown } from "lucide-react";
 import { EventSession } from "../Types";
 import { LegacyColumnDef as ColumnDef } from "@tanstack/react-table/legacy";
 import {
@@ -104,32 +98,28 @@ export function SessionTable({
       },
       {
         id: "actions",
-        header: "Aksi",
+        header: () => <div className="text-right text-sm">Aksi</div>,
         cell: ({ row }) => {
           const session = row.original;
           return (
-            <div className="text-center">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="h-8 w-8 p-0">
-                    <span className="sr-only">Open menu</span>
-                    <MoreVertical className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => onEdit(session)}>
-                    <Edit className="w-4 h-4 mr-2" />
-                    Edit
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => onDelete(session.id)}
-                    className="text-destructive focus:text-destructive"
-                  >
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    Hapus
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+            <div className="flex justify-end gap-2 items-center">
+              <Button
+                className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg h-8 w-8 p-0"
+                size="sm"
+                onClick={() => onEdit(session)}
+                title="Edit Sesi"
+              >
+                <Edit className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="destructive"
+                size="sm"
+                className="rounded-lg h-8 w-8 p-0"
+                onClick={() => onDelete(session.id)}
+                title="Hapus Sesi"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
             </div>
           );
         },
