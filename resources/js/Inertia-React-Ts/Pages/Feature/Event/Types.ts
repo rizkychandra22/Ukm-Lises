@@ -16,6 +16,16 @@ export type EventItem = {
   status: "draft" | "published" | "cancelled" | "completed";
 };
 
+export type EventSession = {
+  id: number;
+  event_id: number;
+  name: string;
+  start_time: string;
+  end_time: string;
+  ticket_allocation: number;
+  event?: EventItem;
+};
+
 export type PayAccount = {
   id: number;
   batch_member_id: number;

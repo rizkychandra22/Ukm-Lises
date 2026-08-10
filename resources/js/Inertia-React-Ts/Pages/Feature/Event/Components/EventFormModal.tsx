@@ -31,12 +31,10 @@ interface EventFormModalProps {
     status: "draft" | "published" | "cancelled" | "completed";
   };
   eventDateInput: string;
-  eventTimeInput: string;
   eventErrors: Record<string, string>;
   processingEvent: boolean;
   setEventData: (key: string, value: any) => void;
   setEventDateInput: (value: string) => void;
-  setEventTimeInput: (value: string) => void;
   onSubmit: (e: React.FormEvent) => void;
   onCancel: () => void;
 }
@@ -46,12 +44,10 @@ export function EventFormModal({
   editingEvent,
   eventData,
   eventDateInput,
-  eventTimeInput,
   eventErrors,
   processingEvent,
   setEventData,
   setEventDateInput,
-  setEventTimeInput,
   onSubmit,
   onCancel,
 }: EventFormModalProps) {
@@ -93,30 +89,16 @@ export function EventFormModal({
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Tanggal Pelaksanaan</label>
-              <div className="relative">
-                <Input
-                  type="date"
-                  className="h-8 text-[13px] pr-10"
-                  value={eventDateInput}
-                  onChange={(e) => setEventDateInput(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Jam Pelaksanaan</label>
-              <div className="relative">
-                <Input
-                  type="time"
-                  className="h-8 text-[13px] pr-10"
-                  value={eventTimeInput}
-                  onChange={(e) => setEventTimeInput(e.target.value)}
-                  required
-                />
-              </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Tanggal Pelaksanaan</label>
+            <div className="relative">
+              <Input
+                type="date"
+                className="h-8 text-[13px] w-full"
+                value={eventDateInput}
+                onChange={(e) => setEventDateInput(e.target.value)}
+                required
+              />
             </div>
           </div>
 

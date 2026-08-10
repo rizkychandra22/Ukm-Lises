@@ -6,6 +6,7 @@ use App\Http\Controllers\ListMemberController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventSessionController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\SitemapController;
@@ -68,6 +69,7 @@ Route::middleware(['access:Developer,Admin'])->prefix('dashboard')->group(functi
     Route::post('/orders', [EventController::class, 'storeOrder'])->name('orders.store');
     Route::put('/orders/{order}/status', [EventController::class, 'updateOrderStatus'])->name('orders.update-status');
     Route::delete('/orders/{order}', [EventController::class, 'destroyOrder'])->name('orders.destroy');
+    Route::resource('event-sessions', EventSessionController::class)->except(['index', 'create', 'show', 'edit']);
 
     // Manajemen Rekening Bank / Pembayaran
     Route::post('/accounts', [EventController::class, 'storeAccount'])->name('accounts.store');

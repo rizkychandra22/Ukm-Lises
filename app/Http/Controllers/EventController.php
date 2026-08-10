@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BatchMember;
 use App\Models\Event;
+use App\Models\EventSession;
 use App\Models\PayAccount;
 use App\Models\PayOrder;
 use App\Services\EventService;
@@ -41,6 +42,7 @@ class EventController extends Controller
             'events'   => $events,
             'orders'   => PayOrder::with(['event', 'payAccount'])->latest()->get(),
             'accounts' => PayAccount::with('batchMember')->get(),
+            'sessions' => EventSession::with('event')->latest()->get(),
             'members'  => BatchMember::select('id', 'name')
                 ->where('type', 'Pengurus')
                 ->where('status', 'Active')
