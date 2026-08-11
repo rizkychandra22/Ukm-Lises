@@ -783,7 +783,7 @@ export function EventPage() {
                       </p>
                       {trackedOrder.event_session && (
                         <p className="text-sm font-semibold text-primary mt-1">
-                          {trackedOrder.event_session.name} ({trackedOrder.event_session.start_time.slice(0, 5)} - {trackedOrder.event_session.end_time.slice(0, 5)})
+                          {isEn && trackedOrder.event_session.name_en ? trackedOrder.event_session.name_en : trackedOrder.event_session.name_id} ({trackedOrder.event_session.start_time.slice(0, 5)} - {trackedOrder.event_session.end_time.slice(0, 5)})
                         </p>
                       )}
                     </div>

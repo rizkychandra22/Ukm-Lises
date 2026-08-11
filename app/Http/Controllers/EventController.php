@@ -42,7 +42,7 @@ class EventController extends Controller
             'events'   => $events,
             'orders'   => PayOrder::with(['event', 'eventSession', 'payAccount.batchMember'])->latest()->get(),
             'accounts' => PayAccount::with('batchMember')->get(),
-            'sessions' => EventSession::with('event')->withSum('orders', 'qty')->latest()->get(),
+            'sessions' => EventSession::with('event')->withSum(['orders' => fn($q) => $q->where('status', 'success')], 'qty')->latest()->get(),
             'members'  => BatchMember::select('id', 'name')
                 ->where('type', 'Pengurus')
                 ->where('status', 'Active')
