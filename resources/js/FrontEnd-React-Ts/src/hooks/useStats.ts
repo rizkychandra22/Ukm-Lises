@@ -10,8 +10,8 @@ export function useStats() {
   const query = useQuery<AppStats, AxiosError<ApiErrorResponse>>({
     queryKey: ["app-stats"],
     queryFn: getStats,
-    staleTime: 5 * 60 * 1000, 
-    retry: 2,
+    refetchInterval: 60000, 
+    retry: 5,
   });
 
   return {

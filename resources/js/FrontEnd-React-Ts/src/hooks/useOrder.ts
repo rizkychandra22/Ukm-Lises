@@ -31,7 +31,8 @@ export function usePaymentAccounts() {
   const query = useQuery<PayAccount[], AxiosError<ApiErrorResponse>>({
     queryKey: ["payment-accounts"],
     queryFn: getPaymentAccounts,
-    retry: 2,
+    refetchInterval: 15000,
+    retry: 4,
   });
 
   return {
@@ -61,7 +62,8 @@ export function useTrackOrder(orderCode: string) {
     queryKey: ["track-order", orderCode],
     queryFn: () => trackOrder(orderCode),
     enabled: Boolean(orderCode), 
-    retry: 3,
+    refetchInterval: 15000,
+    retry: 4,
   });
 
   return {
