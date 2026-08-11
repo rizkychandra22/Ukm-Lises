@@ -44,7 +44,7 @@ class AuthService
             RateLimiter::hit($throttleKey, 1800);
 
             throw ValidationException::withMessages([
-                'login' => ['Username/Email atau password yang Anda masukkan salah.'],
+                'login' => ['Username atau password yang Anda masukkan salah.'],
             ]);
         }
 

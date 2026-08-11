@@ -8,6 +8,7 @@ use App\Models\BatchMember;
 use App\Models\Gallery;
 use App\Models\News;
 use App\Models\Event;
+use App\Models\Visitor;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
@@ -31,7 +32,7 @@ class DashboardController extends Controller
                 'demisioner' => $demisionerCount,
                 'kepengurusan' => $kepengurusanCount,
                 'total_angkatan' => $totalAngkatan,
-                'total_pengunjung' => 0, // Implement visitor tracking
+                'total_pengunjung' => Visitor::count(),
                 'total_galeri' => Gallery::count(),
                 'total_berita' => News::count(),
                 'total_event' => Event::count(),
