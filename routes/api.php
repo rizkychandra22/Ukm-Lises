@@ -22,6 +22,7 @@ Route::get('/members', [MemberApiController::class, 'index']);
 Route::get('/batches', [MemberApiController::class, 'batches']);
 
 // Endpoint Content Public
+Route::get('/stats', [ContentController::class, 'stats']);
 Route::get('/galleries', [ContentController::class, 'galleries']);
 Route::get('/news', [ContentController::class, 'news']);
 Route::get('/news/{slug}', [ContentController::class, 'newsDetail']);

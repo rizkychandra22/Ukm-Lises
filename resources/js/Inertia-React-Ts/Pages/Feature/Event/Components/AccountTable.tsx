@@ -1,12 +1,21 @@
 import { useMemo } from "react";
 import { LegacyColumnDef as ColumnDef } from "@tanstack/react-table/legacy";
-import { DataTable } from "./DataTable";
+import { DataTable } from "../../../../Components/DataTable";
 import { PayAccount } from "../Types";
 import { Button } from "@/components/ui/button";
 import { Edit, Trash2, ArrowUpDown, Plus } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface AccountTableProps {
   accounts: PayAccount[];
+  activeSessionTab: string;
+  setActiveSessionTab: (val: string) => void;
   onEdit: (account: PayAccount) => void;
   onDelete: (id: number) => void;
   onAdd?: () => void;
@@ -15,6 +24,8 @@ interface AccountTableProps {
 
 export function AccountTable({
   accounts,
+  activeSessionTab,
+  setActiveSessionTab,
   onEdit,
   onDelete,
   onAdd,
@@ -123,19 +134,35 @@ export function AccountTable({
         },
       },
     ],
-    [onEdit, onDelete, hasRole],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
   );
 
-  const toolbarExtra = hasRole(["Developer", "Admin"]) && onAdd ? (
-    <Button
-      size="sm"
-      className="h-8 px-3.5 rounded-lg text-[13px] font-medium shrink-0 shadow-sm w-full sm:w-auto flex-none"
-      onClick={onAdd}
-    >
-      <Plus className="h-3.5 w-3.5 mr-1" />
-      Tambah Rekening
-    </Button>
-  ) : null;
+  const toolbarExtra = (
+    <>
+      <div className="flex-1 sm:flex-none">
+        <Select value={activeSessionTab} onValueChange={setActiveSessionTab}>
+          <SelectTrigger className="w-full sm:w-[180px] h-8 text-[13px]">
+            <SelectValue placeholder="Pilih Tipe Tabel" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="session">Table Type Session</SelectItem>
+            <SelectItem value="payment">Table Type Payment</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      {hasRole(["Developer", "Admin"]) && onAdd && (
+        <Button
+          size="sm"
+          className="h-8 px-3.5 rounded-lg text-[13px] font-medium shrink-0 shadow-sm flex-1 sm:flex-none sm:w-auto"
+          onClick={onAdd}
+        >
+          <Plus className="h-3.5 w-3.5 mr-1" />
+          Tambah Rekening
+        </Button>
+      )}
+    </>
+  );
 
   return (
     <DataTable

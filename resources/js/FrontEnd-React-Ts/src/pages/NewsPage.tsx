@@ -3,7 +3,6 @@ import { ArrowUpRight, CalendarDays, Newspaper, Sparkles, User } from "lucide-re
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
 import { useNews } from "@/hooks/useNews";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTranslation } from "@/i18n";
@@ -56,7 +55,7 @@ export function NewsPage() {
               <p className="text-lg font-medium">{t("no_upload")}</p>
             </div>
           ) : (
-            posts.map((post) => {
+            posts.map((post, index) => {
               const title = isEn ? post.title_en || post.title_id : post.title_id;
               const excerpt = isEn ? post.summary_en || post.summary_id : post.summary_id;
               const date = new Date(post.date).toLocaleDateString(isEn ? "en-US" : "id-ID", {

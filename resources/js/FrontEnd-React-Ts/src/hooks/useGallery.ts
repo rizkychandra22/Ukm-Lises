@@ -25,9 +25,9 @@ export function useGallery() {
   const query = useQuery<Gallery[], AxiosError<ApiErrorResponse>>({
     queryKey: ["gallery"],
     queryFn: getGalleries,
-    refetchInterval: 10000,
+    refetchInterval: 60000,
     refetchOnWindowFocus: true,
-    retry: 3,
+    retry: 5,
   });
 
   return {

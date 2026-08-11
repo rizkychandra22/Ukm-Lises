@@ -44,6 +44,8 @@ import {
   Newspaper,
   CalendarDays,
   Server,
+  Loader2,
+  Save,
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import LogoDark from "@/assets/logo-bg-dark.png";
@@ -259,7 +261,7 @@ export function AppSidebar() {
               {auth.user?.roles?.join(", ") + " - " + user?.username || "@username"}
             </span>
           </div>
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-3">
             <Dialog open={isProfileModalOpen} onOpenChange={setIsProfileModalOpen}>
               <DialogTrigger asChild>
                 <button
@@ -267,7 +269,7 @@ export function AppSidebar() {
                   aria-label="Pengaturan"
                   title="Pengaturan"
                 >
-                  <Settings className="w-[18px] h-[18px]" />
+                  <Settings className="w-[15px] h-[15px]" />
                 </button>
               </DialogTrigger>
               <DialogContent className="rounded-md w-[90%] sm:max-w-[425px]">
@@ -323,7 +325,15 @@ export function AppSidebar() {
                   </div>
                   <div className="flex justify-end mt-4">
                     <Button type="submit" disabled={processing}>
-                      Simpan Perubahan
+                      {processing ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin mr-1.5" /> Menyimpan...
+                        </>
+                      ) : (
+                        <>
+                          <Save className="w-4 h-4 mr-1.5" /> Simpan Perubahan
+                        </>
+                      )}
                     </Button>
                   </div>
                 </form>
@@ -336,7 +346,7 @@ export function AppSidebar() {
                   aria-label="Keluar"
                   title="Keluar"
                 >
-                  <LogOut className="w-[18px] h-[18px]" />
+                  <LogOut className="w-[15px] h-[15px]" />
                 </button>
               </AlertDialogTrigger>
               <AlertDialogContent className="w-[90%] max-w-[360px] rounded-md p-6">

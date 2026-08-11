@@ -25,9 +25,9 @@ export function useEvents() {
   const query = useQuery<EventItem[], AxiosError<ApiErrorResponse>>({
     queryKey: ["events"],
     queryFn: getEvents,
-    refetchInterval: 10000,
+    refetchInterval: 15000,
     refetchOnWindowFocus: true,
-    retry: 3,
+    retry: 4,
   });
 
   return {

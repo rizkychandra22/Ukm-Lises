@@ -1,5 +1,16 @@
 import apiClient from "../api-client";
 
+export interface EventSession {
+  id: number;
+  event_id: number;
+  name_id: string;
+  name_en: string | null;
+  start_time: string;
+  end_time: string;
+  ticket_allocation: number;
+  remaining_tickets: number;
+}
+
 export interface EventItem {
   id: number;
   title_id: string;
@@ -16,6 +27,7 @@ export interface EventItem {
   ticket: number | null;
   remaining_tickets: number | null;
   status: "draft" | "published" | "cancelled" | "completed";
+  sessions?: EventSession[];
 }
 
 export const getEvents = async (): Promise<EventItem[]> => {

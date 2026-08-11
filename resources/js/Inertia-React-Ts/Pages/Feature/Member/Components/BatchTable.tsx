@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { LegacyColumnDef as ColumnDef } from "@tanstack/react-table/legacy";
-import { DataTable } from "../../Event/Components/DataTable";
+import { DataTable } from "../../../../Components/DataTable";
 import { Batch } from "../Types";
 import { Button } from "@/components/ui/button";
 import { Edit, Trash2, ArrowUpDown, Plus } from "lucide-react";
@@ -103,7 +103,8 @@ export function BatchTable({
         },
       },
     ],
-    [onEdit, onDelete, hasRole],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
   );
 
   const toolbarExtra = hasRole(["Developer", "Admin"]) && onAdd ? (

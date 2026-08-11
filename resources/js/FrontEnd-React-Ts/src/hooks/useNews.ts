@@ -25,9 +25,9 @@ export function useNews() {
   const query = useQuery<News[], AxiosError<ApiErrorResponse>>({
     queryKey: ["news"],
     queryFn: getNews,
-    refetchInterval: 10000,
+    refetchInterval: 60000,
     refetchOnWindowFocus: true,
-    retry: 3,
+    retry: 5,
   });
 
   return {
@@ -42,7 +42,7 @@ export function useNewsDetail(slug: string) {
     queryKey: ["news", slug],
     queryFn: () => getNewsDetail(slug),
     enabled: Boolean(slug), 
-    retry: 3,
+    retry: 5,
   });
 
   return {

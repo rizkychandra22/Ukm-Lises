@@ -32,9 +32,9 @@ export function useMembers(params?: QueryMemberParams) {
   const query = useQuery<Member[], AxiosError<ApiErrorResponse>>({
     queryKey: ["members", params],
     queryFn: () => getMembers(params),
-    refetchInterval: 10000,
+    refetchInterval: 60000,
     refetchOnWindowFocus: true,
-    retry: 3,
+    retry: 5,
   });
 
   return {
@@ -48,7 +48,8 @@ export function useBatches() {
   const query = useQuery<Batch[], AxiosError<ApiErrorResponse>>({
     queryKey: ["batches"],
     queryFn: getBatches,
-    retry: 3,
+    refetchInterval: 60000,
+    retry: 5,
   });
 
   return {
@@ -65,8 +66,8 @@ export function useCategorizedMembers() {
   >({
     queryKey: ["members-categorized"],
     queryFn: getCategorizedMembers,
-    refetchInterval: 10000,
-    retry: 3,
+    refetchInterval: 60000,
+    retry: 5,
   });
 
   return {

@@ -17,7 +17,7 @@ function resolveApiBaseUrl(): string {
 
 export const apiClient = axios.create({
   baseURL: resolveApiBaseUrl(),
-  timeout: 10000,
+  timeout: 30000,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -28,10 +28,7 @@ axiosRetry(apiClient, {
   retries: 2,
   retryDelay: axiosRetry.exponentialDelay,
   retryCondition: (error) => {
-    return (
-      axiosRetry.isNetworkOrIdempotentRequestError(error) ||
-      error.code === "ECONNABORTED"
-    );
+    return axiosRetry.isNetworkOrIdempotentRequestError(error);
   },
 });
 

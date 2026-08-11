@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text('summary_id')->nullable();
             $table->text('summary_en')->nullable();
             $table->enum('type', ['Exclusive', 'Non-Exclusive']);
-            $table->dateTime('date');
+            $table->date('date');
             $table->string('location_id');
             $table->string('location_en')->nullable();
             $table->decimal('price', 15, 2)->nullable();

@@ -21,12 +21,31 @@ class OrderService
     {
         return DB::transaction(function () use ($data) {
             $event = Event::findOrFail($data['event_id']);
+            $eventSession = null;
 
-            // 1. Validasi Sisa Tiket
+            if ($event->type === 'Exclusive') {
+                if (empty($data['event_session_id'])) {
+                    throw new \Exception('Sesi event wajib dipilih untuk event eksklusif.');
+                }
+                $eventSession = \App\Models\EventSession::where('event_id', $event->id)
+                    ->findOrFail($data['event_session_id']);
+                
+                // Cek ketersediaan tiket sesi
+                $sessionOrdersCount = PayOrder::where('event_session_id', $eventSession->id)
+                    ->where('status', 'success')
+                    ->sum('qty');
+                
+                $remainingSession = $eventSession->ticket_allocation - $sessionOrdersCount;
+                if ($remainingSession < $data['qty']) {
+                    throw new \Exception('Maaf, sisa tiket untuk sesi ini tidak mencukupi.');
+                }
+            }
+
+            // 1. Validasi Sisa Tiket Event Keseluruhan
             if ($event->ticket !== null) {
                 $remaining = $event->remaining_tickets;
                 if ($remaining !== null && $remaining < $data['qty']) {
-                    throw new \Exception('Maaf, sisa tiket yang tersedia tidak mencukupi.');
+                    throw new \Exception('Maaf, sisa tiket keseluruhan yang tersedia tidak mencukupi.');
                 }
             }
 
@@ -42,18 +61,19 @@ class OrderService
 
             // 4. Create Order (order_code di-generate otomatis via Model Boot jika kosong)
             return PayOrder::create([
-                'order_code'     => $data['order_code'] ?? null,
-                'name'           => $data['name'],
-                'email'          => $data['email'] ?? null,
-                'phone'          => $data['phone'],
-                'event_id'       => $event->id,
-                'qty'            => $data['qty'],
-                'total_price'    => $totalPrice,
-                'notes'          => $data['notes'] ?? null,
-                'pay_account_id' => $data['pay_account_id'] ?? null,
-                'payment_proof'  => $proofUrl,
-                'order_method'   => $data['order_method'] ?? 'online',
-                'status'         => $data['status'] ?? 'pending',
+                'order_code'       => $data['order_code'] ?? null,
+                'name'             => $data['name'],
+                'email'            => $data['email'] ?? null,
+                'phone'            => $data['phone'],
+                'event_id'         => $event->id,
+                'event_session_id' => $eventSession ? $eventSession->id : null,
+                'qty'              => $data['qty'],
+                'total_price'      => $totalPrice,
+                'notes'            => $data['notes'] ?? null,
+                'pay_account_id'   => $data['pay_account_id'] ?? null,
+                'payment_proof'    => $proofUrl,
+                'order_method'     => $data['order_method'] ?? 'online',
+                'status'           => $data['status'] ?? 'pending',
             ]);
         });
     }

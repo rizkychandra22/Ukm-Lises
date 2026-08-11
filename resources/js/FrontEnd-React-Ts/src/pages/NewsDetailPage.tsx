@@ -1,6 +1,6 @@
 import DOMPurify from "dompurify";
 import { useParams, Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -229,9 +229,9 @@ export function NewsDetailPage() {
       </section>
 
       {/* ─────────── TWO-COLUMN LAYOUT (like AboutPage) ─────────── */}
-      <section className="mx-auto grid max-w-7xl gap-12 px-6 pb-12 md:pb-16 md:grid-cols-2 md:items-start">
-        {/* Left Column — Image */}
-        <div className="relative overflow-hidden rounded-3xl border border-border/60">
+      <section className="mx-auto max-w-7xl px-6 pb-12 md:pb-16 block after:content-[''] after:table after:clear-both">
+        {/* Left Column — Image (Floated on Desktop) */}
+        <div className="relative overflow-hidden rounded-3xl border border-border/60 md:float-left md:w-[48%] md:mr-10 md:mb-6 mb-8">
           <img
             src={post.image}
             alt={isEn ? post.title_en || post.title_id : post.title_id}
@@ -240,36 +240,33 @@ export function NewsDetailPage() {
           />
         </div>
 
-        {/* Right Column — Excerpt + Content */}
-        <div className="space-y-6">
-          {/* Excerpt */}
-          {(post.summary_id || post.summary_en) && (
-            <p className="text-base md:text-lg leading-relaxed text-muted-foreground">
-              <span className="font-semibold text-foreground">{post.type}.</span>{" "}
-              {isEn ? post.summary_en || post.summary_id : post.summary_id}
-            </p>
-          )}
+        {/* Excerpt */}
+        {(post.summary_id || post.summary_en) && (
+          <p className="text-base md:text-lg leading-relaxed text-muted-foreground mb-6">
+            <span className="font-semibold text-foreground">{post.type}.</span>{" "}
+            {isEn ? post.summary_en || post.summary_id : post.summary_id}
+          </p>
+        )}
 
-          {/* Article Content */}
-          <div
-            className="
-              max-w-none text-base leading-relaxed text-muted-foreground
-              [&>p]:mt-4 [&>p]:mb-4 [&>p]:last:mb-0 [&>p]:text-justify [&>p]:indent-8
-              [&>h2]:mt-6 [&>h2]:mb-2 [&>h2]:font-display [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:text-foreground
-              [&>h3]:mt-4 [&>h3]:mb-2 [&>h3]:font-display [&>h3]:text-xl [&>h3]:font-bold [&>h3]:text-foreground
-              [&>blockquote]:my-5 [&>blockquote]:border-l-4 [&>blockquote]:border-primary/60
-              [&>blockquote]:bg-card/50 [&>blockquote]:rounded-r-2xl [&>blockquote]:px-5 [&>blockquote]:py-4
-              [&>blockquote]:italic [&>blockquote]:text-foreground/80
-              [&>img]:my-5 [&>img]:rounded-2xl [&>img]:border [&>img]:border-border/60
-              [&>ul]:list-disc [&>ul]:my-2 [&>ul]:pl-6 [&>ol]:list-decimal [&>ol]:my-2 [&>ol]:pl-6
-            "
-            dangerouslySetInnerHTML={{
-              __html: DOMPurify.sanitize(
-                isEn ? post.description_en || post.description_id : post.description_id,
-              ),
-            }}
-          />
-        </div>
+        {/* Article Content */}
+        <div
+          className="
+            max-w-none w-full text-base leading-relaxed text-muted-foreground
+            [&>p]:mt-4 [&>p]:mb-4 [&>p]:last:mb-0 [&>p]:text-justify [&>p]:indent-8
+            [&>h2]:mt-6 [&>h2]:mb-2 [&>h2]:font-display [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:text-foreground
+            [&>h3]:mt-4 [&>h3]:mb-2 [&>h3]:font-display [&>h3]:text-xl [&>h3]:font-bold [&>h3]:text-foreground
+            [&>blockquote]:my-5 [&>blockquote]:border-l-4 [&>blockquote]:border-primary/60
+            [&>blockquote]:bg-card/50 [&>blockquote]:rounded-r-2xl [&>blockquote]:px-5 [&>blockquote]:py-4
+            [&>blockquote]:italic [&>blockquote]:text-foreground/80
+            [&>img]:my-5 [&>img]:rounded-2xl [&>img]:border [&>img]:border-border/60
+            [&>ul]:list-disc [&>ul]:my-2 [&>ul]:pl-6 [&>ol]:list-decimal [&>ol]:my-2 [&>ol]:pl-6
+          "
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(
+              (isEn ? post.description_en || post.description_id : post.description_id).replace(/&nbsp;/g, ' ')
+            ),
+          }}
+        />
       </section>
 
       {/* ─────────── SHARE SECTION ─────────── */}
