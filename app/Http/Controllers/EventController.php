@@ -40,7 +40,7 @@ class EventController extends Controller
 
         return Inertia::render('IndexEvent', [
             'events'   => $events,
-            'orders'   => PayOrder::with(['event', 'payAccount'])->latest()->get(),
+            'orders'   => PayOrder::with(['event', 'payAccount.batchMember'])->latest()->get(),
             'accounts' => PayAccount::with('batchMember')->get(),
             'sessions' => EventSession::with('event')->latest()->get(),
             'members'  => BatchMember::select('id', 'name')

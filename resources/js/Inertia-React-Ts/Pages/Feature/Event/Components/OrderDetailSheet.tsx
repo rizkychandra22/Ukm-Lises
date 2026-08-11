@@ -60,19 +60,19 @@ export function OrderDetailSheet({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4">
             <div>
               <h4 className="text-xs text-muted-foreground">Pembayaran Melalui</h4>
               <p className="text-sm font-medium capitalize">
                 {order.pay_account
-                  ? `${order.pay_account.name_account} - ${order.pay_account.no_account}`
+                  ? `${order.pay_account.name_account} - ${order.pay_account.no_account} - ${order.pay_account?.batch_member?.name}`
                   : "Cash / Tunai"}
               </p>
             </div>
           </div>
 
-          <div>
-            <h4 className="text-xs text-muted-foreground mb-1">Bukti Pembayaran / Transfer</h4>
+          <div className="grid grid-cols-1 gap-1">
+            <h4 className="text-xs text-muted-foreground">Bukti Pembayaran / Transfer</h4>
             {order.payment_proof ? (
               <a
                 href={order.payment_proof}

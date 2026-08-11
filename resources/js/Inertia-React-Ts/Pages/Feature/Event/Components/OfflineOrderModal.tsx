@@ -174,7 +174,7 @@ export function OfflineOrderModal({
                 <SelectItem value="cash">Cash / Tunai</SelectItem>
                 {accounts.map((acc) => (
                   <SelectItem key={acc.id} value={acc.id.toString()}>
-                    {acc.name_account} - {acc.no_account}
+                    {acc.name_account} - {acc.no_account} - {acc.batch_member?.name}
                   </SelectItem>
                 ))}
               </SelectContent>
