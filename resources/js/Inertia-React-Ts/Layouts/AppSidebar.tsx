@@ -44,6 +44,8 @@ import {
   Newspaper,
   CalendarDays,
   Server,
+  Loader2,
+  Save,
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import LogoDark from "@/assets/logo-bg-dark.png";
@@ -323,7 +325,15 @@ export function AppSidebar() {
                   </div>
                   <div className="flex justify-end mt-4">
                     <Button type="submit" disabled={processing}>
-                      Simpan Perubahan
+                      {processing ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin mr-1.5" /> Menyimpan...
+                        </>
+                      ) : (
+                        <>
+                          <Save className="w-4 h-4 mr-1.5" /> Simpan Perubahan
+                        </>
+                      )}
                     </Button>
                   </div>
                 </form>

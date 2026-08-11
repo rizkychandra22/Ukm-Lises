@@ -227,11 +227,11 @@ export default function FormNews({ news }: NewsProps) {
               >
                 {processing ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin" /> Menyimpan...
+                    <Loader2 className="w-4 h-4 animate-spin mr-1.5" /> Menyimpan...
                   </>
                 ) : (
                   <>
-                    <Save className="w-4 h-4" /> {isEdit ? "Simpan Perubahan" : "Simpan"}
+                    <Save className="w-4 h-4 mr-1.5" /> {isEdit ? "Simpan Perubahan" : "Simpan"}
                   </>
                 )}
               </Button>
