@@ -260,7 +260,8 @@ export function MemberTable({
         },
       },
     ],
-    [onView, onEdit, onDelete, hasRole, showPeriodeJabatan, activeMemberTab, userBatch],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [showPeriodeJabatan, activeMemberTab, userBatch],
   );
 
   const canAddMember = (() => {

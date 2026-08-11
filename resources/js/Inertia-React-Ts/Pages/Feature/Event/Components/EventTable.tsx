@@ -103,18 +103,18 @@ export function EventTable({
             className="-ml-4 hover:bg-transparent text-sm font-semibold"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            Tanggal & Waktu <ArrowUpDown className="ml-2 h-4 w-4" />
+            Tanggal <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         ),
         cell: ({ row }: { row: { original: EventItem } }) => (
           <span className="text-sm">
-            {new Date(row.original.date).toLocaleDateString("id-ID", {
-              day: "numeric",
-              month: "short",
-              year: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
+            {row.original.date
+              ? new Date(row.original.date).toLocaleDateString("id-ID", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                })
+              : "-"}
           </span>
         ),
       },
@@ -136,13 +136,15 @@ export function EventTable({
       {
         id: "ticket",
         header: "Tiket",
-        cell: ({ row }: { row: { original: EventItem } }) => (
-          <span className="text-sm font-medium">
-            {row.original.ticket
-              ? `${row.original.remaining_tickets ?? row.original.ticket} / ${row.original.ticket}`
-              : "Unlimited"}
-          </span>
-        ),
+        cell: ({ row }: { row: { original: EventItem } }) => {
+          const total = row.original.ticket ?? 0;
+          const remaining = row.original.remaining_tickets ?? total;
+          return (
+            <span className="text-sm font-medium">
+              {row.original.ticket ? `${remaining} / ${total}` : "Unlimited"}
+            </span>
+          );
+        },
       },
       {
         accessorKey: "status",
@@ -214,7 +216,8 @@ export function EventTable({
         },
       },
     ],
-    [onView, onEdit, onDelete, hasRole, formatIDR],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
   );
 
   const toolbarExtra = (

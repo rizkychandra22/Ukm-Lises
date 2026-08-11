@@ -14,6 +14,21 @@ export type EventItem = {
   sold_tickets?: number;
   remaining_tickets?: number | null;
   status: "draft" | "published" | "cancelled" | "completed";
+  sessions?: EventSession[];
+};
+
+export type EventSession = {
+  id: number;
+  event_id: number;
+  name: string;
+  start_time: string;
+  end_time: string;
+  ticket_allocation: number;
+  remaining_tickets?: number;
+  created_at: string;
+  updated_at: string;
+  event?: EventItem;
+  orders_sum_qty?: number;
 };
 
 export type PayAccount = {
@@ -32,6 +47,7 @@ export type PayOrder = {
   email?: string | null;
   phone?: string | null;
   event_id: number;
+  event_session_id?: number | null;
   qty: number;
   total_price: number;
   notes?: string | null;
@@ -39,7 +55,9 @@ export type PayOrder = {
   payment_proof?: string | null;
   order_method: "online" | "offline";
   status: "pending" | "success" | "cancelled";
+  created_at: string;
   event?: EventItem;
+  event_session?: EventSession;
   pay_account?: PayAccount;
 };
 

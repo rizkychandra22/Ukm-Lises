@@ -82,20 +82,6 @@ export function OrderTable({
         ),
       },
       {
-        id: "info",
-        header: "Informasi",
-        cell: ({ row }: { row: { original: PayOrder } }) => {
-          const ord = row.original;
-          return (
-            <div className="flex flex-col text-xs text-muted-foreground">
-              {ord.email && <span>{ord.email}</span>}
-              {ord.phone && <span>{ord.phone}</span>}
-              {!ord.email && !ord.phone && <span>-</span>}
-            </div>
-          );
-        },
-      },
-      {
         accessorKey: "event.title_id",
         header: ({ column }: { column: any }) => (
           <Button
@@ -107,8 +93,28 @@ export function OrderTable({
           </Button>
         ),
         cell: ({ row }: { row: { original: PayOrder } }) => (
-          <span className="text-sm">{row.original.event?.title_id || "-"}</span>
+          <div className="w-30 sm:w-45">
+            <span className="text-sm font-medium text-foreground line-clamp-2">{row.original.event?.title_id || "-"}</span>
+          </div>
         ),
+      },
+      {
+        id: "event_session",
+        header: "Sesi",
+        cell: ({ row }: { row: { original: PayOrder } }) => {
+          const session = row.original.event_session;
+          if (!session) return <span className="text-sm text-muted-foreground">-</span>;
+          const start = session.start_time ? session.start_time.slice(0, 5) : "";
+          const end = session.end_time ? session.end_time.slice(0, 5) : "";
+          return (
+            <div className="flex flex-col gap-0.5 text-sm w-20 sm:w-18">
+              <span className="font-medium text-foreground whitespace-nowrap">{session.name}</span>
+              <span className="text-[11px] text-muted-foreground whitespace-nowrap">
+                {start} - {end}
+              </span>
+            </div>
+          );
+        },
       },
       {
         accessorKey: "qty",
@@ -218,7 +224,8 @@ export function OrderTable({
         },
       },
     ],
-    [onView, onEditStatus, onDelete, hasRole, formatIDR],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
   );
 
   const toolbarExtra = (

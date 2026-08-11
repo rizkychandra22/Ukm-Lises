@@ -127,7 +127,8 @@ export function Table({
         },
       },
     ],
-    [onDelete],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
   );
 
   const toolbarExtra = (
