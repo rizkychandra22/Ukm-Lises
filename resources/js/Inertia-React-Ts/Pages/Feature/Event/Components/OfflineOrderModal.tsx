@@ -11,14 +11,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Loader2, Save } from "lucide-react";
-import { EventItem, PayAccount } from "../Types";
+import { EventItem, EventSession, PayAccount } from "../Types";
 
 interface OfflineOrderModalProps {
   isOpen: boolean;
   events: EventItem[];
+  sessions: EventSession[];
   accounts: PayAccount[];
   offlineOrderData: {
     event_id: string;
+    event_session_id: string;
     name: string;
     phone: string;
     email: string;
@@ -36,6 +38,7 @@ interface OfflineOrderModalProps {
 export function OfflineOrderModal({
   isOpen,
   events,
+  sessions,
   accounts,
   offlineOrderData,
   offlineOrderErrors,
@@ -93,6 +96,45 @@ export function OfflineOrderModal({
               <span className="text-xs text-destructive">{offlineOrderErrors.event_id}</span>
             )}
           </div>
+
+          {/* Session Selection (Only for Exclusive Events) */}
+          {offlineOrderData.event_id && events.find(e => e.id.toString() === offlineOrderData.event_id)?.type === 'Exclusive' && (
+            <div>
+              <label className="block text-sm font-medium mb-1">Sesi Event <span className="text-destructive">*</span></label>
+              <Select
+                value={offlineOrderData.event_session_id}
+                onValueChange={(val: string) => setOfflineOrderData("event_session_id", val)}
+                required
+              >
+                <SelectTrigger className="h-8 text-[13px]">
+                  <SelectValue placeholder="Pilih Sesi Event..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {sessions.filter((s) => s.event_id.toString() === offlineOrderData.event_id).length === 0 ? (
+                    <SelectItem value="none" disabled className="text-foreground">
+                      Event ini belum memiliki sesi tampil
+                    </SelectItem>
+                  ) : (
+                    sessions
+                      .filter((s) => s.event_id.toString() === offlineOrderData.event_id)
+                      .map((session) => {
+                        const available = session.ticket_allocation - (session.orders_sum_qty || 0);
+                        const start = session.start_time ? session.start_time.slice(0, 5) : "";
+                        const end = session.end_time ? session.end_time.slice(0, 5) : "";
+                        return (
+                          <SelectItem key={session.id} value={session.id.toString()} disabled={available <= 0}>
+                            {session.name} ({start} - {end}) — {available > 0 ? `Sisa ${available} Tiket` : "Habis"}
+                          </SelectItem>
+                        );
+                      })
+                  )}
+                </SelectContent>
+              </Select>
+              {offlineOrderErrors.event_session_id && (
+                <span className="text-xs text-destructive">{offlineOrderErrors.event_session_id}</span>
+              )}
+            </div>
+          )}
 
           {/* Info Pemesan */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
