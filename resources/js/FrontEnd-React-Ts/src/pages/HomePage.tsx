@@ -20,6 +20,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { ScrollTop } from "@/components/scroll-top";
 import { useGallery } from "@/hooks/useGallery";
 import { useNews } from "@/hooks/useNews";
+import { useStats } from "@/hooks/useStats";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function HomePage() {
@@ -28,6 +29,7 @@ export function HomePage() {
 
   const { galleries, isLoading: isGalleryLoading } = useGallery();
   const { news, isLoading: isNewsLoading } = useNews();
+  const { stats } = useStats();
 
   const isLoading = isGalleryLoading || isNewsLoading;
   const momentImages = galleries.slice(0, 3);
@@ -93,9 +95,9 @@ export function HomePage() {
 
             <div className="mt-16 grid max-w-3xl gap-6 sm:grid-cols-3">
               {[
-                { n: "120+", l: t("banner.card_1") },
-                { n: "45", l: t("banner.card_2") },
-                { n: "12", l: t("banner.card_3") },
+                { n: stats.total_members > 0 ? `${stats.total_members}` : "0", l: t("banner.card_1") },
+                { n: stats.total_batches > 0 ? `${stats.total_batches}` : "0", l: t("banner.card_2") },
+                { n: stats.total_events > 0 ? `${stats.total_events}` : "0", l: t("banner.card_3") },
               ].map((item) => (
                 <Card
                   key={item.l}

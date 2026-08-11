@@ -14,6 +14,7 @@ export type EventItem = {
   sold_tickets?: number;
   remaining_tickets?: number | null;
   status: "draft" | "published" | "cancelled" | "completed";
+  sessions?: EventSession[];
 };
 
 export type EventSession = {
@@ -52,7 +53,8 @@ export type PayOrder = {
   pay_account_id?: number | null;
   payment_proof?: string | null;
   order_method: "online" | "offline";
-  status: "pending" | "success" | "cancelled";
+  status: "pending" | "success" | "failed";
+  created_at: string;
   event?: EventItem;
   event_session?: EventSession;
   pay_account?: PayAccount;

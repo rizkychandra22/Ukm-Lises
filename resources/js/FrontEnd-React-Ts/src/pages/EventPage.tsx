@@ -50,6 +50,7 @@ export function EventPage() {
     qty: 1 as number | string,
     notes: "",
     pay_account_id: "",
+    event_session_id: "",
   });
   const [paymentProof, setPaymentProof] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -107,6 +108,7 @@ export function EventPage() {
       qty: 1,
       notes: "",
       pay_account_id: "",
+      event_session_id: "",
     });
     setPaymentProof(null);
     setIsDialogOpen(true);
@@ -145,6 +147,7 @@ export function EventPage() {
 
     if (formData.notes) payload.append("notes", formData.notes);
     if (formData.pay_account_id) payload.append("pay_account_id", formData.pay_account_id);
+    if (formData.event_session_id) payload.append("event_session_id", formData.event_session_id);
     if (paymentProof) payload.append("payment_proof", paymentProof);
 
     try {
@@ -502,6 +505,32 @@ export function EventPage() {
 
                 {/* FIELDS */}
                 <div className="grid gap-4">
+                  {selectedEvent?.sessions && selectedEvent.sessions.length > 0 && (
+                    <div className="grid gap-2">
+                      <Label>
+                        {isEn ? "Ticket Session" : "Sesi Tiket"} <span className="text-red-500">*</span>
+                      </Label>
+                      <Select
+                        required
+                        value={formData.event_session_id}
+                        onValueChange={(val) => setFormData({ ...formData, event_session_id: val, qty: 1 })}
+                      >
+                        <SelectTrigger>
+                          <SelectValue
+                            placeholder={isEn ? "Select a session" : "Pilih sesi tiket"}
+                          />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {selectedEvent.sessions.map((session) => (
+                            <SelectItem key={session.id} value={session.id.toString()}>
+                              {session.name} ({session.start_time.slice(0, 5)} - {session.end_time.slice(0, 5)})
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+
                   <div className="grid gap-2">
                     <Label htmlFor="name">
                       {isEn ? "Full Name" : "Nama Lengkap"} <span className="text-red-500">*</span>
@@ -555,8 +584,13 @@ export function EventPage() {
                           id="qty"
                           type="text"
                           min="1"
-                          max={selectedEvent?.remaining_tickets ?? undefined}
+                          max={
+                            selectedEvent?.sessions && selectedEvent.sessions.length > 0
+                              ? (selectedEvent.sessions.find((s) => s.id.toString() === formData.event_session_id)?.remaining_tickets ?? undefined)
+                              : (selectedEvent?.remaining_tickets ?? undefined)
+                          }
                           required
+                          disabled={!!(selectedEvent?.sessions && selectedEvent.sessions.length > 0 && !formData.event_session_id)}
                           value={formData.qty}
                           onChange={(e) => {
                             const val = e.target.value;
@@ -569,11 +603,19 @@ export function EventPage() {
                               }
                             }
                           }}
-                          className={selectedEvent?.remaining_tickets !== null ? "pr-30" : ""}
+                          className={
+                            (selectedEvent?.sessions && selectedEvent.sessions.length > 0)
+                              ? (formData.event_session_id ? "pr-30" : "")
+                              : (selectedEvent?.remaining_tickets !== null ? "pr-30" : "")
+                          }
                         />
-                        {selectedEvent?.remaining_tickets !== null && (
+                        {((selectedEvent?.sessions && selectedEvent.sessions.length > 0 && formData.event_session_id) || 
+                          (!(selectedEvent?.sessions && selectedEvent.sessions.length > 0) && selectedEvent?.remaining_tickets !== null)) && (
                           <span className="absolute right-3 text-xs text-muted-foreground">
-                            {isEn ? "Left:" : "Sisa:"} {selectedEvent?.remaining_tickets}
+                            {isEn ? "Left:" : "Sisa:"}{" "}
+                            {selectedEvent?.sessions && selectedEvent.sessions.length > 0
+                              ? selectedEvent.sessions.find((s) => s.id.toString() === formData.event_session_id)?.remaining_tickets
+                              : selectedEvent?.remaining_tickets}
                           </span>
                         )}
                       </div>
@@ -621,6 +663,34 @@ export function EventPage() {
                             ))}
                           </SelectContent>
                         </Select>
+
+                        {formData.pay_account_id && (
+                          <div className="mt-1 p-3 bg-muted/50 rounded-md flex items-center justify-between border border-border">
+                            <div>
+                              <p className="text-xs text-muted-foreground">
+                                {isEn ? "Account Number" : "Nomor Rekening"}
+                              </p>
+                              <p className="font-mono font-semibold text-primary">
+                                {accounts.find((a) => a.id.toString() === formData.pay_account_id)?.no_account}
+                              </p>
+                            </div>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                const acc = accounts.find((a) => a.id.toString() === formData.pay_account_id);
+                                if (acc) {
+                                  navigator.clipboard.writeText(acc.no_account);
+                                  toast.success(isEn ? "Account number copied!" : "Nomor rekening berhasil disalin!");
+                                }
+                              }}
+                            >
+                              <Copy className="h-4 w-4 mr-2" />
+                              {isEn ? "Copy" : "Salin"}
+                            </Button>
+                          </div>
+                        )}
                       </div>
 
                       <div className="grid gap-2">
@@ -713,6 +783,11 @@ export function EventPage() {
                       <p className="font-bold text-lg leading-tight">
                         {trackedOrder.event?.title_id || "Unknown Event"}
                       </p>
+                      {trackedOrder.event_session && (
+                        <p className="text-sm font-semibold text-primary mt-1">
+                          {trackedOrder.event_session.name} ({trackedOrder.event_session.start_time.slice(0, 5)} - {trackedOrder.event_session.end_time.slice(0, 5)})
+                        </p>
+                      )}
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">

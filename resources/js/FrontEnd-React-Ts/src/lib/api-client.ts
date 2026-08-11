@@ -28,10 +28,7 @@ axiosRetry(apiClient, {
   retries: 2,
   retryDelay: axiosRetry.exponentialDelay,
   retryCondition: (error) => {
-    return (
-      axiosRetry.isNetworkOrIdempotentRequestError(error) ||
-      error.code === "ECONNABORTED"
-    );
+    return axiosRetry.isNetworkOrIdempotentRequestError(error);
   },
 });
 

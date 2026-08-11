@@ -23,4 +23,15 @@ class EventSession extends Model
     {
         return $this->hasMany(PayOrder::class);
     }
+
+    protected $appends = ['remaining_tickets'];
+
+    public function getRemainingTicketsAttribute(): int
+    {
+        $sold = $this->orders()
+            ->where('status', 'success')
+            ->sum('qty');
+
+        return max(0, $this->ticket_allocation - $sold);
+    }
 }

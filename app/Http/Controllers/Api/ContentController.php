@@ -10,6 +10,8 @@ use App\Models\PayOrder;
 use App\Services\OrderService;
 use App\Http\Resources\GalleryResource;
 use App\Http\Resources\NewsResource;
+use App\Models\Batch;
+use App\Models\BatchMember;
 use App\Models\News;
 use Illuminate\Http\Request;
 
@@ -26,7 +28,7 @@ class ContentController extends Controller
             ->where('date', '<=', now()->subHours(3))
             ->update(['status' => 'cancelled']);
 
-        $events = Event::published()
+        $events = Event::with('sessions')->published()
             ->orderByRaw("CASE WHEN status = 'published' THEN 0 WHEN status = 'completed' THEN 1 ELSE 2 END ASC")
             ->orderBy('date', 'asc')
             ->get()
@@ -47,10 +49,30 @@ class ContentController extends Controller
                     'ticket'      => $event->ticket,
                     'remaining_tickets' => $event->remaining_tickets,
                     'status'      => $event->status,
+                    'sessions'    => $event->sessions->map(function ($session) {
+                        return [
+                            'id' => $session->id,
+                            'event_id' => $session->event_id,
+                            'name' => $session->name,
+                            'start_time' => $session->start_time,
+                            'end_time' => $session->end_time,
+                            'ticket_allocation' => $session->ticket_allocation,
+                            'remaining_tickets' => $session->remaining_tickets,
+                        ];
+                    }),
                 ];
             });
 
         return response()->json($events);
+    }
+
+    public function stats()
+    {
+        return response()->json([
+            'total_members' => BatchMember::count(),
+            'total_batches' => Batch::count(),
+            'total_events'  => Event::count(),
+        ]);
     }
 
     public function galleries()
@@ -91,15 +113,16 @@ class ContentController extends Controller
     public function storeOrder(Request $request, OrderService $orderService)
     {
         $validated = $request->validate([
-            'order_code'     => ['required', 'string', 'max:50'],
-            'event_id'       => ['required', 'exists:events,id'],
-            'name'           => ['required', 'string', 'max:255'],
-            'email'          => ['required', 'email', 'max:255'],
-            'phone'          => ['required', 'string', 'max:30'],
-            'qty'            => ['required', 'integer', 'min:1'],
-            'notes'          => ['nullable', 'string', 'max:500'],
-            'pay_account_id' => ['nullable', 'exists:pay_accounts,id'],
-            'payment_proof'  => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'order_code'       => ['required', 'string', 'max:50'],
+            'event_id'         => ['required', 'exists:events,id'],
+            'event_session_id' => ['nullable', 'exists:event_sessions,id'],
+            'name'             => ['required', 'string', 'max:255'],
+            'email'            => ['required', 'email', 'max:255'],
+            'phone'            => ['required', 'string', 'max:30'],
+            'qty'              => ['required', 'integer', 'min:1'],
+            'notes'            => ['nullable', 'string', 'max:500'],
+            'pay_account_id'   => ['nullable', 'exists:pay_accounts,id'],
+            'payment_proof'    => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ]);
 
         $validated['order_method'] = 'online';
@@ -118,7 +141,7 @@ class ContentController extends Controller
 
     public function trackOrder($order_code)
     {
-        $order = PayOrder::with('event')->where('order_code', $order_code)->first();
+        $order = PayOrder::with(['event', 'eventSession'])->where('order_code', $order_code)->first();
         if (!$order) {
             return response()->json(['message' => 'Pesanan tiket tidak ditemukan.'], 404);
         }
