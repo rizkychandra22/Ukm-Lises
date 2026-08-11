@@ -42,7 +42,7 @@ export default function IndexSystem({
       <Head title="IT System Dashboard" />
       <div className="flex flex-col gap-4 max-w-7xl mx-auto pb-12 relative">
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <h2 className="text-2xl font-bold text-foreground font-display tracking-tight">
               System Dashboard
@@ -51,16 +51,11 @@ export default function IndexSystem({
               Server health, infrastructure, scheduled jobs, and caching control.
             </p>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex shrink-0 mt-1 sm:mt-0">
             <Badge variant={isHealthy ? "default" : "destructive"} className="text-xs">
               <Activity className="mr-1 w-3 h-3" />
               {isHealthy ? "Healthy" : "Issues Detected"}
             </Badge>
-            {envInfo.app_version && (
-              <Badge variant="outline" className="text-xs font-mono bg-primary/10 border-primary/20">
-                {envInfo.app_version}
-              </Badge>
-            )}
           </div>
         </div>
 

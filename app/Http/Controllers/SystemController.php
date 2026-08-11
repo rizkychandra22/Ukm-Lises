@@ -15,79 +15,6 @@ class SystemController extends Controller
      */
     public function index()
     {
-        // Fetch App Version (Cached for 1 hour to prevent API rate limits, cleared when cache optimized)
-        $appVersion = \Illuminate\Support\Facades\Cache::remember('system_app_version', 3600, function () {
-            $version = '';
-            
-            // Try local git (Works in development environment)
-            try {
-                $branch = trim(shell_exec('git branch --show-current 2>nul'));
-                
-                if ($branch === 'main') {
-                    $gitLog = shell_exec('git log --grep="Release v" -n 1 --format="%s" 2>nul');
-                    if ($gitLog && preg_match('/v\d+\.\d+\.\d+/', $gitLog, $matches)) {
-                        $version = $matches[0];
-                    }
-                } elseif ($branch === 'development') {
-                    $gitLog = shell_exec('git log --grep="Dev v" -n 1 --format="%s" 2>nul');
-                    if ($gitLog && preg_match('/v\d+\.\d+\.\d+/', $gitLog, $matches)) {
-                        $version = $matches[0];
-                    } else {
-                        $gitLog = shell_exec('git log --grep="Release v" -n 1 --format="%s" 2>nul');
-                        if ($gitLog && preg_match('/v\d+\.\d+\.\d+/', $gitLog, $matches)) {
-                            $version = $matches[0];
-                        }
-                    }
-                } else {
-                    $gitLogs = shell_exec('git log -n 30 --format="%s" 2>nul');
-                    if ($gitLogs) {
-                        $logs = explode("\n", trim($gitLogs));
-                        foreach ($logs as $log) {
-                            if (preg_match('/Release\s+(v\d+\.\d+\.\d+)/i', $log, $matches)) {
-                                $version = $matches[1];
-                                break;
-                            }
-                            if (preg_match('/Dev\s+(v\d+\.\d+\.\d+)/i', $log, $matches)) {
-                                $version = $matches[1] . '-dev';
-                                break;
-                            }
-                        }
-                    }
-                }
-            } catch (\Exception $e) {}
-
-            // Fallback to GitHub API (Works in Production/Laravel Cloud where .git is stripped)
-            if (empty($version)) {
-                try {
-                    $response = \Illuminate\Support\Facades\Http::timeout(5)
-                        ->withHeaders(['User-Agent' => 'Laravel-Dashboard'])
-                        ->get('https://api.github.com/repos/rizkychandra22/Ukm-Lises/commits');
-                    
-                    if ($response->successful()) {
-                        $commits = $response->json();
-                        foreach ($commits as $commit) {
-                            $message = $commit['commit']['message'] ?? '';
-                            if (preg_match('/Release\s+(v\d+\.\d+\.\d+)/i', $message, $matches)) {
-                                $version = $matches[1];
-                                break;
-                            }
-                            if (preg_match('/Dev\s+(v\d+\.\d+\.\d+)/i', $message, $matches)) {
-                                $version = $matches[1] . '-dev';
-                                break;
-                            }
-                        }
-                    }
-                } catch (\Exception $e) {}
-            }
-
-            // Final Fallback to .env
-            if (empty($version)) {
-                $version = env('APP_VERSION', '');
-            }
-
-            return $version;
-        });
-
         $nodeVersion = 'Unknown';
         try {
             $nodeVersion = trim(shell_exec('node -v 2>nul')) ?: 'Unknown';
@@ -96,7 +23,6 @@ class SystemController extends Controller
         // Get Environment Info
         $envInfo = [
             'app_name' => config('app.name'),
-            'app_version' => $appVersion,
             'environment' => config('app.env'),
             'debug_mode' => config('app.debug'),
             'php_version' => phpversion(),

@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Batch;
 use App\Models\BatchMember;
+use App\Models\Gallery;
+use App\Models\News;
+use App\Models\Event;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
@@ -27,7 +30,11 @@ class DashboardController extends Controller
                 'total_anggota' => $totalAnggota,
                 'demisioner' => $demisionerCount,
                 'kepengurusan' => $kepengurusanCount,
-                'total_angkatan' => $totalAngkatan
+                'total_angkatan' => $totalAngkatan,
+                'total_pengunjung' => 0, // Implement visitor tracking
+                'total_galeri' => Gallery::count(),
+                'total_berita' => News::count(),
+                'total_event' => Event::count(),
             ]
         ]);
     }

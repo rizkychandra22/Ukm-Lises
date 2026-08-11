@@ -1,3 +1,4 @@
+import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -97,21 +98,29 @@ export function SystemOverview({ sysInfo, dbInfo, diskInfo, envInfo, processing,
               {/* Left Column */}
               <div className="space-y-4">
                 <div className="space-y-1">
-                  <p className="text-sm font-medium leading-none">Operating System</p>
-                  <p className="text-sm text-muted-foreground">{envInfo.os}</p>
-                </div>
-                <div className="space-y-1">
                   <p className="text-sm font-medium leading-none">PHP Version</p>
                   <p className="text-sm text-muted-foreground">{envInfo.php_version}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm font-medium leading-none">Laravel Version</p>
+                  <p className="text-sm text-muted-foreground">{envInfo.laravel_version}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-sm font-medium leading-none">Node Version</p>
                   <p className="text-sm text-muted-foreground">{envInfo.node_version}</p>
                 </div>
+                <div className="space-y-1">
+                  <p className="text-sm font-medium leading-none">React Version</p>
+                  <p className="text-sm text-muted-foreground">{React.version}</p>
+                </div>
               </div>
               
               {/* Right Column */}
               <div className="space-y-4">
+                <div className="space-y-1">
+                  <p className="text-sm font-medium leading-none">Operating System</p>
+                  <p className="text-sm text-muted-foreground">{envInfo.os}</p>
+                </div>
                 <div className="space-y-1">
                   <p className="text-sm font-medium leading-none">Web Server</p>
                   <p className="text-sm text-muted-foreground truncate">{envInfo.server}</p>

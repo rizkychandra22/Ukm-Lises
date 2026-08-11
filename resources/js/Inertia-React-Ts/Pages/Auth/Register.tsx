@@ -302,7 +302,7 @@ export default function Register({ majors }: { majors: any[] }) {
 
             <div className="text-center pt-4">
               <p className="text-xs text-muted-foreground">
-                Sistem Manajemen Internal Ukm Lises Realese v1.9.0
+                Sistem Manajemen Internal Ukm Lises Realese v1.0.0
               </p>
             </div>
           </form>
