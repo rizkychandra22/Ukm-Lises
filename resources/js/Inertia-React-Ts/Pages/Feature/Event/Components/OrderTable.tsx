@@ -82,20 +82,6 @@ export function OrderTable({
         ),
       },
       {
-        id: "info",
-        header: "Informasi",
-        cell: ({ row }: { row: { original: PayOrder } }) => {
-          const ord = row.original;
-          return (
-            <div className="flex flex-col text-xs text-muted-foreground">
-              {ord.email && <span>{ord.email}</span>}
-              {ord.phone && <span>{ord.phone}</span>}
-              {!ord.email && !ord.phone && <span>-</span>}
-            </div>
-          );
-        },
-      },
-      {
         accessorKey: "event.title_id",
         header: ({ column }: { column: any }) => (
           <Button

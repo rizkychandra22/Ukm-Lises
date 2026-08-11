@@ -38,12 +38,19 @@ export function OrderDetailSheet({
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <h4 className="text-xs text-muted-foreground">Nama Pemesan</h4>
-              <p className="text-sm font-medium">{order.name}</p>
+              <h4 className="text-xs text-muted-foreground">Email</h4>
+              <p className="text-sm font-medium">{order.email || "-"}</p>
             </div>
             <div>
               <h4 className="text-xs text-muted-foreground">No. WhatsApp</h4>
               <p className="text-sm font-medium">{order.phone || "-"}</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4">
+            <div>
+              <h4 className="text-xs text-muted-foreground">Nama Pemesan</h4>
+              <p className="text-sm font-medium">{order.name}</p>
             </div>
           </div>
 
@@ -105,7 +112,9 @@ export function OrderDetailSheet({
               </a>
             ) : (
               <p className="text-xs text-muted-foreground italic">
-                Tidak ada bukti pembayaran diunggah.
+                {order.order_method === "offline"
+                  ? "Offline Order Via Admin"
+                  : "Tidak ada bukti pembayaran diunggah."}
               </p>
             )}
           </div>

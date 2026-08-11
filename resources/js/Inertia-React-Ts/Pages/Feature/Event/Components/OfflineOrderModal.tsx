@@ -110,18 +110,24 @@ export function OfflineOrderModal({
                   <SelectValue placeholder="Pilih Sesi Event..." />
                 </SelectTrigger>
                 <SelectContent>
-                  {sessions
-                    .filter((s) => s.event_id.toString() === offlineOrderData.event_id)
-                    .map((session) => {
-                      const available = session.ticket_allocation - (session.orders_sum_qty || 0);
-                      const start = session.start_time ? session.start_time.slice(0, 5) : "";
-                      const end = session.end_time ? session.end_time.slice(0, 5) : "";
-                      return (
-                        <SelectItem key={session.id} value={session.id.toString()} disabled={available <= 0}>
-                          {session.name} ({start} - {end}) — {available > 0 ? `Sisa ${available} Tiket` : "Habis"}
-                        </SelectItem>
-                      );
-                    })}
+                  {sessions.filter((s) => s.event_id.toString() === offlineOrderData.event_id).length === 0 ? (
+                    <SelectItem value="none" disabled className="text-foreground">
+                      Event ini belum memiliki sesi tampil
+                    </SelectItem>
+                  ) : (
+                    sessions
+                      .filter((s) => s.event_id.toString() === offlineOrderData.event_id)
+                      .map((session) => {
+                        const available = session.ticket_allocation - (session.orders_sum_qty || 0);
+                        const start = session.start_time ? session.start_time.slice(0, 5) : "";
+                        const end = session.end_time ? session.end_time.slice(0, 5) : "";
+                        return (
+                          <SelectItem key={session.id} value={session.id.toString()} disabled={available <= 0}>
+                            {session.name} ({start} - {end}) — {available > 0 ? `Sisa ${available} Tiket` : "Habis"}
+                          </SelectItem>
+                        );
+                      })
+                  )}
                 </SelectContent>
               </Select>
               {offlineOrderErrors.event_session_id && (
@@ -133,16 +139,16 @@ export function OfflineOrderModal({
           {/* Info Pemesan */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Nama Pemesan</label>
+              <label className="block text-sm font-medium mb-1">Email</label>
               <Input
+                type="email"
                 className="h-8 text-[13px]"
-                placeholder="Nama lengkap"
-                value={offlineOrderData.name}
-                onChange={(e) => setOfflineOrderData("name", e.target.value)}
-                required
+                placeholder="email@example.com"
+                value={offlineOrderData.email}
+                onChange={(e) => setOfflineOrderData("email", e.target.value)}
               />
-              {offlineOrderErrors.name && (
-                <span className="text-xs text-destructive">{offlineOrderErrors.name}</span>
+              {offlineOrderErrors.email && (
+                <span className="text-xs text-destructive">{offlineOrderErrors.email}</span>
               )}
             </div>
             <div>
@@ -162,16 +168,16 @@ export function OfflineOrderModal({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Email</label>
+              <label className="block text-sm font-medium mb-1">Nama Pemesan</label>
               <Input
-                type="email"
                 className="h-8 text-[13px]"
-                placeholder="email@example.com"
-                value={offlineOrderData.email}
-                onChange={(e) => setOfflineOrderData("email", e.target.value)}
+                placeholder="Nama lengkap"
+                value={offlineOrderData.name}
+                onChange={(e) => setOfflineOrderData("name", e.target.value)}
+                required
               />
-              {offlineOrderErrors.email && (
-                <span className="text-xs text-destructive">{offlineOrderErrors.email}</span>
+              {offlineOrderErrors.name && (
+                <span className="text-xs text-destructive">{offlineOrderErrors.name}</span>
               )}
             </div>
             <div>
