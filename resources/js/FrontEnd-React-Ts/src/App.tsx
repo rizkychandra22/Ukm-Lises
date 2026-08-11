@@ -40,7 +40,7 @@ function App() {
           <Route path="news" element={<NewsPage />} />
           <Route path="news/:slug" element={<NewsDetailPage />} />
           <Route path="event" element={<EventPage />} />
-          <Route path="members" element={<MemberPage />} />
+          <Route path="member" element={<MemberPage />} />
           <Route path="contact" element={<ContactPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
