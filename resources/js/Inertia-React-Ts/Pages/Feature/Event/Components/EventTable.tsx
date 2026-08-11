@@ -214,7 +214,8 @@ export function EventTable({
         },
       },
     ],
-    [onView, onEdit, onDelete, hasRole, formatIDR],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
   );
 
   const toolbarExtra = (

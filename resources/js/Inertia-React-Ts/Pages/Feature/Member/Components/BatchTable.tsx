@@ -103,7 +103,8 @@ export function BatchTable({
         },
       },
     ],
-    [onEdit, onDelete, hasRole],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
   );
 
   const toolbarExtra = hasRole(["Developer", "Admin"]) && onAdd ? (

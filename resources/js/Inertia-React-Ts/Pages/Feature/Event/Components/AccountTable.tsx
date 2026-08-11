@@ -134,7 +134,8 @@ export function AccountTable({
         },
       },
     ],
-    [onEdit, onDelete, hasRole],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
   );
 
   const toolbarExtra = (
