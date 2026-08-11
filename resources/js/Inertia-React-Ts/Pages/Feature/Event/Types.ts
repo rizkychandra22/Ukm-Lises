@@ -24,6 +24,7 @@ export type EventSession = {
   start_time: string;
   end_time: string;
   ticket_allocation: number;
+  remaining_tickets?: number;
   created_at: string;
   updated_at: string;
   event?: EventItem;

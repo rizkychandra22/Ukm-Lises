@@ -92,9 +92,14 @@ export function SessionTable({
             Alokasi Tiket <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         ),
-        cell: ({ row }) => (
-          <span className="text-muted-foreground">{row.original.ticket_allocation} tiket</span>
-        ),
+        cell: ({ row }) => {
+          const allocation = row.original.ticket_allocation ?? 0;
+          const remaining = row.original.remaining_tickets ?? allocation;
+          const sold = allocation - remaining;
+          return (
+            <span className="text-muted-foreground">{sold} / {allocation} tiket</span>
+          );
+        },
       },
       {
         id: "actions",
