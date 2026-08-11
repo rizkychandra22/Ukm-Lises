@@ -54,7 +54,7 @@ export type PayOrder = {
   pay_account_id?: number | null;
   payment_proof?: string | null;
   order_method: "online" | "offline";
-  status: "pending" | "success" | "failed";
+  status: "pending" | "success" | "cancelled";
   created_at: string;
   event?: EventItem;
   event_session?: EventSession;

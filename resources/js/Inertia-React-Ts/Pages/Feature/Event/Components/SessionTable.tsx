@@ -95,9 +95,8 @@ export function SessionTable({
         cell: ({ row }) => {
           const allocation = row.original.ticket_allocation ?? 0;
           const remaining = row.original.remaining_tickets ?? allocation;
-          const sold = allocation - remaining;
           return (
-            <span className="text-muted-foreground">{sold} / {allocation} tiket</span>
+            <span className="text-muted-foreground">{remaining} / {allocation} tiket tersedia</span>
           );
         },
       },

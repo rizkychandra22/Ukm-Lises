@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Head, useForm, usePage, router } from "@inertiajs/react";
+import { Head, useForm, usePage } from "@inertiajs/react";
 import DashboardLayout from "@admin/Layouts/AppLayout";
 import { route } from "../Lib/Route";
 import { toast } from "sonner";
@@ -77,6 +77,8 @@ export default function IndexEvent({
     reset: resetEvent,
     processing: processingEvent,
     errors: eventErrors,
+    post: postEvent,
+    transform: transformEventData,
   } = useForm({
     title_id: "",
     title_en: "",
@@ -145,29 +147,15 @@ export default function IndexEvent({
 
   const handleSubmitEvent = (e: React.FormEvent) => {
     e.preventDefault();
+    transformEventData((data) => ({
+      ...data,
+      date: eventDateInput,
+      ...(data.type === "Non-Exclusive" && { price: "", ticket: "" })
+    }));
     const endpoint = editingEvent ? route("events.update", editingEvent.id) : route("events.store");
-    const formData = new FormData();
-    formData.append("title_id", eventData.title_id);
-    if (eventData.title_en) formData.append("title_en", eventData.title_en);
-    if (eventData.image) formData.append("image", eventData.image);
-    formData.append("summary_id", eventData.summary_id);
-    if (eventData.summary_en) formData.append("summary_en", eventData.summary_en);
-    formData.append("type", eventData.type);
-    formData.append("date", eventDateInput);
-    formData.append("location_id", eventData.location_id);
-    if (eventData.location_en) formData.append("location_en", eventData.location_en);
-    formData.append("status", eventData.status);
-
-    if (eventData.type === "Exclusive") {
-      formData.append("price", eventData.price);
-      formData.append("ticket", eventData.ticket);
-    }
-
-    if (editingEvent) {
-      formData.append("_method", "put");
-    }
-
-    router.post(endpoint, formData as any, {
+    
+    postEvent(endpoint, {
+      preserveScroll: true,
       onSuccess: () => {
         handleCancelEditEvent();
         toast.success(
@@ -262,7 +250,6 @@ export default function IndexEvent({
     errors: offlineOrderErrors,
   } = useForm({
     event_id: "" as string,
-    event_session_id: "" as string,
     name: "",
     phone: "",
     email: "",
@@ -370,7 +357,7 @@ export default function IndexEvent({
     }
   };
   // =========================================================================
-  //  SESSION MANAGEMENT STATES & HANDLERS
+  //  SESI EVENT MANAGEMENT STATES & HANDLERS
   // =========================================================================
   const [isSessionModalOpen, setIsSessionModalOpen] = useState(false);
   const [editingSession, setEditingSession] = useState<EventSession | null>(null);
@@ -471,7 +458,7 @@ export default function IndexEvent({
         <div className="w-full border-b border-border">
           <div className="flex flex-col sm:flex-row gap-4 w-full items-start sm:items-center">
             {!hasRole(["User"]) && (
-              <Tabs
+                <Tabs
                 value={activeTab}
                 onValueChange={(val) => setActiveTab(val)}
                 className="w-full sm:w-auto relative"
@@ -619,7 +606,6 @@ export default function IndexEvent({
       <OfflineOrderModal
         isOpen={isOfflineOrderModalOpen}
         events={events}
-        sessions={sessions}
         accounts={accounts}
         offlineOrderData={offlineOrderData}
         offlineOrderErrors={offlineOrderErrors}

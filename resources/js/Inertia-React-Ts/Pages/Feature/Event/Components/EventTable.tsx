@@ -136,13 +136,15 @@ export function EventTable({
       {
         id: "ticket",
         header: "Tiket",
-        cell: ({ row }: { row: { original: EventItem } }) => (
-          <span className="text-sm font-medium">
-            {row.original.ticket
-              ? `${row.original.remaining_tickets ?? row.original.ticket} / ${row.original.ticket}`
-              : "Unlimited"}
-          </span>
-        ),
+        cell: ({ row }: { row: { original: EventItem } }) => {
+          const total = row.original.ticket ?? 0;
+          const remaining = row.original.remaining_tickets ?? total;
+          return (
+            <span className="text-sm font-medium">
+              {row.original.ticket ? `${remaining} / ${total}` : "Unlimited"}
+            </span>
+          );
+        },
       },
       {
         accessorKey: "status",
