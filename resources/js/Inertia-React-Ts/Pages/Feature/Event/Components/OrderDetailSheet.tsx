@@ -113,7 +113,7 @@ export function OrderDetailSheet({
             ) : (
               <p className="text-xs text-muted-foreground italic">
                 {order.order_method === "offline"
-                  ? "Offline Order Via Admin"
+                  ? `Offline Order Via ${order?.pay_account?.batch_member?.name}`
                   : "Tidak ada bukti pembayaran diunggah."}
               </p>
             )}
