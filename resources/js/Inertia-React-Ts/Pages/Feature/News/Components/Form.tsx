@@ -1,4 +1,6 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
 import { Head, useForm, router } from "@inertiajs/react";
 import DashboardLayout from "../../../../Layouts/AppLayout";
 import { route } from "../../../../Lib/Route";
@@ -197,11 +199,21 @@ export default function FormNews({ news }: NewsProps) {
             {/* Bawah: Konten Panjang */}
             <div className="space-y-2 pt-4 border-t border-border">
               <Label>Isi Berita / Deskripsi Berita</Label>
-              <Textarea
+              <ReactQuill
+                theme="snow"
                 value={data.description_id}
-                onChange={(e) => setData("description_id", e.target.value)}
+                onChange={(value) => setData("description_id", value)}
                 placeholder="Tulis deskripsi berita secara lengkap di sini..."
-                className="min-h-[300px]"
+                className="bg-background rounded-md"
+                modules={{
+                  toolbar: [
+                    [{ 'header': [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    ['link'],
+                    ['clean']
+                  ],
+                }}
               />
               {errors.description_id && (
                 <span className="text-xs text-destructive">{errors.description_id}</span>
