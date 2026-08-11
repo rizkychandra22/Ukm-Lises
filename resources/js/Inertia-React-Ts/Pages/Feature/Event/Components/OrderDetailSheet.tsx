@@ -61,7 +61,7 @@ export function OrderDetailSheet({
                 {order.event?.title_id}
                 {order.event_session && (
                   <span className="block text-[11px] text-foreground mt-0.5">
-                    {order.event_session.name} ({(order.event_session.start_time || "").slice(0, 5)} - {(order.event_session.end_time || "").slice(0, 5)})
+                    {order.event_session.name_id} ({(order.event_session.start_time || "").slice(0, 5)} - {(order.event_session.end_time || "").slice(0, 5)})
                   </span>
                 )}
               </p>

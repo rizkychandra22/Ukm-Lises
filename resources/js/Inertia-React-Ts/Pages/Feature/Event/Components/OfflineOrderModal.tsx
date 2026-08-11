@@ -123,7 +123,7 @@ export function OfflineOrderModal({
                         const end = session.end_time ? session.end_time.slice(0, 5) : "";
                         return (
                           <SelectItem key={session.id} value={session.id.toString()} disabled={available <= 0}>
-                            {session.name} ({start} - {end}) — {available > 0 ? `Sisa ${available} Tiket` : "Habis"}
+                            {session.name_id} ({start} - {end}) — {available > 0 ? `Sisa ${available} Tiket` : "Habis"}
                           </SelectItem>
                         );
                       })

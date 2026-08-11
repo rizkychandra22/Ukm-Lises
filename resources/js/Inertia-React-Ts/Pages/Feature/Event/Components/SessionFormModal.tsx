@@ -17,7 +17,7 @@ interface SessionFormModalProps {
   editingSession: EventSession | null;
   sessionData: {
     event_id: string;
-    name: string;
+    name_id: string;
     start_time: string;
     end_time: string;
     ticket_allocation: string;
@@ -102,9 +102,9 @@ export function SessionFormModal({
             <Input
               type="text"
               className="h-8 text-[13px]"
-              value={sessionData.name}
-              onChange={(e) => setSessionData("name", e.target.value)}
-              placeholder="Contoh: Sesi 1 / Sesi Pagi"
+              value={sessionData.name_id}
+              onChange={(e) => setSessionData("name_id", e.target.value)}
+              placeholder="Contoh: Sesi Pagi / Meet & Greet"
               required
             />
           </div>

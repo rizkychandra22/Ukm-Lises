@@ -253,8 +253,7 @@ export function EventPage() {
           ) : (
             <>
               {isTrackingOrder ? (
-                <Card className="flex flex-col overflow-hidden rounded-3xl border-border/60 bg-card col-span-full md:col-span-1 shadow-lg ring-2 ring-primary/20 relative">
-                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-gold opacity-50"></div>
+                <Card className="flex flex-col overflow-hidden rounded-3xl border border-primary/80 border-t-4 border-t-primary/80 hover:border-t-primary/60 bg-card col-span-full md:col-span-1 shadow-lg ring-2 ring-primary/20 relative">
                   <CardContent className="p-6 space-y-4 pt-8">
                     <div>
                       <Skeleton className="h-3 w-24 mb-2" />
@@ -277,10 +276,9 @@ export function EventPage() {
                 </Card>
               ) : trackedOrder ? (
                 <Card
-                  className="group flex flex-col overflow-hidden rounded-3xl border-border/60 bg-card transition-colors hover:border-primary/60 cursor-pointer col-span-full md:col-span-1 shadow-lg ring-2 ring-primary/50 relative"
+                  className="group flex flex-col overflow-hidden rounded-3xl border border-primary/80 border-t-4 border-t-primary/80 hover:border-t-primary/60 bg-card transition-colors hover:border-primary/60 cursor-pointer col-span-full md:col-span-1 shadow-lg ring-2 ring-primary/50 relative"
                   onClick={() => setIsTicketModalOpen(true)}
                 >
-                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-gold"></div>
                   <CardContent className="p-6 space-y-4 pt-8">
                     <div>
                       <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
@@ -523,7 +521,7 @@ export function EventPage() {
                         <SelectContent>
                           {selectedEvent.sessions.map((session) => (
                             <SelectItem key={session.id} value={session.id.toString()}>
-                              {session.name} ({session.start_time.slice(0, 5)} - {session.end_time.slice(0, 5)})
+                              {isEn && session.name_en ? session.name_en : session.name_id} ({session.start_time.slice(0, 5)} - {session.end_time.slice(0, 5)})
                             </SelectItem>
                           ))}
                         </SelectContent>

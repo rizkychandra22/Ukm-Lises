@@ -373,7 +373,7 @@ export default function IndexEvent({
     processing: processingSession,
   } = useForm({
     event_id: "",
-    name: "",
+    name_id: "",
     start_time: "",
     end_time: "",
     ticket_allocation: "",
@@ -389,7 +389,7 @@ export default function IndexEvent({
     setEditingSession(session);
     setSessionData({
       event_id: session.event_id.toString(),
-      name: session.name,
+      name_id: session.name_id,
       start_time: session.start_time,
       end_time: session.end_time,
       ticket_allocation: session.ticket_allocation.toString(),

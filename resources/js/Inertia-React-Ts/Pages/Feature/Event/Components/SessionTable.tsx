@@ -61,7 +61,7 @@ export function SessionTable({
             Sesi <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         ),
-        cell: ({ row }) => <span className="text-muted-foreground">{row.original.name}</span>,
+        cell: ({ row }) => <span className="text-muted-foreground">{row.original.name_id}</span>,
       },
       {
         id: "time",

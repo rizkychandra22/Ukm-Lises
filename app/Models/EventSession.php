@@ -8,7 +8,8 @@ class EventSession extends Model
 {
     protected $fillable = [
         'event_id',
-        'name',
+        'name_id',
+        'name_en',
         'start_time',
         'end_time',
         'ticket_allocation',

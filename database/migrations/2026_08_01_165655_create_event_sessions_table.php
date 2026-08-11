@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('event_sessions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('event_id')->constrained()->cascadeOnDelete();
-            $table->string('name');
+            $table->string('name_id');
+            $table->string('name_en')->nullable();
             $table->time('start_time');
             $table->time('end_time');
             $table->integer('ticket_allocation');

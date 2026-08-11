@@ -3,7 +3,8 @@ import apiClient from "../api-client";
 export interface EventSession {
   id: number;
   event_id: number;
-  name: string;
+  name_id: string;
+  name_en: string | null;
   start_time: string;
   end_time: string;
   ticket_allocation: number;

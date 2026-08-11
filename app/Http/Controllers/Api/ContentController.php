@@ -53,7 +53,8 @@ class ContentController extends Controller
                         return [
                             'id' => $session->id,
                             'event_id' => $session->event_id,
-                            'name' => $session->name,
+                            'name_id' => $session->name_id,
+                            'name_en' => $session->name_en,
                             'start_time' => $session->start_time,
                             'end_time' => $session->end_time,
                             'ticket_allocation' => $session->ticket_allocation,
