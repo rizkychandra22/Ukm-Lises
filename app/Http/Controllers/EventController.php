@@ -40,9 +40,9 @@ class EventController extends Controller
 
         return Inertia::render('IndexEvent', [
             'events'   => $events,
-            'orders'   => PayOrder::with(['event', 'payAccount.batchMember'])->latest()->get(),
+            'orders'   => PayOrder::with(['event', 'eventSession', 'payAccount.batchMember'])->latest()->get(),
             'accounts' => PayAccount::with('batchMember')->get(),
-            'sessions' => EventSession::with('event')->latest()->get(),
+            'sessions' => EventSession::with('event')->withSum('orders', 'qty')->latest()->get(),
             'members'  => BatchMember::select('id', 'name')
                 ->where('type', 'Pengurus')
                 ->where('status', 'Active')
@@ -136,13 +136,14 @@ class EventController extends Controller
     public function storeOrder(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'event_id'       => ['required', 'exists:events,id'],
-            'name'           => ['required', 'string', 'max:255'],
-            'phone'          => ['required', 'string', 'max:30'],
-            'email'          => ['nullable', 'email', 'max:255'],
-            'qty'            => ['required', 'integer', 'min:1'],
-            'notes'          => ['nullable', 'string', 'max:500'],
-            'pay_account_id' => ['nullable', 'exists:pay_accounts,id'],
+            'event_id'         => ['required', 'exists:events,id'],
+            'event_session_id' => ['nullable', 'exists:event_sessions,id'],
+            'name'             => ['required', 'string', 'max:255'],
+            'phone'            => ['required', 'string', 'max:30'],
+            'email'            => ['nullable', 'email', 'max:255'],
+            'qty'              => ['required', 'integer', 'min:1'],
+            'notes'            => ['nullable', 'string', 'max:500'],
+            'pay_account_id'   => ['nullable', 'exists:pay_accounts,id'],
         ], [
             'event_id.required'  => 'Event wajib dipilih.',
             'event_id.exists'    => 'Event yang dipilih tidak ditemukan.',

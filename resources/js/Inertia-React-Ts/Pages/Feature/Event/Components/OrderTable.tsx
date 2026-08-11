@@ -107,8 +107,28 @@ export function OrderTable({
           </Button>
         ),
         cell: ({ row }: { row: { original: PayOrder } }) => (
-          <span className="text-sm">{row.original.event?.title_id || "-"}</span>
+          <div className="w-32 sm:w-48">
+            <span className="text-sm font-medium text-foreground line-clamp-2">{row.original.event?.title_id || "-"}</span>
+          </div>
         ),
+      },
+      {
+        id: "event_session",
+        header: "Sesi",
+        cell: ({ row }: { row: { original: PayOrder } }) => {
+          const session = row.original.event_session;
+          if (!session) return <span className="text-sm text-muted-foreground">-</span>;
+          const start = session.start_time ? session.start_time.slice(0, 5) : "";
+          const end = session.end_time ? session.end_time.slice(0, 5) : "";
+          return (
+            <div className="flex flex-col gap-0.5 text-sm w-17 sm:w-17">
+              <span className="font-medium text-foreground whitespace-nowrap">{session.name}</span>
+              <span className="text-[11px] text-muted-foreground whitespace-nowrap">
+                {start} - {end}
+              </span>
+            </div>
+          );
+        },
       },
       {
         accessorKey: "qty",

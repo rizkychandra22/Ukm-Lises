@@ -262,6 +262,7 @@ export default function IndexEvent({
     errors: offlineOrderErrors,
   } = useForm({
     event_id: "" as string,
+    event_session_id: "" as string,
     name: "",
     phone: "",
     email: "",
@@ -618,6 +619,7 @@ export default function IndexEvent({
       <OfflineOrderModal
         isOpen={isOfflineOrderModalOpen}
         events={events}
+        sessions={sessions}
         accounts={accounts}
         offlineOrderData={offlineOrderData}
         offlineOrderErrors={offlineOrderErrors}

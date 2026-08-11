@@ -23,7 +23,10 @@ export type EventSession = {
   start_time: string;
   end_time: string;
   ticket_allocation: number;
+  created_at: string;
+  updated_at: string;
   event?: EventItem;
+  orders_sum_qty?: number;
 };
 
 export type PayAccount = {
@@ -42,6 +45,7 @@ export type PayOrder = {
   email?: string | null;
   phone?: string | null;
   event_id: number;
+  event_session_id?: number | null;
   qty: number;
   total_price: number;
   notes?: string | null;
@@ -50,6 +54,7 @@ export type PayOrder = {
   order_method: "online" | "offline";
   status: "pending" | "success" | "cancelled";
   event?: EventItem;
+  event_session?: EventSession;
   pay_account?: PayAccount;
 };
 

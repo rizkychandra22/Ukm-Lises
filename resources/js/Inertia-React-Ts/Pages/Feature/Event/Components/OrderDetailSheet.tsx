@@ -47,6 +47,20 @@ export function OrderDetailSheet({
             </div>
           </div>
 
+          <div className="grid grid-cols-1 gap-4">
+            <div>
+              <h4 className="text-xs text-muted-foreground">Event / Acara</h4>
+              <p className="text-sm font-medium">
+                {order.event?.title_id}
+                {order.event_session && (
+                  <span className="block text-[11px] text-foreground mt-0.5">
+                    {order.event_session.name} ({(order.event_session.start_time || "").slice(0, 5)} - {(order.event_session.end_time || "").slice(0, 5)})
+                  </span>
+                )}
+              </p>
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div>
               <h4 className="text-xs text-muted-foreground">Jumlah Tiket</h4>
