@@ -186,7 +186,14 @@ export function EventFormModal({
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Gambar Banner Event</label>
+            <label className="block text-sm font-medium mb-1">
+              Gambar Banner Event {" "}
+              {editingEvent && (
+                <span className="text-xs text-muted-foreground font-normal">
+                  (Kosongkan jika tidak diubah)
+                </span>
+              )}
+            </label>
             <Input
               type="file"
               accept="image/*"
