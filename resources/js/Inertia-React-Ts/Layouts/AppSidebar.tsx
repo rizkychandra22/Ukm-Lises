@@ -47,6 +47,7 @@ import {
   Loader2,
   Save,
   MousePointerClick,
+  Info,
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import LogoDark from "@/assets/logo-bg-dark.png";
@@ -267,9 +268,26 @@ export function AppSidebar() {
         )}
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-border/40 p-3">
-        <div className="w-full flex items-center gap-2.5 p-1.5 h-auto">
-          <Avatar className="h-8 w-8">
+      <SidebarFooter className="p-2">
+        {/* Release Information */}
+        <SidebarGroup>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                asChild
+                className="rounded-xl transition-all hover:bg-primary/10 hover:text-primary"
+              >
+                <Link href="#">
+                  <Info className="w-[18px] h-[18px]" />
+                  <span className="text-[13px] font-medium">Realese Information</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroup>
+        <div className="border-t border-border/40 mb-0" />
+        <div className="w-full flex items-center gap-2 p-1.5 h-auto">
+          <Avatar className="h-9.5 w-9.5">
             <AvatarFallback className="bg-primary/10 text-xs font-semibold text-primary">
               {user?.name ? user.name.charAt(0) + user.name.split(" ").pop()?.charAt(0) : "RC"}
             </AvatarFallback>
