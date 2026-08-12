@@ -152,6 +152,7 @@ export default function Release({ releases }: { releases: Release[] }) {
         ),
       },
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
