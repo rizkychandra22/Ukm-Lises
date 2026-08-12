@@ -83,7 +83,7 @@ export default function Dashboard() {
           <div className="flex shrink-0 mt-1 sm:mt-0">
             <Badge variant="default" className="text-xs">
               <Rocket className="mr-1 w-3 h-3" />
-              Release v1.0.0
+              {(usePage().props as any).web_version || "Release v0.0.0"}
             </Badge>
           </div>
         </div>

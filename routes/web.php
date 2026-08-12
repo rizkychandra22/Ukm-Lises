@@ -9,6 +9,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventSessionController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\ReleaseController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\SystemController;
 
@@ -84,6 +85,7 @@ Route::middleware(['access:Developer'])->prefix('dashboard/system')->name('syste
     Route::get('/', [SystemController::class, 'index'])->name('index');
     Route::get('/log-visitor', [SystemController::class, 'logVisitor'])->name('log-visitor');
     Route::post('/clear-cache', [SystemController::class, 'clearCache'])->name('clear-cache');
+    Route::resource('releases', ReleaseController::class)->except(['show', 'create', 'edit']);
 });
 
 // -------------------------------------------------------------
