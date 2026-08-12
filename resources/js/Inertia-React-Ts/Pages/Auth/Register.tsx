@@ -205,7 +205,7 @@ export default function Register({ majors }: { majors: any[] }) {
 
             <div className="space-y-2">
               <Label htmlFor="year">
-                Angkatan Masuk <span className="text-destructive">*</span>
+                Tahun Masuk <span className="text-destructive">*</span>
               </Label>
               <Input
                 type="text"

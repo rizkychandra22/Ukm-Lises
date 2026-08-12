@@ -29,21 +29,21 @@ export default function Information({ dbInfo, envInfo, releases = [] }: Props) {
       <Head title="Release Information" />
       <div className="flex flex-col gap-4 max-w-7xl mx-auto pb-12 relative">
         {/* Header Section For System Information */}
-        <div className="flex flex-row items-start sm:items-center justify-between gap-4">
-          <div>
+        <div className="w-full">
+          <div className="flex flex-row items-start sm:items-center justify-between gap-4">
             <h2 className="text-2xl font-bold text-foreground font-display tracking-tight flex items-center">
               <Layers className="w-5 h-5 mr-3 text-rose-500" /> System Information
             </h2>
-            <p className="text-sm text-muted-foreground mt-1">
-              Detailed information regarding the server infrastructure running the application.
-            </p>
+            <div className="flex shrink-0 mt-1 sm:mt-0">
+              <Badge variant="default" className="text-xs">
+                <Rocket className="mr-1 w-3 h-3" />
+                {(usePage().props as any).web_version || "Release v0.0.0"}
+              </Badge>
+            </div>
           </div>
-          <div className="flex shrink-0 mt-1 sm:mt-0">
-            <Badge variant="default" className="text-xs">
-              <Rocket className="mr-1 w-3 h-3" />
-              {(usePage().props as any).web_version || "Release v0.0.0"}
-            </Badge>
-          </div>
+          <p className="w-full text-sm text-muted-foreground mt-1">
+            Detailed information regarding the server infrastructure running the application.
+          </p>
         </div>
         <Card className="shadow-sm border-primary">
           <CardContent className="pt-5">
