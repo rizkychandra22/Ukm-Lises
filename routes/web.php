@@ -13,6 +13,7 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ReleaseController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\SystemController;
+use App\Models\News;
 
 // -------------------------------------------------------------
 // AUTHENTICATION ROUTES (GUEST ONLY)
@@ -109,6 +110,22 @@ Route::middleware(['access:Developer,Admin,User'])->prefix('dashboard')->group(f
 // SITEMAP XML & LANDING PAGE PUBLIK (PURE REACT SPA)
 // -------------------------------------------------------------
 Route::get('/sitemap.xml', [SitemapController::class, 'index']);
+
+// Route khusus untuk News (SEO & Open Graph Social Media Preview)
+Route::get('/news/{slug}', function ($slug) {
+    $news = News::where('slug', $slug)->first();
+    
+    if ($news) {
+        return view('web', [
+            'title' => $news->title_id . ' | Lises Asmarandana',
+            'description' => $news->summary_id,
+            'image' => $news->image,
+            'news' => $news
+        ]);
+    }
+    
+    return view('web');
+});
 
 // Catch-all route untuk menangani halaman publik selain auth, dashboard, & api
 Route::get('/{any?}', function () {
