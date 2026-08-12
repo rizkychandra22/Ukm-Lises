@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default function Information({ dbInfo, envInfo }: Props) {
- return(
+  return(
     <AppLayout>
       <Head title="Release Information" />
       <div className="flex flex-col gap-4 max-w-7xl mx-auto pb-12 relative">
@@ -77,5 +77,5 @@ export default function Information({ dbInfo, envInfo }: Props) {
         </Card>
       </div >
     </AppLayout>
- )
+  )
 }
