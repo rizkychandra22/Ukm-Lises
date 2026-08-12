@@ -1,5 +1,5 @@
 import { Head, usePage } from "@inertiajs/react";
-import { Users, UserMinus, UserCheck, GraduationCap, Rocket, MousePointerClick, Image, Newspaper, CalendarDays } from "lucide-react";
+import { Users, UserMinus, UserCheck, GraduationCap, Rocket, MousePointerClick, Image, Newspaper, CalendarDays, Sparkles } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import AdminLayout from "../Layouts/AppLayout";
 import { Badge } from "@/components/ui/badge";
@@ -48,8 +48,8 @@ export default function Dashboard() {
         {/* Header Section */}
         <div className="flex flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-foreground font-display tracking-tight">
-              Dashboard
+            <h2 className="text-2xl font-bold text-foreground font-display tracking-tight flex items-center">
+              <Sparkles className="w-5 h-5 mr-3 text-primary" /> Dashboard
             </h2>
             <p className="text-sm text-muted-foreground mt-1">
               {hasRole("Developer") ? (

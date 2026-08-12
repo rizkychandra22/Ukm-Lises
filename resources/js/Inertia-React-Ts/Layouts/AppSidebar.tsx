@@ -43,11 +43,11 @@ import {
   LogOut,
   Newspaper,
   CalendarDays,
-  Server,
   Loader2,
   Save,
   MousePointerClick,
   Info,
+  Layers,
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import LogoDark from "@/assets/logo-bg-dark.png";
@@ -241,7 +241,7 @@ export function AppSidebar() {
                     className="rounded-xl transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium"
                   >
                     <Link href={route("system.index")}>
-                      <Server className="w-[18px] h-[18px]" />
+                      <Layers className="w-[18px] h-[18px]" />
                       <span className="text-[13px]">Dashboard IT</span>
                     </Link>
                   </SidebarMenuButton>
