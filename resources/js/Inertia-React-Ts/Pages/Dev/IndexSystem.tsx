@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { Head, useForm } from "@inertiajs/react";
-import AppLayout from "../Layouts/AppLayout";
-import { route } from "../Lib/Route";
+import AppLayout from "../../Layouts/AppLayout";
+import { route } from "../../Lib/Route";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Activity } from "lucide-react";
 import { toast } from "sonner";
-import { SystemProps } from "./Feature/System/Types";
-import { SystemOverview } from "./Feature/System/Components/SystemOverview";
-import { CacheManagement } from "./Feature/System/Components/CacheManagement";
-import { SystemLogs } from "./Feature/System/Components/SystemLogs";
+import { SystemProps } from "../Feature/Dev/Types";
+import { SystemOverview } from "../Feature/Dev/Components/SystemOverview";
+import { CacheManagement } from "../Feature/Dev/Components/CacheManagement";
+import { SystemLogs } from "../Feature/Dev/Components/SystemLogs";
 
 export default function IndexSystem({
   envInfo,

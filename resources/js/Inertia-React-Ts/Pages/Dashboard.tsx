@@ -155,69 +155,73 @@ export default function Dashboard() {
               </CardContent>
             </Card>
 
-            {/* Card 5: Total Pengunjung */}
-            <Card className="border-l-4 border-l-indigo-500 shadow-sm rounded-xl">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 sm:p-5">
-                <CardTitle className="tracking-tight text-xs sm:text-sm font-medium text-muted-foreground">
-                  Total Pengunjung
-                </CardTitle>
-                <MousePointerClick className="h-4 w-4 text-indigo-500" />
-              </CardHeader>
-              <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
-                <div className="text-2xl sm:text-3xl font-bold">{stats.total_pengunjung}</div>
-                <p className="text-[10px] sm:text-[12px] text-muted-foreground leading-tight mt-1">
-                  Data klik dan kunjungan web
-                </p>
-              </CardContent>
-            </Card>
+            {!hasRole("User") && (
+              <>
+                {/* Card 5: Total Pengunjung */}
+                <Card className="border-l-4 border-l-indigo-500 shadow-sm rounded-xl">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 sm:p-5">
+                    <CardTitle className="tracking-tight text-xs sm:text-sm font-medium text-muted-foreground">
+                      Total Pengunjung
+                    </CardTitle>
+                    <MousePointerClick className="h-4 w-4 text-indigo-500" />
+                  </CardHeader>
+                  <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
+                    <div className="text-2xl sm:text-3xl font-bold">{stats.total_pengunjung}</div>
+                    <p className="text-[10px] sm:text-[12px] text-muted-foreground leading-tight mt-1">
+                      Data klik dan kunjungan web
+                    </p>
+                  </CardContent>
+                </Card>
 
-            {/* Card 6: Total Galeri */}
-            <Card className="border-l-4 border-l-amber-500 shadow-sm rounded-xl">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 sm:p-5">
-                <CardTitle className="tracking-tight text-xs sm:text-sm font-medium text-muted-foreground">
-                  Total Galeri
-                </CardTitle>
-                <Image className="h-4 w-4 text-amber-500" />
-              </CardHeader>
-              <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
-                <div className="text-2xl sm:text-3xl font-bold">{stats.total_galeri}</div>
-                <p className="text-[10px] sm:text-[12px] text-muted-foreground leading-tight mt-1">
-                  Data seluruh galeri foto
-                </p>
-              </CardContent>
-            </Card>
+                {/* Card 6: Total Galeri */}
+                <Card className="border-l-4 border-l-amber-500 shadow-sm rounded-xl">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 sm:p-5">
+                    <CardTitle className="tracking-tight text-xs sm:text-sm font-medium text-muted-foreground">
+                      Total Galeri
+                    </CardTitle>
+                    <Image className="h-4 w-4 text-amber-500" />
+                  </CardHeader>
+                  <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
+                    <div className="text-2xl sm:text-3xl font-bold">{stats.total_galeri}</div>
+                    <p className="text-[10px] sm:text-[12px] text-muted-foreground leading-tight mt-1">
+                      Data seluruh galeri foto
+                    </p>
+                  </CardContent>
+                </Card>
 
-            {/* Card 7: Total Berita */}
-            <Card className="border-l-4 border-l-emerald-500 shadow-sm rounded-xl">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 sm:p-5">
-                <CardTitle className="tracking-tight text-xs sm:text-sm font-medium text-muted-foreground">
-                  Total Berita
-                </CardTitle>
-                <Newspaper className="h-4 w-4 text-emerald-500" />
-              </CardHeader>
-              <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
-                <div className="text-2xl sm:text-3xl font-bold">{stats.total_berita}</div>
-                <p className="text-[10px] sm:text-[12px] text-muted-foreground leading-tight mt-1">
-                  Data seluruh artikel berita
-                </p>
-              </CardContent>
-            </Card>
+                {/* Card 7: Total Berita */}
+                <Card className="border-l-4 border-l-emerald-500 shadow-sm rounded-xl">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 sm:p-5">
+                    <CardTitle className="tracking-tight text-xs sm:text-sm font-medium text-muted-foreground">
+                      Total Berita
+                    </CardTitle>
+                    <Newspaper className="h-4 w-4 text-emerald-500" />
+                  </CardHeader>
+                  <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
+                    <div className="text-2xl sm:text-3xl font-bold">{stats.total_berita}</div>
+                    <p className="text-[10px] sm:text-[12px] text-muted-foreground leading-tight mt-1">
+                      Data seluruh artikel berita
+                    </p>
+                  </CardContent>
+                </Card>
 
-            {/* Card 8: Total Event */}
-            <Card className="border-l-4 border-l-rose-500 shadow-sm rounded-xl">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 sm:p-5">
-                <CardTitle className="tracking-tight text-xs sm:text-sm font-medium text-muted-foreground">
-                  Total Event
-                </CardTitle>
-                <CalendarDays className="h-4 w-4 text-rose-500" />
-              </CardHeader>
-              <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
-                <div className="text-2xl sm:text-3xl font-bold">{stats.total_event}</div>
-                <p className="text-[10px] sm:text-[12px] text-muted-foreground leading-tight mt-1">
-                  Data seluruh kegiatan event
-                </p>
-              </CardContent>
-            </Card>
+                {/* Card 8: Total Event */}
+                <Card className="border-l-4 border-l-rose-500 shadow-sm rounded-xl">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 sm:p-5">
+                    <CardTitle className="tracking-tight text-xs sm:text-sm font-medium text-muted-foreground">
+                      Total Event
+                    </CardTitle>
+                    <CalendarDays className="h-4 w-4 text-rose-500" />
+                  </CardHeader>
+                  <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
+                    <div className="text-2xl sm:text-3xl font-bold">{stats.total_event}</div>
+                    <p className="text-[10px] sm:text-[12px] text-muted-foreground leading-tight mt-1">
+                      Data seluruh kegiatan event
+                    </p>
+                  </CardContent>
+                </Card>
+              </>
+            )}
           </div>
         )}
       </div>

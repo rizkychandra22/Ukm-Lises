@@ -46,6 +46,7 @@ import {
   Server,
   Loader2,
   Save,
+  MousePointerClick,
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import LogoDark from "@/assets/logo-bg-dark.png";
@@ -127,7 +128,9 @@ export function AppSidebar() {
       <SidebarContent className="px-2 py-2 no-scrollbar">
         <SidebarGroup>
           <SidebarGroupLabel className="px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">
-            Beranda
+            {hasRole(["Developer", "Admin", "User"]) && auth.user?.roles?.[0]
+              ? `Beranda ${auth.user.roles[0]}`
+              : null}
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -226,19 +229,35 @@ export function AppSidebar() {
         {hasRole(["Developer"]) && (
           <SidebarGroup>
             <SidebarGroupLabel className="px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">
-              IT System
+              Development System
             </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem>
                   <SidebarMenuButton
                     asChild
-                    isActive={isActive(route("system.index"))}
+                    isActive={isActive(route("system.index"), true)}
                     className="rounded-xl transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium"
                   >
                     <Link href={route("system.index")}>
                       <Server className="w-[18px] h-[18px]" />
-                      <span className="text-[13px]">Dashboard</span>
+                      <span className="text-[13px]">Dashboard IT</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={isActive(route("system.log-visitor"))}
+                    className="rounded-xl transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium"
+                  >
+                    <Link href={route("system.log-visitor")}>
+                      <MousePointerClick className="w-[18px] h-[18px]" />
+                      <span className="text-[13px]">Riwayat Pengunjung</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

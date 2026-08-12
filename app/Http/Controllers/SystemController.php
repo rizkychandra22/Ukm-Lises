@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Visitor;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
@@ -10,6 +11,53 @@ use Illuminate\Support\Facades\File;
 
 class SystemController extends Controller
 {
+    /**
+     * Display the Log Visitor.
+     */
+    public function logVisitor()
+    {
+        // Get Disk Usage
+        $diskPath = base_path();
+        $diskTotal = disk_total_space($diskPath);
+        $diskFree = disk_free_space($diskPath);
+        $diskUsed = $diskTotal - $diskFree;
+        $diskUsagePercent = $diskTotal > 0 ? round(($diskUsed / $diskTotal) * 100, 2) : 0;
+
+        $diskInfo = [
+            'total' => $this->formatBytes($diskTotal),
+            'used' => $this->formatBytes($diskUsed),
+            'free' => $this->formatBytes($diskFree),
+            'usage_percent' => $diskUsagePercent
+        ];
+
+        // Database Info (PostgreSQL)
+        $dbInfo = [
+            'connection' => config('database.default'),
+            'status' => 'Disconnected',
+            'active_connections' => 0,
+            'database_name' => config('database.connections.' . config('database.default') . '.database')
+        ];
+
+        try {
+            DB::connection()->getPdo();
+            $dbInfo['status'] = 'Connected';
+            
+            if (config('database.default') === 'pgsql') {
+                $connections = DB::select("SELECT count(*) as count FROM pg_stat_activity");
+                $dbInfo['active_connections'] = $connections[0]->count ?? 0;
+            }
+        } catch (\Exception $e) {
+            $dbInfo['status'] = 'Error: ' . $e->getMessage();
+        }
+
+        $guests = Visitor::latest()->get();
+        return Inertia::render('Dev/LogVisitor', [
+            'guests' => $guests,
+            'diskInfo' => $diskInfo,
+            'dbInfo' => $dbInfo,
+        ]);
+    }
+
     /**
      * Display the IT System dashboard.
      */
@@ -83,7 +131,7 @@ class SystemController extends Controller
             $logs = array_reverse($logs); // Newest first
         }
 
-        return Inertia::render('IndexSystem', [
+        return Inertia::render('Dev/IndexSystem', [
             'envInfo' => $envInfo,
             'diskInfo' => $diskInfo,
             'dbInfo' => $dbInfo,

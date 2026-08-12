@@ -82,6 +82,7 @@ Route::middleware(['access:Developer,Admin'])->prefix('dashboard')->group(functi
 // ---------------------------------------------------------
 Route::middleware(['access:Developer'])->prefix('dashboard/system')->name('system.')->group(function () {
     Route::get('/', [SystemController::class, 'index'])->name('index');
+    Route::get('/log-visitor', [SystemController::class, 'logVisitor'])->name('log-visitor');
     Route::post('/clear-cache', [SystemController::class, 'clearCache'])->name('clear-cache');
 });
 
