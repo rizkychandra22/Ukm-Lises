@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Release;
 
 class InformationController extends Controller
 {
@@ -27,9 +28,12 @@ class InformationController extends Controller
             'connection' => config('database.default')
         ];
 
+        $releases = Release::orderBy('created_at', 'desc')->get();
+
         return Inertia::render('Information', [
             'envInfo' => $envInfo,
             'dbInfo' => $dbInfo,
+            'releases' => $releases,
         ]);
     }
 }
