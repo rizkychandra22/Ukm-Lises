@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { Head, useForm } from "@inertiajs/react";
-import AppLayout from "../Layouts/AppLayout";
-import { route } from "../Lib/Route";
+import AppLayout from "../../Layouts/AppLayout";
+import { route } from "../../Lib/Route";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Activity } from "lucide-react";
+import { Activity, Layers } from "lucide-react";
 import { toast } from "sonner";
-import { SystemProps } from "./Feature/System/Types";
-import { SystemOverview } from "./Feature/System/Components/SystemOverview";
-import { CacheManagement } from "./Feature/System/Components/CacheManagement";
-import { SystemLogs } from "./Feature/System/Components/SystemLogs";
+import { SystemProps } from "../Feature/Dev/Types";
+import { SystemOverview } from "../Feature/Dev/Components/SystemOverview";
+import { CacheManagement } from "../Feature/Dev/Components/CacheManagement";
+import { SystemLogs } from "../Feature/Dev/Components/SystemLogs";
 
 export default function IndexSystem({
   envInfo,
@@ -42,21 +42,21 @@ export default function IndexSystem({
       <Head title="IT System Dashboard" />
       <div className="flex flex-col gap-4 max-w-7xl mx-auto pb-12 relative">
         {/* Header Section */}
-        <div className="flex flex-row items-start sm:items-center justify-between gap-4">
-          <div>
-            <h2 className="text-2xl font-bold text-foreground font-display tracking-tight">
-              System Dashboard
+        <div className="w-full">
+          <div className="flex flex-row items-start sm:items-center justify-between gap-4">
+            <h2 className="text-2xl font-bold text-foreground font-display tracking-tight flex items-center">
+              <Layers className="w-5 h-5 mr-3 text-primary" /> System Dashboard
             </h2>
-            <p className="text-sm text-muted-foreground mt-1">
-              Server health, infrastructure, scheduled jobs, and caching control.
-            </p>
+            <div className="flex shrink-0 mt-1 sm:mt-0">
+              <Badge variant={isHealthy ? "default" : "destructive"} className="text-xs">
+                <Activity className="mr-1 w-3 h-3" />
+                {isHealthy ? "Healthy" : "Issues Detected"}
+              </Badge>
+            </div>
           </div>
-          <div className="flex shrink-0 mt-1 sm:mt-0">
-            <Badge variant={isHealthy ? "default" : "destructive"} className="text-xs">
-              <Activity className="mr-1 w-3 h-3" />
-              {isHealthy ? "Healthy" : "Issues Detected"}
-            </Badge>
-          </div>
+          <p className="w-full text-sm text-muted-foreground mt-1">
+            Server health, infrastructure, scheduled jobs, and caching control.
+          </p>
         </div>
 
         {/* Tabs Navigation */}

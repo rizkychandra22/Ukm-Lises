@@ -32,6 +32,7 @@ interface DataTableProps<TData extends Record<string, any>> {
   data: TData[];
   searchPlaceholder?: string;
   toolbarExtra?: React.ReactNode;
+  mobileLayout?: "row" | "col";
 }
 
 export function DataTable<TData extends Record<string, any>>({
@@ -39,6 +40,7 @@ export function DataTable<TData extends Record<string, any>>({
   data,
   searchPlaceholder = "Cari data...",
   toolbarExtra,
+  mobileLayout = "col",
 }: DataTableProps<TData>) {
   const [sorting, setSorting] = useState<any[]>([]);
   const [globalFilter, setGlobalFilter] = useState("");
@@ -67,7 +69,7 @@ export function DataTable<TData extends Record<string, any>>({
   return (
     <div className="space-y-4">
       {/* Controls Row */}
-      <div className="flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-3">
+      <div className={`flex ${mobileLayout === "row" ? "flex-row items-center flex-wrap sm:flex-nowrap" : "flex-col lg:flex-row items-stretch lg:items-center"} justify-between gap-3`}>
         {/* Search Input */}
         <SearchFilter
           value={globalFilter ?? ""}

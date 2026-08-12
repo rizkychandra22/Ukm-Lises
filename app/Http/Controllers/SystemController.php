@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Visitor;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
@@ -11,28 +12,10 @@ use Illuminate\Support\Facades\File;
 class SystemController extends Controller
 {
     /**
-     * Display the IT System dashboard.
+     * Display the Log Visitor.
      */
-    public function index()
+    public function logVisitor()
     {
-        $nodeVersion = 'Unknown';
-        try {
-            $nodeVersion = trim(shell_exec('node -v 2>nul')) ?: 'Unknown';
-        } catch (\Exception $e) {}
-
-        // Get Environment Info
-        $envInfo = [
-            'app_name' => config('app.name'),
-            'environment' => config('app.env'),
-            'debug_mode' => config('app.debug'),
-            'php_version' => phpversion(),
-            'node_version' => $nodeVersion,
-            'laravel_version' => app()->version(),
-            'os' => php_uname('s') . ' ' . php_uname('r'),
-            'server' => $_SERVER['SERVER_SOFTWARE'] ?? 'Unknown',
-            'timezone' => config('app.timezone'),
-        ];
-
         // Get Disk Usage
         $diskPath = base_path();
         $diskTotal = disk_total_space($diskPath);
@@ -67,6 +50,70 @@ class SystemController extends Controller
             $dbInfo['status'] = 'Error: ' . $e->getMessage();
         }
 
+        $guests = Visitor::latest()->get();
+        return Inertia::render('Dev/LogVisitor', [
+            'guests' => $guests,
+            'diskInfo' => $diskInfo,
+            'dbInfo' => $dbInfo,
+        ]);
+    }
+
+    /**
+     * Display the IT System dashboard.
+     */
+    public function index()
+    {
+        $nodeVersion = 'Unknown';
+        try {
+            $nodeVersion = trim(shell_exec('node -v 2>nul')) ?: 'Unknown';
+        } catch (\Exception $e) {}
+
+        // Get Environment Info
+        $envInfo = [
+            'app_name' => config('app.name'),
+            'environment' => config('app.env'),
+            'debug_mode' => config('app.debug'),
+            'php_version' => phpversion(),
+            'node_version' => $nodeVersion,
+            'laravel_version' => app()->version(),
+            'os' => php_uname('s') . ' ' . php_uname('r'),
+            'server' => str_replace(' (Development Server)', '', $_SERVER['SERVER_SOFTWARE'] ?? 'Unknown'),
+            'timezone' => config('app.timezone'),
+        ];
+
+        // Get Disk Usage
+        $diskPath = base_path();
+        $diskTotal = disk_total_space($diskPath);
+        $diskFree = disk_free_space($diskPath);
+        $diskUsed = $diskTotal - $diskFree;
+        $diskUsagePercent = $diskTotal > 0 ? round(($diskUsed / $diskTotal) * 100, 2) : 0;
+
+        $diskInfo = [
+            'total' => $this->formatBytes($diskTotal),
+            'used' => $this->formatBytes($diskUsed),
+            'free' => $this->formatBytes($diskFree),
+            'usage_percent' => $diskUsagePercent
+        ];
+
+        // Database Info (PostgreSQL)
+        $dbInfo = [
+            'connection' => config('database.default'),
+            'status' => 'Disconnected',
+            'active_connections' => 0,
+        ];
+
+        try {
+            DB::connection()->getPdo();
+            $dbInfo['status'] = 'Connected';
+            
+            if (config('database.default') === 'pgsql') {
+                $connections = DB::select("SELECT count(*) as count FROM pg_stat_activity");
+                $dbInfo['active_connections'] = $connections[0]->count ?? 0;
+            }
+        } catch (\Exception $e) {
+            $dbInfo['status'] = 'Error: ' . $e->getMessage();
+        }
+
         // Memory/CPU (Best effort, varies by OS)
         $sysInfo = [
             'memory_usage' => $this->formatBytes(memory_get_usage(true)),
@@ -83,7 +130,7 @@ class SystemController extends Controller
             $logs = array_reverse($logs); // Newest first
         }
 
-        return Inertia::render('IndexSystem', [
+        return Inertia::render('Dev/IndexSystem', [
             'envInfo' => $envInfo,
             'diskInfo' => $diskInfo,
             'dbInfo' => $dbInfo,

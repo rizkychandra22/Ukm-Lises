@@ -12,6 +12,7 @@ import { MemberDeleteDialog } from "./Feature/Member/Components/MemberDeleteDial
 import { BatchTable } from "./Feature/Member/Components/BatchTable";
 import { BatchFormModal } from "./Feature/Member/Components/BatchFormModal";
 import { BatchDeleteDialog } from "./Feature/Member/Components/BatchDeleteDialog";
+import { Users } from "lucide-react";
 
 export default function IndexMember({ members = [], batches = [], majors = [] }: MemberPageProps) {
   const { auth } = usePage<any>().props;
@@ -255,8 +256,8 @@ export default function IndexMember({ members = [], batches = [], majors = [] }:
       <div className="flex flex-col gap-4 max-w-7xl mx-auto pb-12 relative">
         {/* Header Section */}
         <div>
-          <h2 className="text-2xl font-bold text-foreground font-display tracking-tight">
-            Manajemen Keanggotaan
+          <h2 className="text-2xl font-bold text-foreground font-display tracking-tight flex items-center">
+            <Users className="w-5 h-5 mr-3 text-primary" /> Manajemen Keanggotaan
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
             Kelola data anggota dan data angkatan

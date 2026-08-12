@@ -43,9 +43,11 @@ import {
   LogOut,
   Newspaper,
   CalendarDays,
-  Server,
   Loader2,
   Save,
+  MousePointerClick,
+  Info,
+  Layers,
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import LogoDark from "@/assets/logo-bg-dark.png";
@@ -127,7 +129,9 @@ export function AppSidebar() {
       <SidebarContent className="px-2 py-2 no-scrollbar">
         <SidebarGroup>
           <SidebarGroupLabel className="px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">
-            Beranda
+            {hasRole(["Developer", "Admin", "User"]) && auth.user?.roles?.[0]
+              ? `Beranda ${auth.user.roles[0]}`
+              : null}
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -226,19 +230,35 @@ export function AppSidebar() {
         {hasRole(["Developer"]) && (
           <SidebarGroup>
             <SidebarGroupLabel className="px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">
-              IT System
+              Development System
             </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem>
                   <SidebarMenuButton
                     asChild
-                    isActive={isActive(route("system.index"))}
+                    isActive={isActive(route("system.index"), true)}
                     className="rounded-xl transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium"
                   >
                     <Link href={route("system.index")}>
-                      <Server className="w-[18px] h-[18px]" />
-                      <span className="text-[13px]">Dashboard</span>
+                      <Layers className="w-[18px] h-[18px]" />
+                      <span className="text-[13px]">Dashboard IT</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={isActive(route("system.log-visitor"))}
+                    className="rounded-xl transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium"
+                  >
+                    <Link href={route("system.log-visitor")}>
+                      <MousePointerClick className="w-[18px] h-[18px]" />
+                      <span className="text-[13px]">Riwayat Pengunjung</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -248,9 +268,27 @@ export function AppSidebar() {
         )}
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-border/40 p-3">
-        <div className="w-full flex items-center gap-2.5 p-1.5 h-auto">
-          <Avatar className="h-8 w-8">
+      <SidebarFooter className="p-2">
+        {/* Release Information */}
+        <SidebarGroup>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                asChild
+                isActive={isActive(route(hasRole("Developer") ? "system.releases.index" : "information"))}
+                className="rounded-xl transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium hover:bg-primary/10 hover:text-primary"
+              >
+                <Link href={route(hasRole("Developer") ? "system.releases.index" : "information")}>
+                  <Info className="w-[18px] h-[18px]" />
+                  <span className="text-[13px] font-medium">Information</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroup>
+        <div className="border-t border-border/40 mb-0" />
+        <div className="w-full flex items-center gap-2 p-1.5 h-auto">
+          <Avatar className="h-9.5 w-9.5">
             <AvatarFallback className="bg-primary/10 text-xs font-semibold text-primary">
               {user?.name ? user.name.charAt(0) + user.name.split(" ").pop()?.charAt(0) : "RC"}
             </AvatarFallback>

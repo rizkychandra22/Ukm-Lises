@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Cpu, Database, HardDrive, Server, Zap, Code } from "lucide-react";
 import { SystemProps } from "../Types";
+import { FaPhp, FaLaravel, FaNodeJs, FaReact, FaDesktop, FaServer, FaDatabase, FaClock } from "react-icons/fa6";
 
 interface Props {
   sysInfo: SystemProps["sysInfo"];
@@ -86,60 +87,53 @@ export function SystemOverview({ sysInfo, dbInfo, diskInfo, envInfo, processing,
 
       <div className="grid gap-4 lg:grid-cols-7">
         {/* Resource Utilization Details */}
-        <Card className="lg:col-span-4">
+        <Card className="lg:col-span-5">
           <CardHeader>
             <CardTitle>System Information</CardTitle>
             <CardDescription>
-              Informasi detail mengenai infrastruktur server yang menjalankan aplikasi.
+              Detailed information regarding the server infrastructure running the application.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Left Column */}
-              <div className="space-y-4">
-                <div className="space-y-1">
-                  <p className="text-sm font-medium leading-none">PHP Version</p>
-                  <p className="text-sm text-muted-foreground">{envInfo.php_version}</p>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-sm font-medium leading-none">Laravel Version</p>
-                  <p className="text-sm text-muted-foreground">{envInfo.laravel_version}</p>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-sm font-medium leading-none">Node Version</p>
-                  <p className="text-sm text-muted-foreground">{envInfo.node_version}</p>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-sm font-medium leading-none">React Version</p>
-                  <p className="text-sm text-muted-foreground">{React.version}</p>
-                </div>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-6 gap-x-4">
+              <div className="space-y-1">
+                <p className="text-sm font-medium leading-none flex items-center gap-1.5"><FaPhp className="text-indigo-500 w-4 h-4" /> PHP Version</p>
+                <p className="text-sm text-muted-foreground">{envInfo.php_version}</p>
               </div>
-              
-              {/* Right Column */}
-              <div className="space-y-4">
-                <div className="space-y-1">
-                  <p className="text-sm font-medium leading-none">Operating System</p>
-                  <p className="text-sm text-muted-foreground">{envInfo.os}</p>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-sm font-medium leading-none">Web Server</p>
-                  <p className="text-sm text-muted-foreground truncate">{envInfo.server}</p>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-sm font-medium leading-none">Database Name</p>
-                  <p className="text-sm text-muted-foreground">{dbInfo.database_name}</p>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-sm font-medium leading-none">Timezone</p>
-                  <p className="text-sm text-muted-foreground">{envInfo.timezone}</p>
-                </div>
+              <div className="space-y-1">
+                <p className="text-sm font-medium leading-none flex items-center gap-1.5"><FaLaravel className="text-red-500 w-4 h-4" /> Laravel Version</p>
+                <p className="text-sm text-muted-foreground">{envInfo.laravel_version}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-medium leading-none flex items-center gap-1.5"><FaNodeJs className="text-green-500 w-4 h-4" /> Node Version</p>
+                <p className="text-sm text-muted-foreground">{envInfo.node_version}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-medium leading-none flex items-center gap-1.5"><FaReact className="text-blue-500 w-4 h-4" /> React Version</p>
+                <p className="text-sm text-muted-foreground">{React.version}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-medium leading-none flex items-center gap-1.5"><FaDesktop className="text-slate-500 w-4 h-4" /> Operating System</p>
+                <p className="text-sm text-muted-foreground">{envInfo.os}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-medium leading-none flex items-center gap-1.5"><FaServer className="text-gray-500 w-4 h-4" /> Web Server</p>
+                <p className="text-sm text-muted-foreground">{envInfo.server}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-medium leading-none flex items-center gap-1.5"><FaDatabase className="text-teal-500 w-4 h-4" /> Database Name</p>
+                <p className="text-sm text-muted-foreground">{dbInfo.connection === "pgsql" ? "PostgreSQL" : dbInfo.connection === "mysql" ? "MySQL" : "Unknown"}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-medium leading-none flex items-center gap-1.5"><FaClock className="text-orange-500 w-4 h-4" /> Timezone</p>
+                <p className="text-sm text-muted-foreground">{envInfo.timezone}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Quick Actions */}
-        <Card className="lg:col-span-3">
+        <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle>Quick Actions</CardTitle>
             <CardDescription>Jalan pintas untuk optimasi sistem.</CardDescription>

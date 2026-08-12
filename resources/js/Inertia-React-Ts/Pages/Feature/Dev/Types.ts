@@ -20,7 +20,6 @@ export interface SystemProps {
     connection: string;
     status: string;
     active_connections: number;
-    database_name: string;
   };
   sysInfo: {
     memory_usage: string;

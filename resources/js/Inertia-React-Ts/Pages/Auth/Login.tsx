@@ -1,4 +1,4 @@
-import { Head, useForm } from "@inertiajs/react";
+import { Head, useForm, usePage } from "@inertiajs/react";
 import React, { useState, useEffect } from "react";
 import { Eye, EyeOff, Moon, Sun, AlertCircle } from "lucide-react";
 
@@ -302,7 +302,7 @@ export default function Login() {
 
             <div className="text-center pt-4">
               <p className="text-xs text-muted-foreground">
-                Sistem Manajemen Internal Ukm Lises Realese v1.0.0
+                Sistem Manajemen Internal Ukm Lises {usePage().props.web_version as string}
               </p>
             </div>
           </form>

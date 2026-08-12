@@ -8,7 +8,9 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventSessionController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\InformationController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\ReleaseController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\SystemController;
 
@@ -82,7 +84,16 @@ Route::middleware(['access:Developer,Admin'])->prefix('dashboard')->group(functi
 // ---------------------------------------------------------
 Route::middleware(['access:Developer'])->prefix('dashboard/system')->name('system.')->group(function () {
     Route::get('/', [SystemController::class, 'index'])->name('index');
+    Route::get('/log-visitor', [SystemController::class, 'logVisitor'])->name('log-visitor');
     Route::post('/clear-cache', [SystemController::class, 'clearCache'])->name('clear-cache');
+    Route::resource('releases', ReleaseController::class)->except(['show', 'create', 'edit']);
+});
+
+// ---------------------------------------------------------
+// SYSTEM INFORMATION (Admin & User)
+// ---------------------------------------------------------
+Route::middleware(['access:Admin,User'])->prefix('dashboard')->group(function () {
+    Route::get('/information', [InformationController::class, 'index'])->name('information');
 });
 
 // -------------------------------------------------------------
