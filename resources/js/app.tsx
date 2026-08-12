@@ -1,5 +1,9 @@
 /// <reference types="vite/client" />
 import "../css/app.css";
+// Import assets so Vite compiles them into the build/assets folder
+import "./FrontEnd-React-Ts/src/assets/logo-bg-light.png";
+import "./FrontEnd-React-Ts/src/assets/logo-bg-dark.png";
+import "./FrontEnd-React-Ts/src/assets/logo-no-bg.png";
 import { createRoot } from "react-dom/client";
 import { createInertiaApp, router } from "@inertiajs/react";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
