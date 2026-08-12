@@ -275,10 +275,10 @@ export function AppSidebar() {
             <SidebarMenuItem>
               <SidebarMenuButton
                 asChild
-                isActive={isActive(route("system.releases.index"))}
+                isActive={isActive(route(hasRole("Developer") ? "system.releases.index" : "information"))}
                 className="rounded-xl transition-all data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium hover:bg-primary/10 hover:text-primary"
               >
-                <Link href={route("system.releases.index")}>
+                <Link href={route(hasRole("Developer") ? "system.releases.index" : "information")}>
                   <Info className="w-[18px] h-[18px]" />
                   <span className="text-[13px] font-medium">Information</span>
                 </Link>

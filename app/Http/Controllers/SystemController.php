@@ -77,7 +77,7 @@ class SystemController extends Controller
             'node_version' => $nodeVersion,
             'laravel_version' => app()->version(),
             'os' => php_uname('s') . ' ' . php_uname('r'),
-            'server' => $_SERVER['SERVER_SOFTWARE'] ?? 'Unknown',
+            'server' => str_replace(' (Development Server)', '', $_SERVER['SERVER_SOFTWARE'] ?? 'Unknown'),
             'timezone' => config('app.timezone'),
         ];
 
@@ -100,7 +100,6 @@ class SystemController extends Controller
             'connection' => config('database.default'),
             'status' => 'Disconnected',
             'active_connections' => 0,
-            'database_name' => config('database.connections.' . config('database.default') . '.database')
         ];
 
         try {
