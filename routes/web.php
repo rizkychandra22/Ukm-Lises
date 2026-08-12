@@ -111,7 +111,7 @@ Route::middleware(['access:Developer,Admin,User'])->prefix('dashboard')->group(f
 // -------------------------------------------------------------
 Route::get('/sitemap.xml', [SitemapController::class, 'index']);
 
-// Route khusus untuk News (SEO & Open Graph Social Media Preview)
+// Route khusus untuk News (SEO Meta Tag & Open Graph Social Media Preview)
 Route::get('/news/{slug}', function ($slug) {
     $news = News::where('slug', $slug)->first();
     
