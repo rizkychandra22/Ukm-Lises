@@ -29,7 +29,7 @@ export default {
       btn_about: "Kenali Kami",
       btn_contact: "Hubungi Kami",
       card_1: "Total Anggota",
-      card_2: "Angkatan",
+      card_2: "Total Angkatan",
       card_3: "Tampil Berkarya",
     },
     section_divisi: {
