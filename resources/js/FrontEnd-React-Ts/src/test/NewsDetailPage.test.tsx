@@ -27,7 +27,7 @@ vi.mock("@/hooks/useNews", () => ({
       slug: "test-news",
       title_id: "Test News Title",
       title_en: "Test News Title",
-      date: "31 July 2026",
+      date: "2026-07-31",
       tag: "Kegiatan",
       img: "test.jpg",
       excerpt: "Test excerpt",
@@ -44,7 +44,7 @@ describe("NewsDetailPage", () => {
     render(<NewsDetailPage />, { wrapper });
 
     expect(screen.getByText("Test News Title")).toBeInTheDocument();
-    expect(screen.getAllByText("31 July 2026")[0]).toBeInTheDocument();
+    expect(screen.getAllByText("31 Jul 2026")[0]).toBeInTheDocument();
   });
 
   it("should sanitize HTML and prevent XSS (script injection)", () => {
@@ -58,5 +58,6 @@ describe("NewsDetailPage", () => {
     expect(scriptTag).toBeNull();
   });
 });
+
 
 
