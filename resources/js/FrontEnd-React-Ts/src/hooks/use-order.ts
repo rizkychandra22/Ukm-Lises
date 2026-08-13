@@ -16,10 +16,7 @@ interface ApiErrorResponse {
 function parseErrorMessage(error: AxiosError<ApiErrorResponse> | null): string {
   if (!error) return "";
   if (error.response) {
-    return (
-      error.response.data?.message ||
-      "Terjadi kesalahan pada transaksi order di server."
-    );
+    return error.response.data?.message || "Terjadi kesalahan pada transaksi order di server.";
   }
   if (error.request) {
     return "Gagal terhubung ke server. Periksa kembali koneksi internet Anda.";
@@ -61,7 +58,7 @@ export function useTrackOrder(orderCode: string) {
   const query = useQuery<any | null, AxiosError<ApiErrorResponse>>({
     queryKey: ["track-order", orderCode],
     queryFn: () => trackOrder(orderCode),
-    enabled: Boolean(orderCode), 
+    enabled: Boolean(orderCode),
     refetchInterval: 15000,
     retry: 4,
   });

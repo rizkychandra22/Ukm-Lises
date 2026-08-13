@@ -12,12 +12,7 @@ interface TableProps {
   onDelete: (item: GalleryItem) => void;
 }
 
-export function Table({
-  galleries,
-  onAdd,
-  onEdit,
-  onDelete,
-}: TableProps) {
+export function Table({ galleries, onAdd, onEdit, onDelete }: TableProps) {
   const columns = useMemo<ColumnDef<GalleryItem, any>[]>(
     () => [
       {

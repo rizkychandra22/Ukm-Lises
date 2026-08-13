@@ -4,7 +4,13 @@ import DashboardLayout from "@admin/Layouts/AppLayout";
 import { route } from "../Lib/Route";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { EventItem, PayOrder, PayAccount, BatchMemberSelect, EventSession } from "./Feature/Event/Types";
+import {
+  EventItem,
+  PayOrder,
+  PayAccount,
+  BatchMemberSelect,
+  EventSession,
+} from "./Feature/Event/Types";
 import { EventTable } from "./Feature/Event/Components/EventTable";
 import { SessionTable } from "./Feature/Event/Components/SessionTable";
 import { SessionFormModal } from "./Feature/Event/Components/SessionFormModal";
@@ -151,10 +157,10 @@ export default function IndexEvent({
     transformEventData((data) => ({
       ...data,
       date: eventDateInput,
-      ...(data.type === "Non-Exclusive" && { price: "", ticket: "" })
+      ...(data.type === "Non-Exclusive" && { price: "", ticket: "" }),
     }));
     const endpoint = editingEvent ? route("events.update", editingEvent.id) : route("events.store");
-    
+
     postEvent(endpoint, {
       preserveScroll: true,
       onSuccess: () => {
@@ -460,7 +466,7 @@ export default function IndexEvent({
         <div className="w-full border-b border-border">
           <div className="flex flex-col sm:flex-row gap-4 w-full items-start sm:items-center">
             {!hasRole(["User"]) && (
-                <Tabs
+              <Tabs
                 value={activeTab}
                 onValueChange={(val) => setActiveTab(val)}
                 className="w-full sm:w-auto relative"

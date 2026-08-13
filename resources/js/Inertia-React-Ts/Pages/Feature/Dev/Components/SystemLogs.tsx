@@ -22,9 +22,9 @@ export function SystemLogs({ logs }: Props) {
       <CardContent>
         <div className="bg-black/90 dark:bg-black text-green-400 font-mono text-xs p-4 rounded-md overflow-hidden relative">
           <div className="absolute top-2 right-2 flex gap-2">
-            <Button 
-              variant="outline" 
-              size="icon" 
+            <Button
+              variant="outline"
+              size="icon"
               className="h-6 w-6 bg-transparent text-white hover:text-black border-white/20"
               onClick={() => window.location.reload()}
               title="Refresh Logs"
@@ -35,9 +35,9 @@ export function SystemLogs({ logs }: Props) {
           <ScrollArea className="h-[400px] w-full pr-4">
             {logs.length > 0 ? (
               logs.map((log, index) => (
-                <div 
-                  key={index} 
-                  className={`mb-1 pb-1 border-b border-white/10 ${log.toLowerCase().includes('error') || log.toLowerCase().includes('exception') ? 'text-red-400 font-bold' : ''}`}
+                <div
+                  key={index}
+                  className={`mb-1 pb-1 border-b border-white/10 ${log.toLowerCase().includes("error") || log.toLowerCase().includes("exception") ? "text-red-400 font-bold" : ""}`}
                 >
                   {log}
                 </div>

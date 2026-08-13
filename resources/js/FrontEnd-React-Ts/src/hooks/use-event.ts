@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getGalleries, Gallery } from "@/lib/api/gallery";
+import { getEvents, EventItem } from "@/lib/api/event";
 import { AxiosError } from "axios";
 
 interface ApiErrorResponse {
@@ -11,8 +11,7 @@ function parseErrorMessage(error: AxiosError<ApiErrorResponse> | null): string {
   if (!error) return "";
   if (error.response) {
     return (
-      error.response.data?.message ||
-      "Terjadi kesalahan saat mengambil data gallery dari server."
+      error.response.data?.message || "Terjadi kesalahan saat mengambil data event dari server."
     );
   }
   if (error.request) {
@@ -21,18 +20,18 @@ function parseErrorMessage(error: AxiosError<ApiErrorResponse> | null): string {
   return "Terjadi kesalahan yang tidak diketahui.";
 }
 
-export function useGallery() {
-  const query = useQuery<Gallery[], AxiosError<ApiErrorResponse>>({
-    queryKey: ["gallery"],
-    queryFn: getGalleries,
-    refetchInterval: 60000,
+export function useEvents() {
+  const query = useQuery<EventItem[], AxiosError<ApiErrorResponse>>({
+    queryKey: ["events"],
+    queryFn: getEvents,
+    refetchInterval: 15000,
     refetchOnWindowFocus: true,
-    retry: 5,
+    retry: 4,
   });
 
   return {
     ...query,
-    galleries: query.data ?? [],
+    events: query.data ?? [],
     errorMessage: parseErrorMessage(query.error),
   };
 }

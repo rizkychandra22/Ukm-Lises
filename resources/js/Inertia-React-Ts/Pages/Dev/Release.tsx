@@ -8,8 +8,20 @@ import { Textarea } from "@/components/ui/textarea";
 import { DataTable } from "../../Components/DataTable";
 import { LegacyColumnDef as ColumnDef } from "@tanstack/react-table/legacy";
 import { Plus, Edit, Trash2, ArrowUpDown, Eye, Loader2, Save, Rocket, Info } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 
@@ -29,7 +41,16 @@ export default function Release({ releases }: { releases: Release[] }) {
   const [viewData, setViewData] = useState<Release | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
 
-  const { data, setData, post, put, delete: destroy, processing, reset, errors } = useForm({
+  const {
+    data,
+    setData,
+    post,
+    put,
+    delete: destroy,
+    processing,
+    reset,
+    errors,
+  } = useForm({
     version: "",
     title: "",
     subtitle: "",
@@ -111,9 +132,7 @@ export default function Release({ releases }: { releases: Release[] }) {
       {
         accessorKey: "title",
         header: "Title",
-        cell: ({ row }: { row: { original: Release } }) => (
-          <div>{row.original.title}</div>
-        ),
+        cell: ({ row }: { row: { original: Release } }) => <div>{row.original.title}</div>,
       },
       {
         id: "actions",
@@ -153,7 +172,7 @@ export default function Release({ releases }: { releases: Release[] }) {
       },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [],
   );
 
   const toolbarExtra = (
@@ -186,7 +205,8 @@ export default function Release({ releases }: { releases: Release[] }) {
             </div>
           </div>
           <p className="w-full text-sm text-muted-foreground mt-1">
-            Manage the list of releases and the app update changelog. The latest version will appear throughout the app.
+            Manage the list of releases and the app update changelog. The latest version will appear
+            throughout the app.
           </p>
         </div>
 
@@ -246,7 +266,12 @@ export default function Release({ releases }: { releases: Release[] }) {
               </div>
             </div>
             <div className="flex justify-end gap-3 pt-2 mb-2">
-              <Button type="button" size="sm" variant="outline" onClick={() => setIsModalOpen(false)}>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={() => setIsModalOpen(false)}
+              >
                 Batal
               </Button>
               <Button type="submit" size="sm" disabled={processing}>
@@ -271,13 +296,19 @@ export default function Release({ releases }: { releases: Release[] }) {
             <DialogTitle>Hapus Release</DialogTitle>
           </DialogHeader>
           <div className="py-4">
-            Apakah Anda yakin ingin menghapus data release ini? Data yang sudah dihapus tidak dapat dikembalikan.
+            Apakah Anda yakin ingin menghapus data release ini? Data yang sudah dihapus tidak dapat
+            dikembalikan.
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => setIsDeleteModalOpen(false)}>
               Batal
             </Button>
-            <Button type="button" variant="destructive" onClick={handleDelete} disabled={processing}>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={handleDelete}
+              disabled={processing}
+            >
               {processing ? "Menghapus..." : "Hapus"}
             </Button>
           </DialogFooter>
@@ -288,7 +319,9 @@ export default function Release({ releases }: { releases: Release[] }) {
         <SheetContent className="w-[90%] sm:max-w-md overflow-y-auto">
           <SheetHeader>
             <SheetTitle>Detail Release</SheetTitle>
-            <SheetDescription>Complete information regarding this release version.</SheetDescription>
+            <SheetDescription>
+              Complete information regarding this release version.
+            </SheetDescription>
           </SheetHeader>
           {viewData && (
             <div className="flex flex-col gap-4 py-4 mt-2">

@@ -22,12 +22,7 @@ interface TableProps {
   onDelete: (item: NewsItem) => void;
 }
 
-export function Table({
-  news,
-  selectedType,
-  onTypeChange,
-  onDelete,
-}: TableProps) {
+export function Table({ news, selectedType, onTypeChange, onDelete }: TableProps) {
   const filteredData = useMemo(() => {
     if (selectedType === "Semua Tipe Berita") return news;
     return news.filter((n) => n.type === selectedType);
@@ -94,9 +89,7 @@ export function Table({
           </Button>
         ),
         cell: ({ row }: { row: { original: NewsItem } }) => (
-          <div className="text-sm">
-            {dayjs(row.original.date).format("DD MMM YYYY")}
-          </div>
+          <div className="text-sm">{dayjs(row.original.date).format("DD MMM YYYY")}</div>
         ),
       },
       {

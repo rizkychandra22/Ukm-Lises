@@ -4,7 +4,16 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Cpu, Database, HardDrive, Server, Zap, Code } from "lucide-react";
 import { SystemProps } from "../Types";
-import { FaPhp, FaLaravel, FaNodeJs, FaReact, FaDesktop, FaServer, FaDatabase, FaClock } from "react-icons/fa6";
+import {
+  FaPhp,
+  FaLaravel,
+  FaNodeJs,
+  FaReact,
+  FaDesktop,
+  FaServer,
+  FaDatabase,
+  FaClock,
+} from "react-icons/fa6";
 
 interface Props {
   sysInfo: SystemProps["sysInfo"];
@@ -15,7 +24,14 @@ interface Props {
   onClearCache: (type: string) => void;
 }
 
-export function SystemOverview({ sysInfo, dbInfo, diskInfo, envInfo, processing, onClearCache }: Props) {
+export function SystemOverview({
+  sysInfo,
+  dbInfo,
+  diskInfo,
+  envInfo,
+  processing,
+  onClearCache,
+}: Props) {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
@@ -97,35 +113,57 @@ export function SystemOverview({ sysInfo, dbInfo, diskInfo, envInfo, processing,
           <CardContent>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-6 gap-x-4">
               <div className="space-y-1">
-                <p className="text-sm font-medium leading-none flex items-center gap-1.5"><FaPhp className="text-indigo-500 w-4 h-4" /> PHP Version</p>
+                <p className="text-sm font-medium leading-none flex items-center gap-1.5">
+                  <FaPhp className="text-indigo-500 w-4 h-4" /> PHP Version
+                </p>
                 <p className="text-sm text-muted-foreground">{envInfo.php_version}</p>
               </div>
               <div className="space-y-1">
-                <p className="text-sm font-medium leading-none flex items-center gap-1.5"><FaLaravel className="text-red-500 w-4 h-4" /> Laravel Version</p>
+                <p className="text-sm font-medium leading-none flex items-center gap-1.5">
+                  <FaLaravel className="text-red-500 w-4 h-4" /> Laravel Version
+                </p>
                 <p className="text-sm text-muted-foreground">{envInfo.laravel_version}</p>
               </div>
               <div className="space-y-1">
-                <p className="text-sm font-medium leading-none flex items-center gap-1.5"><FaNodeJs className="text-green-500 w-4 h-4" /> Node Version</p>
+                <p className="text-sm font-medium leading-none flex items-center gap-1.5">
+                  <FaNodeJs className="text-green-500 w-4 h-4" /> Node Version
+                </p>
                 <p className="text-sm text-muted-foreground">{envInfo.node_version}</p>
               </div>
               <div className="space-y-1">
-                <p className="text-sm font-medium leading-none flex items-center gap-1.5"><FaReact className="text-blue-500 w-4 h-4" /> React Version</p>
+                <p className="text-sm font-medium leading-none flex items-center gap-1.5">
+                  <FaReact className="text-blue-500 w-4 h-4" /> React Version
+                </p>
                 <p className="text-sm text-muted-foreground">{React.version}</p>
               </div>
               <div className="space-y-1">
-                <p className="text-sm font-medium leading-none flex items-center gap-1.5"><FaDesktop className="text-slate-500 w-4 h-4" /> Operating System</p>
+                <p className="text-sm font-medium leading-none flex items-center gap-1.5">
+                  <FaDesktop className="text-slate-500 w-4 h-4" /> Operating System
+                </p>
                 <p className="text-sm text-muted-foreground">{envInfo.os}</p>
               </div>
               <div className="space-y-1">
-                <p className="text-sm font-medium leading-none flex items-center gap-1.5"><FaServer className="text-gray-500 w-4 h-4" /> Web Server</p>
+                <p className="text-sm font-medium leading-none flex items-center gap-1.5">
+                  <FaServer className="text-gray-500 w-4 h-4" /> Web Server
+                </p>
                 <p className="text-sm text-muted-foreground">{envInfo.server}</p>
               </div>
               <div className="space-y-1">
-                <p className="text-sm font-medium leading-none flex items-center gap-1.5"><FaDatabase className="text-teal-500 w-4 h-4" /> Database Name</p>
-                <p className="text-sm text-muted-foreground">{dbInfo.connection === "pgsql" ? "PostgreSQL" : dbInfo.connection === "mysql" ? "MySQL" : "Unknown"}</p>
+                <p className="text-sm font-medium leading-none flex items-center gap-1.5">
+                  <FaDatabase className="text-teal-500 w-4 h-4" /> Database Name
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {dbInfo.connection === "pgsql"
+                    ? "PostgreSQL"
+                    : dbInfo.connection === "mysql"
+                      ? "MySQL"
+                      : "Unknown"}
+                </p>
               </div>
               <div className="space-y-1">
-                <p className="text-sm font-medium leading-none flex items-center gap-1.5"><FaClock className="text-orange-500 w-4 h-4" /> Timezone</p>
+                <p className="text-sm font-medium leading-none flex items-center gap-1.5">
+                  <FaClock className="text-orange-500 w-4 h-4" /> Timezone
+                </p>
                 <p className="text-sm text-muted-foreground">{envInfo.timezone}</p>
               </div>
             </div>
@@ -139,8 +177,8 @@ export function SystemOverview({ sysInfo, dbInfo, diskInfo, envInfo, processing,
             <CardDescription>Jalan pintas untuk optimasi sistem.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               className="w-full justify-start"
               disabled={processing}
               onClick={() => onClearCache("optimize")}
@@ -148,11 +186,11 @@ export function SystemOverview({ sysInfo, dbInfo, diskInfo, envInfo, processing,
               <Zap className="mr-2 h-4 w-4" />
               Optimize All Cache
             </Button>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               className="w-full justify-start"
               disabled={processing}
-              onClick={() => window.open('/sitemap.xml', '_blank')}
+              onClick={() => window.open("/sitemap.xml", "_blank")}
             >
               <Code className="mr-2 h-4 w-4" />
               Check Sitemap XML

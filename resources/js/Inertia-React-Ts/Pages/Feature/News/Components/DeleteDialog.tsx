@@ -15,12 +15,7 @@ interface DeleteDialogProps {
   onConfirm: () => void;
 }
 
-export function DeleteDialog({
-  isOpen,
-  processing,
-  onOpenChange,
-  onConfirm,
-}: DeleteDialogProps) {
+export function DeleteDialog({ isOpen, processing, onOpenChange, onConfirm }: DeleteDialogProps) {
   return (
     <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
       <AlertDialogContent className="w-[90%] max-w-[360px] rounded-md p-6">

@@ -22,9 +22,13 @@ export default function NotFound(_: NotFoundProps): JSX.Element {
           Oops! Halaman Tidak Ditemukan
         </h1>
         <p className="text-muted-foreground max-w-md mb-8 text-base leading-relaxed">
-          Maaf, halaman atau rute yang Anda cari tidak tersedia, telah dipindahkan, atau metode aksesnya tidak diizinkan.
+          Maaf, halaman atau rute yang Anda cari tidak tersedia, telah dipindahkan, atau metode
+          aksesnya tidak diizinkan.
         </p>
-        <Button asChild className="h-10 px-6 rounded-full font-medium shadow-sm transition-all hover:scale-105 active:scale-95">
+        <Button
+          asChild
+          className="h-10 px-6 rounded-full font-medium shadow-sm transition-all hover:scale-105 active:scale-95"
+        >
           <Link href={route("dashboard")}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Kembali ke Dashboard
@@ -43,10 +47,7 @@ interface ErrorBoundaryState {
   readonly hasError: boolean;
 }
 
-export class ErrorBoundary extends Component<
-  ErrorBoundaryProps,
-  ErrorBoundaryState
-> {
+export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   public constructor(props: ErrorBoundaryProps) {
     super(props);
 

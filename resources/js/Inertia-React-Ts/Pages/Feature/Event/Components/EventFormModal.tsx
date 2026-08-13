@@ -173,9 +173,7 @@ export function EventFormModal({
           )}
 
           <div>
-            <label className="block text-sm font-medium mb-1">
-              Ringkasan / Deskripsi Event
-            </label>
+            <label className="block text-sm font-medium mb-1">Ringkasan / Deskripsi Event</label>
             <Textarea
               rows={3}
               className="text-[13px]"
@@ -187,7 +185,7 @@ export function EventFormModal({
 
           <div>
             <label className="block text-sm font-medium mb-1">
-              Gambar Banner Event {" "}
+              Gambar Banner Event{" "}
               {editingEvent && (
                 <span className="text-xs text-muted-foreground font-normal">
                   (Kosongkan jika tidak diubah)
@@ -200,9 +198,7 @@ export function EventFormModal({
               className="bg-background text-sm file:text-foreground file:bg-muted file:border-0 file:rounded-md file:px-2 file:py-1 file:mr-2"
               onChange={(e) => setEventData("image", e.target.files ? e.target.files[0] : null)}
             />
-            {eventErrors.image && (
-              <span className="text-xs text-red-500">{eventErrors.image}</span>
-            )}
+            {eventErrors.image && <span className="text-xs text-red-500">{eventErrors.image}</span>}
           </div>
 
           <div className="flex justify-end gap-3 pt-2 mb-2">

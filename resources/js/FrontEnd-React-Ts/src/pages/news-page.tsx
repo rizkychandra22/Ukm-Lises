@@ -3,7 +3,7 @@ import { ArrowUpRight, CalendarDays, Newspaper, Sparkles, User } from "lucide-re
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useNews } from "@/hooks/useNews";
+import { useNews } from "@/hooks/use-news";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTranslation } from "@/i18n";
 import { SEOHead } from "@/components/SEOHead";

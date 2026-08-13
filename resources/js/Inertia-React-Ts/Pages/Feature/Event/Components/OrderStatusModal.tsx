@@ -40,8 +40,7 @@ export function OrderStatusModal({
         <form onSubmit={onSubmit} className="space-y-4 pt-2">
           <div>
             <label className="block text-sm font-medium mb-1">
-              Kode Order:{" "}
-              <span className="font-mono font-bold">{editingOrder?.order_code}</span>
+              Kode Order: <span className="font-mono font-bold">{editingOrder?.order_code}</span>
             </label>
             <Select value={status} onValueChange={(val: any) => onStatusChange(val)}>
               <SelectTrigger className="h-8 text-[13px]">

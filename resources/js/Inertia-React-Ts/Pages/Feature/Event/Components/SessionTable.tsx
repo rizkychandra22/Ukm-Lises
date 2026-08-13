@@ -30,7 +30,6 @@ export function SessionTable({
   onEdit,
   onDelete,
 }: SessionTableProps) {
-
   const columns = useMemo<ColumnDef<EventSession>[]>(
     () => [
       {
@@ -45,9 +44,7 @@ export function SessionTable({
           </Button>
         ),
         cell: ({ row }) => (
-          <span className="font-medium text-foreground">
-            {row.original.event?.title_id || "-"}
-          </span>
+          <span className="font-medium text-foreground">{row.original.event?.title_id || "-"}</span>
         ),
       },
       {
@@ -96,7 +93,9 @@ export function SessionTable({
           const allocation = row.original.ticket_allocation ?? 0;
           const remaining = row.original.remaining_tickets ?? allocation;
           return (
-            <span className="text-muted-foreground">{remaining} / {allocation} tiket tersedia</span>
+            <span className="text-muted-foreground">
+              {remaining} / {allocation} tiket tersedia
+            </span>
           );
         },
       },

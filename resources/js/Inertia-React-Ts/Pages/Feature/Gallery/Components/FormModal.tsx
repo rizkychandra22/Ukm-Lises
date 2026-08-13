@@ -63,9 +63,7 @@ export function FormModal({
                 value={formData.desc_id}
                 onChange={(e) => setFormData((prev) => ({ ...prev, desc_id: e.target.value }))}
               />
-              {errors.desc_id && (
-                <span className="text-xs text-destructive">{errors.desc_id}</span>
-              )}
+              {errors.desc_id && <span className="text-xs text-destructive">{errors.desc_id}</span>}
             </div>
 
             <div>

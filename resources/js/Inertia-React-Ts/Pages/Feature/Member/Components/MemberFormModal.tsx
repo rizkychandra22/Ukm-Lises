@@ -364,7 +364,8 @@ export function MemberFormModal({
                 </>
               ) : (
                 <>
-                  <Save className="w-4 h-4 mr-1.5" /> {editingMember ? "Simpan Perubahan" : "Simpan"}
+                  <Save className="w-4 h-4 mr-1.5" />{" "}
+                  {editingMember ? "Simpan Perubahan" : "Simpan"}
                 </>
               )}
             </Button>

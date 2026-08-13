@@ -18,8 +18,7 @@ function parseErrorMessage(error: AxiosError<ApiErrorResponse> | null): string {
   if (!error) return "";
   if (error.response) {
     return (
-      error.response.data?.message ||
-      "Terjadi kesalahan saat mengambil data anggota dari server."
+      error.response.data?.message || "Terjadi kesalahan saat mengambil data anggota dari server."
     );
   }
   if (error.request) {

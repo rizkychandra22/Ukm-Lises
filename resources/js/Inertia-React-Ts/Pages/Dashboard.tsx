@@ -1,5 +1,16 @@
 import { Head, usePage } from "@inertiajs/react";
-import { Users, UserMinus, UserCheck, GraduationCap, Rocket, MousePointerClick, Image, Newspaper, CalendarDays, Sparkles } from "lucide-react";
+import {
+  Users,
+  UserMinus,
+  UserCheck,
+  GraduationCap,
+  Rocket,
+  MousePointerClick,
+  Image,
+  Newspaper,
+  CalendarDays,
+  Sparkles,
+} from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import AdminLayout from "../Layouts/AppLayout";
 import { Badge } from "@/components/ui/badge";
@@ -73,8 +84,7 @@ export default function Dashboard() {
                 <i>
                   <b>{user?.name}</b>
                 </i>
-                , selamat datang kembali di pusat management internal{" "}
-                <b>Lises Asmarandana</b>.
+                , selamat datang kembali di pusat management internal <b>Lises Asmarandana</b>.
               </>
             ) : hasRole("User") ? (
               <>
@@ -82,8 +92,8 @@ export default function Dashboard() {
                 <i>
                   <b>{user?.name}</b>
                 </i>
-                , selamat datang kembali di <b>Lises Asmarandana</b>. Silahkan lihat
-                daftar teman angkatan kalian yaa.
+                , selamat datang kembali di <b>Lises Asmarandana</b>. Silahkan lihat daftar teman
+                angkatan kalian yaa.
               </>
             ) : null}
           </p>

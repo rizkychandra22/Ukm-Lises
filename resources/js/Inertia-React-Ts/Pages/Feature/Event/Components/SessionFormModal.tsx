@@ -43,12 +43,12 @@ export function SessionFormModal({
 }: SessionFormModalProps) {
   // Only show exclusive events for sessions, and only those that are not completed or cancelled.
   const exclusiveEvents = events.filter(
-    (e) => e.type === "Exclusive" && (e.status === "draft" || e.status === "published")
+    (e) => e.type === "Exclusive" && (e.status === "draft" || e.status === "published"),
   );
 
   // Calculate remaining tickets for selected event
   const selectedEvent = exclusiveEvents.find((e) => e.id.toString() === sessionData.event_id);
-  
+
   let eventTicketMax = 0;
   let isUnlimited = false;
 
@@ -57,7 +57,7 @@ export function SessionFormModal({
       const totalAllocated = sessions
         .filter((s) => s.event_id === selectedEvent.id && s.id !== editingSession?.id)
         .reduce((sum, s) => sum + s.ticket_allocation, 0);
-      
+
       eventTicketMax = Math.max(0, selectedEvent.ticket - totalAllocated);
     } else {
       isUnlimited = true;
@@ -84,12 +84,12 @@ export function SessionFormModal({
               <SelectContent>
                 {exclusiveEvents.map((evt) => (
                   <SelectItem key={evt.id} value={evt.id.toString()}>
-                    {evt.title_id} —{" "} {
-                      new Date(evt.date).toLocaleDateString("id-ID", {
-                        day: "2-digit",
-                        month: "short",
-                        year: "numeric",
-                      })}
+                    {evt.title_id} —{" "}
+                    {new Date(evt.date).toLocaleDateString("id-ID", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    })}
                     {/* {evt.title_id} ({evt.status.charAt(0).toUpperCase() + evt.status.slice(1)}) */}
                   </SelectItem>
                 ))}
@@ -151,11 +151,14 @@ export function SessionFormModal({
                 type="text"
                 className="h-8 text-[13px]"
                 value={
-                  selectedEvent 
-                    ? (isUnlimited ? "Unlimited" : eventTicketMax + " Tiket Tersedia") 
+                  selectedEvent
+                    ? isUnlimited
+                      ? "Unlimited"
+                      : eventTicketMax + " Tiket Tersedia"
                     : "Silahkan Pilih Event"
                 }
-                required readOnly
+                required
+                readOnly
               />
             </div>
           </div>
@@ -182,7 +185,8 @@ export function SessionFormModal({
                 </>
               ) : (
                 <>
-                  <Save className="w-4 h-4 mr-1.5" /> {editingSession ? "Simpan Perubahan" : "Simpan"}
+                  <Save className="w-4 h-4 mr-1.5" />{" "}
+                  {editingSession ? "Simpan Perubahan" : "Simpan"}
                 </>
               )}
             </Button>
