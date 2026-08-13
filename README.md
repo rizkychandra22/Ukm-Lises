@@ -158,33 +158,35 @@ Aplikasi kini dapat diakses melalui: **`http://localhost:8000`**
 
 ## 🧪 Cara Menjalankan Test (Automated Testing)
 
-Proyek ini dilengkapi dengan serangkaian test otomatis untuk memastikan kestabilan aplikasi, baik di sisi _backend_ maupun _frontend_.
+Proyek ini dilengkapi dengan serangkaian test otomatis untuk memastikan kestabilan aplikasi, baik di sisi _backend_ maupun _frontend_. Buka terminal baru di direktori proyek yang sama, lalu jalankan perintah berikut (agar mudah di-copy/paste).
 
-### 1. Test Backend (Laravel PHPUnit)
+### 1. Test Backend (Laravel / PHPUnit)
 
-Digunakan untuk menguji fitur API, logika controller, serta relasi model database secara aman di lingkungan _RefreshDatabase_.
+Buka terminal baru di direktori proyek, lalu jalankan:
 
-`ash
-
-# Menjalankan seluruh test backend
-
+```bash
+# Jalankan seluruh test backend (menggunakan Artisan / PHPUnit)
 php artisan test
-`
+```
 
-### 2. Test Frontend (React SPA Menggunakan Vitest)
+Jika ingin menjalankan PHPUnit langsung:
 
-Digunakan untuk menguji komponen UI, _custom hooks_, dan koneksi _API Client_ dengan simulasi (mocking) secara lokal tanpa bergantung pada server backend.
+```bash
+# Jalankan PHPUnit secara langsung
+vendor/bin/phpunit
+```
 
-`ash
+### 2. Test Frontend (React + Vitest)
 
+Buka terminal baru di direktori proyek untuk menguji komponen UI, _custom hooks_, dan koneksi _API Client_ dengan simulasi (mocking) secara lokal tanpa bergantung pada server backend.
+
+```bash
 # Menjalankan seluruh test frontend satu kali
-
 npm run test
 
-# Menjalankan test dalam mode interaktif (Watch Mode) sekaligus membuka Dashboard UI di Browser
-
+# Menjalankan test dalam mode interaktif (Watch Mode) dengan UI
 npm run test -- --ui --watch
-`
+```
 
 ---
 
@@ -210,5 +212,5 @@ resources/
 ---
 
 <p align="center">
-  Dibuat dengan ❤️ oleh <b>Rizky Chandra</b> untuk <b>UKM Lises Asmarandana UMMI</b>
+  Dibuat oleh <b>Rizky Chandra</b> untuk <b>UKM Lises Asmarandana UMMI</b>
 </p>
