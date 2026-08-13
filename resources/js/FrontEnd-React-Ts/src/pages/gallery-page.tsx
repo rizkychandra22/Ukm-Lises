@@ -3,7 +3,7 @@ import { useTranslation } from "@/i18n";
 import { SEOHead } from "@/components/SEOHead";
 import { ScrollTop } from "@/components/scroll-top";
 import { Sparkles, Camera } from "lucide-react";
-import { useGallery } from "@/hooks/useGallery";
+import { useGallery } from "@/hooks/use-gallery";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function GalleryPage() {

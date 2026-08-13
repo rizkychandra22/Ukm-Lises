@@ -18,9 +18,9 @@ import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/c
 import { useTranslation } from "@/i18n";
 import { SEOHead } from "@/components/SEOHead";
 import { ScrollTop } from "@/components/scroll-top";
-import { useGallery } from "@/hooks/useGallery";
-import { useNews } from "@/hooks/useNews";
-import { useStats } from "@/hooks/useStats";
+import { useGallery } from "@/hooks/use-gallery";
+import { useNews } from "@/hooks/use-news";
+import { useStats } from "@/hooks/use-stats";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function HomePage() {

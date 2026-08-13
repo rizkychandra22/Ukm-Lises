@@ -29,13 +29,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { type PayAccount } from "@/lib/api/order";
 import { type EventItem } from "@/lib/api/event";
-import { useEvents } from "@/hooks/useEvent";
+import { useEvents } from "@/hooks/use-event";
 import {
   usePaymentAccounts,
   useGenerateOrderCode,
   useTrackOrder,
   useSubmitOrder,
-} from "@/hooks/useOrder";
+} from "@/hooks/use-order";
 
 export function EventPage() {
   const { t, i18n } = useTranslation("EventPage");

@@ -1,9 +1,8 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
-import { NewsPage } from "../pages/NewsPage";
+import { GalleryPage } from "../pages/gallery-page";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter } from "react-router-dom";
 
 vi.mock("@/i18n", () => ({
   useTranslation: () => ({
@@ -12,18 +11,16 @@ vi.mock("@/i18n", () => ({
   }),
 }));
 
-vi.mock("@/hooks/useNews", () => ({
-  useNews: () => ({ isLoading: false, news: [] }),
+vi.mock("@/hooks/useGallery", () => ({
+  useGallery: () => ({ isLoading: false, galleries: [] }),
 }));
 
-describe("NewsPage", () => {
-  it("should render the news page successfully", () => {
+describe("GalleryPage", () => {
+  it("should render the gallery page successfully", () => {
     const queryClient = new QueryClient();
     render(
       <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <NewsPage />
-        </BrowserRouter>
+        <GalleryPage />
       </QueryClientProvider>,
     );
     expect(document.body).toBeInTheDocument();

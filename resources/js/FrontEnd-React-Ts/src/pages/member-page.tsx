@@ -4,7 +4,7 @@ import { Sparkles, Search, ArrowUpDown, Eye } from "lucide-react";
 import { useTranslation } from "@/i18n";
 import { SEOHead } from "@/components/SEOHead";
 import { type Member, type Batch } from "@/lib/api/member";
-import { useMembers, useBatches } from "@/hooks/useMember";
+import { useMembers, useBatches } from "@/hooks/use-member";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";

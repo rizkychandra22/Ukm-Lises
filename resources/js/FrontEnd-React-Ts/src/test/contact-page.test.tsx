@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
-import { AboutPage } from "../pages/AboutPage";
+import { ContactPage } from "../pages/contact-page";
 
 vi.mock("@/i18n", () => ({
   useTranslation: () => ({
@@ -10,9 +10,9 @@ vi.mock("@/i18n", () => ({
   }),
 }));
 
-describe("AboutPage", () => {
-  it("should render the about page successfully", () => {
-    render(<AboutPage />);
+describe("ContactPage", () => {
+  it("should render the contact page successfully", () => {
+    render(<ContactPage />);
     expect(document.body).toBeInTheDocument();
   });
 });

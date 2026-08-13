@@ -3,15 +3,15 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { SiteLayout } from "./components/site-layout";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
-import { AboutPage } from "./pages/AboutPage";
-import { ContactPage } from "./pages/ContactPage";
-import { GalleryPage } from "./pages/GalleryPage";
-import { HomePage } from "./pages/HomePage";
-import { NewsPage } from "./pages/NewsPage";
-import { NewsDetailPage } from "./pages/NewsDetailPage";
-import { EventPage } from "./pages/EventPage";
-import { MemberPage } from "./pages/MemberPage";
-import { NotFoundPage } from "./pages/NotFoundPage";
+import { AboutPage } from "./pages/about-page";
+import { ContactPage } from "./pages/contact-page";
+import { GalleryPage } from "./pages/gallery-page";
+import { HomePage } from "./pages/home-page";
+import { NewsPage } from "./pages/news-page";
+import { NewsDetailPage } from "./pages/news-detail-page";
+import { EventPage } from "./pages/event-page";
+import { MemberPage } from "./pages/member-page";
+import { NotFoundPage } from "./pages/not-found-page";
 
 function App() {
   useEffect(() => {

@@ -16,7 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useNews, useNewsDetail } from "@/hooks/useNews";
+import { useNews, useNewsDetail } from "@/hooks/use-news";
 import { useTranslation } from "@/i18n";
 import { SEOHead } from "@/components/SEOHead";
 import { ScrollTop } from "@/components/scroll-top";
