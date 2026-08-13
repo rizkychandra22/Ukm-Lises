@@ -38,13 +38,13 @@ class AdminRoutesTest extends TestCase
         ];
 
         foreach ($allowed as $route) {
-            $response = $this->withoutExceptionHandling()->actingAs($user)->get($route[0]);
+            $response = $this->actingAs($user)->get($route[0]);
             $response->assertStatus(200);
             $response->assertInertia(fn (Assert $page) => $page->component($route[1]));
         }
 
         // Developer cannot access Information route
-        $response = $this->withoutExceptionHandling()->actingAs($user)->get('/dashboard/information');
+        $response = $this->actingAs($user)->get('/dashboard/information');
         $this->assertTrue(in_array($response->status(), [403, 302]));
     }
 
@@ -64,7 +64,7 @@ class AdminRoutesTest extends TestCase
         ];
 
         foreach ($allowed as $route) {
-            $response = $this->withoutExceptionHandling()->actingAs($user)->get($route[0]);
+            $response = $this->actingAs($user)->get($route[0]);
             $response->assertStatus(200);
             $response->assertInertia(fn (Assert $page) => $page->component($route[1]));
         }
@@ -77,7 +77,7 @@ class AdminRoutesTest extends TestCase
         ];
 
         foreach ($forbidden as $uri) {
-            $response = $this->withoutExceptionHandling()->actingAs($user)->get($uri);
+            $response = $this->actingAs($user)->get($uri);
             $this->assertTrue(in_array($response->status(), [403, 302]));
         }
     }
@@ -95,7 +95,7 @@ class AdminRoutesTest extends TestCase
         ];
 
         foreach ($allowed as $route) {
-            $response = $this->withoutExceptionHandling()->actingAs($user)->get($route[0]);
+            $response = $this->actingAs($user)->get($route[0]);
             $response->assertStatus(200);
             $response->assertInertia(fn (Assert $page) => $page->component($route[1]));
         }
@@ -111,7 +111,7 @@ class AdminRoutesTest extends TestCase
         ];
 
         foreach ($forbidden as $uri) {
-            $response = $this->withoutExceptionHandling()->actingAs($user)->get($uri);
+            $response = $this->actingAs($user)->get($uri);
             $this->assertTrue(in_array($response->status(), [403, 302]));
         }
     }

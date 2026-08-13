@@ -32,5 +32,5 @@
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
-    </php>
+        <env name="CLOUDINARY_URL" value="cloudinary://123456789012345:abcde_fghij1234567890@my_cloud_name"/>`n    </php>
 </phpunit>
