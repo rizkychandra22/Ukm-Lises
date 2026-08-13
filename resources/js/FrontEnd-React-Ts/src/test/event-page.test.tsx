@@ -12,12 +12,13 @@ vi.mock("@/i18n", () => ({
   }),
 }));
 
-vi.mock("@/hooks/useEvent", () => ({
+vi.mock("@/hooks/use-event", () => ({
   useEvents: () => ({ isLoading: false, events: [] }),
 }));
-vi.mock("@/hooks/usePayment", () => ({
+vi.mock("@/hooks/use-order", () => ({
   usePaymentAccounts: () => ({ isLoading: false, accounts: [], refetch: vi.fn() }),
   useGenerateOrderCode: () => ({ isLoading: false, data: null, refetch: vi.fn() }),
+  useTrackOrder: () => ({ orderData: null, isFetching: false }),
   useSubmitOrder: () => ({ submitOrderAsync: vi.fn(), isPending: false }),
 }));
 

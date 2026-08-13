@@ -12,7 +12,7 @@ vi.mock("@/i18n", () => ({
   }),
 }));
 
-vi.mock("@/hooks/useMember", () => ({
+vi.mock("@/hooks/use-member", () => ({
   useMembers: () => ({ isLoading: false, members: [] }),
   useBatches: () => ({ isLoading: false, batches: [] }),
 }));

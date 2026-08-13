@@ -12,7 +12,7 @@ vi.mock("@/i18n", () => ({
   }),
 }));
 
-vi.mock("@/hooks/useNews", () => ({
+vi.mock("@/hooks/use-news", () => ({
   useNews: () => ({ isLoading: false, news: [] }),
 }));
 

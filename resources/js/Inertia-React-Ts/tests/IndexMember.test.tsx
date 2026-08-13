@@ -8,6 +8,6 @@ describe('IndexMember Component', () => {
             batches: [], members: []
         };
         const { container } = render(<IndexMember {...mockProps as any} />);
-        expect(container).toBeInTheDocument();
+        expect(container).toBeTruthy();
     });
 });

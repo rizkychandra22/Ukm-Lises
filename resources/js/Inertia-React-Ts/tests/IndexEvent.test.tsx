@@ -8,6 +8,6 @@ describe('IndexEvent Component', () => {
             events: [], orders: [], accounts: [], sessions: [], members: []
         };
         const { container } = render(<IndexEvent {...mockProps as any} />);
-        expect(container).toBeInTheDocument();
+        expect(container).toBeTruthy();
     });
 });

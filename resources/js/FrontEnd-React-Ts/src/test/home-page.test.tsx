@@ -12,13 +12,13 @@ vi.mock("@/i18n", () => ({
   }),
 }));
 
-vi.mock("@/hooks/useGallery", () => ({
+vi.mock("@/hooks/use-gallery", () => ({
   useGallery: () => ({ isLoading: false, galleries: [] }),
 }));
-vi.mock("@/hooks/useNews", () => ({
+vi.mock("@/hooks/use-news", () => ({
   useNews: () => ({ isLoading: false, news: [] }),
 }));
-vi.mock("@/hooks/useStats", () => ({
+vi.mock("@/hooks/use-stats", () => ({
   useStats: () => ({
     isLoading: false,
     stats: { total_members: 10, total_batches: 5, total_events: 3 },

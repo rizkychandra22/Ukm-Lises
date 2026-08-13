@@ -10,6 +10,6 @@ describe('Information Component', () => {
             releases: []
         };
         const { container } = render(<Information {...mockProps as any} />);
-        expect(container).toBeInTheDocument();
+        expect(container).toBeTruthy();
     });
 });

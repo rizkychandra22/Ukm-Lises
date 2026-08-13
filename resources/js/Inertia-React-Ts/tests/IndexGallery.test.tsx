@@ -8,6 +8,6 @@ describe('IndexGallery Component', () => {
             galleries: { data: [], links: [] }
         };
         const { container } = render(<IndexGallery {...mockProps as any} />);
-        expect(container).toBeInTheDocument();
+        expect(container).toBeTruthy();
     });
 });

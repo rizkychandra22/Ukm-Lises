@@ -11,7 +11,7 @@ vi.mock("@/i18n", () => ({
   }),
 }));
 
-vi.mock("@/hooks/useGallery", () => ({
+vi.mock("@/hooks/use-gallery", () => ({
   useGallery: () => ({ isLoading: false, galleries: [] }),
 }));
 

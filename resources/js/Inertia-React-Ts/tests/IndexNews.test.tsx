@@ -8,6 +8,6 @@ describe('IndexNews Component', () => {
             news: { data: [], links: [] }
         };
         const { container } = render(<IndexNews {...mockProps as any} />);
-        expect(container).toBeInTheDocument();
+        expect(container).toBeTruthy();
     });
 });

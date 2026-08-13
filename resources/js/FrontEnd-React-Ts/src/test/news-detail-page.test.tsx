@@ -19,7 +19,7 @@ vi.mock("@/i18n", () => ({
 }));
 
 // Mock usePosts to return a post with a script tag (for testing XSS)
-vi.mock("@/hooks/useNews", () => ({
+vi.mock("@/hooks/use-news", () => ({
   useNews: () => ({ isLoading: false, news: [] }),
   useNewsDetail: () => ({
     isLoading: false,
