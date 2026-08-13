@@ -76,7 +76,7 @@
 
   --gradient-gold: linear-gradient(135deg, var(--gold-deep), var(--gold));
   --shadow-gold: 0 20px 60px -20px color-mix(in oklab, var(--gold) 45%, transparent);
-  
+
   --sidebar-background: oklch(0.99 0.01 90);
   --sidebar-foreground: oklch(0.14 0.01 60);
   --sidebar-primary: oklch(0.82 0.16 82);
@@ -128,7 +128,10 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
   }
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     font-family: var(--font-display);
     letter-spacing: -0.01em;
   }

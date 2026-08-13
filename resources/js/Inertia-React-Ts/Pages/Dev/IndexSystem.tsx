@@ -11,13 +11,7 @@ import { SystemOverview } from "../Feature/Dev/Components/SystemOverview";
 import { CacheManagement } from "../Feature/Dev/Components/CacheManagement";
 import { SystemLogs } from "../Feature/Dev/Components/SystemLogs";
 
-export default function IndexSystem({
-  envInfo,
-  diskInfo,
-  dbInfo,
-  sysInfo,
-  logs,
-}: SystemProps) {
+export default function IndexSystem({ envInfo, diskInfo, dbInfo, sysInfo, logs }: SystemProps) {
   const [activeTab, setActiveTab] = useState("overview");
   const { post, processing } = useForm({
     type: "",
@@ -31,7 +25,7 @@ export default function IndexSystem({
       },
       onError: () => {
         toast.error(`Gagal mengeksekusi aksi: ${type}`);
-      }
+      },
     });
   };
 
@@ -93,9 +87,8 @@ export default function IndexSystem({
 
         {/* Tab Content Wrapper */}
         <Tabs value={activeTab} className="w-full">
-
           <TabsContent value="overview" className="mt-0 space-y-4">
-            <SystemOverview 
+            <SystemOverview
               sysInfo={sysInfo}
               dbInfo={dbInfo}
               diskInfo={diskInfo}
@@ -106,10 +99,7 @@ export default function IndexSystem({
           </TabsContent>
 
           <TabsContent value="cache" className="mt-0 space-y-4">
-            <CacheManagement 
-              processing={processing}
-              onClearCache={handleClearCache}
-            />
+            <CacheManagement processing={processing} onClearCache={handleClearCache} />
           </TabsContent>
 
           <TabsContent value="logs" className="mt-0 space-y-4">

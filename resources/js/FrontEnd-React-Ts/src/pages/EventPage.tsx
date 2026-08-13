@@ -30,7 +30,12 @@ import { toast } from "sonner";
 import { type PayAccount } from "@/lib/api/order";
 import { type EventItem } from "@/lib/api/event";
 import { useEvents } from "@/hooks/useEvent";
-import { usePaymentAccounts, useGenerateOrderCode, useTrackOrder, useSubmitOrder } from "@/hooks/useOrder";
+import {
+  usePaymentAccounts,
+  useGenerateOrderCode,
+  useTrackOrder,
+  useSubmitOrder,
+} from "@/hooks/useOrder";
 
 export function EventPage() {
   const { t, i18n } = useTranslation("EventPage");
@@ -59,7 +64,8 @@ export function EventPage() {
   const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
 
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
-  const { orderData: trackedOrder, isFetching: isTrackingOrder } = useTrackOrder(debouncedSearchQuery);
+  const { orderData: trackedOrder, isFetching: isTrackingOrder } =
+    useTrackOrder(debouncedSearchQuery);
   const { refetch: refetchAccounts } = usePaymentAccounts();
   const { refetch: refetchOrderCode } = useGenerateOrderCode();
   const { submitOrderAsync } = useSubmitOrder();
@@ -114,10 +120,7 @@ export function EventPage() {
     setIsDialogOpen(true);
 
     try {
-      const [accountsRes, codeRes] = await Promise.all([
-        refetchAccounts(),
-        refetchOrderCode(),
-      ]);
+      const [accountsRes, codeRes] = await Promise.all([refetchAccounts(), refetchOrderCode()]);
       setAccounts(accountsRes.data ?? []);
       setOrderCode(codeRes.data ?? null);
     } catch (e) {
@@ -506,12 +509,15 @@ export function EventPage() {
                   {selectedEvent?.sessions && selectedEvent.sessions.length > 0 && (
                     <div className="grid gap-2">
                       <Label>
-                        {isEn ? "Ticket Session" : "Sesi Tiket"} <span className="text-red-500">*</span>
+                        {isEn ? "Ticket Session" : "Sesi Tiket"}{" "}
+                        <span className="text-red-500">*</span>
                       </Label>
                       <Select
                         required
                         value={formData.event_session_id}
-                        onValueChange={(val) => setFormData({ ...formData, event_session_id: val, qty: 1 })}
+                        onValueChange={(val) =>
+                          setFormData({ ...formData, event_session_id: val, qty: 1 })
+                        }
                       >
                         <SelectTrigger>
                           <SelectValue
@@ -521,7 +527,8 @@ export function EventPage() {
                         <SelectContent>
                           {selectedEvent.sessions.map((session) => (
                             <SelectItem key={session.id} value={session.id.toString()}>
-                              {isEn && session.name_en ? session.name_en : session.name_id} ({session.start_time.slice(0, 5)} - {session.end_time.slice(0, 5)})
+                              {isEn && session.name_en ? session.name_en : session.name_id} (
+                              {session.start_time.slice(0, 5)} - {session.end_time.slice(0, 5)})
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -584,11 +591,19 @@ export function EventPage() {
                           min="1"
                           max={
                             selectedEvent?.sessions && selectedEvent.sessions.length > 0
-                              ? (selectedEvent.sessions.find((s) => s.id.toString() === formData.event_session_id)?.remaining_tickets ?? undefined)
+                              ? (selectedEvent.sessions.find(
+                                  (s) => s.id.toString() === formData.event_session_id,
+                                )?.remaining_tickets ?? undefined)
                               : (selectedEvent?.remaining_tickets ?? undefined)
                           }
                           required
-                          disabled={!!(selectedEvent?.sessions && selectedEvent.sessions.length > 0 && !formData.event_session_id)}
+                          disabled={
+                            !!(
+                              selectedEvent?.sessions &&
+                              selectedEvent.sessions.length > 0 &&
+                              !formData.event_session_id
+                            )
+                          }
                           value={formData.qty}
                           onChange={(e) => {
                             const val = e.target.value;
@@ -602,17 +617,26 @@ export function EventPage() {
                             }
                           }}
                           className={
-                            (selectedEvent?.sessions && selectedEvent.sessions.length > 0)
-                              ? (formData.event_session_id ? "pr-30" : "")
-                              : (selectedEvent?.remaining_tickets !== null ? "pr-30" : "")
+                            selectedEvent?.sessions && selectedEvent.sessions.length > 0
+                              ? formData.event_session_id
+                                ? "pr-30"
+                                : ""
+                              : selectedEvent?.remaining_tickets !== null
+                                ? "pr-30"
+                                : ""
                           }
                         />
-                        {((selectedEvent?.sessions && selectedEvent.sessions.length > 0 && formData.event_session_id) || 
-                          (!(selectedEvent?.sessions && selectedEvent.sessions.length > 0) && selectedEvent?.remaining_tickets !== null)) && (
+                        {((selectedEvent?.sessions &&
+                          selectedEvent.sessions.length > 0 &&
+                          formData.event_session_id) ||
+                          (!(selectedEvent?.sessions && selectedEvent.sessions.length > 0) &&
+                            selectedEvent?.remaining_tickets !== null)) && (
                           <span className="absolute right-3 text-xs text-muted-foreground">
                             {isEn ? "Left:" : "Sisa:"}{" "}
                             {selectedEvent?.sessions && selectedEvent.sessions.length > 0
-                              ? selectedEvent.sessions.find((s) => s.id.toString() === formData.event_session_id)?.remaining_tickets
+                              ? selectedEvent.sessions.find(
+                                  (s) => s.id.toString() === formData.event_session_id,
+                                )?.remaining_tickets
                               : selectedEvent?.remaining_tickets}
                           </span>
                         )}
@@ -651,10 +675,7 @@ export function EventPage() {
                           </SelectTrigger>
                           <SelectContent>
                             {accounts.map((acc) => (
-                              <SelectItem
-                                key={acc.id}
-                                value={acc.id.toString()}
-                              >
+                              <SelectItem key={acc.id} value={acc.id.toString()}>
                                 {acc.name_account} - {acc.no_account} -{" "}
                                 {acc.batch_member?.name || "Unknown"}
                               </SelectItem>
@@ -669,7 +690,10 @@ export function EventPage() {
                                 {isEn ? "Account Number" : "Nomor Rekening"}
                               </p>
                               <p className="font-mono font-semibold text-primary">
-                                {accounts.find((a) => a.id.toString() === formData.pay_account_id)?.no_account}
+                                {
+                                  accounts.find((a) => a.id.toString() === formData.pay_account_id)
+                                    ?.no_account
+                                }
                               </p>
                             </div>
                             <Button
@@ -677,10 +701,16 @@ export function EventPage() {
                               variant="outline"
                               size="sm"
                               onClick={() => {
-                                const acc = accounts.find((a) => a.id.toString() === formData.pay_account_id);
+                                const acc = accounts.find(
+                                  (a) => a.id.toString() === formData.pay_account_id,
+                                );
                                 if (acc) {
                                   navigator.clipboard.writeText(acc.no_account);
-                                  toast.success(isEn ? "Account number copied!" : "Nomor rekening berhasil disalin!");
+                                  toast.success(
+                                    isEn
+                                      ? "Account number copied!"
+                                      : "Nomor rekening berhasil disalin!",
+                                  );
                                 }
                               }}
                             >
@@ -783,7 +813,11 @@ export function EventPage() {
                       </p>
                       {trackedOrder.event_session && (
                         <p className="text-sm font-semibold text-primary mt-1">
-                          {isEn && trackedOrder.event_session.name_en ? trackedOrder.event_session.name_en : trackedOrder.event_session.name_id} ({trackedOrder.event_session.start_time.slice(0, 5)} - {trackedOrder.event_session.end_time.slice(0, 5)})
+                          {isEn && trackedOrder.event_session.name_en
+                            ? trackedOrder.event_session.name_en
+                            : trackedOrder.event_session.name_id}{" "}
+                          ({trackedOrder.event_session.start_time.slice(0, 5)} -{" "}
+                          {trackedOrder.event_session.end_time.slice(0, 5)})
                         </p>
                       )}
                     </div>

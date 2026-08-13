@@ -11,8 +11,7 @@ function parseErrorMessage(error: AxiosError<ApiErrorResponse> | null): string {
   if (!error) return "";
   if (error.response) {
     return (
-      error.response.data?.message ||
-      "Terjadi kesalahan saat mengambil data gallery dari server."
+      error.response.data?.message || "Terjadi kesalahan saat mengambil data gallery dari server."
     );
   }
   if (error.request) {

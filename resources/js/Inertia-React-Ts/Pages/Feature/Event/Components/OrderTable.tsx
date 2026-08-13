@@ -94,7 +94,9 @@ export function OrderTable({
         ),
         cell: ({ row }: { row: { original: PayOrder } }) => (
           <div className="w-30 sm:w-45">
-            <span className="text-sm font-medium text-foreground line-clamp-2">{row.original.event?.title_id || "-"}</span>
+            <span className="text-sm font-medium text-foreground line-clamp-2">
+              {row.original.event?.title_id || "-"}
+            </span>
           </div>
         ),
       },
@@ -108,7 +110,9 @@ export function OrderTable({
           const end = session.end_time ? session.end_time.slice(0, 5) : "";
           return (
             <div className="flex flex-col gap-0.5 text-sm w-20 sm:w-18">
-              <span className="font-medium text-foreground whitespace-nowrap">{session.name_id}</span>
+              <span className="font-medium text-foreground whitespace-nowrap">
+                {session.name_id}
+              </span>
               <span className="text-[11px] text-muted-foreground whitespace-nowrap">
                 {start} - {end}
               </span>

@@ -28,7 +28,6 @@ export interface LogVisitorProps extends SystemProps {
 }
 
 export default function LogVisitor({ dbInfo, diskInfo, guests }: LogVisitorProps) {
-    
   const isHealthy = dbInfo.status === "Connected" && diskInfo.usage_percent < 90;
 
   const [dateFilter, setDateFilter] = useState("all");
@@ -43,11 +42,11 @@ export default function LogVisitor({ dbInfo, diskInfo, guests }: LogVisitorProps
   }, [guests, dateFilter, deviceFilter]);
 
   const uniqueDates = useMemo(() => {
-    return Array.from(new Set(guests.map(g => g.visit_date))).sort((a, b) => (a < b ? 1 : -1));
+    return Array.from(new Set(guests.map((g) => g.visit_date))).sort((a, b) => (a < b ? 1 : -1));
   }, [guests]);
 
   const uniqueDevices = useMemo(() => {
-    return Array.from(new Set(guests.map(g => g.device_name || "Unknown"))).sort();
+    return Array.from(new Set(guests.map((g) => g.device_name || "Unknown"))).sort();
   }, [guests]);
 
   const columns = useMemo<ColumnDef<Visitor, any>[]>(
@@ -100,18 +99,20 @@ export default function LogVisitor({ dbInfo, diskInfo, guests }: LogVisitorProps
         cell: ({ row }: { row: { original: Visitor } }) => (
           <span className="font-medium text-sm text-foreground">
             {new Date(row.original.visit_date).toLocaleDateString("id-ID", {
-              day: "2-digit", month: "long", year: "numeric"
+              day: "2-digit",
+              month: "long",
+              year: "numeric",
             })}
           </span>
         ),
       },
     ],
-    []
+    [],
   );
 
   return (
     <AppLayout>
-      <Head title="Log Visitor" />  
+      <Head title="Log Visitor" />
       <div className="flex flex-col gap-4 max-w-7xl mx-auto pb-12 relative">
         {/* Header Section */}
         <div className="w-full">
@@ -132,7 +133,7 @@ export default function LogVisitor({ dbInfo, diskInfo, guests }: LogVisitorProps
         </div>
 
         <div className="w-full border-b border-border mt-2" />
-        
+
         <DataTable
           columns={columns}
           data={filteredData}
@@ -163,7 +164,9 @@ export default function LogVisitor({ dbInfo, diskInfo, guests }: LogVisitorProps
                   {uniqueDates.map((date) => (
                     <SelectItem key={date} value={date}>
                       {new Date(date).toLocaleDateString("id-ID", {
-                        day: "2-digit", month: "long", year: "numeric"
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric",
                       })}
                     </SelectItem>
                   ))}

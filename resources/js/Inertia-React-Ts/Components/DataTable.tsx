@@ -69,7 +69,9 @@ export function DataTable<TData extends Record<string, any>>({
   return (
     <div className="space-y-4">
       {/* Controls Row */}
-      <div className={`flex ${mobileLayout === "row" ? "flex-row items-center flex-wrap sm:flex-nowrap" : "flex-col lg:flex-row items-stretch lg:items-center"} justify-between gap-3`}>
+      <div
+        className={`flex ${mobileLayout === "row" ? "flex-row items-center flex-wrap sm:flex-nowrap" : "flex-col lg:flex-row items-stretch lg:items-center"} justify-between gap-3`}
+      >
         {/* Search Input */}
         <SearchFilter
           value={globalFilter ?? ""}
@@ -118,7 +120,10 @@ export function DataTable<TData extends Record<string, any>>({
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="text-center h-24 text-sm text-muted-foreground">
+                <TableCell
+                  colSpan={columns.length}
+                  className="text-center h-24 text-sm text-muted-foreground"
+                >
                   Tidak ada data yang ditemukan.
                 </TableCell>
               </TableRow>
@@ -148,9 +153,7 @@ export function DataTable<TData extends Record<string, any>>({
               ))}
             </SelectContent>
           </Select>
-          <span>
-            | Total {table.getFilteredRowModel().rows.length} data
-          </span>
+          <span>| Total {table.getFilteredRowModel().rows.length} data</span>
         </div>
 
         <div className="flex items-center gap-1.5">

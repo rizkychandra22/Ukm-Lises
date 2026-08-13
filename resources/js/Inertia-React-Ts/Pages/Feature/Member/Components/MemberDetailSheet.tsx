@@ -13,11 +13,7 @@ interface MemberDetailSheetProps {
   onClose: () => void;
 }
 
-export function MemberDetailSheet({
-  isOpen,
-  member,
-  onClose,
-}: MemberDetailSheetProps) {
+export function MemberDetailSheet({ isOpen, member, onClose }: MemberDetailSheetProps) {
   if (!member) return null;
 
   return (
@@ -60,7 +56,9 @@ export function MemberDetailSheet({
               <h4 className="text-sm font-medium text-muted-foreground">
                 Angkatan Tahun <b>{member.batch?.year}</b>
               </h4>
-              <p className="text-base font-medium">{member.batch?.year} - {member.batch?.name_id}</p>
+              <p className="text-base font-medium">
+                {member.batch?.year} - {member.batch?.name_id}
+              </p>
             </div>
 
             {member.type === "Pengurus" && (

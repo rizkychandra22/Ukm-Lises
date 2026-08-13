@@ -13,13 +13,7 @@ interface BatchTableProps {
   hasRole: (roles: string | string[]) => boolean;
 }
 
-export function BatchTable({
-  batches,
-  onEdit,
-  onDelete,
-  onAdd,
-  hasRole,
-}: BatchTableProps) {
+export function BatchTable({ batches, onEdit, onDelete, onAdd, hasRole }: BatchTableProps) {
   const columns = useMemo<ColumnDef<Batch, any>[]>(
     () => [
       {
@@ -107,16 +101,17 @@ export function BatchTable({
     [],
   );
 
-  const toolbarExtra = hasRole(["Developer", "Admin"]) && onAdd ? (
-    <Button
-      size="sm"
-      className="h-8 px-3.5 rounded-lg text-[13px] font-medium shrink-0 shadow-sm w-full sm:w-auto flex-none"
-      onClick={onAdd}
-    >
-      <Plus className="h-3.5 w-3.5 mr-1" />
-      Tambah Angkatan
-    </Button>
-  ) : null;
+  const toolbarExtra =
+    hasRole(["Developer", "Admin"]) && onAdd ? (
+      <Button
+        size="sm"
+        className="h-8 px-3.5 rounded-lg text-[13px] font-medium shrink-0 shadow-sm w-full sm:w-auto flex-none"
+        onClick={onAdd}
+      >
+        <Plus className="h-3.5 w-3.5 mr-1" />
+        Tambah Angkatan
+      </Button>
+    ) : null;
 
   return (
     <DataTable

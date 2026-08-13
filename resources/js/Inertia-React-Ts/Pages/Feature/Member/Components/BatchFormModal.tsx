@@ -41,12 +41,13 @@ export function BatchFormModal({
     <Dialog open={isOpen} onOpenChange={(open) => !open && onCancel()}>
       <DialogContent className="w-[90%] max-w-[360px] rounded-md">
         <DialogHeader>
-          <DialogTitle>
-            {editingBatch ? "Edit Angkatan" : "Tambah Angkatan Baru"}
-          </DialogTitle>
+          <DialogTitle>{editingBatch ? "Edit Angkatan" : "Tambah Angkatan Baru"}</DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={onSubmit} className="space-y-4 pt-4 max-h-[75vh] overflow-y-auto no-scrollbar px-1">
+        <form
+          onSubmit={onSubmit}
+          className="space-y-4 pt-4 max-h-[75vh] overflow-y-auto no-scrollbar px-1"
+        >
           <div>
             <label className="block text-sm font-medium mb-1">Tahun Angkatan</label>
             <Input
@@ -87,7 +88,9 @@ export function BatchFormModal({
             <div className="flex items-start gap-2 bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 p-3 rounded-md">
               <Info className="h-4 w-4 mt-0.5 shrink-0" />
               <p className="text-xs leading-relaxed">
-                Pemberitahuan: Sistem akan otomatis membuatkan akun akses untuk angkatan ini dengan Username <span className="font-semibold">lises{batchData.year || "202X"}</span> dan Password bawaan: <span className="font-semibold">password</span>
+                Pemberitahuan: Sistem akan otomatis membuatkan akun akses untuk angkatan ini dengan
+                Username <span className="font-semibold">lises{batchData.year || "202X"}</span> dan
+                Password bawaan: <span className="font-semibold">password</span>
               </p>
             </div>
           )}
@@ -97,7 +100,8 @@ export function BatchFormModal({
               <div className="flex items-start gap-2 bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 p-3 rounded-md">
                 <Info className="h-4 w-4 mt-0.5 shrink-0" />
                 <p className="text-xs leading-relaxed">
-                  Opsional: Isi kolom di bawah jika ingin mengubah akses akun untuk angkatan ini. (Biarkan kosong jika tidak diubah)
+                  Opsional: Isi kolom di bawah jika ingin mengubah akses akun untuk angkatan ini.
+                  (Biarkan kosong jika tidak diubah)
                 </p>
               </div>
               <div>

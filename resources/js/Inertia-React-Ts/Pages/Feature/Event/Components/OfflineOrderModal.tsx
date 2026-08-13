@@ -59,8 +59,8 @@ export function OfflineOrderModal({
           <DialogTitle>Catat Pesanan Tiket Offline</DialogTitle>
         </DialogHeader>
         <p className="text-[12px] text-muted-foreground -mt-2 pb-1">
-          Pesanan ini dicatat manual oleh admin. Status otomatis berhasil karena pembayaran
-          diterima langsung.
+          Pesanan ini dicatat manual oleh admin. Status otomatis berhasil karena pembayaran diterima
+          langsung.
         </p>
 
         <form
@@ -98,43 +98,56 @@ export function OfflineOrderModal({
           </div>
 
           {/* Session Selection (Only for Exclusive Events) */}
-          {offlineOrderData.event_id && events.find(e => e.id.toString() === offlineOrderData.event_id)?.type === 'Exclusive' && (
-            <div>
-              <label className="block text-sm font-medium mb-1">Sesi Event <span className="text-destructive">*</span></label>
-              <Select
-                value={offlineOrderData.event_session_id}
-                onValueChange={(val: string) => setOfflineOrderData("event_session_id", val)}
-                required
-              >
-                <SelectTrigger className="h-8 text-[13px]">
-                  <SelectValue placeholder="Pilih Sesi Event..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {sessions.filter((s) => s.event_id.toString() === offlineOrderData.event_id).length === 0 ? (
-                    <SelectItem value="none" disabled className="text-foreground">
-                      Event ini belum memiliki sesi tampil
-                    </SelectItem>
-                  ) : (
-                    sessions
-                      .filter((s) => s.event_id.toString() === offlineOrderData.event_id)
-                      .map((session) => {
-                        const available = session.ticket_allocation - (session.orders_sum_qty || 0);
-                        const start = session.start_time ? session.start_time.slice(0, 5) : "";
-                        const end = session.end_time ? session.end_time.slice(0, 5) : "";
-                        return (
-                          <SelectItem key={session.id} value={session.id.toString()} disabled={available <= 0}>
-                            {session.name_id} ({start} - {end}) — {available > 0 ? `Sisa ${available} Tiket` : "Habis"}
-                          </SelectItem>
-                        );
-                      })
-                  )}
-                </SelectContent>
-              </Select>
-              {offlineOrderErrors.event_session_id && (
-                <span className="text-xs text-destructive">{offlineOrderErrors.event_session_id}</span>
-              )}
-            </div>
-          )}
+          {offlineOrderData.event_id &&
+            events.find((e) => e.id.toString() === offlineOrderData.event_id)?.type ===
+              "Exclusive" && (
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Sesi Event <span className="text-destructive">*</span>
+                </label>
+                <Select
+                  value={offlineOrderData.event_session_id}
+                  onValueChange={(val: string) => setOfflineOrderData("event_session_id", val)}
+                  required
+                >
+                  <SelectTrigger className="h-8 text-[13px]">
+                    <SelectValue placeholder="Pilih Sesi Event..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {sessions.filter((s) => s.event_id.toString() === offlineOrderData.event_id)
+                      .length === 0 ? (
+                      <SelectItem value="none" disabled className="text-foreground">
+                        Event ini belum memiliki sesi tampil
+                      </SelectItem>
+                    ) : (
+                      sessions
+                        .filter((s) => s.event_id.toString() === offlineOrderData.event_id)
+                        .map((session) => {
+                          const available =
+                            session.ticket_allocation - (session.orders_sum_qty || 0);
+                          const start = session.start_time ? session.start_time.slice(0, 5) : "";
+                          const end = session.end_time ? session.end_time.slice(0, 5) : "";
+                          return (
+                            <SelectItem
+                              key={session.id}
+                              value={session.id.toString()}
+                              disabled={available <= 0}
+                            >
+                              {session.name_id} ({start} - {end}) —{" "}
+                              {available > 0 ? `Sisa ${available} Tiket` : "Habis"}
+                            </SelectItem>
+                          );
+                        })
+                    )}
+                  </SelectContent>
+                </Select>
+                {offlineOrderErrors.event_session_id && (
+                  <span className="text-xs text-destructive">
+                    {offlineOrderErrors.event_session_id}
+                  </span>
+                )}
+              </div>
+            )}
 
           {/* Info Pemesan */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -204,10 +217,14 @@ export function OfflineOrderModal({
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Rekening Pembayaran (Pilih jika Transfer)</label>
+            <label className="block text-sm font-medium mb-1">
+              Rekening Pembayaran (Pilih jika Transfer)
+            </label>
             <Select
               value={offlineOrderData.pay_account_id || "cash"}
-              onValueChange={(val: any) => setOfflineOrderData("pay_account_id", val === "cash" ? "" : val)}
+              onValueChange={(val: any) =>
+                setOfflineOrderData("pay_account_id", val === "cash" ? "" : val)
+              }
             >
               <SelectTrigger className="h-8 text-[13px]">
                 <SelectValue placeholder="Pilih Rekening (Atau Cash)" />

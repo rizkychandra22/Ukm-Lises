@@ -268,7 +268,11 @@ export default function IndexMember({ members = [], batches = [], majors = [] }:
         <div className="w-full border-b border-border">
           <div className="flex flex-col sm:flex-row gap-4 w-full items-start sm:items-center">
             {!hasRole(["User"]) ? (
-              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full sm:w-auto relative">
+              <Tabs
+                value={activeTab}
+                onValueChange={setActiveTab}
+                className="w-full sm:w-auto relative"
+              >
                 <TabsList className="grid grid-cols-2 w-full sm:flex sm:w-auto h-auto p-0 bg-transparent sm:gap-6 justify-start rounded-none border-none">
                   <TabsTrigger
                     value="anggota"

@@ -263,7 +263,10 @@ export function NewsDetailPage() {
           "
           dangerouslySetInnerHTML={{
             __html: DOMPurify.sanitize(
-              (isEn ? post.description_en || post.description_id : post.description_id).replace(/&nbsp;/g, ' ')
+              (isEn ? post.description_en || post.description_id : post.description_id).replace(
+                /&nbsp;/g,
+                " ",
+              ),
             ),
           }}
         />

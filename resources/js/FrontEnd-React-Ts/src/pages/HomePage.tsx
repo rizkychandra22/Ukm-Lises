@@ -95,9 +95,18 @@ export function HomePage() {
 
             <div className="mt-16 grid max-w-3xl gap-6 sm:grid-cols-3">
               {[
-                { n: stats.total_members > 0 ? `${stats.total_members}` : "0", l: t("banner.card_1") },
-                { n: stats.total_batches > 0 ? `${stats.total_batches}` : "0", l: t("banner.card_2") },
-                { n: stats.total_events > 0 ? `${stats.total_events}` : "0", l: t("banner.card_3") },
+                {
+                  n: stats.total_members > 0 ? `${stats.total_members}` : "0",
+                  l: t("banner.card_1"),
+                },
+                {
+                  n: stats.total_batches > 0 ? `${stats.total_batches}` : "0",
+                  l: t("banner.card_2"),
+                },
+                {
+                  n: stats.total_events > 0 ? `${stats.total_events}` : "0",
+                  l: t("banner.card_3"),
+                },
               ].map((item) => (
                 <Card
                   key={item.l}

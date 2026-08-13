@@ -11,8 +11,7 @@ function parseErrorMessage(error: AxiosError<ApiErrorResponse> | null): string {
   if (!error) return "";
   if (error.response) {
     return (
-      error.response.data?.message ||
-      "Terjadi kesalahan saat mengambil data berita dari server."
+      error.response.data?.message || "Terjadi kesalahan saat mengambil data berita dari server."
     );
   }
   if (error.request) {
@@ -41,7 +40,7 @@ export function useNewsDetail(slug: string) {
   const query = useQuery<News | null, AxiosError<ApiErrorResponse>>({
     queryKey: ["news", slug],
     queryFn: () => getNewsDetail(slug),
-    enabled: Boolean(slug), 
+    enabled: Boolean(slug),
     retry: 5,
   });
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { NewsDetailPage } from "../pages/NewsDetailPage";
 
 // Mock react-router-dom
@@ -14,7 +14,7 @@ vi.mock("react-router-dom", () => ({
 vi.mock("@/i18n", () => ({
   useTranslation: () => ({
     t: (key: string) => key,
-    i18n: { language: 'id' },
+    i18n: { language: "id" },
   }),
 }));
 
@@ -32,12 +32,14 @@ vi.mock("@/hooks/useNews", () => ({
       img: "test.jpg",
       excerpt: "Test excerpt",
       description_id: '<p>Safe Content</p><script data-testid="xss-script">alert("xss")</script>',
-    }
+    },
   }),
 }));
 
 const queryClient = new QueryClient();
-const wrapper = ({ children }: any) => <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+const wrapper = ({ children }: any) => (
+  <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+);
 
 describe("NewsDetailPage", () => {
   it("should render post title and date", () => {
@@ -58,6 +60,3 @@ describe("NewsDetailPage", () => {
     expect(scriptTag).toBeNull();
   });
 });
-
-
-

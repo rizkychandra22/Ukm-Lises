@@ -14,11 +14,7 @@ interface AccountDeleteDialogProps {
   onConfirm: () => void;
 }
 
-export function AccountDeleteDialog({
-  isOpen,
-  onOpenChange,
-  onConfirm,
-}: AccountDeleteDialogProps) {
+export function AccountDeleteDialog({ isOpen, onOpenChange, onConfirm }: AccountDeleteDialogProps) {
   return (
     <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
       <AlertDialogContent className="w-[90%] max-w-[360px] rounded-md p-6">
@@ -31,9 +27,7 @@ export function AccountDeleteDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <div className="flex flex-row items-center justify-center gap-3">
-          <AlertDialogCancel className="w-24 border h-8 text-[13px] !mt-0">
-            Batal
-          </AlertDialogCancel>
+          <AlertDialogCancel className="w-24 border h-8 text-[13px] !mt-0">Batal</AlertDialogCancel>
           <AlertDialogAction
             onClick={onConfirm}
             className="w-24 h-8 text-[13px] bg-destructive text-destructive-foreground hover:bg-destructive/90"

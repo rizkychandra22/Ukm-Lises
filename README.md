@@ -3,10 +3,10 @@
   <br/>
   <br/>
 
-  # 🎭 UKM Lises Asmarandana - Official Website & Portal
-  
-  **Platform Profil & Sistem Informasi Manajemen Anggota UKM Seni Musik & Tari Lises Asmarandana**<br/>
-  *Universitas Muhammadiyah Sukabumi (UMMI)*
+# 🎭 UKM Lises Asmarandana - Official Website & Portal
+
+**Platform Profil & Sistem Informasi Manajemen Anggota UKM Seni Musik & Tari Lises Asmarandana**<br/>
+_Universitas Muhammadiyah Sukabumi (UMMI)_
 
   <p align="center">
     <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
@@ -22,14 +22,16 @@
 
 ## 📖 Tentang Proyek
 
-Website ini adalah platform resmi terintegrasi untuk **UKM Lises Asmarandana** yang berfungsi sebagai **Company Profile (Landing Page)** sekaligus **Sistem Informasi Manajemen** untuk pengurus dan anggota. 
+Website ini adalah platform resmi terintegrasi untuk **UKM Lises Asmarandana** yang berfungsi sebagai **Company Profile (Landing Page)** sekaligus **Sistem Informasi Manajemen** untuk pengurus dan anggota.
 
-Proyek ini menggunakan arsitektur *Hybrid* modern yang memadukan kekuatan **Laravel** di sisi *backend* dengan ekosistem **React & TypeScript** di sisi *frontend*.
+Proyek ini menggunakan arsitektur _Hybrid_ modern yang memadukan kekuatan **Laravel** di sisi _backend_ dengan ekosistem **React & TypeScript** di sisi _frontend_.
 
 ### 🏗️ Arsitektur Aplikasi
-Aplikasi ini dibagi menjadi dua bagian *frontend* yang berjalan pada satu aplikasi Laravel:
-1. **Public Landing Page (SPA Murni)**: Menggunakan murni *React Router DOM* dan berkomunikasi dengan *backend* melalui **REST API via Axios**. Menyediakan pengalaman navigasi yang sangat cepat (*Single Page Application*) tanpa *reload* halaman.
-2. **Admin Dashboard (Inertia.js)**: Menggunakan **Inertia.js** untuk menjembatani *routing* Laravel dengan komponen React secara transparan. Memudahkan manajemen data tanpa perlu membangun API terpisah untuk fitur admin.
+
+Aplikasi ini dibagi menjadi dua bagian _frontend_ yang berjalan pada satu aplikasi Laravel:
+
+1. **Public Landing Page (SPA Murni)**: Menggunakan murni _React Router DOM_ dan berkomunikasi dengan _backend_ melalui **REST API via Axios**. Menyediakan pengalaman navigasi yang sangat cepat (_Single Page Application_) tanpa _reload_ halaman.
+2. **Admin Dashboard (Inertia.js)**: Menggunakan **Inertia.js** untuk menjembatani _routing_ Laravel dengan komponen React secara transparan. Memudahkan manajemen data tanpa perlu membangun API terpisah untuk fitur admin.
 
 ## ✨ Fitur Utama
 
@@ -37,52 +39,58 @@ Aplikasi ini dibagi menjadi dua bagian *frontend* yang berjalan pada satu aplika
 - 🎨 **Modern & Responsive UI** - Dibangun dengan **Tailwind CSS** dan komponen UI dari **Shadcn UI**.
 - 👥 **Manajemen Anggota Pengurus** - Sistem pengelolaan data anggota, mencakup status Kepengurusan (Aktif) dan Demisioner (Alumni).
 - 🏛️ **Manajemen Angkatan (Batch)** - Pengelompokan anggota berdasarkan tahun dan nama angkatan.
-- 🎟️ **Sistem Event & Ticketing** - Manajemen acara beserta penjualan tiket secara online maupun offline lengkap dengan pemantauan *status order*.
+- 🎟️ **Sistem Event & Ticketing** - Manajemen acara beserta penjualan tiket secara online maupun offline lengkap dengan pemantauan _status order_.
 - 📰 **Portal Berita & Artikel** - Sistem manajemen publikasi berita dan artikel informatif.
-- ☁️ **Cloudinary Integration** - Penyimpanan dan optimasi *image assets* secara cloud melalui integrasi Cloudinary.
-- ⚡ **Fast Navigation** - Transisi instan antar halaman berkat implementasi SPA (*Single Page Application*).
+- ☁️ **Cloudinary Integration** - Penyimpanan dan optimasi _image assets_ secara cloud melalui integrasi Cloudinary.
+- ⚡ **Fast Navigation** - Transisi instan antar halaman berkat implementasi SPA (_Single Page Application_).
 - 🔒 **Secure Authentication** - Sistem login dan peran (Role) yang aman menggunakan Spatie Role Permission Laravel.
 
 ## 🛠️ Teknologi yang Digunakan
 
 ### Backend
-* [**Laravel 13**](https://laravel.com/) - PHP Framework (PHP >= 8.3)
-* **PostgreSQL** - Database Relasional
-* **Cloudinary API** - Cloud Image Storage Driver
-* **Spatie Permission** - Manajemen Roles & Permissions
-* **REST API** - Endpoints untuk Landing Page SPA
+
+- [**Laravel 13**](https://laravel.com/) - PHP Framework (PHP >= 8.3)
+- **PostgreSQL** - Database Relasional
+- **Cloudinary API** - Cloud Image Storage Driver
+- **Spatie Permission** - Manajemen Roles & Permissions
+- **REST API** - Endpoints untuk Landing Page SPA
 
 ### Sistem Admin Dashboard (Backend Terintegrasi via Inertia)
-* [**Inertia.js**](https://inertiajs.com/) - Menghubungkan routing Laravel dengan React secara langsung tanpa membuat REST API terpisah
-* [**React 19**](https://react.dev/) & [**TypeScript 5**](https://www.typescriptlang.org/) - Basis framework UI
-* [**TanStack Table v9**](https://tanstack.com/table/latest) - Headless UI untuk pengolahan Data Table kompleks di Dashboard
-* [**Shadcn UI (Radix UI)**](https://ui.shadcn.com/) - Reusable UI Components untuk antarmuka dashboard
-* [**Tailwind CSS 4**](https://tailwindcss.com/) - Utility-first CSS framework
+
+- [**Inertia.js**](https://inertiajs.com/) - Menghubungkan routing Laravel dengan React secara langsung tanpa membuat REST API terpisah
+- [**React 19**](https://react.dev/) & [**TypeScript 5**](https://www.typescriptlang.org/) - Basis framework UI
+- [**TanStack Table v9**](https://tanstack.com/table/latest) - Headless UI untuk pengolahan Data Table kompleks di Dashboard
+- [**Shadcn UI (Radix UI)**](https://ui.shadcn.com/) - Reusable UI Components untuk antarmuka dashboard
+- [**Tailwind CSS 4**](https://tailwindcss.com/) - Utility-first CSS framework
 
 ### Sistem Public Landing Page (Pure SPA React)
-* [**React Router DOM 7**](https://reactrouter.com/) - Client-side Routing untuk SPA murni
-* [**TanStack Query v5**](https://tanstack.com/query/latest/) - Data Fetching, Server State Caching, & Sinkronisasi API
-* [**Axios & Axios Retry**](https://axios-http.com/) - HTTP Client dengan fitur eksponensial Auto-Retry
-* [**React Error Boundary**](https://github.com/bvaughn/react-error-boundary) - Penanganan error UI untuk mencegah aplikasi *crash* (Blank Screen)
-* [**i18next**](https://www.i18next.com/) - Fitur Internationalization (Multi-bahasa ID/EN)
-* [**Day.js**](https://day.js.org/) - Manipulasi & Formatting Waktu yang ringan
-* [**React 19**](https://react.dev/) & [**TypeScript 5**](https://www.typescriptlang.org/) - Basis framework UI
-* [**Tailwind CSS 4**](https://tailwindcss.com/) - Styling & desain UI
+
+- [**React Router DOM 7**](https://reactrouter.com/) - Client-side Routing untuk SPA murni
+- [**TanStack Query v5**](https://tanstack.com/query/latest/) - Data Fetching, Server State Caching, & Sinkronisasi API
+- [**Axios & Axios Retry**](https://axios-http.com/) - HTTP Client dengan fitur eksponensial Auto-Retry
+- [**React Error Boundary**](https://github.com/bvaughn/react-error-boundary) - Penanganan error UI untuk mencegah aplikasi _crash_ (Blank Screen)
+- [**i18next**](https://www.i18next.com/) - Fitur Internationalization (Multi-bahasa ID/EN)
+- [**Day.js**](https://day.js.org/) - Manipulasi & Formatting Waktu yang ringan
+- [**React 19**](https://react.dev/) & [**TypeScript 5**](https://www.typescriptlang.org/) - Basis framework UI
+- [**Tailwind CSS 4**](https://tailwindcss.com/) - Styling & desain UI
 
 ### Build Tools & Tooling
-* [**Vite 8**](https://vitejs.dev/) - Blazing fast frontend build tool
-* [**ESLint**](https://eslint.org/) - Linter untuk menjaga standar kualitas & konsistensi kode
-* [**Prettier**](https://prettier.io/) - Code formatter otomatis
-* [**Vitest**](https://vitest.dev/) - Framework testing yang cepat (Vite-native)
+
+- [**Vite 8**](https://vitejs.dev/) - Blazing fast frontend build tool
+- [**ESLint**](https://eslint.org/) - Linter untuk menjaga standar kualitas & konsistensi kode
+- [**Prettier**](https://prettier.io/) - Code formatter otomatis
+- [**Vitest**](https://vitest.dev/) - Framework testing yang cepat (Vite-native)
 
 ---
 
 ## 🚀 Cara Menjalankan Aplikasi di Lokal (Development)
 
-Ikuti langkah-langkah berikut untuk menjalankan *project* ini di komputer Anda:
+Ikuti langkah-langkah berikut untuk menjalankan _project_ ini di komputer Anda:
 
 ### 1. Kebutuhan Sistem
+
 Pastikan Anda telah menginstal:
+
 - **PHP** >= 8.3
 - **Composer**
 - **Node.js** (Disarankan versi 20+ / LTS terbaru) & **NPM**
@@ -106,7 +114,9 @@ php artisan key:generate
 ```
 
 ### 3. Konfigurasi Database
+
 Buka file `.env` dan sesuaikan kredensial database Anda:
+
 ```env
 DB_CONNECTION=pgsql
 DB_HOST=127.0.0.1
@@ -115,13 +125,17 @@ DB_DATABASE=nama_database_anda
 DB_USERNAME=postgres
 DB_PASSWORD=
 ```
+
 Lalu jalankan migrasi dan seeder untuk data awal:
+
 ```bash
 php artisan migrate --seed
 ```
 
 ### 4. Instalasi Frontend (React & Tailwind)
+
 Buka terminal baru di direktori proyek yang sama, lalu jalankan:
+
 ```bash
 # Instal dependensi NPM
 npm install
@@ -131,7 +145,9 @@ npm run dev
 ```
 
 ### 5. Jalankan Server Laravel
+
 Kembali ke terminal pertama, jalankan lokal server Laravel:
+
 ```bash
 php artisan serve
 ```
@@ -142,24 +158,31 @@ Aplikasi kini dapat diakses melalui: **`http://localhost:8000`**
 
 ## 🧪 Cara Menjalankan Test (Automated Testing)
 
-Proyek ini dilengkapi dengan serangkaian test otomatis untuk memastikan kestabilan aplikasi, baik di sisi *backend* maupun *frontend*.
+Proyek ini dilengkapi dengan serangkaian test otomatis untuk memastikan kestabilan aplikasi, baik di sisi _backend_ maupun _frontend_.
 
 ### 1. Test Backend (Laravel PHPUnit)
-Digunakan untuk menguji fitur API, logika controller, serta relasi model database secara aman di lingkungan *RefreshDatabase*.
+
+Digunakan untuk menguji fitur API, logika controller, serta relasi model database secara aman di lingkungan _RefreshDatabase_.
 
 `ash
+
 # Menjalankan seluruh test backend
+
 php artisan test
 `
 
 ### 2. Test Frontend (React SPA Menggunakan Vitest)
-Digunakan untuk menguji komponen UI, *custom hooks*, dan koneksi *API Client* dengan simulasi (mocking) secara lokal tanpa bergantung pada server backend.
+
+Digunakan untuk menguji komponen UI, _custom hooks_, dan koneksi _API Client_ dengan simulasi (mocking) secara lokal tanpa bergantung pada server backend.
 
 `ash
+
 # Menjalankan seluruh test frontend satu kali
+
 npm run test
 
 # Menjalankan test dalam mode interaktif (Watch Mode) sekaligus membuka Dashboard UI di Browser
+
 npm run test -- --ui --watch
 `
 
@@ -189,5 +212,3 @@ resources/
 <p align="center">
   Dibuat dengan ❤️ oleh <b>Rizky Chandra</b> untuk <b>UKM Lises Asmarandana UMMI</b>
 </p>
-
-
