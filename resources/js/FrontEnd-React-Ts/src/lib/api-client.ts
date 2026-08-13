@@ -4,10 +4,10 @@ import axiosRetry from "axios-retry";
 function resolveApiBaseUrl(): string {
   if (typeof window !== "undefined") {
     const host = window.location.hostname;
-    if (host === "lises.laravel.cloud") {
+    if (host === import.meta.env.VITE_API_BASE_URL_HOST_PRD) {
       return import.meta.env.VITE_API_BASE_URL_PRD;
     }
-    if (host === "lises-dev.laravel.cloud") {
+    if (host === import.meta.env.VITE_API_BASE_URL_HOST_DEV) {
       return import.meta.env.VITE_API_BASE_URL_DEV;
     }
     return `${window.location.origin}/api`;
