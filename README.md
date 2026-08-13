@@ -140,6 +140,31 @@ Aplikasi kini dapat diakses melalui: **`http://localhost:8000`**
 
 ---
 
+## 🧪 Cara Menjalankan Test (Automated Testing)
+
+Proyek ini dilengkapi dengan serangkaian test otomatis untuk memastikan kestabilan aplikasi, baik di sisi *backend* maupun *frontend*.
+
+### 1. Test Backend (Laravel PHPUnit)
+Digunakan untuk menguji fitur API, logika controller, serta relasi model database secara aman di lingkungan *RefreshDatabase*.
+
+`ash
+# Menjalankan seluruh test backend
+php artisan test
+`
+
+### 2. Test Frontend (React SPA Menggunakan Vitest)
+Digunakan untuk menguji komponen UI, *custom hooks*, dan koneksi *API Client* dengan simulasi (mocking) secara lokal tanpa bergantung pada server backend.
+
+`ash
+# Menjalankan seluruh test frontend satu kali
+npm run test
+
+# Menjalankan test dalam mode interaktif (Watch Mode) sekaligus membuka Dashboard UI di Browser
+npm run test -- --ui --watch
+`
+
+---
+
 ## 📂 Struktur Direktori Utama Frontend
 
 ```text
@@ -164,3 +189,5 @@ resources/
 <p align="center">
   Dibuat dengan ❤️ oleh <b>Rizky Chandra</b> untuk <b>UKM Lises Asmarandana UMMI</b>
 </p>
+
+
