@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
@@ -23,6 +24,33 @@ import { useNews } from "@/hooks/use-news";
 import { useStats } from "@/hooks/use-stats";
 import { Skeleton } from "@/components/ui/skeleton";
 
+function useAnimatedCounter(targetValue: number, duration: number = 1500) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (targetValue === 0) {
+      setCount(0);
+      return;
+    }
+
+    let startTimestamp: number | null = null;
+    const step = (timestamp: number) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      
+      setCount(Math.floor(progress * targetValue));
+      
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      }
+    };
+    
+    window.requestAnimationFrame(step);
+  }, [targetValue, duration]);
+
+  return count;
+}
+
 export function HomePage() {
   const { t, i18n } = useTranslation("HomePage");
   const isEn = i18n.language === "en";
@@ -34,6 +62,10 @@ export function HomePage() {
   const isLoading = isGalleryLoading || isNewsLoading;
   const momentImages = galleries.slice(0, 3);
   const latestNews = news.slice(0, 3);
+
+  const animatedMembers = useAnimatedCounter(stats.total_members || 0);
+  const animatedBatches = useAnimatedCounter(stats.total_batches || 0);
+  const animatedEvents = useAnimatedCounter(stats.total_events || 0);
 
   return (
     <>
@@ -96,15 +128,15 @@ export function HomePage() {
             <div className="mt-16 grid max-w-3xl gap-6 sm:grid-cols-3">
               {[
                 {
-                  n: stats.total_members > 0 ? `${stats.total_members}` : "0",
+                  n: stats.total_members > 0 ? `${animatedMembers}` : "0",
                   l: t("banner.card_1"),
                 },
                 {
-                  n: stats.total_batches > 0 ? `${stats.total_batches}` : "0",
+                  n: stats.total_batches > 0 ? `${animatedBatches}` : "0",
                   l: t("banner.card_2"),
                 },
                 {
-                  n: stats.total_events > 0 ? `${stats.total_events}` : "0",
+                  n: stats.total_events > 0 ? `${animatedEvents}` : "0",
                   l: t("banner.card_3"),
                 },
               ].map((item) => (
