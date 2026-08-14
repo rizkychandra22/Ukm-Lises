@@ -27,12 +27,20 @@ import {
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 import { SearchFilter } from "./SearchFilter";
 
+export interface DataTablePaginationLabels {
+  noResults?: string;
+  rowsPerPage?: string;
+  totalData?: (count: number) => string;
+  pageInfo?: (current: number, total: number) => string;
+}
+
 interface DataTableProps<TData extends Record<string, any>> {
   columns: ColumnDef<TData, any>[];
   data: TData[];
   searchPlaceholder?: string;
   toolbarExtra?: React.ReactNode;
   mobileLayout?: "row" | "col";
+  paginationLabels?: DataTablePaginationLabels;
 }
 
 export function DataTable<TData extends Record<string, any>>({
@@ -41,6 +49,7 @@ export function DataTable<TData extends Record<string, any>>({
   searchPlaceholder = "Cari data...",
   toolbarExtra,
   mobileLayout = "col",
+  paginationLabels,
 }: DataTableProps<TData>) {
   const [sorting, setSorting] = useState<any[]>([]);
   const [globalFilter, setGlobalFilter] = useState("");
@@ -124,7 +133,7 @@ export function DataTable<TData extends Record<string, any>>({
                   colSpan={columns.length}
                   className="text-center h-24 text-sm text-muted-foreground"
                 >
-                  Tidak ada data yang ditemukan.
+                  {paginationLabels?.noResults || "Tidak ada data yang ditemukan."}
                 </TableCell>
               </TableRow>
             )}
@@ -135,7 +144,7 @@ export function DataTable<TData extends Record<string, any>>({
       {/* Pagination Section */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-1 py-1 text-xs text-muted-foreground">
         <div className="flex items-center gap-2">
-          <span>Tampilkan per halaman</span>
+          <span>{paginationLabels?.rowsPerPage || "Tampilkan per halaman"}</span>
           <Select
             value={`${table.getState().pagination.pageSize}`}
             onValueChange={(value) => {
@@ -153,12 +162,21 @@ export function DataTable<TData extends Record<string, any>>({
               ))}
             </SelectContent>
           </Select>
-          <span>| Total {table.getFilteredRowModel().rows.length} data</span>
+          <span>
+            {paginationLabels?.totalData
+              ? paginationLabels.totalData(table.getFilteredRowModel().rows.length)
+              : `| Total ${table.getFilteredRowModel().rows.length} data`}
+          </span>
         </div>
 
         <div className="flex items-center gap-1.5">
           <span className="mr-2 font-medium">
-            Halaman {table.getState().pagination.pageIndex + 1} dari {table.getPageCount() || 1}
+            {paginationLabels?.pageInfo
+              ? paginationLabels.pageInfo(
+                  table.getState().pagination.pageIndex + 1,
+                  table.getPageCount() || 1
+                )
+              : `Halaman ${table.getState().pagination.pageIndex + 1} dari ${table.getPageCount() || 1}`}
           </span>
           <Button
             variant="outline"

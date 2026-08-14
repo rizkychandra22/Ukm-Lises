@@ -8,6 +8,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
+      "@admin": fileURLToPath(new URL("../Inertia-React-Ts", import.meta.url)),
     },
   },
   plugins: [react(), tailwindcss()],

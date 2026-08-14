@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, Search, ArrowUpDown, Eye } from "lucide-react";
 import { useTranslation } from "@/i18n";
 import { SEOHead } from "@/components/SEOHead";
-import { type Member, type Batch } from "@/lib/api/member";
+import { type Member } from "@/lib/api/member";
 import { useMembers, useBatches } from "@/hooks/use-member";
-
+import { DataTable } from "@admin/Components/DataTable";
+import { LegacyColumnDef as ColumnDef } from "@tanstack/react-table/legacy";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,21 +27,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollTop } from "@/components/scroll-top";
-
-type SortConfig = {
-  key: string;
-  direction: "asc" | "desc";
-} | null;
 
 export function MemberPage() {
   const { t, i18n } = useTranslation("MemberPage");
@@ -53,12 +41,7 @@ export function MemberPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedBatch, setSelectedBatch] = useState("all");
   const [memberStatusFilter, setMemberStatusFilter] = useState("all");
-  const [sortConfig, setSortConfig] = useState<SortConfig>(null);
   const [selectedMember, setSelectedMember] = useState<any>(null);
-
-  // Pagination state
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; // Number of items to display per page
 
   const activeMembers = members.filter((m) => {
     const isActiveBatch = m.batch?.status !== "Deactive";
@@ -102,43 +85,7 @@ export function MemberPage() {
       year: b.year,
     }));
 
-  // Reset pagination when search, sort, filter, or tab changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, sortConfig, selectedBatch, memberStatusFilter, activeTab]);
-
-  const handleSort = (key: string) => {
-    let direction: "asc" | "desc" = "asc";
-    if (sortConfig && sortConfig.key === key && sortConfig.direction === "asc") {
-      direction = "desc";
-    }
-    setSortConfig({ key, direction });
-  };
-
-  const getSortValue = (member: Member, key: string): any => {
-    switch (key) {
-      case "name":
-        return member.name?.toLowerCase();
-      case "prodi":
-        return (
-          isEn ? member.major?.nameEn || member.major?.nameId : member.major?.nameId
-        )?.toLowerCase();
-      case "periode":
-        return member.periode?.toLowerCase();
-      case "position":
-        return (isEn ? member.positionEn || member.positionId : member.positionId)?.toLowerCase();
-      case "batch":
-        return member.batch?.year;
-      case "batch_name":
-        return (
-          isEn ? member.batch?.nameEn || member.batch?.nameId : member.batch?.nameId
-        )?.toLowerCase();
-      default:
-        return "";
-    }
-  };
-
-  const filterAndSortData = (data: typeof members) => {
+  const filterAndSearchData = (data: typeof members) => {
     let filteredData = [...data];
 
     // Filter by search query
@@ -151,97 +98,290 @@ export function MemberPage() {
           : member.major?.nameId;
         const searchableText = `${member.name} ${majorName || ""}`.toLowerCase();
 
-        // Memastikan setiap kata yang diketik cocok dengan awalan kata pada nama/jurusan
         return searchTerms.every(
           (term) => searchableText.includes(` ${term}`) || searchableText.startsWith(term),
         );
       });
     }
-
-    // Sort logic
-    if (sortConfig !== null) {
-      filteredData.sort((a, b) => {
-        const valA = getSortValue(a, sortConfig.key);
-        const valB = getSortValue(b, sortConfig.key);
-
-        if (valA < valB) {
-          return sortConfig.direction === "asc" ? -1 : 1;
-        }
-        if (valA > valB) {
-          return sortConfig.direction === "asc" ? 1 : -1;
-        }
-        return 0;
-      });
-    }
-
     return filteredData;
   };
 
-  const sortedActiveMembers = filterAndSortData(activeMembers);
+  const searchedActiveMembers = filterAndSearchData(activeMembers);
 
-  let sortedAlumniMembers = filterAndSortData(alumniMembers);
+  let searchedAlumniMembers = filterAndSearchData(alumniMembers);
   if (selectedBatch !== "all") {
-    sortedAlumniMembers = sortedAlumniMembers.filter(
+    searchedAlumniMembers = searchedAlumniMembers.filter(
       (m) => m.batch?.id?.toString() === selectedBatch,
     );
   }
 
-  // Apply pagination
-  const totalPagesActive = Math.ceil(sortedActiveMembers.length / itemsPerPage);
-  const paginatedActiveMembers = sortedActiveMembers.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
+  const activeColumns = useMemo<ColumnDef<Member, any>[]>(
+    () => [
+      {
+        id: "image",
+        header: t("table.img"),
+        cell: ({ row }) => {
+          const member = row.original;
+          return (
+            <img
+              src={
+                member.image ||
+                `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random`
+              }
+              alt={member.name}
+              className="h-10 w-10 min-w-10 min-h-10 rounded-full object-cover border"
+            />
+          );
+        },
+        enableSorting: false,
+      },
+      {
+        accessorKey: "name",
+        header: ({ column }) => {
+          return (
+            <Button
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              className="-ml-4"
+            >
+              {t("table.name")}
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+          )
+        },
+        cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
+      },
+      {
+        id: "prodi",
+        accessorFn: (row) =>
+          isEn ? row.major?.nameEn || row.major?.nameId : row.major?.nameId,
+        header: ({ column }) => {
+          return (
+            <Button
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              className="-ml-4"
+            >
+              {t("table.major")}
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+          )
+        },
+        cell: ({ row }) => {
+          const member = row.original;
+          return (
+            <>
+              {member.major?.degree ? `${member.major.degree} - ` : ""}
+              {isEn ? member.major?.nameEn || member.major?.nameId : member.major?.nameId}
+            </>
+          );
+        },
+      },
+      {
+        accessorKey: "periode",
+        header: ({ column }) => {
+          return (
+            <Button
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              className="-ml-4"
+            >
+              {t("table.period")}
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+          )
+        },
+        cell: ({ row }) => row.original.periode || "-",
+      },
+      {
+        id: "position",
+        accessorFn: (row) =>
+          isEn ? row.positionEn || row.positionId : row.positionId,
+        header: ({ column }) => {
+          return (
+            <Button
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              className="-ml-4"
+            >
+              {t("table.position")}
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+          )
+        },
+        cell: ({ row }) =>
+          isEn
+            ? row.original.positionEn || row.original.positionId
+            : row.original.positionId || "-",
+      },
+      {
+        id: "batch",
+        accessorFn: (row) => row.batch?.year,
+        header: ({ column }) => {
+          return (
+            <Button
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              className="-ml-4"
+            >
+              {t("table.year")}
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+          )
+        },
+      },
+      {
+        id: "batch_name",
+        accessorFn: (row) =>
+          isEn ? row.batch?.nameEn || row.batch?.nameId : row.batch?.nameId,
+        header: ({ column }) => {
+          return (
+            <Button
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              className="-ml-4"
+            >
+              {t("table.batch_name")}
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+          )
+        },
+      },
+      {
+        id: "actions",
+        header: () => <div className="text-right">{t("table.show")}</div>,
+        cell: ({ row }) => (
+          <div className="text-right">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setSelectedMember(row.original)}
+            >
+              <Eye className="h-4 w-4" />
+            </Button>
+          </div>
+        ),
+        enableSorting: false,
+      },
+    ],
+    [isEn, t],
   );
 
-  const totalPagesAlumni = Math.ceil(sortedAlumniMembers.length / itemsPerPage);
-  const paginatedAlumniMembers = sortedAlumniMembers.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
+  const alumniColumns = useMemo<ColumnDef<Member, any>[]>(
+    () => [
+      {
+        id: "image",
+        header: t("table.img"),
+        cell: ({ row }) => {
+          const member = row.original;
+          return (
+            <img
+              src={
+                member.image ||
+                `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random`
+              }
+              alt={member.name}
+              className="h-10 w-10 min-w-10 min-h-10 rounded-full object-cover border"
+            />
+          );
+        },
+        enableSorting: false,
+      },
+      {
+        accessorKey: "name",
+        header: ({ column }) => {
+          return (
+            <Button
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              className="-ml-4"
+            >
+              {t("table.name")}
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+          )
+        },
+        cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
+      },
+      {
+        id: "prodi",
+        accessorFn: (row) =>
+          isEn ? row.major?.nameEn || row.major?.nameId : row.major?.nameId,
+        header: ({ column }) => {
+          return (
+            <Button
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              className="-ml-4"
+            >
+              {t("table.major")}
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+          )
+        },
+        cell: ({ row }) => {
+          const member = row.original;
+          return (
+            <>
+              {member.major?.degree ? `${member.major.degree} - ` : ""}
+              {isEn ? member.major?.nameEn || member.major?.nameId : member.major?.nameId}
+            </>
+          );
+        },
+      },
+      {
+        id: "batch",
+        accessorFn: (row) => row.batch?.year,
+        header: ({ column }) => {
+          return (
+            <Button
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              className="-ml-4"
+            >
+              {t("table.year")}
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+          )
+        },
+      },
+      {
+        id: "batch_name",
+        accessorFn: (row) =>
+          isEn ? row.batch?.nameEn || row.batch?.nameId : row.batch?.nameId,
+        header: ({ column }) => {
+          return (
+            <Button
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              className="-ml-4"
+            >
+              {t("table.batch_name")}
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+          )
+        },
+      },
+      {
+        id: "actions",
+        header: () => <div className="text-right">{t("table.show")}</div>,
+        cell: ({ row }) => (
+          <div className="text-right">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setSelectedMember(row.original)}
+            >
+              <Eye className="h-4 w-4" />
+            </Button>
+          </div>
+        ),
+        enableSorting: false,
+      },
+    ],
+    [isEn, t],
   );
-
-  const renderPagination = (totalPages: number) => {
-    if (totalPages <= 1) return null;
-    return (
-      <div className="mt-4">
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (currentPage > 1) setCurrentPage((p) => p - 1);
-                }}
-              />
-            </PaginationItem>
-            {[...Array(totalPages)].map((_, i) => (
-              <PaginationItem key={i}>
-                <PaginationLink
-                  href="#"
-                  isActive={currentPage === i + 1}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setCurrentPage(i + 1);
-                  }}
-                >
-                  {i + 1}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
-            <PaginationItem>
-              <PaginationNext
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (currentPage < totalPages) setCurrentPage((p) => p + 1);
-                }}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      </div>
-    );
-  };
+  // Pagination handled by DataTable
 
   return (
     <>
@@ -260,7 +400,17 @@ export function MemberPage() {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           {/* Controls Row (Category & Filter Selects on LEFT, Search on FAR RIGHT) */}
           <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 mb-6">
-            {/* LEFT: Category Select & Filter Select (Side-by-side on mobile) */}
+            {/* Left: Search Input Box */}
+            <div className="relative w-full md:w-80">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder={t("search")}
+                className="pl-10"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            {/* Right: Category Select & Filter Select (Side-by-side on mobile) */}
             <div className="flex flex-row gap-2.5 items-center w-full md:w-auto">
               {/* Select 1: Kategori Dropdown (Kepengurusan / Demisioner) */}
               <Select value={activeTab} onValueChange={setActiveTab}>
@@ -304,79 +454,56 @@ export function MemberPage() {
                 </Select>
               )}
             </div>
-
-            {/* FAR RIGHT: Search Input Box */}
-            <div className="relative w-full md:w-80">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder={t("search")}
-                className="pl-10"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
           </div>
 
           <TabsContent value="Kepengurusan">
-            <div className="rounded-md border bg-card">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>{t("table.img")}</TableHead>
-                    <TableHead>
-                      <Button variant="ghost" onClick={() => handleSort("name")} className="-ml-4">
-                        {t("table.name")}
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
-                      </Button>
-                    </TableHead>
-                    <TableHead>
-                      <Button variant="ghost" onClick={() => handleSort("prodi")} className="-ml-4">
-                        {t("table.major")}
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
-                      </Button>
-                    </TableHead>
-                    <TableHead>
-                      <Button
-                        variant="ghost"
-                        onClick={() => handleSort("periode")}
-                        className="-ml-4"
-                      >
-                        {t("table.period")}
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
-                      </Button>
-                    </TableHead>
-                    <TableHead>
-                      <Button
-                        variant="ghost"
-                        onClick={() => handleSort("position")}
-                        className="-ml-4"
-                      >
-                        {t("table.position")}
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
-                      </Button>
-                    </TableHead>
-                    <TableHead>
-                      <Button variant="ghost" onClick={() => handleSort("batch")} className="-ml-4">
-                        {t("table.year")}
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
-                      </Button>
-                    </TableHead>
-                    <TableHead>
-                      <Button
-                        variant="ghost"
-                        onClick={() => handleSort("batch_name")}
-                        className="-ml-4"
-                      >
-                        {t("table.batch_name")}
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
-                      </Button>
-                    </TableHead>
-                    <TableHead className="text-right">{t("table.show")}</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {isLoading ? (
-                    Array.from({ length: 5 }).map((_, index) => (
+            {isLoading ? (
+              <div className="rounded-md border bg-card">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{t("table.img")}</TableHead>
+                      <TableHead>
+                        <Button variant="ghost" className="-ml-4">
+                          {t("table.name")}
+                          <ArrowUpDown className="ml-2 h-4 w-4" />
+                        </Button>
+                      </TableHead>
+                      <TableHead>
+                        <Button variant="ghost" className="-ml-4">
+                          {t("table.major")}
+                          <ArrowUpDown className="ml-2 h-4 w-4" />
+                        </Button>
+                      </TableHead>
+                      <TableHead>
+                        <Button variant="ghost" className="-ml-4">
+                          {t("table.period")}
+                          <ArrowUpDown className="ml-2 h-4 w-4" />
+                        </Button>
+                      </TableHead>
+                      <TableHead>
+                        <Button variant="ghost" className="-ml-4">
+                          {t("table.position")}
+                          <ArrowUpDown className="ml-2 h-4 w-4" />
+                        </Button>
+                      </TableHead>
+                      <TableHead>
+                        <Button variant="ghost" className="-ml-4">
+                          {t("table.year")}
+                          <ArrowUpDown className="ml-2 h-4 w-4" />
+                        </Button>
+                      </TableHead>
+                      <TableHead>
+                        <Button variant="ghost" className="-ml-4">
+                          {t("table.batch_name")}
+                          <ArrowUpDown className="ml-2 h-4 w-4" />
+                        </Button>
+                      </TableHead>
+                      <TableHead className="text-right">{t("table.show")}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {Array.from({ length: 10 }).map((_, index) => (
                       <TableRow key={index}>
                         <TableCell>
                           <Skeleton className="h-10 w-10 rounded-full" />
@@ -403,103 +530,62 @@ export function MemberPage() {
                           <Skeleton className="h-8 w-8 rounded-md ml-auto" />
                         </TableCell>
                       </TableRow>
-                    ))
-                  ) : paginatedActiveMembers.length > 0 ? (
-                    paginatedActiveMembers.map((member) => (
-                      <TableRow key={member.id} className="hover:bg-white/[0.10] transition-colors">
-                        <TableCell>
-                          <img
-                            src={
-                              member.image ||
-                              `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random`
-                            }
-                            alt={member.name}
-                            className="h-10 w-10 min-w-10 min-h-10 rounded-full object-cover border"
-                          />
-                        </TableCell>
-                        <TableCell className="font-medium">{member.name}</TableCell>
-                        <TableCell>
-                          {member.major?.degree ? `${member.major.degree} - ` : ""}
-                          {isEn
-                            ? member.major?.nameEn || member.major?.nameId
-                            : member.major?.nameId}
-                        </TableCell>
-                        <TableCell>{member.periode || "-"}</TableCell>
-                        <TableCell>
-                          {isEn ? member.positionEn || member.positionId : member.positionId || "-"}
-                        </TableCell>
-                        <TableCell>{member.batch?.year}</TableCell>
-                        <TableCell>
-                          {isEn
-                            ? member.batch?.nameEn || member.batch?.nameId
-                            : member.batch?.nameId}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setSelectedMember(member)}
-                          >
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={8} className="h-24 text-center text-muted-foreground">
-                        {t("table.not_found")}
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-
-            {/* Pagination for Kepengurusan */}
-            {renderPagination(totalPagesActive)}
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            ) : (
+              <div className="[&>div>div:first-child]:hidden">
+                <DataTable
+                  columns={activeColumns}
+                  data={searchedActiveMembers}
+                  paginationLabels={{
+                    noResults: t("table.not_found"),
+                    rowsPerPage: isEn ? "Rows per page" : "Tampilkan per halaman",
+                    totalData: (c) => isEn ? `| Total ${c} items` : `| Total ${c} data`,
+                    pageInfo: (c, t) => isEn ? `Page ${c} of ${t}` : `Halaman ${c} dari ${t}`
+                  }}
+                />
+              </div>
+            )}
           </TabsContent>
 
           <TabsContent value="Demisioner">
-            <div className="rounded-md border bg-card">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>{t("table.img")}</TableHead>
-                    <TableHead>
-                      <Button variant="ghost" onClick={() => handleSort("name")} className="-ml-4">
-                        {t("table.name")}
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
-                      </Button>
-                    </TableHead>
-                    <TableHead>
-                      <Button variant="ghost" onClick={() => handleSort("prodi")} className="-ml-4">
-                        {t("table.major")}
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
-                      </Button>
-                    </TableHead>
-                    <TableHead>
-                      <Button variant="ghost" onClick={() => handleSort("batch")} className="-ml-4">
-                        {t("table.year")}
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
-                      </Button>
-                    </TableHead>
-                    <TableHead>
-                      <Button
-                        variant="ghost"
-                        onClick={() => handleSort("batch_name")}
-                        className="-ml-4"
-                      >
-                        {t("table.batch_name")}
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
-                      </Button>
-                    </TableHead>
-                    <TableHead className="text-right">{t("table.show")}</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {isLoading ? (
-                    Array.from({ length: 5 }).map((_, index) => (
+            {isLoading ? (
+              <div className="rounded-md border bg-card">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{t("table.img")}</TableHead>
+                      <TableHead>
+                        <Button variant="ghost" className="-ml-4">
+                          {t("table.name")}
+                          <ArrowUpDown className="ml-2 h-4 w-4" />
+                        </Button>
+                      </TableHead>
+                      <TableHead>
+                        <Button variant="ghost" className="-ml-4">
+                          {t("table.major")}
+                          <ArrowUpDown className="ml-2 h-4 w-4" />
+                        </Button>
+                      </TableHead>
+                      <TableHead>
+                        <Button variant="ghost" className="-ml-4">
+                          {t("table.year")}
+                          <ArrowUpDown className="ml-2 h-4 w-4" />
+                        </Button>
+                      </TableHead>
+                      <TableHead>
+                        <Button variant="ghost" className="-ml-4">
+                          {t("table.batch_name")}
+                          <ArrowUpDown className="ml-2 h-4 w-4" />
+                        </Button>
+                      </TableHead>
+                      <TableHead className="text-right">{t("table.show")}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {Array.from({ length: 10 }).map((_, index) => (
                       <TableRow key={index}>
                         <TableCell>
                           <Skeleton className="h-10 w-10 rounded-full" />
@@ -520,57 +606,24 @@ export function MemberPage() {
                           <Skeleton className="h-8 w-8 rounded-md ml-auto" />
                         </TableCell>
                       </TableRow>
-                    ))
-                  ) : paginatedAlumniMembers.length > 0 ? (
-                    paginatedAlumniMembers.map((member) => (
-                      <TableRow key={member.id} className="hover:bg-white/[0.10] transition-colors">
-                        <TableCell>
-                          <img
-                            src={
-                              member.image ||
-                              `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random`
-                            }
-                            alt={member.name}
-                            className="h-10 w-10 min-w-10 min-h-10 rounded-full object-cover border"
-                          />
-                        </TableCell>
-                        <TableCell className="font-medium">{member.name}</TableCell>
-                        <TableCell>
-                          {member.major?.degree ? `${member.major.degree} - ` : ""}
-                          {isEn
-                            ? member.major?.nameEn || member.major?.nameId
-                            : member.major?.nameId}
-                        </TableCell>
-                        <TableCell>{member.batch?.year}</TableCell>
-                        <TableCell>
-                          {isEn
-                            ? member.batch?.nameEn || member.batch?.nameId
-                            : member.batch?.nameId}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setSelectedMember(member)}
-                          >
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
-                        {t("table.not_found")}
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-
-            {/* Pagination for Alumni */}
-            {renderPagination(totalPagesAlumni)}
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            ) : (
+              <div className="[&>div>div:first-child]:hidden">
+                <DataTable
+                  columns={alumniColumns}
+                  data={searchedAlumniMembers}
+                  paginationLabels={{
+                    noResults: t("table.not_found"),
+                    rowsPerPage: isEn ? "Rows per page" : "Tampilkan per halaman",
+                    totalData: (c) => isEn ? `| Total ${c} items` : `| Total ${c} data`,
+                    pageInfo: (c, t) => isEn ? `Page ${c} of ${t}` : `Halaman ${c} dari ${t}`
+                  }}
+                />
+              </div>
+            )}
           </TabsContent>
         </Tabs>
       </section>
