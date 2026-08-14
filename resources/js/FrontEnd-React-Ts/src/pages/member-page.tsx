@@ -260,7 +260,17 @@ export function MemberPage() {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           {/* Controls Row (Category & Filter Selects on LEFT, Search on FAR RIGHT) */}
           <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 mb-6">
-            {/* LEFT: Category Select & Filter Select (Side-by-side on mobile) */}
+            {/* Left: Search Input Box */}
+            <div className="relative w-full md:w-80">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder={t("search")}
+                className="pl-10"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            {/* Right: Category Select & Filter Select (Side-by-side on mobile) */}
             <div className="flex flex-row gap-2.5 items-center w-full md:w-auto">
               {/* Select 1: Kategori Dropdown (Kepengurusan / Demisioner) */}
               <Select value={activeTab} onValueChange={setActiveTab}>
@@ -303,17 +313,6 @@ export function MemberPage() {
                   </SelectContent>
                 </Select>
               )}
-            </div>
-
-            {/* FAR RIGHT: Search Input Box */}
-            <div className="relative w-full md:w-80">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder={t("search")}
-                className="pl-10"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
             </div>
           </div>
 
