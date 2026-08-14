@@ -55,9 +55,9 @@ export function HomePage() {
   const { t, i18n } = useTranslation("HomePage");
   const isEn = i18n.language === "en";
 
+  const { stats } = useStats();
   const { galleries, isLoading: isGalleryLoading } = useGallery();
   const { news, isLoading: isNewsLoading } = useNews();
-  const { stats } = useStats();
 
   const isLoading = isGalleryLoading || isNewsLoading;
   const momentImages = galleries.slice(0, 3);
