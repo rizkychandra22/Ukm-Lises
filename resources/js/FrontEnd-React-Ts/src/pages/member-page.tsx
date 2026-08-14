@@ -503,7 +503,7 @@ export function MemberPage() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {Array.from({ length: 5 }).map((_, index) => (
+                    {Array.from({ length: 10 }).map((_, index) => (
                       <TableRow key={index}>
                         <TableCell>
                           <Skeleton className="h-10 w-10 rounded-full" />
@@ -536,7 +536,16 @@ export function MemberPage() {
               </div>
             ) : (
               <div className="[&>div>div:first-child]:hidden">
-                <DataTable columns={activeColumns} data={searchedActiveMembers} />
+                <DataTable
+                  columns={activeColumns}
+                  data={searchedActiveMembers}
+                  paginationLabels={{
+                    noResults: t("table.not_found"),
+                    rowsPerPage: isEn ? "Rows per page" : "Tampilkan per halaman",
+                    totalData: (c) => isEn ? `| Total ${c} items` : `| Total ${c} data`,
+                    pageInfo: (c, t) => isEn ? `Page ${c} of ${t}` : `Halaman ${c} dari ${t}`
+                  }}
+                />
               </div>
             )}
           </TabsContent>
@@ -576,7 +585,7 @@ export function MemberPage() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {Array.from({ length: 5 }).map((_, index) => (
+                    {Array.from({ length: 10 }).map((_, index) => (
                       <TableRow key={index}>
                         <TableCell>
                           <Skeleton className="h-10 w-10 rounded-full" />
@@ -603,7 +612,16 @@ export function MemberPage() {
               </div>
             ) : (
               <div className="[&>div>div:first-child]:hidden">
-                <DataTable columns={alumniColumns} data={searchedAlumniMembers} />
+                <DataTable
+                  columns={alumniColumns}
+                  data={searchedAlumniMembers}
+                  paginationLabels={{
+                    noResults: t("table.not_found"),
+                    rowsPerPage: isEn ? "Rows per page" : "Tampilkan per halaman",
+                    totalData: (c) => isEn ? `| Total ${c} items` : `| Total ${c} data`,
+                    pageInfo: (c, t) => isEn ? `Page ${c} of ${t}` : `Halaman ${c} dari ${t}`
+                  }}
+                />
               </div>
             )}
           </TabsContent>
