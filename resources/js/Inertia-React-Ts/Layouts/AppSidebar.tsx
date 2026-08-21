@@ -93,6 +93,8 @@ export function AppSidebar() {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     put(route("profile.update"), {
+      preserveScroll: true,
+      preserveState: true,
       onSuccess: () => {
         setData("password", "");
         setData("password_confirmation", "");

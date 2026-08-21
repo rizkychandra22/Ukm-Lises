@@ -64,6 +64,8 @@ export default function IndexGallery({ galleries }: GalleryPageProps) {
       : route("gallery.store");
 
     router.post(endpoint, data, {
+      preserveScroll: true,
+      preserveState: true,
       onSuccess: () => {
         setIsSheetOpen(false);
         setProcessing(false);
@@ -80,6 +82,8 @@ export default function IndexGallery({ galleries }: GalleryPageProps) {
     if (!selectedGallery) return;
     setProcessing(true);
     router.delete(route("gallery.destroy", selectedGallery.id), {
+      preserveScroll: true,
+      preserveState: true,
       onSuccess: () => {
         setIsDeleteOpen(false);
         setProcessing(false);

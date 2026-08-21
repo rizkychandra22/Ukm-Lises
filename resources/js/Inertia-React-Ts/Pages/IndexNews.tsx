@@ -23,6 +23,8 @@ export default function IndexNews({ news }: NewsPageProps) {
     if (!selectedNews) return;
     setProcessing(true);
     router.delete(route("news.destroy", selectedNews.id), {
+      preserveScroll: true,
+      preserveState: true,
       onSuccess: () => {
         setIsDeleteOpen(false);
         setProcessing(false);

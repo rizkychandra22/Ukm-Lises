@@ -82,6 +82,8 @@ export default function Release({ releases }: { releases: Release[] }) {
     e.preventDefault();
     if (editingId) {
       put(route("system.releases.update", editingId), {
+        preserveScroll: true,
+        preserveState: true,
         onSuccess: () => {
           setIsModalOpen(false);
           toast.success("Data release berhasil diperbarui");
@@ -90,6 +92,8 @@ export default function Release({ releases }: { releases: Release[] }) {
       });
     } else {
       post(route("system.releases.store"), {
+        preserveScroll: true,
+        preserveState: true,
         onSuccess: () => {
           setIsModalOpen(false);
           toast.success("Data release berhasil ditambahkan");
@@ -102,6 +106,8 @@ export default function Release({ releases }: { releases: Release[] }) {
   const handleDelete = () => {
     if (editingId) {
       destroy(route("system.releases.destroy", editingId), {
+        preserveScroll: true,
+        preserveState: true,
         onSuccess: () => {
           setIsDeleteModalOpen(false);
           toast.success("Data release berhasil dihapus");
