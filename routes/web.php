@@ -13,6 +13,7 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ReleaseController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\SystemController;
+use App\Http\Controllers\WebController;
 use App\Models\News;
 
 // -------------------------------------------------------------
@@ -107,27 +108,21 @@ Route::middleware(['access:Developer,Admin,User'])->prefix('dashboard')->group(f
 });
 
 // -------------------------------------------------------------
-// SITEMAP XML & LANDING PAGE PUBLIK (PURE REACT SPA)
+// SITEMAP XML & HALAMAN PUBLIK (SEO PRE-RENDERING)
 // -------------------------------------------------------------
 Route::get('/sitemap.xml', [SitemapController::class, 'index']);
 
-// Route khusus untuk News (SEO Meta Tag & Open Graph Social Media Preview)
-Route::get('/news/{slug}', function ($slug) {
-    $news = News::where('slug', $slug)->first();
-    
-    if ($news) {
-        return view('web', [
-            'title' => $news->title_id . ' | Lises Asmarandana',
-            'description' => $news->summary_id,
-            'image' => $news->image,
-            'news' => $news
-        ]);
-    }
-    
-    return view('web');
-});
+// Halaman Publik dengan SEO Pre-Rendering & Dynamic Meta Tags
+Route::get('/', [WebController::class, 'home'])->name('web');
+Route::get('/about', [WebController::class, 'about'])->name('web.about');
+Route::get('/gallery', [WebController::class, 'gallery'])->name('web.gallery');
+Route::get('/news', [WebController::class, 'news'])->name('web.news');
+Route::get('/news/{slug}', [WebController::class, 'newsDetail'])->name('web.news-detail');
+Route::get('/event', [WebController::class, 'event'])->name('web.event');
+Route::get('/member', [WebController::class, 'member'])->name('web.member');
+Route::get('/contact', [WebController::class, 'contact'])->name('web.contact');
 
-// Catch-all route untuk menangani halaman publik selain auth, dashboard, & api
-Route::get('/{any?}', function () {
+// Fallback untuk sub-route publik lainnya jika ada
+Route::get('/{any}', function () {
     return view('web');
-})->where('any', '^(?!auth|admin|api|dashboard|sitemap\.xml).*$')->name('web');
+})->where('any', '^(?!auth|admin|api|dashboard|sitemap\.xml|member\/registration).*$');
