@@ -23,7 +23,7 @@ class AuthService
         // Buat kunci Rate Limiter berdasarkan input login dan IP address
         $throttleKey = Str::transliterate(Str::lower($loginInput).'|'.request()->ip());
 
-        // Cek apakah sudah melebihi 5 kali percobaan (diblokir 30 menit)
+        // Cek apakah sudah melebihi 5 kali percobaan (diblokir 1 jam)
         if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
             $seconds = RateLimiter::availableIn($throttleKey);
             $minutes = ceil($seconds / 60);
@@ -40,8 +40,8 @@ class AuthService
 
         // Lakukan autentikasi
         if (!Auth::attempt($attemptCredentials, $credentials['remember'] ?? false)) {
-            // Tambahkan hit kegagalan login dengan waktu blokir 30 menit (1800 detik)
-            RateLimiter::hit($throttleKey, 1800);
+            // Tambahkan hit kegagalan login dengan waktu blokir 1 jam (3600 detik)
+            RateLimiter::hit($throttleKey, 3600);
 
             throw ValidationException::withMessages([
                 'login' => ['Username atau password yang Anda masukkan salah.'],

@@ -60,6 +60,8 @@ export default function FormNews({ news }: NewsProps) {
     const endpoint = isEdit ? route("news.update", news.id) : route("news.store");
 
     post(endpoint, {
+      preserveScroll: isEdit ? true : false,
+      preserveState: true,
       onSuccess: () => {
         toast.success(`Berita berhasil ${isEdit ? "diperbarui" : "ditambahkan"}.`);
       },

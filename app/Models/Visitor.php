@@ -12,6 +12,7 @@ class Visitor extends Model
     protected $fillable = [
         'ip_address',
         'device_name',
-        'visit_date'
+        'visit_date',
+        'visit_time'
     ];
 }

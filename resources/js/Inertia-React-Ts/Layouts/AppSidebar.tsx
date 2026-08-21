@@ -93,6 +93,8 @@ export function AppSidebar() {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     put(route("profile.update"), {
+      preserveScroll: true,
+      preserveState: true,
       onSuccess: () => {
         setData("password", "");
         setData("password_confirmation", "");
@@ -112,7 +114,7 @@ export function AppSidebar() {
 
   return (
     <Sidebar className="border-r border-border">
-      <SidebarHeader className="border-b border-border/40 px-4 py-4">
+      <SidebarHeader className="border-b border-border/40 px-3 py-3">
         <Link href={route("dashboard")} className="flex items-center gap-2.5">
           <img
             src={theme === "dark" ? LogoDark : LogoLight}
@@ -120,7 +122,7 @@ export function AppSidebar() {
             className="w-8 h-8 rounded-full"
           />
           <div className="flex flex-col">
-            <span className="text-[13px] font-bold tracking-tight font-display">UKM Lises</span>
+            <span className="text-[12px] font-semibold tracking-tight font-display">Ukm Lises</span>
             <span className="text-[10px] text-muted-foreground uppercase">Asmarandana</span>
           </div>
         </Link>

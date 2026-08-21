@@ -162,7 +162,8 @@ export default function IndexEvent({
     const endpoint = editingEvent ? route("events.update", editingEvent.id) : route("events.store");
 
     postEvent(endpoint, {
-      preserveScroll: true,
+      preserveScroll: editingEvent ? true : false,
+      preserveState: true,
       onSuccess: () => {
         handleCancelEditEvent();
         toast.success(
@@ -180,6 +181,8 @@ export default function IndexEvent({
   const confirmDeleteEvent = () => {
     if (eventToDelete) {
       deleteEventReq(route("events.destroy", eventToDelete), {
+        preserveScroll: false,
+        preserveState: true,
         onSuccess: () => {
           setIsDeleteEventDialogOpen(false);
           setEventToDelete(null);
@@ -218,6 +221,8 @@ export default function IndexEvent({
     if (!editingOrder) return;
 
     putOrder(route("orders.update-status", editingOrder.id), {
+      preserveScroll: true,
+      preserveState: true,
       onSuccess: () => {
         setIsOrderStatusModalOpen(false);
         setEditingOrder(null);
@@ -234,6 +239,8 @@ export default function IndexEvent({
   const confirmDeleteOrder = () => {
     if (orderToDelete) {
       deleteOrderReq(route("orders.destroy", orderToDelete), {
+        preserveScroll: false,
+        preserveState: true,
         onSuccess: () => {
           setIsDeleteOrderDialogOpen(false);
           setOrderToDelete(null);
@@ -274,6 +281,8 @@ export default function IndexEvent({
   const handleSubmitOfflineOrder = (e: React.FormEvent) => {
     e.preventDefault();
     postOfflineOrder(route("orders.store"), {
+      preserveScroll: false,
+      preserveState: true,
       onSuccess: () => {
         setIsOfflineOrderModalOpen(false);
         resetOfflineOrder();
@@ -333,6 +342,8 @@ export default function IndexEvent({
     e.preventDefault();
     if (editingAccount) {
       putAccount(route("accounts.update", editingAccount.id), {
+        preserveScroll: true,
+        preserveState: true,
         onSuccess: () => {
           handleCancelEditAccount();
           toast.success("Berhasil memperbarui data rekening.");
@@ -340,6 +351,8 @@ export default function IndexEvent({
       });
     } else {
       postAccount(route("accounts.store"), {
+        preserveScroll: false,
+        preserveState: true,
         onSuccess: () => {
           handleCancelEditAccount();
           toast.success("Berhasil menambahkan rekening baru.");
@@ -356,6 +369,8 @@ export default function IndexEvent({
   const confirmDeleteAccount = () => {
     if (accountToDelete) {
       deleteAccountReq(route("accounts.destroy", accountToDelete), {
+        preserveScroll: false,
+        preserveState: true,
         onSuccess: () => {
           setIsDeleteBankDialogOpen(false);
           setAccountToDelete(null);
@@ -414,6 +429,8 @@ export default function IndexEvent({
     e.preventDefault();
     if (editingSession) {
       putSession(route("event-sessions.update", editingSession.id), {
+        preserveScroll: true,
+        preserveState: true,
         onSuccess: () => {
           handleCancelEditSession();
           toast.success("Berhasil memperbarui sesi event.");
@@ -421,6 +438,8 @@ export default function IndexEvent({
       });
     } else {
       postSession(route("event-sessions.store"), {
+        preserveScroll: false,
+        preserveState: true,
         onSuccess: () => {
           handleCancelEditSession();
           toast.success("Berhasil menambahkan sesi event.");
@@ -432,6 +451,8 @@ export default function IndexEvent({
   const handleDeleteSession = (id: number) => {
     if (confirm("Apakah Anda yakin ingin menghapus sesi ini?")) {
       deleteSessionReq(route("event-sessions.destroy", id), {
+        preserveScroll: false,
+        preserveState: true,
         onSuccess: () => toast.success("Berhasil menghapus sesi event."),
       });
     }

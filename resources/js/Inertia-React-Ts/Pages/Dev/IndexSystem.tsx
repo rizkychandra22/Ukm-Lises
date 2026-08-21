@@ -20,6 +20,7 @@ export default function IndexSystem({ envInfo, diskInfo, dbInfo, sysInfo, logs }
   const handleClearCache = (type: string) => {
     post(route("system.clear-cache", { type }), {
       preserveScroll: true,
+      preserveState: true,
       onSuccess: () => {
         toast.success(`Berhasil mengeksekusi aksi: ${type}`);
       },

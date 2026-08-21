@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Toaster } from "@/components/ui/sonner";
 
 const getNav = (t: any) => [
   { to: "/", label: t("nav.home") },
@@ -181,7 +180,6 @@ export function SiteLayout() {
       <main>
         <Outlet />
       </main>
-      <Toaster />
 
       <footer className="mt-24 border-t border-border/60 bg-card/40">
         <div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 md:grid-cols-3">

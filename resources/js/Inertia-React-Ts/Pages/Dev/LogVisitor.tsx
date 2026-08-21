@@ -20,6 +20,7 @@ export interface Visitor {
   ip_address: string;
   device_name: string;
   visit_date: string;
+  visit_time?: string;
   created_at: string;
 }
 
@@ -96,13 +97,33 @@ export default function LogVisitor({ dbInfo, diskInfo, guests }: LogVisitorProps
             Tanggal Kunjungan <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         ),
+        cell: ({ row }: { row: { original: Visitor } }) => {
+          const dateStr = new Date(row.original.visit_date).toLocaleDateString("id-ID", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+          });
+          return (
+            <span className="font-medium text-sm text-foreground">
+              {dateStr}
+            </span>
+          );
+        },
+      },
+      {
+        accessorKey: "visit_time",
+        header: ({ column }: { column: any }) => (
+          <Button
+            variant="ghost"
+            className="-ml-4 hover:bg-transparent text-sm font-semibold"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Waktu <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        ),
         cell: ({ row }: { row: { original: Visitor } }) => (
           <span className="font-medium text-sm text-foreground">
-            {new Date(row.original.visit_date).toLocaleDateString("id-ID", {
-              day: "2-digit",
-              month: "long",
-              year: "numeric",
-            })}
+            {row.original.visit_time ? row.original.visit_time : "-"}
           </span>
         ),
       },
