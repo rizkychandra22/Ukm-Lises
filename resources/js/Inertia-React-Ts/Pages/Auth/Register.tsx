@@ -4,13 +4,13 @@ import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 
 export default function Register({ majors }: { majors: any[] }) {
   const { data, setData, post, processing, errors, reset } = useForm({
     name: "",
     major_id: "",
-    year: "",
+    year: new Date().getFullYear().toString(),
     whatsapp: "",
     instagram: "",
     image: null as File | null,
@@ -65,7 +65,6 @@ export default function Register({ majors }: { majors: any[] }) {
 
   return (
     <div className="min-h-screen flex w-full">
-      <Toaster position="top-right" richColors />
       <Head title="Registrasi Anggota Baru" />
 
       {/* Left Panel - Hidden on mobile */}
@@ -201,23 +200,6 @@ export default function Register({ majors }: { majors: any[] }) {
                   <p className="text-xs text-destructive mt-1">{errors.major_id}</p>
                 )}
               </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="year">
-                Tahun Masuk <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                type="text"
-                name="year"
-                id="year"
-                maxLength={4}
-                value={data.year}
-                onChange={(e) => setData("year", e.target.value.replace(/\D/g, ""))}
-                className="h-10 bg-background text-sm"
-                placeholder="Contoh: 2024"
-              />
-              {errors.year && <p className="text-xs text-destructive mt-1">{errors.year}</p>}
             </div>
 
             <div className="space-y-2">

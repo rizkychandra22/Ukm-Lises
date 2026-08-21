@@ -45,7 +45,7 @@ export default function IndexNews({ news }: NewsPageProps) {
               <Newspaper className="w-5 h-5 mr-3 text-primary" /> Manajemen Data Berita
             </h2>
             <p className="text-sm text-muted-foreground mt-1">
-              Kelola berita dan publikasi UKM Lises.
+              Kelola berita dan publikasi Ukm Lises.
             </p>
           </div>
         </div>
