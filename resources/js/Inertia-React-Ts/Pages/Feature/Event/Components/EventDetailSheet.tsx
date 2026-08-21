@@ -14,12 +14,7 @@ interface EventDetailSheetProps {
   formatIDR: (amount?: number | null) => string;
 }
 
-export function EventDetailSheet({
-  isOpen,
-  event,
-  onClose,
-  formatIDR,
-}: EventDetailSheetProps) {
+export function EventDetailSheet({ isOpen, event, onClose, formatIDR }: EventDetailSheetProps) {
   if (!event) return null;
 
   return (
@@ -43,15 +38,11 @@ export function EventDetailSheet({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <h4 className="text-sm font-medium text-muted-foreground">Tanggal & Waktu</h4>
-              <p className="text-sm font-medium">
-                {new Date(event.date).toLocaleString("id-ID")}
-              </p>
+              <p className="text-sm font-medium">{new Date(event.date).toLocaleString("id-ID")}</p>
             </div>
             <div>
               <h4 className="text-sm font-medium text-muted-foreground">Harga Tiket</h4>
-              <p className="text-sm font-semibold text-emerald-600">
-                {formatIDR(event.price)}
-              </p>
+              <p className="text-sm font-semibold text-emerald-600">{formatIDR(event.price)}</p>
             </div>
           </div>
           <div>
@@ -60,9 +51,7 @@ export function EventDetailSheet({
           </div>
           <div>
             <h4 className="text-sm font-medium text-muted-foreground">Ringkasan</h4>
-            <p className="text-sm text-foreground/80 leading-relaxed">
-              {event.summary_id || "-"}
-            </p>
+            <p className="text-sm text-foreground/80 leading-relaxed">{event.summary_id || "-"}</p>
           </div>
         </div>
       </SheetContent>

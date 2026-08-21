@@ -31,12 +31,10 @@ interface EventFormModalProps {
     status: "draft" | "published" | "cancelled" | "completed";
   };
   eventDateInput: string;
-  eventTimeInput: string;
   eventErrors: Record<string, string>;
   processingEvent: boolean;
   setEventData: (key: string, value: any) => void;
   setEventDateInput: (value: string) => void;
-  setEventTimeInput: (value: string) => void;
   onSubmit: (e: React.FormEvent) => void;
   onCancel: () => void;
 }
@@ -46,12 +44,10 @@ export function EventFormModal({
   editingEvent,
   eventData,
   eventDateInput,
-  eventTimeInput,
   eventErrors,
   processingEvent,
   setEventData,
   setEventDateInput,
-  setEventTimeInput,
   onSubmit,
   onCancel,
 }: EventFormModalProps) {
@@ -93,30 +89,16 @@ export function EventFormModal({
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Tanggal Pelaksanaan</label>
-              <div className="relative">
-                <Input
-                  type="date"
-                  className="h-8 text-[13px] pr-10"
-                  value={eventDateInput}
-                  onChange={(e) => setEventDateInput(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Jam Pelaksanaan</label>
-              <div className="relative">
-                <Input
-                  type="time"
-                  className="h-8 text-[13px] pr-10"
-                  value={eventTimeInput}
-                  onChange={(e) => setEventTimeInput(e.target.value)}
-                  required
-                />
-              </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Tanggal Pelaksanaan</label>
+            <div className="relative">
+              <Input
+                type="date"
+                className="h-8 text-[13px] w-full"
+                value={eventDateInput}
+                onChange={(e) => setEventDateInput(e.target.value)}
+                required
+              />
             </div>
           </div>
 
@@ -191,9 +173,7 @@ export function EventFormModal({
           )}
 
           <div>
-            <label className="block text-sm font-medium mb-1">
-              Ringkasan / Deskripsi Event
-            </label>
+            <label className="block text-sm font-medium mb-1">Ringkasan / Deskripsi Event</label>
             <Textarea
               rows={3}
               className="text-[13px]"
@@ -204,16 +184,21 @@ export function EventFormModal({
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Gambar Banner Event</label>
+            <label className="block text-sm font-medium mb-1">
+              Gambar Banner Event{" "}
+              {editingEvent && (
+                <span className="text-xs text-muted-foreground font-normal">
+                  (Kosongkan jika tidak diubah)
+                </span>
+              )}
+            </label>
             <Input
               type="file"
               accept="image/*"
               className="bg-background text-sm file:text-foreground file:bg-muted file:border-0 file:rounded-md file:px-2 file:py-1 file:mr-2"
               onChange={(e) => setEventData("image", e.target.files ? e.target.files[0] : null)}
             />
-            {eventErrors.image && (
-              <span className="text-xs text-red-500">{eventErrors.image}</span>
-            )}
+            {eventErrors.image && <span className="text-xs text-red-500">{eventErrors.image}</span>}
           </div>
 
           <div className="flex justify-end gap-3 pt-2 mb-2">

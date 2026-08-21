@@ -12,6 +12,7 @@ import { MemberDeleteDialog } from "./Feature/Member/Components/MemberDeleteDial
 import { BatchTable } from "./Feature/Member/Components/BatchTable";
 import { BatchFormModal } from "./Feature/Member/Components/BatchFormModal";
 import { BatchDeleteDialog } from "./Feature/Member/Components/BatchDeleteDialog";
+import { Users } from "lucide-react";
 
 export default function IndexMember({ members = [], batches = [], majors = [] }: MemberPageProps) {
   const { auth } = usePage<any>().props;
@@ -255,8 +256,8 @@ export default function IndexMember({ members = [], batches = [], majors = [] }:
       <div className="flex flex-col gap-4 max-w-7xl mx-auto pb-12 relative">
         {/* Header Section */}
         <div>
-          <h2 className="text-2xl font-bold text-foreground font-display tracking-tight">
-            Manajemen Keanggotaan
+          <h2 className="text-2xl font-bold text-foreground font-display tracking-tight flex items-center">
+            <Users className="w-5 h-5 mr-3 text-primary" /> Manajemen Keanggotaan
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
             Kelola data anggota dan data angkatan
@@ -267,8 +268,12 @@ export default function IndexMember({ members = [], batches = [], majors = [] }:
         <div className="w-full border-b border-border">
           <div className="flex flex-col sm:flex-row gap-4 w-full items-start sm:items-center">
             {!hasRole(["User"]) ? (
-              <Tabs value={activeTab} onValueChange={setActiveTab}>
-                <TabsList className="flex h-auto p-0 bg-transparent gap-4 justify-start rounded-none border-none">
+              <Tabs
+                value={activeTab}
+                onValueChange={setActiveTab}
+                className="w-full sm:w-auto relative"
+              >
+                <TabsList className="grid grid-cols-2 w-full sm:flex sm:w-auto h-auto p-0 bg-transparent sm:gap-6 justify-start rounded-none border-none">
                   <TabsTrigger
                     value="anggota"
                     className="rounded-none border-b-2 border-transparent px-1 pb-2.5 pt-1.5 font-medium text-muted-foreground shadow-none data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:text-foreground"

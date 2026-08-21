@@ -4,10 +4,10 @@ import axiosRetry from "axios-retry";
 function resolveApiBaseUrl(): string {
   if (typeof window !== "undefined") {
     const host = window.location.hostname;
-    if (host === "lises.laravel.cloud") {
+    if (host === import.meta.env.VITE_API_BASE_URL_HOST_PRD) {
       return import.meta.env.VITE_API_BASE_URL_PRD;
     }
-    if (host === "lises-dev.laravel.cloud") {
+    if (host === import.meta.env.VITE_API_BASE_URL_HOST_DEV) {
       return import.meta.env.VITE_API_BASE_URL_DEV;
     }
     return `${window.location.origin}/api`;
@@ -17,7 +17,7 @@ function resolveApiBaseUrl(): string {
 
 export const apiClient = axios.create({
   baseURL: resolveApiBaseUrl(),
-  timeout: 10000,
+  timeout: 30000,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -28,10 +28,7 @@ axiosRetry(apiClient, {
   retries: 2,
   retryDelay: axiosRetry.exponentialDelay,
   retryCondition: (error) => {
-    return (
-      axiosRetry.isNetworkOrIdempotentRequestError(error) ||
-      error.code === "ECONNABORTED"
-    );
+    return axiosRetry.isNetworkOrIdempotentRequestError(error);
   },
 });
 

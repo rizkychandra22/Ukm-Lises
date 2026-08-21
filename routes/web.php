@@ -6,10 +6,14 @@ use App\Http\Controllers\ListMemberController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventSessionController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\InformationController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\ReleaseController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\SystemController;
+use App\Models\News;
 
 // -------------------------------------------------------------
 // AUTHENTICATION ROUTES (GUEST ONLY)
@@ -68,6 +72,7 @@ Route::middleware(['access:Developer,Admin'])->prefix('dashboard')->group(functi
     Route::post('/orders', [EventController::class, 'storeOrder'])->name('orders.store');
     Route::put('/orders/{order}/status', [EventController::class, 'updateOrderStatus'])->name('orders.update-status');
     Route::delete('/orders/{order}', [EventController::class, 'destroyOrder'])->name('orders.destroy');
+    Route::resource('event-sessions', EventSessionController::class)->except(['index', 'create', 'show', 'edit']);
 
     // Manajemen Rekening Bank / Pembayaran
     Route::post('/accounts', [EventController::class, 'storeAccount'])->name('accounts.store');
@@ -80,7 +85,16 @@ Route::middleware(['access:Developer,Admin'])->prefix('dashboard')->group(functi
 // ---------------------------------------------------------
 Route::middleware(['access:Developer'])->prefix('dashboard/system')->name('system.')->group(function () {
     Route::get('/', [SystemController::class, 'index'])->name('index');
+    Route::get('/log-visitor', [SystemController::class, 'logVisitor'])->name('log-visitor');
     Route::post('/clear-cache', [SystemController::class, 'clearCache'])->name('clear-cache');
+    Route::resource('releases', ReleaseController::class)->except(['show', 'create', 'edit']);
+});
+
+// ---------------------------------------------------------
+// SYSTEM INFORMATION (Admin & User)
+// ---------------------------------------------------------
+Route::middleware(['access:Admin,User'])->prefix('dashboard')->group(function () {
+    Route::get('/information', [InformationController::class, 'index'])->name('information');
 });
 
 // -------------------------------------------------------------
@@ -96,6 +110,22 @@ Route::middleware(['access:Developer,Admin,User'])->prefix('dashboard')->group(f
 // SITEMAP XML & LANDING PAGE PUBLIK (PURE REACT SPA)
 // -------------------------------------------------------------
 Route::get('/sitemap.xml', [SitemapController::class, 'index']);
+
+// Route khusus untuk News (SEO Meta Tag & Open Graph Social Media Preview)
+Route::get('/news/{slug}', function ($slug) {
+    $news = News::where('slug', $slug)->first();
+    
+    if ($news) {
+        return view('web', [
+            'title' => $news->title_id . ' | Lises Asmarandana',
+            'description' => $news->summary_id,
+            'image' => $news->image,
+            'news' => $news
+        ]);
+    }
+    
+    return view('web');
+});
 
 // Catch-all route untuk menangani halaman publik selain auth, dashboard, & api
 Route::get('/{any?}', function () {

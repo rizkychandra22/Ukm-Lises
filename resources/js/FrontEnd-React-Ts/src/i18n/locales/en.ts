@@ -28,9 +28,9 @@ export default {
         "UKM Lises Asmarandana is a home for students of Muhammadiyah Sukabumi University who love music and dance - preserving traditions, bringing the stage to life.",
       btn_about: "Get to Know Us",
       btn_contact: "Contact Us",
-      card_1: "Active Members",
-      card_2: "Performances",
-      card_3: "Years of Dedication",
+      card_1: "Count Members",
+      card_2: "Count Batch",
+      card_3: "Showcasing Creativity",
     },
     section_divisi: {
       title: "Our Divisions",

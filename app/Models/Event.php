@@ -58,6 +58,14 @@ class Event extends Model
     /**
      * Scope: hanya event yang statusnya bisa tampil di landing page publik.
      */
+    public function sessions()
+    {
+        return $this->hasMany(EventSession::class);
+    }
+
+    /**
+     * Scope: hanya event yang statusnya bisa tampil di landing page publik.
+     */
     public function scopePublished($query)
     {
         return $query->whereIn('status', ['published', 'completed']);

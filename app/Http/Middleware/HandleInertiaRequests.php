@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Release;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -42,6 +43,7 @@ class HandleInertiaRequests extends Middleware
                     'roles' => $request->user()->getRoleNames(),
                 ]) : null,
             ],
+            'web_version' => Release::latest()->first()?->version ?? 'v1.0.0',
             'flash' => [
                 'success' => fn () => $request->session()->get('success'),
                 'error' => fn () => $request->session()->get('error'),

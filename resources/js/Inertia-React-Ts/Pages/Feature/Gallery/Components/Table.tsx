@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { LegacyColumnDef as ColumnDef } from "@tanstack/react-table/legacy";
-import { DataTable } from "../../Event/Components/DataTable";
+import { DataTable } from "../../../../Components/DataTable";
 import { GalleryItem } from "../Types";
 import { Button } from "@/components/ui/button";
 import { Plus, Edit, Trash2, ArrowUpDown } from "lucide-react";
@@ -12,12 +12,7 @@ interface TableProps {
   onDelete: (item: GalleryItem) => void;
 }
 
-export function Table({
-  galleries,
-  onAdd,
-  onEdit,
-  onDelete,
-}: TableProps) {
+export function Table({ galleries, onAdd, onEdit, onDelete }: TableProps) {
   const columns = useMemo<ColumnDef<GalleryItem, any>[]>(
     () => [
       {
@@ -115,7 +110,8 @@ export function Table({
         },
       },
     ],
-    [onEdit, onDelete],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
   );
 
   const toolbarExtra = (

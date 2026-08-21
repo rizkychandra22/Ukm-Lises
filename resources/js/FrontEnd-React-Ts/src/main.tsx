@@ -28,12 +28,8 @@ function GlobalErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="font-display text-7xl font-bold text-gradient-gold">!</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">
-          Terjadi Kesalahan Sistem
-        </h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          {message}
-        </p>
+        <h2 className="mt-4 text-xl font-semibold text-foreground">Terjadi Kesalahan Sistem</h2>
+        <p className="mt-2 text-sm text-muted-foreground">{message}</p>
         <div className="mt-6">
           <button
             onClick={resetErrorBoundary}
@@ -53,10 +49,7 @@ const root = (container as any).__reactRoot || ReactDOM.createRoot(container);
 
 root.render(
   <React.StrictMode>
-    <ErrorBoundary
-      FallbackComponent={GlobalErrorFallback}
-      onReset={() => window.location.reload()}
-    >
+    <ErrorBoundary FallbackComponent={GlobalErrorFallback} onReset={() => window.location.reload()}>
       <QueryClientProvider client={queryClient}>
         <HelmetProvider>
           <App />

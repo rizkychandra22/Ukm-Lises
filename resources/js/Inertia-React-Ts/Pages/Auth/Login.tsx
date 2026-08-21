@@ -1,4 +1,4 @@
-import { Head, useForm } from "@inertiajs/react";
+import { Head, useForm, usePage } from "@inertiajs/react";
 import React, { useState, useEffect } from "react";
 import { Eye, EyeOff, Moon, Sun, AlertCircle } from "lucide-react";
 
@@ -63,22 +63,16 @@ export default function Login() {
     e.preventDefault();
     setLoginError(false);
 
-    // Hanya blokir jika captcha sudah diisi tapi salah
-    if (captchaInput && captchaInput !== captchaCode) {
-      setCaptchaError("Captcha tidak sesuai!");
-      generateCaptcha();
+    // Jika captcha kosong
+    if (!captchaInput) {
+      setCaptchaError("Captcha wajib diisi!");
       return;
     }
 
-    // Jika captcha kosong, biarkan backend validasi form
-    if (!captchaInput) {
-      post("/auth/login", {
-        onError: () => {
-          setLoginError(true);
-          generateCaptcha();
-        },
-        onSuccess: () => setLoginError(false),
-      });
+    // Jika captcha salah
+    if (captchaInput !== captchaCode) {
+      generateCaptcha();
+      setCaptchaError("Captcha tidak sesuai!");
       return;
     }
 
@@ -94,7 +88,7 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex w-full">
-      <Head title="Login Admin" />
+      <Head title="Login Sistem" />
 
       {/* Left Panel - Hidden on mobile */}
       <div className="hidden lg:flex w-[50%] bg-gradient-gold p-8 flex-col justify-between relative overflow-hidden">
@@ -308,7 +302,7 @@ export default function Login() {
 
             <div className="text-center pt-4">
               <p className="text-xs text-muted-foreground">
-                Sistem Manajemen Internal Ukm Lises Realese v1.7.1
+                Sistem Manajemen Internal Ukm Lises {usePage().props.web_version as string}
               </p>
             </div>
           </form>

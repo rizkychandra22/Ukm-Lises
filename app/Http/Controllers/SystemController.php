@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Visitor;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
@@ -11,102 +12,10 @@ use Illuminate\Support\Facades\File;
 class SystemController extends Controller
 {
     /**
-     * Display the IT System dashboard.
+     * Display the Log Visitor.
      */
-    public function index()
+    public function logVisitor()
     {
-        // Fetch App Version (Cached for 1 hour to prevent API rate limits, cleared when cache optimized)
-        $appVersion = \Illuminate\Support\Facades\Cache::remember('system_app_version', 3600, function () {
-            $version = '';
-            
-            // Try local git (Works in development environment)
-            try {
-                $branch = trim(shell_exec('git branch --show-current 2>nul'));
-                
-                if ($branch === 'main') {
-                    $gitLog = shell_exec('git log --grep="Release v" -n 1 --format="%s" 2>nul');
-                    if ($gitLog && preg_match('/v\d+\.\d+\.\d+/', $gitLog, $matches)) {
-                        $version = $matches[0];
-                    }
-                } elseif ($branch === 'development') {
-                    $gitLog = shell_exec('git log --grep="Dev v" -n 1 --format="%s" 2>nul');
-                    if ($gitLog && preg_match('/v\d+\.\d+\.\d+/', $gitLog, $matches)) {
-                        $version = $matches[0];
-                    } else {
-                        $gitLog = shell_exec('git log --grep="Release v" -n 1 --format="%s" 2>nul');
-                        if ($gitLog && preg_match('/v\d+\.\d+\.\d+/', $gitLog, $matches)) {
-                            $version = $matches[0];
-                        }
-                    }
-                } else {
-                    $gitLogs = shell_exec('git log -n 30 --format="%s" 2>nul');
-                    if ($gitLogs) {
-                        $logs = explode("\n", trim($gitLogs));
-                        foreach ($logs as $log) {
-                            if (preg_match('/Release\s+(v\d+\.\d+\.\d+)/i', $log, $matches)) {
-                                $version = $matches[1];
-                                break;
-                            }
-                            if (preg_match('/Dev\s+(v\d+\.\d+\.\d+)/i', $log, $matches)) {
-                                $version = $matches[1] . '-dev';
-                                break;
-                            }
-                        }
-                    }
-                }
-            } catch (\Exception $e) {}
-
-            // Fallback to GitHub API (Works in Production/Laravel Cloud where .git is stripped)
-            if (empty($version)) {
-                try {
-                    $response = \Illuminate\Support\Facades\Http::timeout(5)
-                        ->withHeaders(['User-Agent' => 'Laravel-Dashboard'])
-                        ->get('https://api.github.com/repos/rizkychandra22/Ukm-Lises/commits');
-                    
-                    if ($response->successful()) {
-                        $commits = $response->json();
-                        foreach ($commits as $commit) {
-                            $message = $commit['commit']['message'] ?? '';
-                            if (preg_match('/Release\s+(v\d+\.\d+\.\d+)/i', $message, $matches)) {
-                                $version = $matches[1];
-                                break;
-                            }
-                            if (preg_match('/Dev\s+(v\d+\.\d+\.\d+)/i', $message, $matches)) {
-                                $version = $matches[1] . '-dev';
-                                break;
-                            }
-                        }
-                    }
-                } catch (\Exception $e) {}
-            }
-
-            // Final Fallback to .env
-            if (empty($version)) {
-                $version = env('APP_VERSION', '');
-            }
-
-            return $version;
-        });
-
-        $nodeVersion = 'Unknown';
-        try {
-            $nodeVersion = trim(shell_exec('node -v 2>nul')) ?: 'Unknown';
-        } catch (\Exception $e) {}
-
-        // Get Environment Info
-        $envInfo = [
-            'app_name' => config('app.name'),
-            'app_version' => $appVersion,
-            'environment' => config('app.env'),
-            'debug_mode' => config('app.debug'),
-            'php_version' => phpversion(),
-            'node_version' => $nodeVersion,
-            'laravel_version' => app()->version(),
-            'os' => php_uname('s') . ' ' . php_uname('r'),
-            'server' => $_SERVER['SERVER_SOFTWARE'] ?? 'Unknown',
-            'timezone' => config('app.timezone'),
-        ];
-
         // Get Disk Usage
         $diskPath = base_path();
         $diskTotal = disk_total_space($diskPath);
@@ -141,6 +50,70 @@ class SystemController extends Controller
             $dbInfo['status'] = 'Error: ' . $e->getMessage();
         }
 
+        $guests = Visitor::latest()->get();
+        return Inertia::render('Dev/LogVisitor', [
+            'guests' => $guests,
+            'diskInfo' => $diskInfo,
+            'dbInfo' => $dbInfo,
+        ]);
+    }
+
+    /**
+     * Display the IT System dashboard.
+     */
+    public function index()
+    {
+        $nodeVersion = 'Unknown';
+        try {
+            $nodeVersion = trim(shell_exec('node -v 2>nul')) ?: 'Unknown';
+        } catch (\Exception $e) {}
+
+        // Get Environment Info
+        $envInfo = [
+            'app_name' => config('app.name'),
+            'environment' => config('app.env'),
+            'debug_mode' => config('app.debug'),
+            'php_version' => phpversion(),
+            'node_version' => $nodeVersion,
+            'laravel_version' => app()->version(),
+            'os' => php_uname('s') . ' ' . php_uname('r'),
+            'server' => str_replace(' (Development Server)', '', $_SERVER['SERVER_SOFTWARE'] ?? 'Unknown'),
+            'timezone' => config('app.timezone'),
+        ];
+
+        // Get Disk Usage
+        $diskPath = base_path();
+        $diskTotal = disk_total_space($diskPath);
+        $diskFree = disk_free_space($diskPath);
+        $diskUsed = $diskTotal - $diskFree;
+        $diskUsagePercent = $diskTotal > 0 ? round(($diskUsed / $diskTotal) * 100, 2) : 0;
+
+        $diskInfo = [
+            'total' => $this->formatBytes($diskTotal),
+            'used' => $this->formatBytes($diskUsed),
+            'free' => $this->formatBytes($diskFree),
+            'usage_percent' => $diskUsagePercent
+        ];
+
+        // Database Info (PostgreSQL)
+        $dbInfo = [
+            'connection' => config('database.default'),
+            'status' => 'Disconnected',
+            'active_connections' => 0,
+        ];
+
+        try {
+            DB::connection()->getPdo();
+            $dbInfo['status'] = 'Connected';
+            
+            if (config('database.default') === 'pgsql') {
+                $connections = DB::select("SELECT count(*) as count FROM pg_stat_activity");
+                $dbInfo['active_connections'] = $connections[0]->count ?? 0;
+            }
+        } catch (\Exception $e) {
+            $dbInfo['status'] = 'Error: ' . $e->getMessage();
+        }
+
         // Memory/CPU (Best effort, varies by OS)
         $sysInfo = [
             'memory_usage' => $this->formatBytes(memory_get_usage(true)),
@@ -157,7 +130,7 @@ class SystemController extends Controller
             $logs = array_reverse($logs); // Newest first
         }
 
-        return Inertia::render('IndexSystem', [
+        return Inertia::render('Dev/IndexSystem', [
             'envInfo' => $envInfo,
             'diskInfo' => $diskInfo,
             'dbInfo' => $dbInfo,

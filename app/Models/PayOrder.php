@@ -12,6 +12,7 @@ class PayOrder extends Model
         'email',
         'phone',
         'event_id',
+        'event_session_id',
         'qty',
         'total_price',
         'notes',
@@ -35,6 +36,14 @@ class PayOrder extends Model
     public function event()
     {
         return $this->belongsTo(Event::class);
+    }
+
+    /**
+     * Pesanan memiliki sesi event (untuk event eksklusif).
+     */
+    public function eventSession()
+    {
+        return $this->belongsTo(EventSession::class);
     }
 
     /**

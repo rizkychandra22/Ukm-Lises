@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Link } from "@inertiajs/react";
 import { LegacyColumnDef as ColumnDef } from "@tanstack/react-table/legacy";
-import { DataTable } from "../../Event/Components/DataTable";
+import { DataTable } from "../../../../Components/DataTable";
 import { NewsItem } from "../Types";
 import { route } from "@admin/Lib/Route";
 import { Button } from "@/components/ui/button";
@@ -22,12 +22,7 @@ interface TableProps {
   onDelete: (item: NewsItem) => void;
 }
 
-export function Table({
-  news,
-  selectedType,
-  onTypeChange,
-  onDelete,
-}: TableProps) {
+export function Table({ news, selectedType, onTypeChange, onDelete }: TableProps) {
   const filteredData = useMemo(() => {
     if (selectedType === "Semua Tipe Berita") return news;
     return news.filter((n) => n.type === selectedType);
@@ -94,9 +89,7 @@ export function Table({
           </Button>
         ),
         cell: ({ row }: { row: { original: NewsItem } }) => (
-          <div className="text-sm">
-            {dayjs(row.original.date).format("DD MMM YYYY")}
-          </div>
+          <div className="text-sm">{dayjs(row.original.date).format("DD MMM YYYY")}</div>
         ),
       },
       {
@@ -127,7 +120,8 @@ export function Table({
         },
       },
     ],
-    [onDelete],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
   );
 
   const toolbarExtra = (

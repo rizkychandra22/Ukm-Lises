@@ -64,7 +64,12 @@
   --ring: oklch(0.82 0.16 82);
 
   --gradient-gold: linear-gradient(135deg, var(--gold-deep), var(--gold));
-  --gradient-hero: linear-gradient(180deg, oklch(0.11 0.01 60 / 0.1) 0%, oklch(0.11 0.01 60 / 0.35) 50%, oklch(0.11 0.01 60 / 0.95) 100%);
+  --gradient-hero: linear-gradient(
+    180deg,
+    oklch(0.11 0.01 60 / 0.1) 0%,
+    oklch(0.11 0.01 60 / 0.35) 50%,
+    oklch(0.11 0.01 60 / 0.95) 100%
+  );
   --shadow-gold: 0 20px 60px -20px color-mix(in oklab, var(--gold) 45%, transparent);
 }
 
@@ -77,7 +82,10 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
   }
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     font-family: var(--font-display);
     letter-spacing: -0.01em;
   }

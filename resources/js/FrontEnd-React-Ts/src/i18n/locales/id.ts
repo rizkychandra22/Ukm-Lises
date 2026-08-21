@@ -28,9 +28,9 @@ export default {
         "UKM Lises Asmarandana adalah rumah bagi mahasiswa Universitas Muhammadiyah Sukabumi yang mencintai seni musik dan tari - merawat tradisi, menghidupkan panggung.",
       btn_about: "Kenali Kami",
       btn_contact: "Hubungi Kami",
-      card_1: "Anggota Aktif",
-      card_2: "Pementasan",
-      card_3: "Tahun Berkarya",
+      card_1: "Total Anggota",
+      card_2: "Total Angkatan",
+      card_3: "Tampil Berkarya",
     },
     section_divisi: {
       title: "Divisi Kami.",

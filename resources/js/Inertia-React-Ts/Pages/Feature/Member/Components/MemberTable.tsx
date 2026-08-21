@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { LegacyColumnDef as ColumnDef } from "@tanstack/react-table/legacy";
-import { DataTable } from "../../Event/Components/DataTable";
+import { DataTable } from "../../../../Components/DataTable";
 import { BatchMember, Batch } from "../Types";
 import { Button } from "@/components/ui/button";
 import {
@@ -203,7 +203,11 @@ export function MemberTable({
           </Button>
         ),
         cell: ({ row }: { row: { original: BatchMember } }) => (
-          <div className="text-sm">{row.original.batch ? `${row.original.batch.year} - ${row.original.batch.name_id}` : "-"}</div>
+          <div className="text-sm">
+            {row.original.batch
+              ? `${row.original.batch.year} - ${row.original.batch.name_id}`
+              : "-"}
+          </div>
         ),
       },
       {
@@ -260,7 +264,8 @@ export function MemberTable({
         },
       },
     ],
-    [onView, onEdit, onDelete, hasRole, showPeriodeJabatan, activeMemberTab, userBatch],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [showPeriodeJabatan, activeMemberTab, userBatch],
   );
 
   const canAddMember = (() => {
@@ -316,10 +321,7 @@ export function MemberTable({
           )}
 
           {activeMemberTab === "Demisioner" && (
-            <Select
-              value={demisionerBatchFilter}
-              onValueChange={onDemisionerBatchFilterChange}
-            >
+            <Select value={demisionerBatchFilter} onValueChange={onDemisionerBatchFilterChange}>
               <SelectTrigger className="h-8 flex-1 min-w-0 sm:w-44 rounded-lg text-[13px] bg-muted/50 border-border/60">
                 <SelectValue placeholder="Filter Angkatan" />
               </SelectTrigger>

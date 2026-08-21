@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->foreignId('event_id')->constrained()->onDelete('cascade');
+            $table->foreignId('event_session_id')->nullable()->constrained('event_sessions')->onDelete('cascade');
             $table->integer('qty');
             $table->decimal('total_price', 15, 2);
             $table->text('notes')->nullable();
