@@ -13,8 +13,8 @@ concurrency:
 jobs:
   deploy-production:
     name: Deploy to Production
-    # HANYA JALAN JIKA: CI Sukses DAN yang memicu adalah branch 'main' atau 'development'
-    if: ${{ github.event.workflow_run.conclusion == 'success' && (github.event.workflow_run.head_branch == 'main' || github.event.workflow_run.head_branch == 'development') }}
+    # JALAN JIKA: CI Sukses (CI hanya dipicu oleh Push & PR ke 'main', serta PR ke 'development')
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: self-hosted
 
     steps:
@@ -57,12 +57,7 @@ jobs:
 
           echo "✅ Deployment Successful!"
 
-      # OPSI B: Jika menggunakan Webhook Laravel Cloud (Branch Main)
+      # Jika menggunakan Webhook Laravel Cloud (Branch Main)
       - name: 🌐 Trigger Deploy Webhook (Production - Main)
         if: ${{ github.event.workflow_run.head_branch == 'main' }}
         run: curl -X POST "${{ secrets.LARAVEL_CLOUD_DEPLOY_WEBHOOK }}"
-
-      # OPSI B: Jika menggunakan Webhook Laravel Cloud (Branch Development)
-      - name: 🌐 Trigger Deploy Webhook (Staging - Development)
-        if: ${{ github.event.workflow_run.head_branch == 'development' }}
-        run: curl -X POST "${{ secrets.LARAVEL_CLOUD_DEPLOY_WEBHOOK_DEV }}"
