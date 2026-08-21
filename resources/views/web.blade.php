@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}">
+<html lang="{{ $locale ?? app()->getLocale() }}">
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'self'; upgrade-insecure-requests">
@@ -26,7 +26,7 @@
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:site_name" content="UKM Lises Asmarandana UMMI">
-    <meta property="og:locale" content="id_ID">
+    <meta property="og:locale" content="{{ ($locale ?? 'id') === 'en' ? 'en_US' : 'id_ID' }}">
 
     {{-- Twitter / X Card --}}
     <meta name="twitter:card" content="summary_large_image">
