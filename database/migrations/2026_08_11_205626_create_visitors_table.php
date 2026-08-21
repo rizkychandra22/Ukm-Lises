@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('ip_address', 45);
             $table->string('device_name')->nullable();
-            $table->date('visit_date');
+            $table->date('visit_date')->nullable();
+            $table->time('visit_time')->nullable();
             $table->timestamps();
             
             $table->unique(['ip_address', 'visit_date']);

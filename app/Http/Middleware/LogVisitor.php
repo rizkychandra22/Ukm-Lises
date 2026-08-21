@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\Visitor;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class LogVisitor
 {
@@ -40,11 +41,18 @@ class LogVisitor
                 $deviceName = 'Android';
             }
 
-            // We use firstOrCreate to avoid duplicate entries for the same IP on the same day
-            Visitor::firstOrCreate(
-                ['ip_address' => $ip, 'visit_date' => $today],
-                ['device_name' => $deviceName]
-            );
+            $cacheKey = 'visitor_' . $ip . '_' . $today;
+
+            if (!Cache::has($cacheKey)) {
+                // We use firstOrCreate to avoid duplicate entries for the same IP on the same day
+                Visitor::firstOrCreate(
+                    ['ip_address' => $ip, 'visit_date' => $today],
+                    ['device_name' => $deviceName, 'visit_time' => now()->toTimeString()]
+                );
+                
+                // Cache until the end of the day
+                Cache::put($cacheKey, true, Carbon::tomorrow());
+            }
         } catch (\Exception $e) {
             // Silently ignore tracking errors so they don't break the app
         }
