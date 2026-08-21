@@ -143,7 +143,7 @@ export default function IndexMember({ members = [], batches = [], majors = [] }:
       : route("list-member.members.store");
 
       postMember(endpoint, {
-      preserveScroll: true,
+      preserveScroll: editingMember ? true : false,
       preserveState: true,
       onSuccess: () => {
         handleCancelEditMember();
@@ -160,7 +160,7 @@ export default function IndexMember({ members = [], batches = [], majors = [] }:
   const confirmDeleteMember = () => {
     if (memberToDelete) {
       deleteMemberReq(route("list-member.members.destroy", memberToDelete), {
-        preserveScroll: true,
+        preserveScroll: false,
         preserveState: true,
         onSuccess: () => {
           setIsDeleteMemberDialogOpen(false);
@@ -230,7 +230,7 @@ export default function IndexMember({ members = [], batches = [], majors = [] }:
       });
     } else {
       postBatch(route("list-member.batches.store"), {
-        preserveScroll: true,
+        preserveScroll: false,
         preserveState: true,
         onSuccess: () => {
           handleCancelEditBatch();
@@ -248,7 +248,7 @@ export default function IndexMember({ members = [], batches = [], majors = [] }:
   const confirmDeleteBatch = () => {
     if (batchToDelete) {
       deleteBatchReq(route("list-member.batches.destroy", batchToDelete), {
-        preserveScroll: true,
+        preserveScroll: false,
         preserveState: true,
         onSuccess: () => {
           setIsDeleteBatchDialogOpen(false);

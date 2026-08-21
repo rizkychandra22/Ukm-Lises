@@ -92,7 +92,7 @@ export default function Release({ releases }: { releases: Release[] }) {
       });
     } else {
       post(route("system.releases.store"), {
-        preserveScroll: true,
+        preserveScroll: false,
         preserveState: true,
         onSuccess: () => {
           setIsModalOpen(false);
@@ -106,7 +106,7 @@ export default function Release({ releases }: { releases: Release[] }) {
   const handleDelete = () => {
     if (editingId) {
       destroy(route("system.releases.destroy", editingId), {
-        preserveScroll: true,
+        preserveScroll: false,
         preserveState: true,
         onSuccess: () => {
           setIsDeleteModalOpen(false);

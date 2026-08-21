@@ -162,7 +162,7 @@ export default function IndexEvent({
     const endpoint = editingEvent ? route("events.update", editingEvent.id) : route("events.store");
 
     postEvent(endpoint, {
-      preserveScroll: true,
+      preserveScroll: editingEvent ? true : false,
       preserveState: true,
       onSuccess: () => {
         handleCancelEditEvent();
@@ -181,7 +181,7 @@ export default function IndexEvent({
   const confirmDeleteEvent = () => {
     if (eventToDelete) {
       deleteEventReq(route("events.destroy", eventToDelete), {
-        preserveScroll: true,
+        preserveScroll: false,
         preserveState: true,
         onSuccess: () => {
           setIsDeleteEventDialogOpen(false);
@@ -239,7 +239,7 @@ export default function IndexEvent({
   const confirmDeleteOrder = () => {
     if (orderToDelete) {
       deleteOrderReq(route("orders.destroy", orderToDelete), {
-        preserveScroll: true,
+        preserveScroll: false,
         preserveState: true,
         onSuccess: () => {
           setIsDeleteOrderDialogOpen(false);
@@ -281,7 +281,7 @@ export default function IndexEvent({
   const handleSubmitOfflineOrder = (e: React.FormEvent) => {
     e.preventDefault();
     postOfflineOrder(route("orders.store"), {
-      preserveScroll: true,
+      preserveScroll: false,
       preserveState: true,
       onSuccess: () => {
         setIsOfflineOrderModalOpen(false);
@@ -351,7 +351,7 @@ export default function IndexEvent({
       });
     } else {
       postAccount(route("accounts.store"), {
-        preserveScroll: true,
+        preserveScroll: false,
         preserveState: true,
         onSuccess: () => {
           handleCancelEditAccount();
@@ -369,7 +369,7 @@ export default function IndexEvent({
   const confirmDeleteAccount = () => {
     if (accountToDelete) {
       deleteAccountReq(route("accounts.destroy", accountToDelete), {
-        preserveScroll: true,
+        preserveScroll: false,
         preserveState: true,
         onSuccess: () => {
           setIsDeleteBankDialogOpen(false);
@@ -438,7 +438,7 @@ export default function IndexEvent({
       });
     } else {
       postSession(route("event-sessions.store"), {
-        preserveScroll: true,
+        preserveScroll: false,
         preserveState: true,
         onSuccess: () => {
           handleCancelEditSession();
@@ -451,7 +451,7 @@ export default function IndexEvent({
   const handleDeleteSession = (id: number) => {
     if (confirm("Apakah Anda yakin ingin menghapus sesi ini?")) {
       deleteSessionReq(route("event-sessions.destroy", id), {
-        preserveScroll: true,
+        preserveScroll: false,
         preserveState: true,
         onSuccess: () => toast.success("Berhasil menghapus sesi event."),
       });
